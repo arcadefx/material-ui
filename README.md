@@ -11,7 +11,7 @@ material-ui is a loosely based Material UI module for Corona Labs SDK.  It is wr
 Using material-ui
 --------------
 
-* Clone the repo
+* Clone the repo or download archive
 ```bash
 git clone git://github.com/arcadefx/material-ui.git
 ```

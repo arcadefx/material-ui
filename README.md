@@ -78,7 +78,7 @@ Contributing
 
 To-Do
 -------------
-* Expand the module
+* Expand the module (new widgets: switches, hamburger menu, input fields, etc)
 * Develop a layout engine 
 * Develop a palette engine
 

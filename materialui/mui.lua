@@ -349,16 +349,21 @@ function M.createRRectButton(options)
 
     local nr = (options.height+M.getScaleVal(8)) * 0.2
 
-    local paint = {
-        type = "gradient",
-        color1 = { 0.9, 0.9, 0.9, 255 },
-        --color1 = { 1, 0.58, 0 },
-        color2 = { 0.9, 0.9, 0.9, 0 },
-        direction = "up"
-    }
+    -- paint normal or use gradient?
+    local paint = nil
+    if options.gradientColor1 ~= nil and options.gradientColor2 ~= nil then
+        paint = {
+            type = "gradient",
+            color1 = options.gradientColor1,
+            color2 = options.gradientColor2,
+            direction = "up"
+        }
+    end
 
     M.widgetDict[options.name]["rrect2"] = display.newRoundedRect( 0, 1, options.width+M.getScaleVal(8), options.height+M.getScaleVal(8), nr )
-    M.widgetDict[options.name]["rrect2"].fill = paint
+    if paint ~= nil then
+        M.widgetDict[options.name]["rrect2"].fill = paint
+    end
     M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["rrect2"] )
 
     local fillColor = { 0, 0.82, 1 }

@@ -49,7 +49,8 @@ function scene:create( event )
         x = mui.getScaleVal(160),
         y = mui.getScaleVal(220),
         font = native.systemFont,
-        fillColor = { 0, 0.82, 1 },
+        gradientColor1 = { 0.9, 0.9, 0.9, 255 },
+        gradientColor2 = { 0.9, 0.9, 0.9, 0 },
         textColor = { 1, 1, 1 },
         callBack = mui.actionForButton
     })

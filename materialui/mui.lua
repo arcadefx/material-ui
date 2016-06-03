@@ -352,11 +352,14 @@ function M.createRRectButton(options)
     -- paint normal or use gradient?
     local paint = nil
     if options.gradientColor1 ~= nil and options.gradientColor2 ~= nil then
+        if options.gradientDirection == nil then
+            options.gradientDirection = "up"
+        end
         paint = {
             type = "gradient",
             color1 = options.gradientColor1,
             color2 = options.gradientColor2,
-            direction = "up"
+            direction = options.gradientDirection
         }
     end
 
@@ -493,27 +496,28 @@ function M.createRectButton(options)
 
     local fillColor = { 0, 0.82, 1 }
 
-    --[[--
-    local paint = {
-        type = "gradient",
-        color1 = { 0.7, 0.7, 0.7 },
-        color2 = { 0.9, 0.9, 0.9, 0 },
-        direction = "up"
-    }
-
-    M.widgetDict[options.name]["rrect2"] = display.newRect( -2, 4, options.width+14, options.height+4 )
-    M.widgetDict[options.name]["rrect2"].fill = paint
-    M.widgetDict[options.name]["rrect2"].strokeWidth = 0
-    --fillColor = { 0.8, 0.8, 0.8 }
-    --M.widgetDict[options.name]["rrect2"]:setFillColor( unpack(fillColor) )
-    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["rrect2"] )
-    --]]--
+    -- paint normal or use gradient?
+    local paint = nil
+    if options.gradientColor1 ~= nil and options.gradientColor2 ~= nil then
+        if options.gradientDirection == nil then
+            options.gradientDirection = "up"
+        end
+        paint = {
+            type = "gradient",
+            color1 = options.gradientColor1,
+            color2 = options.gradientColor2,
+            direction = options.gradientDirection
+        }
+    end
 
     if options.fillColor ~= nil then
         fillColor = options.fillColor
     end
 
     M.widgetDict[options.name]["rrect"] = display.newRect( 0, 0, options.width, options.height )
+    if paint ~= nil then
+        M.widgetDict[options.name]["rrect"].fill = paint
+    end
     M.widgetDict[options.name]["rrect"].strokeWidth = 0
     M.widgetDict[options.name]["rrect"]:setFillColor( unpack(fillColor) )
     M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["rrect"] )

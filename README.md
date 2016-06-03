@@ -17,12 +17,13 @@ git clone git://github.com/arcadefx/material-ui.git
 ```
 * Copy the required files and folders into your project:
 ```bash
-materialui.lua
+MaterialIcons-Regular.ttf
+materialui (folder)
 icon-font (folder)
 ```
 * Edit your scene file and be sure to include at the top:
 ```
-local mui = require( "materialui" )
+local mui = require( "materialui.mui" )
 ```
 * In the scene create function add in the initializer and any user-interface elements
 ```
@@ -62,11 +63,13 @@ Additional Features
 * Touchpoints are included in all controls, but can be turned off.
 * Built-in callBacks are defined but can be overridden easily to do other tasks.
 * Colors can be adjusted and some controls support gradients.
+* To use Material font icons, refer to 'icon-font/codepoints' and place the codepoint as the 'text' of a button.  See http://google.github.io/material-design-icons/ for more information.
 
 Contributing
 -------------
 * Feel free to contribute code, testing and feedback.
 * Once we get additional authors they will be included in the repo and get recognition for their efforts.
+* Please follow the licensing terms for any software included.
 
 To-Do
 -------------

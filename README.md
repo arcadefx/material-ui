@@ -16,10 +16,10 @@ Using material-ui
 git clone git://github.com/arcadefx/material-ui.git
 ```
 * Copy the required files and folders into your project:
-  ```
-  materialui.lua
-  icon-font (folder)
-  ```
+```bash
+materialui.lua
+icon-font (folder)
+```
 * Edit your scene file and be sure to include at the top:
 ```
 local mui = require( "materialui" )

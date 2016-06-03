@@ -46,6 +46,11 @@ local mui = require( "materialui.mui" )
     mui.removeWidgets()
 ```
 
+Try a Demo
+-------------
+Using Corona Simulator open up the "main.lua" file in the folder.
+
+
 Available Methods
 -------------
 Please read Lua code to find all parameters and see example in the repo call menu.lua.  All methods below implement a callback and lots of configuration options.  Touchpoints are included.

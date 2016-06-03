@@ -49,15 +49,15 @@ Available Methods
 -------------
 Please read Lua code to find all parameters and see example in the repo call menu.lua.  All methods below implement a callback and lots of configuration options.  Touchpoints are included.
 
-`createRRectButton` - Create a rounded rectangle button
-`createRectButton` - Create a rectangle button
-`createIconButton` - Create an icon button using the material design icon font
-`createRadioGroup` - Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.
-`createToolbar` - Create a horizontal toolbar with icon buttons using the material design icon font. You can override the font.
-`createTableView` - Create a scrollable table view
-`actionSwitchScene` - This is built-in callback for handle scene switching for a button. The color of the switch can be changed.
+- `createRRectButton` - Create a rounded rectangle button
+- `createRectButton` - Create a rectangle button
+- `createIconButton` - Create an icon button using the material design icon font
+- `createRadioGroup` - Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.
+- `createToolbar` - Create a horizontal toolbar with icon buttons using the material design icon font. You can override the font.
+- `createTableView` - Create a scrollable table view
+- `actionSwitchScene` - This is built-in callback for handle scene switching for a button. The color of the switch can be changed.
 
-Available Methods
+Additional Features
 -------------
 * Touchpoints are included in all controls, but can be turned off.
 * Built-in callBacks are defined but can be overridden easily to do other tasks.

@@ -50,6 +50,9 @@ Try a Demo
 -------------
 Using Corona Simulator open up the "main.lua" file in the folder.
 
+Sample Screenshot
+-------------
+![Alt text](http://www.anedix.com/images/github/materialui-sample-view.png "Controls including text input")
 
 Available Methods
 -------------

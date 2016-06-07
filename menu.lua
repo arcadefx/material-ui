@@ -170,6 +170,17 @@ function scene:create( event )
     })
     --]]--
 
+    mui.createTextField({
+        name = "textfield_demo",
+        labelText = "Subject",
+        text = "Hello, world!",
+        width = mui.getScaleVal(400),
+        height = mui.getScaleVal(46),
+        x = mui.getScaleVal(240),
+        y = mui.getScaleVal(400),
+        activeColor = { 0.12, 0.67, 0.27, 1 },
+        inactiveColor = { 0.4, 0.4, 0.4, 1 }
+    })
 end
 
 -- "scene:show()"

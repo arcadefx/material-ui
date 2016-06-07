@@ -1455,6 +1455,9 @@ function M.textListener(event)
         end
 
     elseif ( event.phase == "editing" ) then
+        event.target:setTextColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
+        M.widgetDict[name]["textlabel"]:setFillColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
+        M.widgetDict[name]["line"]:setStrokeColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
         print( event.newCharacters )
         print( event.oldText )
         print( event.startPosition )

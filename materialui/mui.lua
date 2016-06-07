@@ -1438,6 +1438,10 @@ function M.highlightTextField(widgetName, active)
         return
     end
 
+    if M.widgetDict[name]["textfield"] == nil then
+        return
+    end
+
     if active == nil then
         active = false
     end

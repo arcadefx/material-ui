@@ -113,6 +113,8 @@ end
 
 function M.actionSwitchScene( e )
     local circleColor = { 1, 0.58, 0 }
+    M.hideNativeWidgets()
+
     if e.callBackData ~= nil and e.callBackData.sceneTransitionColor ~= nil then
         circleColor = e.callBackData.sceneTransitionColor
     end
@@ -494,8 +496,6 @@ function M.createRectButton(options)
     M.widgetDict[options.name]["container"]:translate( x, y ) -- center the container
     M.widgetDict[options.name]["touching"] = false
 
-    local fillColor = { 0, 0.82, 1 }
-
     -- paint normal or use gradient?
     local paint = nil
     if options.gradientColor1 ~= nil and options.gradientColor2 ~= nil then
@@ -510,15 +510,19 @@ function M.createRectButton(options)
         }
     end
 
+    local fillColor = { 0, 0.82, 1 }
     if options.fillColor ~= nil then
         fillColor = options.fillColor
     end
+
+    local strokeWidth = 0
+    if paint ~= nil then strokeWidth = 1 end
 
     M.widgetDict[options.name]["rrect"] = display.newRect( 0, 0, options.width, options.height )
     if paint ~= nil then
         M.widgetDict[options.name]["rrect"].fill = paint
     end
-    M.widgetDict[options.name]["rrect"].strokeWidth = 0
+    M.widgetDict[options.name]["rrect"].strokeWidth = strokeWidth
     M.widgetDict[options.name]["rrect"]:setFillColor( unpack(fillColor) )
     M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["rrect"] )
 
@@ -1353,6 +1357,101 @@ function M.createTableView( options )
 
 end
 
+--
+-- To-do: flow right or below based on parent text widget
+--
+function M.createTextField(options)
+
+    local x,y = 160, 240
+    if options.x ~= nil then
+        x = options.x
+    end
+    if options.y ~= nil then
+        y = options.y
+    end
+
+    if options.text == nil then
+        options.text = ""
+    end
+
+    M.widgetDict[options.name] = {}
+    M.widgetDict[options.name]["type"] = "TextField"
+    M.widgetDict[options.name]["container"] = display.newContainer( options.width+4, options.height * 4)
+    M.widgetDict[options.name]["container"]:translate( x, y ) -- center the container
+    M.widgetDict[options.name]["touching"] = false
+
+    if options.inactiveColor == nil then
+        options.inactiveColor = { 0.4, 0.4, 0.4, 1 }
+    end
+
+    if options.activeColor == nil then
+        options.activeColor = { 0.12, 0.67, 0.27, 1 }
+    end
+
+    M.widgetDict[options.name]["rect"] = display.newRect( 0, 0, options.width, options.height )
+    M.widgetDict[options.name]["rect"].strokeWidth = 0
+    M.widgetDict[options.name]["rect"]:setFillColor( 1, 1, 1 )
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["rect"] )
+
+    local rect = M.widgetDict[options.name]["rect"]
+    M.widgetDict[options.name]["line"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
+    M.widgetDict[options.name]["line"].strokeWidth = 4
+    M.widgetDict[options.name]["line"]:setStrokeColor( unpack(options.inactiveColor) )
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["line"] )
+
+    local labelOptions =
+    {
+        --parent = textGroup,
+        text = options.labelText,
+        x = -(rect.contentWidth * 0.25),
+        y = -(rect.contentHeight * 0.95),
+        width = rect.contentWidth * 0.5,     --required for multi-line and alignment
+        font = native.systemFont,
+        fontSize = options.height * 0.55,
+        align = "left"  --new alignment parameter
+    }
+    M.widgetDict[options.name]["textlabel"] = display.newText( labelOptions )
+    M.widgetDict[options.name]["textlabel"]:setFillColor( unpack(options.inactiveColor) )
+    M.widgetDict[options.name]["textlabel"].inactiveColor = options.inactiveColor
+    M.widgetDict[options.name]["textlabel"].activeColor = options.activeColor
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textlabel"] )
+
+    M.widgetDict[options.name]["textfield"] = native.newTextField( 0, 0, options.width, options.height )
+    M.widgetDict[options.name]["textfield"].name = options.name
+    M.widgetDict[options.name]["textfield"].hasBackground = false
+    M.widgetDict[options.name]["textfield"].text = options.text
+    M.widgetDict[options.name]["textfield"]:setTextColor( M.widgetDict[options.name]["textlabel"].inactiveColor )
+    -- M.widgetDict[options.name]["textfield"].placeholder = "Subject"
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textfield"] )
+    M.widgetDict[options.name]["textfield"]:addEventListener( "userInput", M.textListener )
+end
+
+
+function M.textListener(event)
+    local name = event.target.name
+    if ( event.phase == "began" ) then
+        -- user begins editing defaultField
+        event.target:setTextColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
+        M.widgetDict[name]["textlabel"]:setFillColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
+        M.widgetDict[name]["line"]:setStrokeColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
+        print( event.target.text )
+        if event.target.text ~= nil and string.len(event.target.text) > 0 then
+            event.target.placeholder = ''
+        end
+    elseif ( event.phase == "ended" or event.phase == "submitted" ) then
+        -- do something with defaultField text
+        print( event.target.text )
+        event.target:setTextColor( unpack(M.widgetDict[name]["textlabel"].inactiveColor) )
+        M.widgetDict[name]["textlabel"]:setFillColor( unpack(M.widgetDict[name]["textlabel"].inactiveColor) )
+        M.widgetDict[name]["line"]:setStrokeColor( unpack(M.widgetDict[name]["textlabel"].inactiveColor) )
+
+    elseif ( event.phase == "editing" ) then
+        print( event.newCharacters )
+        print( event.oldText )
+        print( event.startPosition )
+        print( event.text )
+    end
+end
 
 --[[--
 function onSwitchPress( event )
@@ -1371,6 +1470,16 @@ local options = {
 local mySwitch = widget.newSwitch( options )
 --]]--
 
+function M.hideNativeWidgets()
+  for widget in pairs(M.widgetDict) do
+      local widgetType = M.widgetDict[widget]["type"]
+      if widgetType ~= nil then
+        if widgetType == "TextField" then
+            M.widgetDict[widget]["textfield"].isVisible = false
+        end
+      end
+  end
+end
 
 function M.removeWidgets()
   print("Removing widgets")
@@ -1389,6 +1498,8 @@ function M.removeWidgets()
             M.removeWidgetToolbar(widget)
         elseif widgetType == "TableView" then
             M.removeWidgetTableView(widget)
+        elseif widgetType == "TextField" then
+            M.removeWidgetTextField(widget)
         end
       end
   end
@@ -1485,6 +1596,9 @@ function M.removeWidgetToolbarButton(widgetDict, toolbarName, name)
     if toolbarName == nil then
         return
     end
+    if name == nil then
+        return
+    end
     if widgetDict[toolbarName]["toolbar"][name] == nil then
         return
     end
@@ -1505,12 +1619,34 @@ function M.removeWidgetToolbarButton(widgetDict, toolbarName, name)
 end
 
 function M.removeWidgetTableView(widgetName)
+    if widgetName == nil then
+        return
+    end
     if M.widgetDict[widgetName]["tableview"] == nil then
         return
     end
     M.widgetDict[widgetName]["tableview"]:deleteAllRows()
     M.widgetDict[widgetName]["tableview"]:removeSelf()
     M.widgetDict[widgetName]["tableview"] = nil
+end
+
+function M.removeWidgetTextField(widgetName)
+    if widgetName == nil then
+        return
+    end
+    M.widgetDict[widgetName]["textfield"].isVisible = false
+    M.widgetDict[widgetName]["textfield"]:removeSelf()
+    M.widgetDict[widgetName]["textfield"] = nil
+    M.widgetDict[widgetName]["textlabel"]:removeSelf()
+    M.widgetDict[widgetName]["textlabel"] = nil
+    M.widgetDict[widgetName]["line"]:removeSelf()
+    M.widgetDict[widgetName]["line"] = nil
+    M.widgetDict[widgetName]["rect"]:removeEventListener("touch", M.widgetDict[widgetName]["rect"])
+    M.widgetDict[widgetName]["rect"]:removeSelf()
+    M.widgetDict[widgetName]["rect"] = nil
+    M.widgetDict[widgetName]["container"]:removeSelf()
+    M.widgetDict[widgetName]["container"] = nil
+    M.widgetDict[widgetName] = nil
 end
 
 return M

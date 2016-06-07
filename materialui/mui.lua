@@ -1432,14 +1432,33 @@ function M.textfieldCallBack(event)
     print("TextField contains: "..event.target.text)
 end
 
+function M.highlightTextField(widgetName, active)
+    local name = widgetName
+    if name == nil then
+        return
+    end
+
+    if active == nil then
+        active = false
+    end
+
+    if active then
+        M.widgetDict[name]["textfield"]:setTextColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
+        M.widgetDict[name]["textlabel"]:setFillColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
+        M.widgetDict[name]["line"]:setStrokeColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
+    else
+        M.widgetDict[name]["textfield"]:setTextColor( unpack(M.widgetDict[name]["textlabel"].inactiveColor) )
+        M.widgetDict[name]["textlabel"]:setFillColor( unpack(M.widgetDict[name]["textlabel"].inactiveColor) )
+        M.widgetDict[name]["line"]:setStrokeColor( unpack(M.widgetDict[name]["textlabel"].inactiveColor) )
+    end
+
+end
 
 function M.textListener(event)
     local name = event.target.name
     if ( event.phase == "began" ) then
         -- user begins editing defaultField
-        event.target:setTextColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
-        M.widgetDict[name]["textlabel"]:setFillColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
-        M.widgetDict[name]["line"]:setStrokeColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
+        M.highlightTextField(name, true)
         print( event.target.text )
         if event.target.text ~= nil and string.len(event.target.text) > 0 then
             event.target.placeholder = ''
@@ -1447,17 +1466,13 @@ function M.textListener(event)
     elseif ( event.phase == "ended" or event.phase == "submitted" ) then
         -- do something with text
         -- print( event.target.text )
-        event.target:setTextColor( unpack(M.widgetDict[name]["textlabel"].inactiveColor) )
-        M.widgetDict[name]["textlabel"]:setFillColor( unpack(M.widgetDict[name]["textlabel"].inactiveColor) )
-        M.widgetDict[name]["line"]:setStrokeColor( unpack(M.widgetDict[name]["textlabel"].inactiveColor) )
+        M.highlightTextField(name, false)
         if event.target.callBack ~= nil then
             assert( event.target.callBack )(event)
         end
 
     elseif ( event.phase == "editing" ) then
-        event.target:setTextColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
-        M.widgetDict[name]["textlabel"]:setFillColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
-        M.widgetDict[name]["line"]:setStrokeColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
+        M.highlightTextField(name, true)
         print( event.newCharacters )
         print( event.oldText )
         print( event.startPosition )

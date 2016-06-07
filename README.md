@@ -46,6 +46,13 @@ local mui = require( "materialui.mui" )
     mui.removeWidgets()
 ```
 
+Building for Device
+-------------
+Due to device keyboard possibly covering up input fields, be sure to include "coronaWindowMovesWhenKeyboardAppears=true" into iOS settings->iphone->plist table and Android settings.
+
+For an example, see build.settings file included.
+
+
 Try a Demo
 -------------
 Using Corona Simulator open up the "main.lua" file in the folder.

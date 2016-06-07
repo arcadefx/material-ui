@@ -179,7 +179,8 @@ function scene:create( event )
         x = mui.getScaleVal(240),
         y = mui.getScaleVal(400),
         activeColor = { 0.12, 0.67, 0.27, 1 },
-        inactiveColor = { 0.4, 0.4, 0.4, 1 }
+        inactiveColor = { 0.4, 0.4, 0.4, 1 },
+        callBack = mui.textfieldCallBack
     })
 end
 

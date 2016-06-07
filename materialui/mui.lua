@@ -1424,6 +1424,12 @@ function M.createTextField(options)
     -- M.widgetDict[options.name]["textfield"].placeholder = "Subject"
     M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textfield"] )
     M.widgetDict[options.name]["textfield"]:addEventListener( "userInput", M.textListener )
+    M.widgetDict[options.name]["textfield"].callBack = options.callBack
+end
+
+
+function M.textfieldCallBack(event)
+    print("TextField contains: "..event.target.text)
 end
 
 
@@ -1439,11 +1445,14 @@ function M.textListener(event)
             event.target.placeholder = ''
         end
     elseif ( event.phase == "ended" or event.phase == "submitted" ) then
-        -- do something with defaultField text
-        print( event.target.text )
+        -- do something with text
+        -- print( event.target.text )
         event.target:setTextColor( unpack(M.widgetDict[name]["textlabel"].inactiveColor) )
         M.widgetDict[name]["textlabel"]:setFillColor( unpack(M.widgetDict[name]["textlabel"].inactiveColor) )
         M.widgetDict[name]["line"]:setStrokeColor( unpack(M.widgetDict[name]["textlabel"].inactiveColor) )
+        if event.target.callBack ~= nil then
+            assert( event.target.callBack )(event)
+        end
 
     elseif ( event.phase == "editing" ) then
         print( event.newCharacters )

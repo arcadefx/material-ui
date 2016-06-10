@@ -1555,6 +1555,7 @@ function M.textListener(event)
         M.highlightTextField(name, false)
         if event.target.callBack ~= nil then
             M.updateUI(event)
+            M.widgetDict[name]["textfieldfake"].text = event.target.text
             assert( event.target.callBack )(event)
         end
 

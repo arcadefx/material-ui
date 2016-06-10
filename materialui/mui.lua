@@ -1412,6 +1412,10 @@ function M.createTextField(options)
         options.text = ""
     end
 
+    if options.font == nil then
+        options.font = native.systemFont
+    end
+
     M.widgetDict[options.name] = {}
     M.widgetDict[options.name]["type"] = "TextField"
     M.widgetDict[options.name]["container"] = display.newContainer( options.width+4, options.height * 4)
@@ -1449,7 +1453,7 @@ function M.createTextField(options)
         x = -(rect.contentWidth * 0.25),
         y = -(rect.contentHeight * 0.95),
         width = rect.contentWidth * 0.5,     --required for multi-line and alignment
-        font = native.systemFont,
+        font = options.font,
         fontSize = options.height * 0.55,
         align = "left"  --new alignment parameter
     }
@@ -1476,7 +1480,7 @@ function M.createTextField(options)
             x = 0,
             y = 0,
             width = options.width,
-            font = native.systemFont,
+            font = options.font,
             fontSize = (M.widgetDict[options.name]["textfield"].contentHeight * 0.75),
             align = "left"  --new alignment parameter
         }

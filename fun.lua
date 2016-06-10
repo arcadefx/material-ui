@@ -117,7 +117,7 @@ function scene:create( event )
         y = display.contentHeight * 0.75,
         width = mui.getScaleVal(400),
         font = native.systemFont,
-        fontSize = 46,
+        fontSize = (mui.getScaleVal(46) * 0.75),
         align = "left"  --new alignment parameter
     }
     infoText = display.newText( textOptions )

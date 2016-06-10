@@ -72,7 +72,7 @@ Please read Lua code to find all parameters and see example in the repo call men
 - `createRadioGroup` - Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.
 - `createToolbar` - Create a horizontal toolbar with icon buttons using the material design icon font. You can override the font.
 - `createTableView` - Create a scrollable table view
-- `createTextField` - Create a text field with label above (for now) and includes "scrollView" suport. If using widget.newScrollView() then include it in the parameters as "scrollView = <scrollview>" Please see fun.lua for an example.
+- `createTextField` - Create a text field with label above (for now) and includes "scrollView" support. If using widget.newScrollView() then include it in the parameters as "scrollView = <scrollview>" Please see fun.lua for an example.
 - `actionSwitchScene` - This is built-in callback for handle scene switching for a button. The color of the switch can be changed.
 
 Additional Features

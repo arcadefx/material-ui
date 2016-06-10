@@ -175,6 +175,7 @@ function scene:create( event )
         name = "textfield_demo",
         labelText = "Subject",
         text = "Hello, world!",
+        font = native.systemFont,
         width = mui.getScaleVal(400),
         height = mui.getScaleVal(46),
         x = mui.getScaleVal(240),

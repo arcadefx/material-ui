@@ -62,6 +62,8 @@ function M.updateUI(event, skipName)
                 timer.performWithDelay(100, function() native.setKeyboardFocus(nil) end, 1)
                 M.widgetDict[widget]["textfieldfake"].isVisible = true
                 M.widgetDict[widget]["textfield"].isVisible = false
+            elseif widgetType == "TextField" and M.widgetDict[widget]["textfield"].isVisible == true then
+                timer.performWithDelay(100, function() native.setKeyboardFocus(nil) end, 1)
             end
         end
     end
@@ -319,6 +321,7 @@ function M.onRowTouch( event )
  
     if "press" == phase and M.touching == false then
         M.touching = true
+        M.updateUI(event)
         --print( "Touched row:", event.target.id )
         --print( "Touched row:", event.target.index )
     elseif "release" == phase then

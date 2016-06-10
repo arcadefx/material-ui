@@ -46,9 +46,31 @@ function M.init(data)
   M.masterRemainder = nil
   M.tableCircle = nil
   M.widgetDict = {}
+  M.currentNativeFieldName = ""
 
   M.scene = composer.getScene(composer.getSceneName("current"))
   M.scene.name = composer.getSceneName("current")
+end
+
+function M.updateUI(event, skipName)
+    local widgetType = ""
+    for widget in pairs(M.widgetDict) do
+        if widget ~= skipName or skipName == nil then
+            widgetType = M.widgetDict[widget]["type"]
+            if widgetType == "TextField" and M.widgetDict[widget].scrollView ~= nil and M.widgetDict[widget]["textfield"].isVisible == true then
+                -- hide the native field
+                timer.performWithDelay(100, function() native.setKeyboardFocus(nil) end, 1)
+                M.widgetDict[widget]["textfieldfake"].isVisible = true
+                M.widgetDict[widget]["textfield"].isVisible = false
+            end
+        end
+    end
+end
+
+function M.getWidgetByName(name)
+    if name == nil then return nil end
+    if string.len(name) < 1 then return nil end
+    return M.widgetDict[name]
 end
 
 function M.getScaleVal(n)
@@ -76,6 +98,17 @@ function M.tableLength(T)
   local count = 0
   for _ in pairs(T) do count = count + 1 end
   return count
+end
+
+function M.getColor(colorArray, index)
+  local color = 1
+  if colorArray == nil or index == nil then return end
+
+  if colorArray[index] ~= nil then
+    color = colorArray[index]
+  end
+
+  return color
 end
 
 function M.subtleRadius(e)
@@ -431,6 +464,7 @@ function M.createRRectButton(options)
 
     function rrect:touch (event)
         if ( event.phase == "began" ) then
+            M.updateUI(event)
             if M.touching == false then
                 M.touching = true
                 if options.touchpoint ~= nil and options.touchpoint == true then
@@ -581,6 +615,7 @@ function M.createRectButton(options)
 
     function rrect:touch (event)
         if ( event.phase == "began" ) then
+            M.updateUI(event)
             if M.touching == false then
                 M.touching = true
                 if options.touchpoint ~= nil and options.touchpoint == true then
@@ -731,6 +766,7 @@ function M.createIconButton(options)
 
     function checkbox:touch (event)
         if ( event.phase == "began" ) then
+            M.updateUI(event)
             if M.touching == false then
                 M.touching = true
                 if options.touchpoint ~= nil and options.touchpoint == true then
@@ -933,6 +969,7 @@ function M.createRadioButton(options)
 
     function checkbox:touch (event)
         if ( event.phase == "began" ) then
+            M.updateUI(event)
             if M.touching == false then
                 M.touching = true
                 if options.touchpoint ~= nil and options.touchpoint == true then
@@ -1181,6 +1218,7 @@ function M.createToolbarButton( options )
             return
         end
         if ( event.phase == "began" ) then
+            M.updateUI(event)
             if M.touching == false then
                 M.touching = true
                 if options.touchpoint ~= nil and options.touchpoint == true then
@@ -1380,6 +1418,11 @@ function M.createTextField(options)
     M.widgetDict[options.name]["container"]:translate( x, y ) -- center the container
     M.widgetDict[options.name]["touching"] = false
 
+    if options.scrollView ~= nil then
+        M.widgetDict[options.name]["scrollView"] = options.scrollView
+        M.widgetDict[options.name]["scrollView"]:insert( M.widgetDict[options.name]["container"] )
+    end
+
     if options.inactiveColor == nil then
         options.inactiveColor = { 0.4, 0.4, 0.4, 1 }
     end
@@ -1419,14 +1462,45 @@ function M.createTextField(options)
     M.widgetDict[options.name]["textfield"] = native.newTextField( 0, 0, options.width, options.height )
     M.widgetDict[options.name]["textfield"].name = options.name
     M.widgetDict[options.name]["textfield"].hasBackground = false
+    if options.scrollView ~= nil then
+        M.widgetDict[options.name]["textfield"].isVisible = false
+    end
     M.widgetDict[options.name]["textfield"].text = options.text
-    M.widgetDict[options.name]["textfield"]:setTextColor( M.widgetDict[options.name]["textlabel"].inactiveColor )
+    M.widgetDict[options.name]["textfield"]:setTextColor( unpack(M.widgetDict[options.name]["textlabel"].inactiveColor) )
+
+    if M.widgetDict[options.name].scrollView ~= nil then
+        local textOptions =
+        {
+            --parent = textGroup,
+            text = options.text,
+            x = 0,
+            y = 0,
+            width = options.width,
+            font = native.systemFont,
+            fontSize = (M.widgetDict[options.name]["textfield"].contentHeight * 0.75),
+            align = "left"  --new alignment parameter
+        }
+        M.widgetDict[options.name]["textfieldfake"] = display.newText( textOptions )
+        M.widgetDict[options.name]["textfieldfake"]:setFillColor( unpack(M.widgetDict[options.name]["textlabel"].inactiveColor) )
+        M.widgetDict[options.name]["textfieldfake"]:addEventListener("touch", M.showNativeInput)
+        M.widgetDict[options.name]["textfieldfake"].name = options.name
+        M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textfieldfake"] )
+    end
+
     -- M.widgetDict[options.name]["textfield"].placeholder = "Subject"
-    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textfield"] )
-    M.widgetDict[options.name]["textfield"]:addEventListener( "userInput", M.textListener )
     M.widgetDict[options.name]["textfield"].callBack = options.callBack
+    M.widgetDict[options.name]["textfield"]:addEventListener( "userInput", M.textListener )
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textfield"] )
 end
 
+function M.showNativeInput(event)
+    local name = event.target.name
+    if event.phase == "began" then
+        M.widgetDict[name]["textfieldfake"].isVisible = false
+        M.widgetDict[name]["textfield"].isVisible = true
+        timer.performWithDelay(100, function() native.setKeyboardFocus(M.widgetDict[name]["textfield"]) end, 1)
+    end
+end
 
 function M.textfieldCallBack(event)
     print("TextField contains: "..event.target.text)
@@ -1446,14 +1520,21 @@ function M.highlightTextField(widgetName, active)
         active = false
     end
 
+    local widget = M.widgetDict[name]
+    local color = nil
     if active then
-        M.widgetDict[name]["textfield"]:setTextColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
-        M.widgetDict[name]["textlabel"]:setFillColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
-        M.widgetDict[name]["line"]:setStrokeColor( unpack(M.widgetDict[name]["textlabel"].activeColor) )
+        color = widget["textlabel"].activeColor
+        widget["textfield"]:setTextColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
+        widget["textlabel"]:setFillColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
+        widget["line"]:setStrokeColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
     else
-        M.widgetDict[name]["textfield"]:setTextColor( unpack(M.widgetDict[name]["textlabel"].inactiveColor) )
-        M.widgetDict[name]["textlabel"]:setFillColor( unpack(M.widgetDict[name]["textlabel"].inactiveColor) )
-        M.widgetDict[name]["line"]:setStrokeColor( unpack(M.widgetDict[name]["textlabel"].inactiveColor) )
+        color = widget["textlabel"].inactiveColor
+        widget["textfield"]:setTextColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
+        widget["textlabel"]:setFillColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
+        widget["line"]:setStrokeColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
+        if widget["textfieldfake"] ~= nil then
+            widget["textfieldfake"]:setFillColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
+        end
     end
 
 end
@@ -1462,8 +1543,9 @@ function M.textListener(event)
     local name = event.target.name
     if ( event.phase == "began" ) then
         -- user begins editing defaultField
+        M.updateUI(event, name)
+        M.currentNativeFieldName = name
         M.highlightTextField(name, true)
-        print( event.target.text )
         if event.target.text ~= nil and string.len(event.target.text) > 0 then
             event.target.placeholder = ''
         end
@@ -1472,15 +1554,16 @@ function M.textListener(event)
         -- print( event.target.text )
         M.highlightTextField(name, false)
         if event.target.callBack ~= nil then
+            M.updateUI(event)
             assert( event.target.callBack )(event)
         end
 
     elseif ( event.phase == "editing" ) then
         M.highlightTextField(name, true)
-        print( event.newCharacters )
-        print( event.oldText )
-        print( event.startPosition )
-        print( event.text )
+        -- print( event.newCharacters )
+        -- print( event.oldText )
+        -- print( event.startPosition )
+        -- print( event.text )
     end
 end
 

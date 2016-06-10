@@ -6,6 +6,7 @@
 
 local composer = require( "composer" )
 local mui = require( "materialui.mui" )
+local widget = require( "widget" )
 
 local scene = composer.newScene()
 
@@ -15,6 +16,8 @@ local scene = composer.newScene()
 local screenW, screenH, halfW = display.contentWidth, display.contentHeight, display.contentWidth*0.5
 
 local background = nil
+local scrollView = nil
+local infoText = nil
 
 function scene:create( event )
 
@@ -50,8 +53,120 @@ function scene:create( event )
         } -- scene menu.lua
     })
 
+	-- Create the widget
+	local scrollWidth = display.contentWidth * 0.5
+	scrollView = widget.newScrollView(
+	    {
+	        top = 30,
+	        left = (display.contentWidth - scrollWidth),
+	        width = scrollWidth,
+	        height = 450,
+	        scrollWidth = scrollWidth,
+	        scrollHeight = (display.contentHeight * 2),
+	        listener = scrollAListener
+	    }
+	)
+
+    mui.createTextField({
+        name = "textfield_demo2",
+        labelText = "Subject",
+        text = "Hello, world!",
+        width = mui.getScaleVal(400),
+        height = mui.getScaleVal(46),
+        x = mui.getScaleVal(240),
+        y = mui.getScaleVal(100),
+        activeColor = { 0.12, 0.67, 0.27, 1 },
+        inactiveColor = { 0.4, 0.4, 0.4, 1 },
+        callBack = mui.textfieldCallBack,
+        scrollView = scrollView
+    })
+
+    mui.createTextField({
+        name = "textfield_demo3",
+        labelText = "Tweet",
+        text = "Scroll away",
+        width = mui.getScaleVal(400),
+        height = mui.getScaleVal(46),
+        x = mui.getScaleVal(240),
+        y = mui.getScaleVal(230),
+        activeColor = { 0.12, 0.67, 0.27, 1 },
+        inactiveColor = { 0.4, 0.4, 0.4, 1 },
+        callBack = mui.textfieldCallBack,
+        scrollView = scrollView
+    })
+
+    mui.createTextField({
+        name = "textfield_demo4",
+        labelText = "Secret Topic",
+        text = "I am hidden in view",
+        width = mui.getScaleVal(400),
+        height = mui.getScaleVal(46),
+        x = mui.getScaleVal(240),
+        y = mui.getScaleVal(380),
+        activeColor = { 0.12, 0.67, 0.27, 1 },
+        inactiveColor = { 0.4, 0.4, 0.4, 1 },
+        callBack = mui.textfieldCallBack,
+        scrollView = scrollView
+    })
+
+    local textOptions =
+    {
+        --parent = textGroup,
+        text = "Scroll the above",
+        x = display.contentWidth * 0.75,
+        y = display.contentHeight * 0.75,
+        width = mui.getScaleVal(400),
+        font = native.systemFont,
+        fontSize = 46,
+        align = "left"  --new alignment parameter
+    }
+    infoText = display.newText( textOptions )
+    infoText:setFillColor( 0.4, 0.4, 0.4 )
 	
 	sceneGroup:insert( background )
+end
+
+--
+-- a generic scroll to hold ui elements
+--
+local lastScrollY = 0
+local scrollY = 0
+
+-- ScrollView listener
+function scrollAListener( event )
+
+    local phase = event.phase
+    if ( phase == "began" ) then
+        lastScrollY = event.y
+    elseif ( phase == "moved" ) then
+        local widget = mui.getWidgetByName(mui.currentNativeFieldName)
+        if widget ~= nil then
+	        local diff = 0
+	        y = widget["container"].y
+	        if event.y < lastScrollY then
+	            diff = lastScrollY - event.y
+	            print("move up "..diff.." pixels")
+	        else
+	            diff = event.y - lastScrollY
+	            print("move down "..diff.." pixels")
+	        end
+	    end
+        mui.updateUI(event)
+    elseif ( phase == "ended" ) then
+        -- print( "Scroll view was released" )
+        lastScrollY = 0
+    end
+
+    -- In the event a scroll limit is reached...
+    if ( event.limitReached ) then
+        if ( event.direction == "up" ) then print( "Reached bottom limit" )
+        elseif ( event.direction == "down" ) then print( "Reached top limit" )
+        elseif ( event.direction == "left" ) then print( "Reached right limit" )
+        elseif ( event.direction == "right" ) then print( "Reached left limit" )
+        end
+    end
+
+    return true
 end
 
 
@@ -94,11 +209,20 @@ function scene:destroy( event )
 	-- INSERT code here to cleanup the scene
 	-- e.g. remove display objects, remove touch listeners, save state, etc.
 	local sceneGroup = self.view
+
     mui.removeWidgets()
+
+    scrollView:removeSelf()
+    scrollView = nil
+
+    infoText:removeSelf()
+    infoText = nil
+
     if background ~= nil then
         background:removeSelf()
         background = nil
     end
+
 	sceneGroup:removeSelf()
 	sceneGroup = nil
 end

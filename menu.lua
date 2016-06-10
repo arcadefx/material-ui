@@ -9,6 +9,7 @@ local mui = require( "materialui.mui" )
 
 local scene = composer.newScene()
 local background = nil
+local widget = require( "widget" )
 
 -- -----------------------------------------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE unless "composer.removeScene()" is called
@@ -182,6 +183,7 @@ function scene:create( event )
         inactiveColor = { 0.4, 0.4, 0.4, 1 },
         callBack = mui.textfieldCallBack
     })
+
 end
 
 -- "scene:show()"

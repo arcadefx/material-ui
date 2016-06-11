@@ -1755,9 +1755,11 @@ function M.removeWidgetTableView(widgetName)
 end
 
 function M.removeWidgetTextField(widgetName)
+    local scrollView = nil
     if widgetName == nil then
         return
     end
+    scrollView = M.widgetDict[widgetName]["scrollView"]
     M.widgetDict[widgetName]["textfield"].isVisible = false
     M.widgetDict[widgetName]["textfield"]:removeSelf()
     M.widgetDict[widgetName]["textfield"] = nil
@@ -1768,8 +1770,12 @@ function M.removeWidgetTextField(widgetName)
     M.widgetDict[widgetName]["rect"]:removeEventListener("touch", M.widgetDict[widgetName]["rect"])
     M.widgetDict[widgetName]["rect"]:removeSelf()
     M.widgetDict[widgetName]["rect"] = nil
-    M.widgetDict[widgetName]["container"]:removeSelf()
-    M.widgetDict[widgetName]["container"] = nil
+    if scrollView == nil then
+        M.widgetDict[widgetName]["container"]:removeSelf()
+        M.widgetDict[widgetName]["container"] = nil
+    else
+        -- remove this last M.widgetDict[options.name]["scrollView"]:removeSelf()
+    end
     M.widgetDict[widgetName] = nil
 end
 

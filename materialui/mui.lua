@@ -1770,12 +1770,8 @@ function M.removeWidgetTextField(widgetName)
     M.widgetDict[widgetName]["rect"]:removeEventListener("touch", M.widgetDict[widgetName]["rect"])
     M.widgetDict[widgetName]["rect"]:removeSelf()
     M.widgetDict[widgetName]["rect"] = nil
-    if scrollView == nil then
-        M.widgetDict[widgetName]["container"]:removeSelf()
-        M.widgetDict[widgetName]["container"] = nil
-    else
-        -- remove this last M.widgetDict[options.name]["scrollView"]:removeSelf()
-    end
+    M.widgetDict[widgetName]["container"]:removeSelf()
+    M.widgetDict[widgetName]["container"] = nil
     M.widgetDict[widgetName] = nil
 end
 

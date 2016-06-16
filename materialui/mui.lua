@@ -38,6 +38,7 @@ local mathFloor = math.floor
 local mathMod = math.fmod
 
 function M.init(data)
+  M.environment = system.getInfo("environment")
   M.value = data
   M.screenRatio = M.getSizeRatio()
   M.circleSceneSwitch = nil
@@ -1466,7 +1467,11 @@ function M.createTextField(options)
     M.widgetDict[options.name]["textlabel"].activeColor = options.activeColor
     M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textlabel"] )
 
-    M.widgetDict[options.name]["textfield"] = native.newTextField( 0, 0, options.width, options.height * 0.75 )
+    local scaleFontSize = 1
+    if M.environment == "simulator" then
+        scaleFontSize = 0.75
+    end
+    M.widgetDict[options.name]["textfield"] = native.newTextField( 0, 0, options.width, options.height * scaleFontSize )
     M.widgetDict[options.name]["textfield"].name = options.name
     M.widgetDict[options.name]["textfield"].hasBackground = false
     if options.scrollView ~= nil then

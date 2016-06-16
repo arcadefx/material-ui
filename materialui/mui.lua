@@ -1466,7 +1466,7 @@ function M.createTextField(options)
     M.widgetDict[options.name]["textlabel"].activeColor = options.activeColor
     M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textlabel"] )
 
-    M.widgetDict[options.name]["textfield"] = native.newTextField( 0, 0, options.width, options.height )
+    M.widgetDict[options.name]["textfield"] = native.newTextField( 0, 0, options.width, options.height * 0.75 )
     M.widgetDict[options.name]["textfield"].name = options.name
     M.widgetDict[options.name]["textfield"].hasBackground = false
     if options.scrollView ~= nil then
@@ -1484,7 +1484,7 @@ function M.createTextField(options)
             y = 0,
             width = options.width,
             font = options.font,
-            fontSize = (M.widgetDict[options.name]["textfield"].contentHeight * 0.75),
+            fontSize = options.height * 0.55,
             align = "left"  --new alignment parameter
         }
         M.widgetDict[options.name]["textfieldfake"] = display.newText( textOptions )

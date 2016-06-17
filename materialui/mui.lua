@@ -1509,13 +1509,17 @@ end
 
 function M.showNativeInput(event)
     local name = event.target.name
+    M.currentNativeFieldName = name
+
     if event.phase == "began" then
 
-        M.adjustNativeInputIntoView(event)
+        local madeAdjustment = M.adjustNativeInputIntoView(event)
 
         M.widgetDict[name]["textfieldfake"].isVisible = false
         M.widgetDict[name]["textfield"].isVisible = true
-        timer.performWithDelay(100, function() native.setKeyboardFocus(M.widgetDict[name]["textfield"]) end, 1)
+        if madeAdjustment == false then
+            timer.performWithDelay(100, function() native.setKeyboardFocus(M.widgetDict[name]["textfield"]) end, 1)
+        end
     end
 end
 
@@ -1526,9 +1530,11 @@ function M.adjustNativeInputIntoView(event)
     local topMargin = mathFloor(scrollViewHeight * 0.25)
     local bottomMargin = mathFloor(scrollViewHeight * 0.9)
     local x, y = M.widgetDict[name]["scrollView"]:getContentPosition()
-    local scrollDuration = 800
+    local scrollDuration = 500
     local destY = nil
     local scrollOptions = nil
+    local madeAdjustment = false
+
 
     if event.y > bottomMargin then
         destY = y - height
@@ -1550,8 +1556,17 @@ function M.adjustNativeInputIntoView(event)
     end
     if destY ~= nil then
         scrollOptions.time = scrollDuration
+        scrollOptions.onComplete = M.adjustScrollViewComplete
+        madeAdjustment = true
         M.widgetDict[name]["scrollView"]:scrollToPosition(scrollOptions)
     end
+
+    return madeAdjustment
+end
+
+function M.adjustScrollViewComplete(event)
+    local name = M.currentNativeFieldName
+    timer.performWithDelay(100, function() native.setKeyboardFocus(M.widgetDict[name]["textfield"]) end, 1)
 end
 
 function M.textfieldCallBack(event)

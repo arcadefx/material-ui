@@ -112,6 +112,23 @@ function scene:create( event )
         scrollView = scrollView
     })
 
+    mui.createTextBox({
+        name = "textbox_demo1",
+        labelText = "Secret Text Box",
+        text = "I am hidden in view\nYes, me too!\nFood\nDrink\nDesert",
+        font = native.systemFont,
+        fontSize = mui.getScaleVal(46),
+        width = mui.getScaleVal(400),
+        height = mui.getScaleVal(200),
+        x = mui.getScaleVal(240),
+        y = mui.getScaleVal(600),
+        activeColor = { 0.12, 0.67, 0.27, 1 },
+        inactiveColor = { 0.4, 0.4, 0.4, 1 },
+        callBack = mui.textfieldCallBack,
+        isEditable = true,
+        scrollView = scrollView
+    })
+
     local textOptions =
     {
         --parent = textGroup,
@@ -148,10 +165,10 @@ function scrollAListener( event )
 	        y = widget["container"].y
 	        if event.y < lastScrollY then
 	            diff = lastScrollY - event.y
-	            print("move up "..diff.." pixels")
+	            -- print("move up "..diff.." pixels")
 	        else
 	            diff = event.y - lastScrollY
-	            print("move down "..diff.." pixels")
+	            -- print("move down "..diff.." pixels")
 	        end
 	    end
         mui.updateUI(event)

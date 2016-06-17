@@ -58,12 +58,12 @@ function M.updateUI(event, skipName)
     for widget in pairs(M.widgetDict) do
         if widget ~= skipName or skipName == nil then
             widgetType = M.widgetDict[widget]["type"]
-            if widgetType == "TextField" and M.widgetDict[widget].scrollView ~= nil and M.widgetDict[widget]["textfield"].isVisible == true then
+            if (widgetType == "TextField" or widgetType == "TextBox") and M.widgetDict[widget].scrollView ~= nil and M.widgetDict[widget]["textfield"].isVisible == true then
                 -- hide the native field
                 timer.performWithDelay(100, function() native.setKeyboardFocus(nil) end, 1)
                 M.widgetDict[widget]["textfieldfake"].isVisible = true
                 M.widgetDict[widget]["textfield"].isVisible = false
-            elseif widgetType == "TextField" and M.widgetDict[widget]["textfield"].isVisible == true then
+            elseif (widgetType == "TextField" or widgetType == "TextBox") and M.widgetDict[widget]["textfield"].isVisible == true then
                 timer.performWithDelay(100, function() native.setKeyboardFocus(nil) end, 1)
             end
         end
@@ -1508,9 +1508,44 @@ end
 function M.showNativeInput(event)
     local name = event.target.name
     if event.phase == "began" then
+
+        M.adjustNativeInputIntoView(event)
+
         M.widgetDict[name]["textfieldfake"].isVisible = false
         M.widgetDict[name]["textfield"].isVisible = true
         timer.performWithDelay(100, function() native.setKeyboardFocus(M.widgetDict[name]["textfield"]) end, 1)
+    end
+end
+
+function M.adjustNativeInputIntoView(event)
+    local name = event.target.name
+    local height = M.widgetDict[name]["textfield"].contentHeight
+    local scrollViewHeight = M.widgetDict[name]["scrollView"].contentHeight
+    local topMargin = mathFloor(scrollViewHeight * 0.25)
+    local bottomMargin = mathFloor(scrollViewHeight * 0.9)
+    local x, y = M.widgetDict[name]["scrollView"]:getContentPosition()
+    local scrollDuration = 800
+    local destY = nil
+    local scrollOptions = nil
+
+    if event.y > bottomMargin then
+        destY = y - height
+        scrollOptions = {
+            y = destY
+        }
+    elseif event.y < topMargin then
+        local offset = 0
+        destY = y + topMargin
+        if M.widgetDict[name]["type"] == "TextField" then
+            offset = M.widgetDict[name]["textlabel"].contentHeight
+        end
+        scrollOptions = {
+            y = destY + offset
+        }
+    end
+    if destY ~= nil then
+        scrollOptions.time = scrollDuration
+        M.widgetDict[name]["scrollView"]:scrollToPosition(scrollOptions)
     end
 end
 
@@ -1582,6 +1617,117 @@ function M.textListener(event)
     end
 end
 
+--
+-- To-do: flow right or below based on parent text widget
+--
+function M.createTextBox(options)
+
+    local x,y = 160, 240
+    if options.x ~= nil then
+        x = options.x
+    end
+    if options.y ~= nil then
+        y = options.y
+    end
+
+    if options.text == nil then
+        options.text = ""
+    end
+
+    if options.font == nil then
+        options.font = native.systemFont
+    end
+
+    M.widgetDict[options.name] = {}
+    M.widgetDict[options.name]["type"] = "TextBox"
+    M.widgetDict[options.name]["container"] = display.newContainer( options.width+4, options.height * 4)
+    M.widgetDict[options.name]["container"]:translate( x, y ) -- center the container
+    M.widgetDict[options.name]["touching"] = false
+
+    if options.scrollView ~= nil then
+        M.widgetDict[options.name]["scrollView"] = options.scrollView
+        M.widgetDict[options.name]["scrollView"]:insert( M.widgetDict[options.name]["container"] )
+    end
+
+    if options.inactiveColor == nil then
+        options.inactiveColor = { 0.4, 0.4, 0.4, 1 }
+    end
+
+    if options.activeColor == nil then
+        options.activeColor = { 0.12, 0.67, 0.27, 1 }
+    end
+
+    if options.isEditable == nil then
+        options.isEditable = false
+    end
+
+    M.widgetDict[options.name]["rect"] = display.newRect( 0, 0, options.width, options.height )
+    M.widgetDict[options.name]["rect"].strokeWidth = 0
+    M.widgetDict[options.name]["rect"]:setFillColor( 1, 1, 1 )
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["rect"] )
+
+    local rect = M.widgetDict[options.name]["rect"]
+    M.widgetDict[options.name]["line"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
+    M.widgetDict[options.name]["line"].strokeWidth = 4
+    M.widgetDict[options.name]["line"]:setStrokeColor( unpack(options.inactiveColor) )
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["line"] )
+
+    local labelOptions =
+    {
+        --parent = textGroup,
+        text = options.labelText,
+        x = -(rect.contentWidth * 0.25),
+        y = -(rect.contentHeight * 0.6),
+        width = rect.contentWidth * 0.5,     --required for multi-line and alignment
+        font = options.font,
+        fontSize = options.fontSize * 0.55,
+        align = "left"  --new alignment parameter
+    }
+    M.widgetDict[options.name]["textlabel"] = display.newText( labelOptions )
+    M.widgetDict[options.name]["textlabel"]:setFillColor( unpack(options.inactiveColor) )
+    M.widgetDict[options.name]["textlabel"].inactiveColor = options.inactiveColor
+    M.widgetDict[options.name]["textlabel"].activeColor = options.activeColor
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textlabel"] )
+
+    local scaleFontSize = 1
+    if M.environment == "simulator" then
+        scaleFontSize = 0.75
+    end
+    M.widgetDict[options.name]["textfield"] = native.newTextBox( 0, 0, options.width, options.height )
+    M.widgetDict[options.name]["textfield"].name = options.name
+    M.widgetDict[options.name]["textfield"].hasBackground = false
+    M.widgetDict[options.name]["textfield"].isEditable = options.isEditable
+    if options.scrollView ~= nil then
+        M.widgetDict[options.name]["textfield"].isVisible = false
+    end
+    M.widgetDict[options.name]["textfield"].text = options.text
+    M.widgetDict[options.name]["textfield"]:setTextColor( unpack(M.widgetDict[options.name]["textlabel"].inactiveColor) )
+
+    if M.widgetDict[options.name].scrollView ~= nil then
+        local textOptions =
+        {
+            --parent = textGroup,
+            text = options.text,
+            x = 0,
+            y = 0,
+            width = options.width,
+            font = options.font,
+            fontSize = options.fontSize * 0.55,
+            align = "left"  --new alignment parameter
+        }
+        M.widgetDict[options.name]["textfieldfake"] = display.newText( textOptions )
+        M.widgetDict[options.name]["textfieldfake"]:setFillColor( unpack(M.widgetDict[options.name]["textlabel"].inactiveColor) )
+        M.widgetDict[options.name]["textfieldfake"]:addEventListener("touch", M.showNativeInput)
+        M.widgetDict[options.name]["textfieldfake"].name = options.name
+        M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textfieldfake"] )
+    end
+
+    -- M.widgetDict[options.name]["textfield"].placeholder = "Subject"
+    M.widgetDict[options.name]["textfield"].callBack = options.callBack
+    M.widgetDict[options.name]["textfield"]:addEventListener( "userInput", M.textListener )
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textfield"] )
+end
+
 --[[--
 function onSwitchPress( event )
     -- body
@@ -1603,7 +1749,7 @@ function M.hideNativeWidgets()
   for widget in pairs(M.widgetDict) do
       local widgetType = M.widgetDict[widget]["type"]
       if widgetType ~= nil then
-        if widgetType == "TextField" then
+        if widgetType == "TextField" or widgetType == "TextBox" then
             M.widgetDict[widget]["textfield"].isVisible = false
         end
       end
@@ -1629,6 +1775,8 @@ function M.removeWidgets()
             M.removeWidgetTableView(widget)
         elseif widgetType == "TextField" then
             M.removeWidgetTextField(widget)
+        elseif widgetType == "TextBox" then
+            M.removeWidgetTextBox(widget)
         end
       end
   end
@@ -1760,11 +1908,9 @@ function M.removeWidgetTableView(widgetName)
 end
 
 function M.removeWidgetTextField(widgetName)
-    local scrollView = nil
     if widgetName == nil then
         return
     end
-    scrollView = M.widgetDict[widgetName]["scrollView"]
     M.widgetDict[widgetName]["textfield"].isVisible = false
     M.widgetDict[widgetName]["textfield"]:removeSelf()
     M.widgetDict[widgetName]["textfield"] = nil
@@ -1778,6 +1924,10 @@ function M.removeWidgetTextField(widgetName)
     M.widgetDict[widgetName]["container"]:removeSelf()
     M.widgetDict[widgetName]["container"] = nil
     M.widgetDict[widgetName] = nil
+end
+
+function M.removeWidgetTextBox(widgetName)
+    M.removeWidgetTextField(widgetName)
 end
 
 return M

@@ -36,6 +36,8 @@ local widget = require( "widget" )
 
 local mathFloor = math.floor
 local mathMod = math.fmod
+local mathABS = math.abs
+
 
 function M.init(data)
   M.environment = system.getInfo("environment")
@@ -1535,7 +1537,10 @@ function M.adjustNativeInputIntoView(event)
         }
     elseif event.y < topMargin then
         local offset = 0
-        destY = y + topMargin
+        local widgetY = M.widgetDict[name]["container"].y
+        local diffY = mathABS(widgetY) - mathABS(y)
+        local scrollAmount = height - diffY
+        destY = y + scrollAmount
         if M.widgetDict[name]["type"] == "TextField" then
             offset = height
         end

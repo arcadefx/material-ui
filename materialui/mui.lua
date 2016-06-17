@@ -1537,7 +1537,7 @@ function M.adjustNativeInputIntoView(event)
         local offset = 0
         destY = y + topMargin
         if M.widgetDict[name]["type"] == "TextField" then
-            offset = M.widgetDict[name]["textlabel"].contentHeight
+            offset = height
         end
         scrollOptions = {
             y = destY + offset

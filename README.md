@@ -61,6 +61,7 @@ Sample Screenshot
 -------------
 ![Alt text](http://www.anedix.com/images/github/materialui-sample-view-1.png "Controls including text input")
 - Note: The text input is the "Hello, world!"
+- Video: https://youtu.be/6fqhrwtdcvg
 
 Available Methods
 -------------

@@ -167,11 +167,13 @@ end
 
 function M.postActionForSwitchScene(e)
     -- enlarge circle
+    if M.circleSceneSwitch == nil then return end
     transition.to( M.circleSceneSwitch, { time=900, xScale=2, yScale=2, onComplete=M.finalActionForSwitchScene } )
 end
 
 function M.finalActionForSwitchScene(e)
     -- switch to scene
+    if M.circleSceneSwitch == nil then return end
     M.circleSceneSwitch.isVisible = false
     M.circleSceneSwitch:removeSelf()
     M.circleSceneSwitch = nil

@@ -57,10 +57,10 @@ function scene:create( event )
 	local scrollWidth = display.contentWidth * 0.5
 	scrollView = widget.newScrollView(
 	    {
-	        top = 30,
+	        top = mui.getScaleVal(30),
 	        left = (display.contentWidth - scrollWidth),
 	        width = scrollWidth,
-	        height = 450,
+	        height = mui.getScaleVal(450),
 	        scrollWidth = scrollWidth,
 	        scrollHeight = (display.contentHeight * 2),
 	        listener = scrollAListener
@@ -99,8 +99,8 @@ function scene:create( event )
 
     mui.createTextField({
         name = "textfield_demo4",
-        labelText = "Secret Topic",
-        text = "I am hidden in view",
+        labelText = "My Topic",
+        text = "Hello, World!",
         font = native.systemFont,
         width = mui.getScaleVal(400),
         height = mui.getScaleVal(46),
@@ -134,7 +134,7 @@ function scene:create( event )
         --parent = textGroup,
         text = "Scroll the above",
         x = display.contentWidth * 0.75,
-        y = display.contentHeight * 0.75,
+        y = display.contentHeight * 0.95,
         width = mui.getScaleVal(400),
         font = native.systemFont,
         fontSize = (mui.getScaleVal(46) * 0.75),

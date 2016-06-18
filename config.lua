@@ -3,8 +3,10 @@ application =
 
 	content =
 	{
+		--[[--
 		width = 750,
-		height = 1334, 
+		height = 1334,
+		--]]-- 
 
 		--[[-- iphone 4s
 		width = 640,

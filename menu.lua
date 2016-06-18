@@ -50,10 +50,11 @@ function scene:create( event )
         x = mui.getScaleVal(160),
         y = mui.getScaleVal(220),
         font = native.systemFont,
-        gradientColor1 = { 0.9, 0.9, 0.9, 255 },
-        gradientColor2 = { 0.9, 0.9, 0.9, 0 },
+        gradientShadowColor1 = { 0.9, 0.9, 0.9, 255 },
+        gradientShadowColor2 = { 0.9, 0.9, 0.9, 0 },
         gradientDirection = "up",
         textColor = { 1, 1, 1 },
+        radius = 10,
         callBack = mui.actionForButton
     })
 

@@ -394,18 +394,18 @@ function M.createRRectButton(options)
         radius = options.radius
     end
 
-    local nr = (options.height+M.getScaleVal(8)) * 0.2
+    local nr = radius + M.getScaleVal(8) -- (options.height+M.getScaleVal(8)) * 0.2
 
     -- paint normal or use gradient?
     local paint = nil
-    if options.gradientColor1 ~= nil and options.gradientColor2 ~= nil then
+    if options.gradientShadowColor1 ~= nil and options.gradientShadowColor2 ~= nil then
         if options.gradientDirection == nil then
             options.gradientDirection = "up"
         end
         paint = {
             type = "gradient",
-            color1 = options.gradientColor1,
-            color2 = options.gradientColor2,
+            color1 = options.gradientShadowColor1,
+            color2 = options.gradientShadowColor2,
             direction = options.gradientDirection
         }
     end
@@ -420,10 +420,16 @@ function M.createRRectButton(options)
     if options.fillColor ~= nil then
         fillColor = options.fillColor
     end
+
+    if options.strokeWidth == nil then
+        options.strokeWidth = 0
+    end
     M.widgetDict[options.name]["rrect"] = display.newRoundedRect( 0, 0, options.width, options.height, radius )
-    M.widgetDict[options.name]["rrect"].strokeWidth = 1
+    if options.strokeWidth > 0 then
+        M.widgetDict[options.name]["rrect"].strokeWidth = 1
+        M.widgetDict[options.name]["rrect"]:setStrokeColor( 0.9, 0.9, 0.9, 1 )
+    end
     M.widgetDict[options.name]["rrect"]:setFillColor( unpack(fillColor) )
-    M.widgetDict[options.name]["rrect"]:setStrokeColor( 0.9, 0.9, 0.9, 1 )
     M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["rrect"] )
 
     local rrect = M.widgetDict[options.name]["rrect"]

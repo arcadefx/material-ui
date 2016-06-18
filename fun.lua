@@ -112,6 +112,21 @@ function scene:create( event )
         scrollView = scrollView
     })
 
+    mui.createTextField({
+        name = "textfield_demo5",
+        labelText = "My Topic 2",
+        text = "Hello from below!",
+        font = native.systemFont,
+        width = mui.getScaleVal(400),
+        height = mui.getScaleVal(46),
+        x = mui.getScaleVal(240),
+        y = mui.getScaleVal(530),
+        activeColor = { 0.12, 0.67, 0.27, 1 },
+        inactiveColor = { 0.4, 0.4, 0.4, 1 },
+        callBack = mui.textfieldCallBack,
+        scrollView = scrollView
+    })
+
     mui.createTextBox({
         name = "textbox_demo1",
         labelText = "Secret Text Box",
@@ -121,7 +136,7 @@ function scene:create( event )
         width = mui.getScaleVal(400),
         height = mui.getScaleVal(200),
         x = mui.getScaleVal(240),
-        y = mui.getScaleVal(600),
+        y = mui.getScaleVal(750),
         activeColor = { 0.12, 0.67, 0.27, 1 },
         inactiveColor = { 0.4, 0.4, 0.4, 1 },
         callBack = mui.textfieldCallBack,

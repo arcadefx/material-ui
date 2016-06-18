@@ -424,10 +424,15 @@ function M.createRRectButton(options)
     if options.strokeWidth == nil then
         options.strokeWidth = 0
     end
+
+    if options.strokeColor == nil then
+        options.strokeColor = { 0.9, 0.9, 0.9, 1 }
+    end
+
     M.widgetDict[options.name]["rrect"] = display.newRoundedRect( 0, 0, options.width, options.height, radius )
     if options.strokeWidth > 0 then
         M.widgetDict[options.name]["rrect"].strokeWidth = 1
-        M.widgetDict[options.name]["rrect"]:setStrokeColor( 0.9, 0.9, 0.9, 1 )
+        M.widgetDict[options.name]["rrect"]:setStrokeColor( unpack(options.setStrokeColor) )
     end
     M.widgetDict[options.name]["rrect"]:setFillColor( unpack(fillColor) )
     M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["rrect"] )

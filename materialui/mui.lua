@@ -44,6 +44,7 @@ function M.init(data)
   M.value = data
   M.screenRatio = M.getSizeRatio()
   M.circleSceneSwitch = nil
+  M.circleSceneSwitchComplete = false
   M.touching = false
   M.masterRatio = nil
   M.masterRemainder = nil
@@ -150,6 +151,7 @@ end
 --[[ switch scene action ]]
 
 function M.actionSwitchScene( e )
+    if circleSceneSwitchComplete == true then return end
     local circleColor = { 1, 0.58, 0 }
     M.hideNativeWidgets()
 
@@ -170,8 +172,10 @@ end
 
 function M.finalActionForSwitchScene(e)
     -- switch to scene
+    M.circleSceneSwitch.isVisible = false
     M.circleSceneSwitch:removeSelf()
     M.circleSceneSwitch = nil
+    M.circleSceneSwitchComplete = true
     if e.callBackData ~= nil and e.callBackData.sceneDestination ~= nil then
         composer.removeScene( M.scene.name )
         composer.gotoScene( e.callBackData.sceneDestination )

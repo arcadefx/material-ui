@@ -91,6 +91,10 @@ Contributing
 * Once we get additional authors they will be included in the repo and get recognition for their efforts.
 * Please follow the licensing terms for any software included.
 
+Change Log
+-------------
+* Please see "CHANGELOG.md" in this repo for information on latest changes.
+
 To-Do
 -------------
 * Expand the module (new widgets: switches, hamburger menu, input fields, etc)

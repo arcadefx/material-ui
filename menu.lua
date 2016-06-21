@@ -186,6 +186,35 @@ function scene:create( event )
         callBack = mui.textfieldCallBack
     })
 
+    -- create and animate the intial value (1% is always required due to scaling method)
+    mui.createProgressBar({
+        name = "progressbar_demo",
+        width = mui.getScaleVal(290),
+        height = mui.getScaleVal(8),
+        x = mui.getScaleVal(650),
+        y = mui.getScaleVal(400),
+        foregroundColor = { 0, 0.78, 1, 1 },
+        backgroundColor = { 0.82, 0.95, 0.98, 0.8 },
+        startPercent = 20,
+        barType = "determinate",
+        iterations = 1,
+        labelText = "Determinate progress",
+        labelFont = native.systemFont,
+        labelFontSize = mui.getScaleVal(24),
+        labelColor = {  0.4, 0.4, 0.4, 1 },
+        labelAlign = "left",
+        callBack = mui.postProgressCallBack,
+        --repeatCallBack = <your method here>,
+        hideBackdropWhenDone = false
+    })
+
+    -- show how to increase progress bar by percent using a timer or method after the above creation
+    local function increaseMyProgressBar()
+        print("increaseMyProgressBar")
+        mui.increaseProgressBar( "progressbar_demo", 80 )
+    end
+    timer.performWithDelay(3000, increaseMyProgressBar, 1)
+    -- increaseMyProgressBar() -- will be queued if already processing an increase
 end
 
 -- "scene:show()"

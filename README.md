@@ -75,6 +75,7 @@ Please read Lua code to find all parameters and see example in the repo call men
 - `createTableView` - Create a scrollable table view
 - `createTextField` - Create a text field with label above (for now) and includes "scrollView" support. If using widget.newScrollView() then include it in the parameters as "scrollView = <scrollview>" Please see fun.lua for an example.
 - `createTextBox` - Create a text box with label above (for now) and includes "scrollView" support. If using widget.newScrollView() then include it in the parameters as "scrollView = <scrollview>" Please see fun.lua for an example.
+- `createProgressBar` - Create an animated progress bar using "determinate" from Material Design. Please see menu.lua for an example. Includes linear call back (callBack) and later a repeating call back (repeatCallBack).
 - `actionSwitchScene` - This is built-in callback for handle scene switching for a button. The color of the switch can be changed.
 
 Additional Features

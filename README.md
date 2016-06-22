@@ -82,7 +82,7 @@ Additional Features
 -------------
 * Touchpoints are included in all controls, but can be turned off.
 * Built-in callBacks are defined but can be overridden easily to do other tasks.
-* Scroll view support for widgets (widget.newScrollView()). Use parameter: scrollView = <scroll view to use>
+* Scroll view support for widgets (widget.newScrollView()). Use parameter: scrollView = scroll_view
 * Colors can be adjusted and some controls support gradients.
 * Adjusts native widgets into scrollView visible area automatically.
 * To use Material font icons, refer to 'icon-font/codepoints' and place the codepoint as the 'text' of a button.  See http://google.github.io/material-design-icons/ for more information.

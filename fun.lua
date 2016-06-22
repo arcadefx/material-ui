@@ -37,6 +37,7 @@ function scene:create( event )
 
     mui.init()
     mui.createRRectButton({
+        scrollView = scrollView,
         name = "goBack",
         text = "Go Back",
         width = mui.getScaleVal(200),
@@ -164,32 +165,21 @@ end
 --
 -- a generic scroll to hold ui elements
 --
-local lastScrollY = 0
-local scrollY = 0
 
 -- ScrollView listener
 function scrollAListener( event )
 
     local phase = event.phase
+    if event.phase == nil then return end
+
+    mui.updateEventHandler( event )
+
     if ( phase == "began" ) then
-        lastScrollY = event.y
+        -- skip it
     elseif ( phase == "moved" ) then
-        local widget = mui.getWidgetByName(mui.currentNativeFieldName)
-        if widget ~= nil then
-	        local diff = 0
-	        y = widget["container"].y
-	        if event.y < lastScrollY then
-	            diff = lastScrollY - event.y
-	            -- print("move up "..diff.." pixels")
-	        else
-	            diff = event.y - lastScrollY
-	            -- print("move down "..diff.." pixels")
-	        end
-	    end
         mui.updateUI(event)
     elseif ( phase == "ended" ) then
         -- print( "Scroll view was released" )
-        lastScrollY = 0
     end
 
     -- In the event a scroll limit is reached...

@@ -52,13 +52,25 @@ function M.init(data)
   M.widgetDict = {}
   M.progressbarDict = {}
   M.currentNativeFieldName = ""
+  M.interceptEventHandler = nil
+  M.interceptMoved = false
 
   M.scene = composer.getScene(composer.getSceneName("current"))
   M.scene.name = composer.getSceneName("current")
 end
 
+function M.updateEventHandler( event )
+    if M.interceptEventHandler ~= nil then
+        M.interceptEventHandler:touch(event)
+    end
+    if event.phase == "moved" then
+        M.interceptMoved = true
+    end
+end
+
 function M.updateUI(event, skipName)
     local widgetType = ""
+
     for widget in pairs(M.widgetDict) do
         if widget ~= skipName or skipName == nil then
             widgetType = M.widgetDict[widget]["type"]
@@ -152,7 +164,7 @@ end
 --[[ switch scene action ]]
 
 function M.actionSwitchScene( e )
-    if circleSceneSwitchComplete == true then return end
+    if M.circleSceneSwitchComplete == true then return end
     local circleColor = { 1, 0.58, 0 }
     M.hideNativeWidgets()
 
@@ -258,7 +270,7 @@ end
 function M.isTouchPointOutOfRange( event )
     local success = false
 
-    if event ~= nil then        
+    if event ~= nil then
         if event.x < event.target.contentBounds.xMin or
            event.x > event.target.contentBounds.xMax or
            event.y < event.target.contentBounds.yMin or
@@ -390,6 +402,11 @@ function M.createRRectButton(options)
     M.widgetDict[options.name]["container"]:translate( x, y ) -- center the container
     M.widgetDict[options.name]["touching"] = false
 
+    if options.scrollView ~= nil then
+        M.widgetDict[options.name]["scrollView"] = options.scrollView
+        M.widgetDict[options.name]["scrollView"]:insert( M.widgetDict[options.name]["container"] )
+    end
+
     local radius = options.height * 0.2
     if options.radius ~= nil and options.radius < options.height and options.radius > 1 then
         radius = options.radius
@@ -488,6 +505,8 @@ function M.createRRectButton(options)
 
     function rrect:touch (event)
         if ( event.phase == "began" ) then
+            --event.target:takeFocus(event)
+            M.interceptEventHandler = rrect
             M.updateUI(event)
             if M.touching == false then
                 M.touching = true
@@ -504,9 +523,17 @@ function M.createRRectButton(options)
                   event.phase = "offTarget"
                   event.target:dispatchEvent(event)
             else
-              event.phase = "onTarget"
-              event.target:dispatchEvent(event)
+                event.phase = "onTarget"
+                if M.interceptEventHandler ~= nil and M.interceptMoved == false then
+                    event.target = M.widgetDict[options.name]["rrect"]
+                    event.callBackData = options.callBackData
+                    assert( options.callBack )(event)
+                else
+                    event.target:dispatchEvent(event)
+                end
             end
+            M.interceptEventHandler = nil
+            M.interceptMoved = false
         elseif ( event.phase == "onTarget" ) then
             event.callBackData = options.callBackData
             assert( options.callBack )(event)
@@ -516,7 +543,6 @@ function M.createRRectButton(options)
     end
     M.widgetDict[options.name]["rrect"]:addEventListener( "touch", M.widgetDict[options.name]["rrect"] )
 end
-
 
 --[[
  options..
@@ -553,6 +579,11 @@ function M.createRectButton(options)
     M.widgetDict[options.name]["container"] = display.newContainer( options.width+4, options.height+4 )
     M.widgetDict[options.name]["container"]:translate( x, y ) -- center the container
     M.widgetDict[options.name]["touching"] = false
+
+    if options.scrollView ~= nil then
+        M.widgetDict[options.name]["scrollView"] = options.scrollView
+        M.widgetDict[options.name]["scrollView"]:insert( M.widgetDict[options.name]["container"] )
+    end
 
     -- paint normal or use gradient?
     local paint = nil
@@ -705,6 +736,11 @@ function M.createIconButton(options)
     M.widgetDict[options.name]["mygroup"].x = x
     M.widgetDict[options.name]["mygroup"].y = y
     M.widgetDict[options.name]["touching"] = false
+
+    if options.scrollView ~= nil then
+        M.widgetDict[options.name]["scrollView"] = options.scrollView
+        M.widgetDict[options.name]["scrollView"]:insert( M.widgetDict[options.name]["container"] )
+    end
 
     local radius = options.height * (0.2 * M.getSizeRatio())
     if options.radius ~= nil and options.radius < options.height and options.radius > 1 then
@@ -860,6 +896,11 @@ function M.createRadioButton(options)
     radioButton["mygroup"].x = x
     radioButton["mygroup"].y = y
     radioButton["touching"] = false
+
+    if options.scrollView ~= nil and M.widgetDict[options.name]["scrollView"] == nil then
+        M.widgetDict[options.name]["scrollView"] = options.scrollView
+        M.widgetDict[options.name]["scrollView"]:insert( M.widgetDict[options.name]["mygroup"] )
+    end
 
     local radius = options.height * 0.2
     if options.radius ~= nil and options.radius < options.height and options.radius > 1 then
@@ -2197,8 +2238,10 @@ function M.removeWidgetProgressBar(widgetName)
     M.widgetDict[widgetName]["progressbackdrop"] = nil
     M.widgetDict[widgetName]["progressbar"]:removeSelf()
     M.widgetDict[widgetName]["progressbar"] = nil
-    M.widgetDict[widgetName]["label"]:removeSelf()
-    M.widgetDict[widgetName]["label"] = nil
+    if M.widgetDict[widgetName]["label"] ~= nil then
+        M.widgetDict[widgetName]["label"]:removeSelf()
+        M.widgetDict[widgetName]["label"] = nil
+    end
     M.widgetDict[widgetName]["mygroup"]:removeSelf()
     M.widgetDict[widgetName]["mygroup"] = nil
     M.widgetDict[widgetName] = nil

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.4] - 2016-06-22
+### Added
+- scrollView support to widgets. Specify it in the "create<method name>"() parameters as "scrollView = <scroll view>"
+
+### Changed
+- Fixed issue where scrollView widgets (like buttons) would not work when added to scrollView.
+- Fixed bug when releasing memory for createProgressBar when not using a label.
+
 ## [0.1.3] - 2016-06-21
 ### Added
 - createProgressBar() - An animated progress bar using "determinate" from Material Design. Please see menu.lua for an example. Includes linear call back (callBack) and later will support a repeating call back (repeatCallBack). It has a number of options.

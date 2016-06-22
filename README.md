@@ -87,6 +87,11 @@ Additional Features
 * Adjusts native widgets into scrollView visible area automatically.
 * To use Material font icons, refer to 'icon-font/codepoints' and place the codepoint as the 'text' of a button.  See http://google.github.io/material-design-icons/ for more information.
 
+Special Considerations
+-------------
+* Scroll views must contain the method mui.updateEventHandler( event ) before the check for event began. See fun.lua for an example.
+* Scroll views must contain the method mui.updateUI(event) in "moved" phase. See fun.lua for an example.
+
 Contributing
 -------------
 * Feel free to contribute code, testing and feedback.

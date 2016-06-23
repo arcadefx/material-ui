@@ -78,10 +78,15 @@ Please read Lua code to find all parameters and see example in the repo call men
 - `createToggleSwitch` - Create a toggle switch. See menu.lua for an example.
 - `createToolbar` - Create a horizontal toolbar with icon buttons using the material design icon font. You can override the font.
 
-Special Callbacks
+Built-In Callbacks
 -------------
 
 - `actionSwitchScene` - This is built-in callback for handle scene switching for a button. The color of the switch can be changed.  See menu.lua for an example.
+
+Special Considerations
+-------------
+* Scroll views must contain the method mui.updateEventHandler( event ) before the check for event began. See fun.lua for an example.
+* Scroll views must contain the method mui.updateUI(event) in "moved" phase. See fun.lua for an example.
 
 Additional Features
 -------------
@@ -91,11 +96,6 @@ Additional Features
 * Colors can be adjusted and some controls support gradients.
 * Adjusts native widgets into scrollView visible area automatically.
 * To use Material font icons, refer to 'icon-font/codepoints' and place the codepoint as the 'text' of a button.  See http://google.github.io/material-design-icons/ for more information.
-
-Special Considerations
--------------
-* Scroll views must contain the method mui.updateEventHandler( event ) before the check for event began. See fun.lua for an example.
-* Scroll views must contain the method mui.updateUI(event) in "moved" phase. See fun.lua for an example.
 
 Contributing
 -------------

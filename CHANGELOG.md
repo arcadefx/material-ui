@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [0.1.4] - 2016-06-22
 ### Added
 - scrollView support to widgets. Specify it in the parameters as: scrollView = scroll_view
+- createSwitch() - Create toggle switch. See menu.lua for an example.
 
 ### Changed
 - Fixed issue where scrollView widgets (like buttons) would not work when added to scrollView.

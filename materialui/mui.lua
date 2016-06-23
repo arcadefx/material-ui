@@ -506,6 +506,7 @@ function M.createRRectButton(options)
     function rrect:touch (event)
         if ( event.phase == "began" ) then
             --event.target:takeFocus(event)
+            -- if scrollView then use the below
             M.interceptEventHandler = rrect
             M.updateUI(event)
             if M.touching == false then
@@ -670,6 +671,7 @@ function M.createRectButton(options)
 
     function rrect:touch (event)
         if ( event.phase == "began" ) then
+            M.interceptEventHandler = rrect
             M.updateUI(event)
             if M.touching == false then
                 M.touching = true
@@ -687,7 +689,15 @@ function M.createRectButton(options)
                   event.target:dispatchEvent(event)
             else
               event.phase = "onTarget"
-              event.target:dispatchEvent(event)
+                if M.interceptEventHandler ~= nil and M.interceptMoved == false then
+                    event.target = M.widgetDict[options.name]["rrect"]
+                    event.callBackData = options.callBackData
+                    assert( options.callBack )(event)
+                else
+                    event.target:dispatchEvent(event)
+                end
+                M.interceptEventHandler = nil
+                M.interceptMoved = false
             end
         elseif ( event.phase == "onTarget" ) then
             event.callBackData = options.callBackData
@@ -739,7 +749,7 @@ function M.createIconButton(options)
 
     if options.scrollView ~= nil then
         M.widgetDict[options.name]["scrollView"] = options.scrollView
-        M.widgetDict[options.name]["scrollView"]:insert( M.widgetDict[options.name]["container"] )
+        M.widgetDict[options.name]["scrollView"]:insert( M.widgetDict[options.name]["mygroup"] )
     end
 
     local radius = options.height * (0.2 * M.getSizeRatio())
@@ -826,6 +836,7 @@ function M.createIconButton(options)
 
     function checkbox:touch (event)
         if ( event.phase == "began" ) then
+            M.interceptEventHandler = checkbox
             M.updateUI(event)
             if M.touching == false then
                 M.touching = true
@@ -843,7 +854,16 @@ function M.createIconButton(options)
                   event.target:dispatchEvent(event)
             else
               event.phase = "onTarget"
-              event.target:dispatchEvent(event)
+                if M.interceptEventHandler ~= nil and M.interceptMoved == false then
+                    event.target = M.widgetDict[options.name]["checkbox"]
+                    event.altTarget = M.widgetDict[options.name]["myText"]
+                    event.callBackData = options.callBackData
+                    assert( options.callBack )(event)
+                else
+                    event.target:dispatchEvent(event)
+                end
+                M.interceptEventHandler = nil
+                M.interceptMoved = false
             end
         elseif ( event.phase == "onTarget" ) then
             event.myTargetName = options.name
@@ -1034,6 +1054,7 @@ function M.createRadioButton(options)
 
     function checkbox:touch (event)
         if ( event.phase == "began" ) then
+            M.interceptEventHandler = checkbox
             M.updateUI(event)
             if M.touching == false then
                 M.touching = true
@@ -1051,7 +1072,18 @@ function M.createRadioButton(options)
                   event.target:dispatchEvent(event)
             else
               event.phase = "onTarget"
-              event.target:dispatchEvent(event)
+                if M.interceptEventHandler ~= nil and M.interceptMoved == false then
+                    --event.target = M.widgetDict[options.name]["rrect"]
+                    event.myTargetName = options.name
+                    event.myTargetBasename = options.basename
+                    event.altTarget = M.widgetDict[options.basename]["radio"][options.name]["myText"]
+                    event.callBackData = options.callBackData
+                    assert( options.callBack )(event)
+                else
+                    event.target:dispatchEvent(event)
+                end
+                M.interceptEventHandler = nil
+                M.interceptMoved = false
             end
         elseif ( event.phase == "onTarget" ) then
             event.myTargetName = options.name
@@ -1283,6 +1315,7 @@ function M.createToolbarButton( options )
             return
         end
         if ( event.phase == "began" ) then
+            M.interceptEventHandler = thebutton
             M.updateUI(event)
             if M.touching == false then
                 M.touching = true
@@ -1300,7 +1333,19 @@ function M.createToolbarButton( options )
                 event.target:dispatchEvent(event)
             else
                 event.phase = "onTarget"
-                event.target:dispatchEvent(event)
+                if M.interceptEventHandler ~= nil and M.interceptMoved == false then
+                    --event.target = M.widgetDict[options.name]["rrect"]
+                    transition.to(M.widgetDict[options.basename]["toolbar"]["slider"],{time=350, x=button["mygroup"].x, transition=easing.inOutCubic})
+                    event.myTargetName = options.name
+                    event.myTargetBasename = options.basename
+                    event.altTarget = M.widgetDict[options.basename]["toolbar"][options.name]["myText"]
+                    event.callBackData = options.callBackData
+                    assert( options.callBack )(event)
+                else
+                    event.target:dispatchEvent(event)
+                end
+                M.interceptEventHandler = nil
+                M.interceptMoved = false
             end
         elseif ( event.phase == "onTarget" ) then
             transition.to(M.widgetDict[options.basename]["toolbar"]["slider"],{time=350, x=button["mygroup"].x, transition=easing.inOutCubic})
@@ -1994,7 +2039,7 @@ function M.completeProgressBarCallBack( object )
 
     if object.noFinishAnimation == nil and object.percentComplete >= 99 then
         transition.to( M.widgetDict[object.name]["progressbar"], {
-            time = 500,
+            time = 300,
             yScale = 0.10,
             transition = easing.linear,
             iterations = 1,
@@ -2002,7 +2047,7 @@ function M.completeProgressBarCallBack( object )
         } )
         if M.widgetDict[object.name]["progressbackdrop"].hideme ~= nil then
             transition.to( M.widgetDict[object.name]["progressbackdrop"], {
-                time = 500,
+                time = 300,
                 yScale = 0.10,
                 transition = easing.linear,
                 iterations = 1
@@ -2026,22 +2071,190 @@ function M.postProgressCallBack( object )
     print("postProgressCallBack")
 end
 
---[[--
-function onSwitchPress( event )
-    -- body
-    print("You pressed it!")
+function M.createSwitch(options)
+    if options == nil then return end
+
+    local x,y = 160, 240
+    if options.x ~= nil then
+        x = options.x
+    end
+    if options.y ~= nil then
+        y = options.y
+    end
+
+    if options.width == nil then
+        options.width = options.size
+    end
+
+    if options.height == nil then
+        options.height = options.size
+    end
+
+    local textColorOff = { 1, 1, 1 }
+    if options.textColorOff ~= nil then
+        textColorOff = options.textColorOff
+    end
+
+    local textColor = { 1, 1, 1 }
+    if options.textColor ~= nil then
+        textColor = options.textColor
+    end
+
+    if options.foregroundColor == nil then
+        options.foregroundColor = { 0, 0, 1, 0, 1 }
+    end
+
+    if options.backgroundColor == nil then
+        options.backgroundColor = { 0, 0, 1, 0, 0.8 }
+    end
+
+    local isChecked = false
+    if options.isChecked ~= nil then
+        isChecked = options.isChecked
+    end
+
+    M.widgetDict[options.name] = {}
+    M.widgetDict[options.name]["options"] = options
+    M.widgetDict[options.name]["isChecked"] = isChecked
+    M.widgetDict[options.name].name = options.name
+    M.widgetDict[options.name]["type"] = "Switch"
+    M.widgetDict[options.name]["mygroup"] = display.newGroup()
+    M.widgetDict[options.name]["mygroup"].x = x
+    M.widgetDict[options.name]["mygroup"].y = y
+    M.widgetDict[options.name]["touching"] = false
+
+    if options.callBack ~= nil then
+        M.widgetDict[options.name]["callBack"] = options.callBack
+    end
+
+    if options.scrollView ~= nil then
+        M.widgetDict[options.name]["scrollView"] = options.scrollView
+        M.widgetDict[options.name]["scrollView"]:insert( M.widgetDict[options.name]["mygroup"] )
+    end
+
+    local radius = options.height
+
+    x = 0
+    y = 0
+    M.widgetDict[options.name]["mygroup"]["rectmaster"] = display.newRect( x, y, options.width * 1.3, (options.height * 0.75))
+    M.widgetDict[options.name]["mygroup"]["rectmaster"].strokeWidth = 0
+    M.widgetDict[options.name]["mygroup"]["rectmaster"]:setStrokeColor( unpack({1, 0, 0, 1}) )
+
+    M.widgetDict[options.name]["mygroup"]["rect"] = display.newRect( x, y, options.width * 0.5, (options.height * 0.50))
+    M.widgetDict[options.name]["mygroup"]["rect"].strokeWidth = 0
+    M.widgetDict[options.name]["mygroup"]["rect"]:setFillColor( unpack(options.backgroundColorOff) )
+
+    M.widgetDict[options.name]["mygroup"]["circle1"] = display.newCircle( x - (radius * 0.20), y, radius * 0.25 )
+    M.widgetDict[options.name]["mygroup"]["circle1"]:setFillColor( unpack(options.backgroundColorOff) )
+
+    M.widgetDict[options.name]["mygroup"]["circle2"] = display.newCircle( x + (radius * 0.20), y, radius * 0.25 )
+    M.widgetDict[options.name]["mygroup"]["circle2"]:setFillColor( unpack(options.backgroundColorOff) )
+
+    M.widgetDict[options.name]["mygroup"]["circle"] = display.newCircle( x - (radius * 0.25), y, radius * 0.30 )
+    M.widgetDict[options.name]["mygroup"]["circle"]:setFillColor( unpack(options.textColorOff) )
+
+    M.widgetDict[options.name]["mygroup"]:insert(M.widgetDict[options.name]["mygroup"]["rectmaster"])
+    M.widgetDict[options.name]["mygroup"]:insert(M.widgetDict[options.name]["mygroup"]["rect"])
+    M.widgetDict[options.name]["mygroup"]:insert(M.widgetDict[options.name]["mygroup"]["circle1"])
+    M.widgetDict[options.name]["mygroup"]:insert(M.widgetDict[options.name]["mygroup"]["circle2"])
+    M.widgetDict[options.name]["mygroup"]:insert(M.widgetDict[options.name]["mygroup"]["circle"])
+
+    M.widgetDict[options.name]["mygroup"]["circle"].name = options.name
+
+    M.flipSwitch(options.name, 0)
+
+    local rect = M.widgetDict[options.name]["mygroup"]["rectmaster"]
+
+    function rect:touch (event)
+        if ( event.phase == "began" ) then
+            M.interceptEventHandler = rect
+            M.updateUI(event)
+            if M.touching == false and false then
+                M.touching = true
+                if options.touchpoint ~= nil and options.touchpoint == true then
+                    M.widgetDict[options.basename]["radio"][options.name]["myCircle"].x = event.x - M.widgetDict[options.basename]["radio"][options.name]["mygroup"].x
+                    M.widgetDict[options.basename]["radio"][options.name]["myCircle"].y = event.y - M.widgetDict[options.basename]["radio"][options.name]["mygroup"].y
+                end
+                --M.widgetDict[options.basename]["radio"][options.name]["myCircle"].isVisible = true
+                --M.widgetDict[options.basename]["radio"][options.name].myCircleTrans = transition.to( M.widgetDict[options.basename]["radio"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+                transition.to(rect,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
+            end
+        elseif ( event.phase == "ended" ) then
+            if M.isTouchPointOutOfRange( event ) then
+                  event.phase = "offTarget"
+                  event.target:dispatchEvent(event)
+            else
+              event.phase = "onTarget"
+                if M.interceptEventHandler ~= nil and M.interceptMoved == false then
+                    event.target = M.widgetDict[options.name]["rect"]
+                    if M.widgetDict[options.name]["isChecked"] == true then
+                        M.widgetDict[options.name]["isChecked"] = false
+                    else
+                        M.widgetDict[options.name]["isChecked"] = true
+                    end
+                    M.flipSwitch(options.name, nil)
+                    event.callBackData = options.callBackData
+                    assert( options.callBack )(event)
+                else
+                    event.target:dispatchEvent(event)
+                end
+            end
+        elseif ( event.phase == "onTarget" ) then
+            if M.widgetDict[options.name]["isChecked"] == true then
+                M.widgetDict[options.name]["isChecked"] = false
+            else
+                M.widgetDict[options.name]["isChecked"] = true
+            end
+            M.flipSwitch(options.name, nil)
+            event.callBackData = options.callBackData
+            assert( options.callBack )(event)
+        elseif ( event.phase == "offTarget" ) then
+            --print("Its out of the button area")
+        end
+    end
+
+    M.widgetDict[options.name]["mygroup"]["rectmaster"]:addEventListener( "touch", M.widgetDict[options.name]["mygroup"]["rectmaster"] )
 end
 
-local options = {
-    left = 350,
-    top = 200,
-    style = "checkbox",
-    id = "Checkbox",
-    onPress = onSwitchPress
-}
+function M.flipSwitch(widgetName, delay)
+    if widgetName == nil then return end
+    if delay == nil then delay = 250 end
 
-local mySwitch = widget.newSwitch( options )
---]]--
+    local isChecked = M.widgetDict[widgetName]["isChecked"]
+    local xR = M.widgetDict[widgetName]["mygroup"]["rect"].contentWidth * 0.75
+    local x = xR
+    if isChecked == false then
+        x = x - (xR * 2)
+    end
+    if isChecked == true then
+        transition.to( M.widgetDict[widgetName]["mygroup"]["circle"], { time=delay, x=x, onComplete=M.turnOnSwitch } )
+    else
+        transition.to( M.widgetDict[widgetName]["mygroup"]["circle"], { time=delay, x=x, onComplete=M.turnOffSwitch } )
+    end
+end
+
+function M.turnOnSwitch(e)
+    local options = M.widgetDict[e.name].options
+    e:setFillColor( unpack(options.textColor) )
+    M.widgetDict[e.name]["mygroup"]["rect"]:setFillColor( unpack(options.backgroundColor) )
+    M.widgetDict[e.name]["mygroup"]["circle1"]:setFillColor( unpack(options.backgroundColor) )
+    M.widgetDict[e.name]["mygroup"]["circle2"]:setFillColor( unpack(options.backgroundColor) )
+    M.widgetDict[e.name]["isChecked"] = true
+end
+
+function M.turnOffSwitch(e)
+    local options = M.widgetDict[e.name].options
+    e:setFillColor( unpack(options.textColorOff) )
+    M.widgetDict[e.name]["mygroup"]["rect"]:setFillColor( unpack(options.backgroundColorOff) )
+    M.widgetDict[e.name]["mygroup"]["circle1"]:setFillColor( unpack(options.backgroundColorOff) )
+    M.widgetDict[e.name]["mygroup"]["circle2"]:setFillColor( unpack(options.backgroundColorOff) )
+    M.widgetDict[e.name]["isChecked"] = false
+end
+
+function M.actionForSwitch(e)
+    -- use  M.widgetDict[e.name]["isChecked"] to test for boolean
+    print("switch event action")
+end
 
 function M.hideNativeWidgets()
   for widget in pairs(M.widgetDict) do
@@ -2077,6 +2290,8 @@ function M.removeWidgets()
             M.removeWidgetTextBox(widget)
         elseif widgetType == "ProgressBar" then
             M.removeWidgetProgressBar(widget)
+        elseif widgetType == "Switch" then
+            M.removeWidgetSwitch(widget)
         end
       end
   end
@@ -2242,6 +2457,25 @@ function M.removeWidgetProgressBar(widgetName)
         M.widgetDict[widgetName]["label"]:removeSelf()
         M.widgetDict[widgetName]["label"] = nil
     end
+    M.widgetDict[widgetName]["mygroup"]:removeSelf()
+    M.widgetDict[widgetName]["mygroup"] = nil
+    M.widgetDict[widgetName] = nil
+end
+
+function M.removeWidgetSwitch(widgetName)
+    if widgetName == nil then
+        return
+    end
+    M.widgetDict[widgetName]["mygroup"]["circle"]:removeSelf()
+    M.widgetDict[widgetName]["mygroup"]["circle"] = nil
+    M.widgetDict[widgetName]["mygroup"]["circle2"]:removeSelf()
+    M.widgetDict[widgetName]["mygroup"]["circle2"] = nil
+    M.widgetDict[widgetName]["mygroup"]["circle1"]:removeSelf()
+    M.widgetDict[widgetName]["mygroup"]["circle1"] = nil
+    M.widgetDict[widgetName]["mygroup"]["rect"]:removeSelf()
+    M.widgetDict[widgetName]["mygroup"]["rect"] = nil
+    M.widgetDict[widgetName]["mygroup"]["rectmaster"]:removeSelf()
+    M.widgetDict[widgetName]["mygroup"]["rectmaster"] = nil
     M.widgetDict[widgetName]["mygroup"]:removeSelf()
     M.widgetDict[widgetName]["mygroup"] = nil
     M.widgetDict[widgetName] = nil

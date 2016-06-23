@@ -102,6 +102,19 @@ function scene:create( event )
         callBack = mui.actionForCheckbox
     })
 
+    mui.createSwitch({
+        name = "switch_demo",
+        size = mui.getScaleVal(55),
+        x = mui.getScaleVal(360),
+        y = mui.getScaleVal(220),
+        textColorOff = { 0.57, 0.85, 1, 1 },
+        textColor = { 0.25, 0.75, 1, 1 },
+        backgroundColor = { 0.74, 0.88, 0.99, 1 },
+        backgroundColorOff = { 0.82, 0.95, 0.98, 1 },
+        isChecked = true,
+        callBack = mui.actionForSwitch
+    })
+
     mui.createRadioGroup({
         name = "radio_demo",
         width = mui.getScaleVal(30), --+ (getScaleVal(30)*1.2),

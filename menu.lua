@@ -222,6 +222,21 @@ function scene:create( event )
         hideBackdropWhenDone = false
     })
 
+    --[[-- do not use yet, this will crash :)
+    mui.createDialog({
+        name = "dialog_demo",
+        width = mui.getScaleVal(300),
+        height = mui.getScaleVal(300),
+        x = mui.getScaleVal(260),
+        y = mui.getScaleVal(320),
+        textColorOff = { 0.57, 0.85, 1, 1 },
+        textColor = { 0.25, 0.75, 1, 1 },
+        backgroundColor = { 0.74, 0.88, 0.99, 1 },
+        backgroundColorOff = { 0.82, 0.95, 0.98, 1 },
+        callBack = mui.actionForSwitch
+    })
+    --]]--
+
     -- show how to increase progress bar by percent using a timer or method after the above creation
     local function increaseMyProgressBar()
         print("increaseMyProgressBar")

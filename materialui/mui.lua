@@ -54,6 +54,7 @@ function M.init(data)
   M.currentNativeFieldName = ""
   M.interceptEventHandler = nil
   M.interceptMoved = false
+  M.dialogInUse = false
 
   M.scene = composer.getScene(composer.getSceneName("current"))
   M.scene.name = composer.getSceneName("current")
@@ -87,9 +88,45 @@ function M.updateUI(event, skipName)
 end
 
 function M.getWidgetByName(name)
-    if name == nil then return nil end
-    if string.len(name) < 1 then return nil end
-    return M.widgetDict[name]
+    if name ~= nil and string.len(name) > 1 then
+        return M.widgetDict[name]
+    end
+    return nil
+end
+
+function M.getWidgetBaseObject(name)
+    local widgetData = nil
+
+    if name ~= nil and string.len(name) > 1 then
+        for widget in pairs(M.widgetDict) do
+          local widgetType = M.widgetDict[widget]["type"]
+          if widgetType ~= nil then
+            if widgetType == "RRectButton" then
+               widgetData = M.widgetDict[widget]["container"]
+            elseif widgetType == "RectButton" then
+               widgetData = M.widgetDict[widget]["container"]
+            elseif widgetType == "IconButton" then
+               widgetData = M.widgetDict[widget]["mygroup"]
+            elseif widgetType == "RadioButton" then
+               widgetData = M.widgetDict[widget]["mygroup"]
+            elseif widgetType == "Toolbar" then
+               -- widgetData = M.widgetDict[widget]["container"]
+               print("getWidgetForInsert: Toolbar not supported at this time.")
+            elseif widgetType == "TableView" then
+               widgetData = M.widgetDict[widget]["tableview"]
+            elseif widgetType == "TextField" then
+               widgetData = M.widgetDict[widget]["container"]
+            elseif widgetType == "TextBox" then
+               widgetData = M.widgetDict[widget]["container"]
+            elseif widgetType == "ProgressBar" then
+               widgetData = M.widgetDict[widget]["mygroup"]
+            elseif widgetType == "Switch" then
+               widgetData = M.widgetDict[widget]["mygroup"]
+            end
+          end
+        end
+    end
+    return widgetData
 end
 
 function M.getScaleVal(n)
@@ -2220,6 +2257,122 @@ function M.actionForSwitch(e)
     print("switch event action")
 end
 
+function M.createDialog(options)
+    if options == nil then return end
+
+    local x,y = 160, 240
+    if options.x ~= nil then
+        x = options.x
+    end
+    if options.y ~= nil then
+        y = options.y
+    end
+
+    if options.width == nil then
+        options.width = options.size
+    end
+
+    if options.height == nil then
+        options.height = options.size
+    end
+
+    local textColorOff = { 1, 1, 1 }
+    if options.textColorOff ~= nil then
+        textColorOff = options.textColorOff
+    end
+
+    local textColor = { 1, 1, 1 }
+    if options.textColor ~= nil then
+        textColor = options.textColor
+    end
+
+    if options.foregroundColor == nil then
+        options.foregroundColor = { 0, 0, 1, 0, 1 }
+    end
+
+    if options.backgroundColor == nil then
+        options.backgroundColor = { 0, 0, 1, 0, 0.8 }
+    end
+
+    M.widgetDict[options.name] = {}
+    M.widgetDict[options.name]["options"] = options
+    M.widgetDict[options.name].name = options.name
+    M.widgetDict[options.name]["type"] = "Switch"
+    M.widgetDict[options.name]["container"] = display.newContainer( options.width, options.height )
+    M.widgetDict[options.name]["container"]:translate( x, y ) -- center the container
+    M.widgetDict[options.name]["touching"] = false
+
+    M.dialogInUse = true
+
+    if options.callBackOkay ~= nil then
+        M.widgetDict[options.name]["callBackOkay"] = options.callBackOkay
+    end
+
+    if options.callBackCancel ~= nil then
+        M.widgetDict[options.name]["callBackCancel"] = options.callBackCancel
+    end
+
+    local radius = options.height
+
+    x = 0
+    y = 0
+    M.widgetDict[options.name]["container"]["rect"] = display.newRect( x, y, options.width * 0.9, (options.height * 0.9))
+    M.widgetDict[options.name]["container"]["rect"].strokeWidth = 4
+    M.widgetDict[options.name]["container"]["rect"]:setFillColor( unpack(options.backgroundColorOff) )
+    M.widgetDict[options.name]["container"]["rect"].name = options.name
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["container"]["rect"] )
+
+    M.createRectButton({
+        name = "okay_dialog_button",
+        text = "Okay",
+        width = M.getScaleVal(75),
+        height = M.getScaleVal(50),
+        x = M.getScaleVal(50),
+        y = M.getScaleVal(0),
+        font = native.systemFont,
+        fillColor = { 0.17, 0.88, 0.12 },
+        textColor = { 1, 1, 1 },
+        touchpoint = true,
+        callBack = M.actionSwitchScene,
+        callBackData = { 
+            sceneDestination = "fun",
+            sceneTransitionColor = { 0, 0.73, 1 }
+        } -- scene fun.lua
+    })
+
+    M.widgetDict[options.name]["container"]:insert( M.getWidgetBaseObject("okay_dialog_button") )
+
+    local rect = M.widgetDict[options.name]["container"]["rect"]
+
+    function rect:touch (event)
+        if ( event.phase == "began" ) then
+            M.interceptEventHandler = rect
+            M.updateUI(event)
+            if M.touching == false and false then
+                M.touching = true
+                if options.touchpoint ~= nil and options.touchpoint == true then
+                    M.widgetDict[options.basename]["radio"][options.name]["myCircle"].x = event.x - M.widgetDict[options.basename]["radio"][options.name]["mygroup"].x
+                    M.widgetDict[options.basename]["radio"][options.name]["myCircle"].y = event.y - M.widgetDict[options.basename]["radio"][options.name]["mygroup"].y
+                end
+                transition.to(rect,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
+            end
+        elseif ( event.phase == "ended" ) then
+            if M.isTouchPointOutOfRange( event ) then
+                event.phase = "offTarget"
+            else
+              event.phase = "onTarget"
+                if M.interceptMoved == false then
+                    event.target = M.widgetDict[options.name]["rect"]
+                    event.callBackData = options.callBackData
+                    assert( options.callBack )(event)
+                end
+            end
+        end
+    end
+
+    M.widgetDict[options.name]["container"]["rect"]:addEventListener( "touch", M.widgetDict[options.name]["container"]["rect"] )
+end
+
 function M.hideNativeWidgets()
   for widget in pairs(M.widgetDict) do
       local widgetType = M.widgetDict[widget]["type"]
@@ -2255,7 +2408,7 @@ function M.removeWidgets()
         elseif widgetType == "ProgressBar" then
             M.removeWidgetProgressBar(widget)
         elseif widgetType == "Switch" then
-            M.removeWidgetSwitch(widget)
+            M.removeWidgetToggleSwitch(widget)
         end
       end
   end
@@ -2426,7 +2579,7 @@ function M.removeWidgetProgressBar(widgetName)
     M.widgetDict[widgetName] = nil
 end
 
-function M.removeWidgetSwitch(widgetName)
+function M.removeWidgetToggleSwitch(widgetName)
     if widgetName == nil then
         return
     end

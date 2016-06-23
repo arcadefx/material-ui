@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.5] - 2016-06-23
+### Changed
+- Re-factored the event handling. There will be another round of refactoring.
+
 ## [0.1.4] - 2016-06-22
 ### Added
 - scrollView support to widgets. Specify it in the parameters as: scrollView = scroll_view

@@ -69,12 +69,13 @@ Please read Lua code to find all parameters and see example in the repo call men
 
 - `createRRectButton` - Create a rounded rectangle button
 - `createRectButton` - Create a rectangle button
-- `createIconButton` - Create an icon button using the material design icon font
+- `createIconButton` - Create an icon button using the material design icon font.  The demo shows a 'checkbox' as an example.
 - `createRadioGroup` - Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.
 - `createToolbar` - Create a horizontal toolbar with icon buttons using the material design icon font. You can override the font.
 - `createTableView` - Create a scrollable table view
 - `createTextField` - Create a text field with label above (for now) and includes "scrollView" support. If using widget.newScrollView() then include it in the parameters as "scrollView = <scrollview>" Please see fun.lua for an example.
 - `createTextBox` - Create a text box with label above (for now) and includes "scrollView" support. If using widget.newScrollView() then include it in the parameters as "scrollView = <scrollview>" Please see fun.lua for an example.
+- `createSwitch` - Create a toggle switch. See menu.lua for an example.
 - `createProgressBar` - Create an animated progress bar using "determinate" from Material Design. Please see menu.lua for an example. Includes linear call back (callBack) and later will support a repeating call back (repeatCallBack).
 - `actionSwitchScene` - This is built-in callback for handle scene switching for a button. The color of the switch can be changed.
 

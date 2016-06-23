@@ -3,8 +3,14 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.1.5] - 2016-06-23
+### Added
+- getWidgetByName("name_of_widget") - Returns the array of a named widget.
+- getWidgetBaseObject("name_of_widget") returns the base object of a named widget from one of the create methods. It can be inserted into another container, group, scrollview, etc.
+- More documentation on methods and helper methods.
+
 ### Changed
 - Re-factored the event handling. There will be another round of refactoring.
+- Renamed method "removeWidgetSwitch" to "removeWidgetToggleSwitch"
 
 ## [0.1.4] - 2016-06-22
 ### Added

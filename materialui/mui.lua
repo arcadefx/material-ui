@@ -522,24 +522,18 @@ function M.createRRectButton(options)
         elseif ( event.phase == "ended" ) then
             if M.isTouchPointOutOfRange( event ) then
                   event.phase = "offTarget"
-                  event.target:dispatchEvent(event)
+                  -- print("Its out of the button area")
+                  -- event.target:dispatchEvent(event)
             else
                 event.phase = "onTarget"
-                if M.interceptEventHandler ~= nil and M.interceptMoved == false then
+                if M.interceptMoved == false then
                     event.target = M.widgetDict[options.name]["rrect"]
                     event.callBackData = options.callBackData
                     assert( options.callBack )(event)
-                else
-                    event.target:dispatchEvent(event)
                 end
             end
             M.interceptEventHandler = nil
             M.interceptMoved = false
-        elseif ( event.phase == "onTarget" ) then
-            event.callBackData = options.callBackData
-            assert( options.callBack )(event)
-        elseif ( event.phase == "offTarget" ) then
-            --print("Its out of the button area")
         end
     end
     M.widgetDict[options.name]["rrect"]:addEventListener( "touch", M.widgetDict[options.name]["rrect"] )
@@ -685,25 +679,19 @@ function M.createRectButton(options)
             end
         elseif ( event.phase == "ended" ) then
             if M.isTouchPointOutOfRange( event ) then
-                  event.phase = "offTarget"
-                  event.target:dispatchEvent(event)
+                event.phase = "offTarget"
+                -- print("Its out of the button area")
+                -- event.target:dispatchEvent(event)
             else
               event.phase = "onTarget"
-                if M.interceptEventHandler ~= nil and M.interceptMoved == false then
+                if M.interceptMoved == false then
                     event.target = M.widgetDict[options.name]["rrect"]
                     event.callBackData = options.callBackData
                     assert( options.callBack )(event)
-                else
-                    event.target:dispatchEvent(event)
                 end
                 M.interceptEventHandler = nil
                 M.interceptMoved = false
             end
-        elseif ( event.phase == "onTarget" ) then
-            event.callBackData = options.callBackData
-            assert( options.callBack )(event)
-        elseif ( event.phase == "offTarget" ) then
-            --print("Its out of the button area")
         end
     end
     M.widgetDict[options.name]["rrect"]:addEventListener( "touch", M.widgetDict[options.name]["rrect"] )
@@ -850,28 +838,21 @@ function M.createIconButton(options)
             end
         elseif ( event.phase == "ended" ) then
             if M.isTouchPointOutOfRange( event ) then
-                  event.phase = "offTarget"
-                  event.target:dispatchEvent(event)
+                event.phase = "offTarget"
+                -- event.target:dispatchEvent(event)
+                -- print("Its out of the button area")
             else
               event.phase = "onTarget"
-                if M.interceptEventHandler ~= nil and M.interceptMoved == false then
+                if M.interceptMoved == false then
                     event.target = M.widgetDict[options.name]["checkbox"]
                     event.altTarget = M.widgetDict[options.name]["myText"]
+                    event.myTargetName = options.name
                     event.callBackData = options.callBackData
                     assert( options.callBack )(event)
-                else
-                    event.target:dispatchEvent(event)
                 end
                 M.interceptEventHandler = nil
                 M.interceptMoved = false
             end
-        elseif ( event.phase == "onTarget" ) then
-            event.myTargetName = options.name
-            event.altTarget = M.widgetDict[options.name]["myText"]
-            event.callBackData = options.callBackData
-            assert( options.callBack )(event)
-        elseif ( event.phase == "offTarget" ) then
-            --print("Its out of the button area")
         end
     end
     M.widgetDict[options.name]["myText"]:addEventListener( "touch", M.widgetDict[options.name]["myText"] )
@@ -1082,31 +1063,22 @@ function M.createRadioButton(options)
             end
         elseif ( event.phase == "ended" ) then
             if M.isTouchPointOutOfRange( event ) then
-                  event.phase = "offTarget"
-                  event.target:dispatchEvent(event)
+                event.phase = "offTarget"
+                -- event.target:dispatchEvent(event)
+                -- print("Its out of the button area")
             else
               event.phase = "onTarget"
-                if M.interceptEventHandler ~= nil and M.interceptMoved == false then
+                if M.interceptMoved == false then
                     --event.target = M.widgetDict[options.name]["rrect"]
                     event.myTargetName = options.name
                     event.myTargetBasename = options.basename
                     event.altTarget = M.widgetDict[options.basename]["radio"][options.name]["myText"]
                     event.callBackData = options.callBackData
                     assert( options.callBack )(event)
-                else
-                    event.target:dispatchEvent(event)
                 end
                 M.interceptEventHandler = nil
                 M.interceptMoved = false
             end
-        elseif ( event.phase == "onTarget" ) then
-            event.myTargetName = options.name
-            event.myTargetBasename = options.basename
-            event.altTarget = M.widgetDict[options.basename]["radio"][options.name]["myText"]
-            event.callBackData = options.callBackData
-            assert( options.callBack )(event)
-        elseif ( event.phase == "offTarget" ) then
-            --print("Its out of the button area")
         end
     end
     M.widgetDict[options.basename]["radio"][options.name]["myText"]:addEventListener( "touch", M.widgetDict[options.basename]["radio"][options.name]["myText"] )
@@ -1344,10 +1316,11 @@ function M.createToolbarButton( options )
         elseif ( event.phase == "ended" ) then
             if M.isTouchPointOutOfRange( event ) then
                 event.phase = "offTarget"
-                event.target:dispatchEvent(event)
+                -- event.target:dispatchEvent(event)
+                -- print("Its out of the button area")
             else
                 event.phase = "onTarget"
-                if M.interceptEventHandler ~= nil and M.interceptMoved == false then
+                if M.interceptMoved == false then
                     --event.target = M.widgetDict[options.name]["rrect"]
                     transition.to(M.widgetDict[options.basename]["toolbar"]["slider"],{time=350, x=button["mygroup"].x, transition=easing.inOutCubic})
                     event.myTargetName = options.name
@@ -1355,21 +1328,10 @@ function M.createToolbarButton( options )
                     event.altTarget = M.widgetDict[options.basename]["toolbar"][options.name]["myText"]
                     event.callBackData = options.callBackData
                     assert( options.callBack )(event)
-                else
-                    event.target:dispatchEvent(event)
                 end
                 M.interceptEventHandler = nil
                 M.interceptMoved = false
             end
-        elseif ( event.phase == "onTarget" ) then
-            transition.to(M.widgetDict[options.basename]["toolbar"]["slider"],{time=350, x=button["mygroup"].x, transition=easing.inOutCubic})
-            event.myTargetName = options.name
-            event.myTargetBasename = options.basename
-            event.altTarget = M.widgetDict[options.basename]["toolbar"][options.name]["myText"]
-            event.callBackData = options.callBackData
-            assert( options.callBack )(event)
-        elseif ( event.phase == "offTarget" ) then
-            --print("Its out of the button area")
         end
     end
 
@@ -2195,11 +2157,12 @@ function M.createToggleSwitch(options)
             end
         elseif ( event.phase == "ended" ) then
             if M.isTouchPointOutOfRange( event ) then
-                  event.phase = "offTarget"
-                  event.target:dispatchEvent(event)
+                event.phase = "offTarget"
+                -- event.target:dispatchEvent(event)
+                -- print("Its out of the button area")
             else
               event.phase = "onTarget"
-                if M.interceptEventHandler ~= nil and M.interceptMoved == false then
+                if M.interceptMoved == false then
                     event.target = M.widgetDict[options.name]["rect"]
                     if M.widgetDict[options.name]["isChecked"] == true then
                         M.widgetDict[options.name]["isChecked"] = false
@@ -2209,21 +2172,8 @@ function M.createToggleSwitch(options)
                     M.flipSwitch(options.name, nil)
                     event.callBackData = options.callBackData
                     assert( options.callBack )(event)
-                else
-                    event.target:dispatchEvent(event)
                 end
             end
-        elseif ( event.phase == "onTarget" ) then
-            if M.widgetDict[options.name]["isChecked"] == true then
-                M.widgetDict[options.name]["isChecked"] = false
-            else
-                M.widgetDict[options.name]["isChecked"] = true
-            end
-            M.flipSwitch(options.name, nil)
-            event.callBackData = options.callBackData
-            assert( options.callBack )(event)
-        elseif ( event.phase == "offTarget" ) then
-            --print("Its out of the button area")
         end
     end
 

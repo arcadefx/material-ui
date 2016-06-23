@@ -856,6 +856,7 @@ function M.createIconButton(options)
               event.phase = "onTarget"
                 if M.interceptEventHandler ~= nil and M.interceptMoved == false then
                     event.target = M.widgetDict[options.name]["checkbox"]
+                    event.altTarget = M.widgetDict[options.name]["myText"]
                     event.callBackData = options.callBackData
                     assert( options.callBack )(event)
                 else

@@ -50,7 +50,7 @@ function scene:create( event )
         callBack = mui.actionSwitchScene,
         callBackData = { 
             sceneDestination = "menu",
-            sceneTransitionColor = { 1, 0.58, 0 }
+            sceneTransitionColor = { 0, 0.73, 1 }
         } -- scene menu.lua
     })
 

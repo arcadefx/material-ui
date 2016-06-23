@@ -72,7 +72,7 @@ function scene:create( event )
         callBack = mui.actionSwitchScene,
         callBackData = { 
             sceneDestination = "fun",
-            sceneTransitionColor = { 1, 0.58, 0 }
+            sceneTransitionColor = { 0, 0.73, 1 }
         } -- scene fun.lua
     })
 
@@ -89,6 +89,7 @@ function scene:create( event )
         callBack = mui.actionForPlus
     })
 
+    -- simulates a checkbox but can be other toggle buttons too!
     mui.createIconButton({
         name = "check",
         text = "check_box_outline_blank",
@@ -102,7 +103,7 @@ function scene:create( event )
         callBack = mui.actionForCheckbox
     })
 
-    mui.createSwitch({
+    mui.createToggleSwitch({
         name = "switch_demo",
         size = mui.getScaleVal(55),
         x = mui.getScaleVal(360),

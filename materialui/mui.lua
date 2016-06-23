@@ -877,6 +877,20 @@ function M.createIconButton(options)
     M.widgetDict[options.name]["myText"]:addEventListener( "touch", M.widgetDict[options.name]["myText"] )
 end
 
+function M.createCheckBox(options)
+    M.createIconButton({
+        name = options.name,
+        text = "check_box_outline_blank",
+        width = options.width,
+        height = options.height,
+        x = options.x,
+        y = options.y,
+        font = "MaterialIcons-Regular.ttf",
+        textColor = options.textColor,
+        textAlign = "center",
+        callBack = M.actionForCheckbox
+    })
+end
 
 --[[
  options..
@@ -2071,7 +2085,7 @@ function M.postProgressCallBack( object )
     print("postProgressCallBack")
 end
 
-function M.createSwitch(options)
+function M.createToggleSwitch(options)
     if options == nil then return end
 
     local x,y = 160, 240

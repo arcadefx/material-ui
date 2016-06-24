@@ -2053,7 +2053,7 @@ function M.completeProgressBarCallBack( object )
     if object.noFinishAnimation == nil and object.percentComplete >= 99 then
         transition.to( M.widgetDict[object.name]["progressbar"], {
             time = 300,
-            yScale = 0.0,
+            yScale = 0.01,
             transition = easing.linear,
             iterations = 1,
             onComplete = M.completeProgressBarFinalCallBack,
@@ -2061,7 +2061,7 @@ function M.completeProgressBarCallBack( object )
         if M.widgetDict[object.name]["progressbackdrop"].hideme ~= nil then
             transition.to( M.widgetDict[object.name]["progressbackdrop"], {
                 time = 300,
-                yScale = 0.0,
+                yScale = 0.01,
                 transition = easing.linear,
                 iterations = 1
             } )
@@ -2074,6 +2074,7 @@ end
 function M.completeProgressBarFinalCallBack(object)
     if object.name ~= nil then
         if M.widgetDict[object.name] == nil then return end
+        M.widgetDict[object.name]["progressbar"].isVisible = false
         if object.callBack ~= nil then
             assert(object.callBack)( object )
         end

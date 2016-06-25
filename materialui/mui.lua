@@ -2403,9 +2403,12 @@ function M.createDialog(options)
         if options.buttons["okayButton"].textColor == nil then
             options.buttons["okayButton"].textColor = { 1, 0, 0 }
         end
+        if options.buttons["okayButton"].text == nil then
+            options.buttons["okayButton"].text = "Okay"
+        end
         M.createRRectButton({
             name = "okay_dialog_button",
-            text = "Okay",
+            text = options.buttons["okayButton"].text,
             width = M.getScaleVal(100),
             height = M.getScaleVal(50),
             x = bx,
@@ -2435,12 +2438,15 @@ function M.createDialog(options)
         if options.buttons["cancelButton"].textColor == nil then
             options.buttons["cancelButton"].textColor = { 1, 0, 0 }
         end
+        if options.buttons["cancelButton"].text == nil then
+            options.buttons["cancelButton"].text = "Okay"
+        end
         if bx > 0 then
             bx = (bx - (bx * 0.1)) - M.getScaleVal(100)
         end
         M.createRRectButton({
             name = "cancel_dialog_button",
-            text = "Cancel",
+            text = options.buttons["cancelButton"].text,
             width = M.getScaleVal(100),
             height = M.getScaleVal(50),
             x = bx,

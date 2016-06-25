@@ -55,6 +55,7 @@ function M.init(data)
   M.interceptEventHandler = nil
   M.interceptMoved = false
   M.dialogInUse = false
+  M.dialogName = nil
 
   M.scene = composer.getScene(composer.getSceneName("current"))
   M.scene.name = composer.getSceneName("current")
@@ -75,13 +76,13 @@ function M.updateUI(event, skipName)
     for widget in pairs(M.widgetDict) do
         if widget ~= skipName or skipName == nil then
             widgetType = M.widgetDict[widget]["type"]
-            if (widgetType == "TextField" or widgetType == "TextBox") and M.widgetDict[widget].scrollView ~= nil and M.widgetDict[widget]["textfield"].isVisible == true then
+            if (widgetType == "TextField" or widgetType == "TextBox") and M.widgetDict[widget]["textfield"].isVisible == true then
                 -- hide the native field
                 timer.performWithDelay(100, function() native.setKeyboardFocus(nil) end, 1)
                 M.widgetDict[widget]["textfieldfake"].isVisible = true
                 M.widgetDict[widget]["textfield"].isVisible = false
             elseif (widgetType == "TextField" or widgetType == "TextBox") and M.widgetDict[widget]["textfield"].isVisible == true then
-                timer.performWithDelay(100, function() native.setKeyboardFocus(nil) end, 1)
+               --  timer.performWithDelay(100, function() native.setKeyboardFocus(nil) end, 1)
             end
         end
     end
@@ -100,7 +101,7 @@ function M.getWidgetBaseObject(name)
     if name ~= nil and string.len(name) > 1 then
         for widget in pairs(M.widgetDict) do
           local widgetType = M.widgetDict[widget]["type"]
-          if widgetType ~= nil then
+          if widgetType ~= nil and widget == name then
             if widgetType == "RRectButton" then
                widgetData = M.widgetDict[widget]["container"]
             elseif widgetType == "RectButton" then
@@ -120,8 +121,10 @@ function M.getWidgetBaseObject(name)
                widgetData = M.widgetDict[widget]["container"]
             elseif widgetType == "ProgressBar" then
                widgetData = M.widgetDict[widget]["mygroup"]
-            elseif widgetType == "Switch" then
+            elseif widgetType == "ToggleSwitch" then
                widgetData = M.widgetDict[widget]["mygroup"]
+            elseif widgetType == "Dialog" then
+               widgetData = M.widgetDict[widget]["container"]
             end
           end
         end
@@ -378,6 +381,7 @@ end
 function M.onRowTouch( event )
     local phase = event.phase
  
+    if M.dialogInUse == true then return end
     if "press" == phase and M.touching == false then
         M.touching = true
         M.updateUI(event)
@@ -491,6 +495,7 @@ function M.createRRectButton(options)
     end
     M.widgetDict[options.name]["rrect"]:setFillColor( unpack(fillColor) )
     M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["rrect"] )
+    M.widgetDict[options.name]["rrect"].dialogName = options.dialogName
 
     local rrect = M.widgetDict[options.name]["rrect"]
 
@@ -541,6 +546,7 @@ function M.createRRectButton(options)
     local scaleFactor = (maxWidth / radius) * 0.5 -- (since this is a radius of circle)
 
     function rrect:touch (event)
+        if M.dialogInUse == true and options.dialogName == nil then return end
         if ( event.phase == "began" ) then
             --event.target:takeFocus(event)
             -- if scrollView then use the below
@@ -701,6 +707,7 @@ function M.createRectButton(options)
     local scaleFactor = (maxWidth / radius) * 0.5 -- (since this is a radius of circle)
 
     function rrect:touch (event)
+        if M.dialogInUse == true and options.dialogName == nil then return end
         if ( event.phase == "began" ) then
             M.interceptEventHandler = rrect
             M.updateUI(event)
@@ -860,6 +867,7 @@ function M.createIconButton(options)
     local scaleFactor = ((maxWidth * (1.3 * M.masterRatio)) / radius) -- (since this is a radius of circle)
 
     function checkbox:touch (event)
+        if M.dialogInUse == true and options.dialogName == nil then return end
         if ( event.phase == "began" ) then
             M.interceptEventHandler = checkbox
             M.updateUI(event)
@@ -1085,6 +1093,7 @@ function M.createRadioButton(options)
     checkbox = radioButton["myText"]
 
     function checkbox:touch (event)
+        if M.dialogInUse == true and options.dialogName == nil then return end
         if ( event.phase == "began" ) then
             M.interceptEventHandler = checkbox
             M.updateUI(event)
@@ -1337,6 +1346,7 @@ function M.createToolbarButton( options )
         if M.widgetDict[options.basename]["toolbar"][options.name]["myText"].isChecked == true then
             return
         end
+        if M.dialogInUse == true and options.dialogName == nil then return end
         if ( event.phase == "began" ) then
             M.interceptEventHandler = thebutton
             M.updateUI(event)
@@ -1593,30 +1603,27 @@ function M.createTextField(options)
     M.widgetDict[options.name]["textfield"] = native.newTextField( 0, 0, options.width, options.height * scaleFontSize )
     M.widgetDict[options.name]["textfield"].name = options.name
     M.widgetDict[options.name]["textfield"].hasBackground = false
-    if options.scrollView ~= nil then
-        M.widgetDict[options.name]["textfield"].isVisible = false
-    end
+    M.widgetDict[options.name]["textfield"].isVisible = false
     M.widgetDict[options.name]["textfield"].text = options.text
     M.widgetDict[options.name]["textfield"]:setTextColor( unpack(M.widgetDict[options.name]["textlabel"].inactiveColor) )
 
-    if M.widgetDict[options.name].scrollView ~= nil then
-        local textOptions =
-        {
-            --parent = textGroup,
-            text = options.text,
-            x = 0,
-            y = 0,
-            width = options.width,
-            font = options.font,
-            fontSize = options.height * 0.55,
-            align = "left"  --new alignment parameter
-        }
-        M.widgetDict[options.name]["textfieldfake"] = display.newText( textOptions )
-        M.widgetDict[options.name]["textfieldfake"]:setFillColor( unpack(M.widgetDict[options.name]["textlabel"].inactiveColor) )
-        M.widgetDict[options.name]["textfieldfake"]:addEventListener("touch", M.showNativeInput)
-        M.widgetDict[options.name]["textfieldfake"].name = options.name
-        M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textfieldfake"] )
-    end
+    local textOptions =
+    {
+        --parent = textGroup,
+        text = options.text,
+        x = 0,
+        y = 0,
+        width = options.width,
+        font = options.font,
+        fontSize = options.height * 0.55,
+        align = "left"  --new alignment parameter
+    }
+    M.widgetDict[options.name]["textfieldfake"] = display.newText( textOptions )
+    M.widgetDict[options.name]["textfieldfake"]:setFillColor( unpack(M.widgetDict[options.name]["textlabel"].inactiveColor) )
+    M.widgetDict[options.name]["textfieldfake"]:addEventListener("touch", M.showNativeInput)
+    M.widgetDict[options.name]["textfieldfake"].name = options.name
+    M.widgetDict[options.name]["textfieldfake"].dialogName = options.dialogName
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textfieldfake"] )
 
     -- M.widgetDict[options.name]["textfield"].placeholder = "Subject"
     M.widgetDict[options.name]["textfield"].callBack = options.callBack
@@ -1626,11 +1633,16 @@ end
 
 function M.showNativeInput(event)
     local name = event.target.name
+    local dialogName = event.target.dialogName
     M.currentNativeFieldName = name
 
+    if M.dialogInUse == true and dialogName == nil then return end
     if event.phase == "began" then
 
-        local madeAdjustment = M.adjustNativeInputIntoView(event)
+        local madeAdjustment = false
+        if M.widgetDict[name]["scrollView"] ~= nil then
+            madeAdjustment = M.adjustNativeInputIntoView(event)
+        end
 
         M.widgetDict[name]["textfieldfake"].isVisible = false
         M.widgetDict[name]["textfield"].isVisible = true
@@ -1834,30 +1846,27 @@ function M.createTextBox(options)
     M.widgetDict[options.name]["textfield"].name = options.name
     M.widgetDict[options.name]["textfield"].hasBackground = false
     M.widgetDict[options.name]["textfield"].isEditable = options.isEditable
-    if options.scrollView ~= nil then
-        M.widgetDict[options.name]["textfield"].isVisible = false
-    end
+    M.widgetDict[options.name]["textfield"].isVisible = false
     M.widgetDict[options.name]["textfield"].text = options.text
     M.widgetDict[options.name]["textfield"]:setTextColor( unpack(M.widgetDict[options.name]["textlabel"].inactiveColor) )
 
-    if M.widgetDict[options.name].scrollView ~= nil then
-        local textOptions =
-        {
-            --parent = textGroup,
-            text = options.text,
-            x = 0,
-            y = 0,
-            width = options.width,
-            font = options.font,
-            fontSize = options.fontSize * 0.55,
-            align = "left"  --new alignment parameter
-        }
-        M.widgetDict[options.name]["textfieldfake"] = display.newText( textOptions )
-        M.widgetDict[options.name]["textfieldfake"]:setFillColor( unpack(M.widgetDict[options.name]["textlabel"].inactiveColor) )
-        M.widgetDict[options.name]["textfieldfake"]:addEventListener("touch", M.showNativeInput)
-        M.widgetDict[options.name]["textfieldfake"].name = options.name
-        M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textfieldfake"] )
-    end
+    local textOptions =
+    {
+        --parent = textGroup,
+        text = options.text,
+        x = 0,
+        y = 0,
+        width = options.width,
+        font = options.font,
+        fontSize = options.fontSize * 0.55,
+        align = "left"  --new alignment parameter
+    }
+    M.widgetDict[options.name]["textfieldfake"] = display.newText( textOptions )
+    M.widgetDict[options.name]["textfieldfake"]:setFillColor( unpack(M.widgetDict[options.name]["textlabel"].inactiveColor) )
+    M.widgetDict[options.name]["textfieldfake"]:addEventListener("touch", M.showNativeInput)
+    M.widgetDict[options.name]["textfieldfake"].name = options.name
+    M.widgetDict[options.name]["textfieldfake"].dialogName = options.dialogName
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textfieldfake"] )
 
     -- M.widgetDict[options.name]["textfield"].placeholder = "Subject"
     M.widgetDict[options.name]["textfield"].callBack = options.callBack
@@ -2053,7 +2062,7 @@ function M.completeProgressBarCallBack( object )
     if object.noFinishAnimation == nil and object.percentComplete >= 99 then
         transition.to( M.widgetDict[object.name]["progressbar"], {
             time = 300,
-            yScale = 0.01,
+            yScale = 0.01   ,
             transition = easing.linear,
             iterations = 1,
             onComplete = M.completeProgressBarFinalCallBack,
@@ -2131,7 +2140,7 @@ function M.createToggleSwitch(options)
     M.widgetDict[options.name]["options"] = options
     M.widgetDict[options.name]["isChecked"] = isChecked
     M.widgetDict[options.name].name = options.name
-    M.widgetDict[options.name]["type"] = "Switch"
+    M.widgetDict[options.name]["type"] = "ToggleSwitch"
     M.widgetDict[options.name]["mygroup"] = display.newGroup()
     M.widgetDict[options.name]["mygroup"].x = x
     M.widgetDict[options.name]["mygroup"].y = y
@@ -2180,6 +2189,7 @@ function M.createToggleSwitch(options)
     local rect = M.widgetDict[options.name]["mygroup"]["rectmaster"]
 
     function rect:touch (event)
+        if M.dialogInUse == true and options.dialogName ~= nil then return end
         if ( event.phase == "began" ) then
             M.interceptEventHandler = rect
             M.updateUI(event)
@@ -2277,37 +2287,49 @@ function M.createDialog(options)
         options.height = options.size
     end
 
-    local textColorOff = { 1, 1, 1 }
-    if options.textColorOff ~= nil then
-        textColorOff = options.textColorOff
-    end
-
     local textColor = { 1, 1, 1 }
     if options.textColor ~= nil then
         textColor = options.textColor
     end
 
-    if options.foregroundColor == nil then
-        options.foregroundColor = { 0, 0, 1, 0, 1 }
-    end
-
     if options.backgroundColor == nil then
-        options.backgroundColor = { 0, 0, 1, 0, 0.8 }
+        options.backgroundColor = { 1, 1, 1, 1 }
     end
 
+    -- paint normal or use gradient?
+    local paint = nil
+    if options.gradientBorderShadowColor1 ~= nil and options.gradientBorderShadowColor2 ~= nil then
+        if options.gradientDirection == nil then
+            options.gradientDirection = "down"
+        end
+        paint = {
+            type = "gradient",
+            color1 = options.gradientBorderShadowColor1,
+            color2 = options.gradientBorderShadowColor2,
+            direction = options.gradientDirection
+        }
+    end
+
+    -- place on main display
     M.widgetDict[options.name] = {}
+    M.widgetDict[options.name]["rectbackdrop"] = display.newRect( display.contentWidth * 0.5, display.contentHeight * 0.5, display.contentWidth, display.contentHeight)
+    M.widgetDict[options.name]["rectbackdrop"].strokeWidth = 0
+    M.widgetDict[options.name]["rectbackdrop"]:setFillColor( unpack( {0.4, 0.4, 0.4, 0.3} ) )
+
+    -- now for the rest of the dialog
+    local centerX = (display.contentWidth * 0.5)
+    local centerY = (display.contentHeight * 0.5)
+
     M.widgetDict[options.name]["options"] = options
+    M.dialogName = options.name
     M.widgetDict[options.name].name = options.name
-    M.widgetDict[options.name]["type"] = "Switch"
-    M.widgetDict[options.name]["container"] = display.newContainer( options.width, options.height )
-    M.widgetDict[options.name]["container"]:translate( x, y ) -- center the container
+    M.widgetDict[options.name]["type"] = "Dialog"
+    M.widgetDict[options.name]["container"] = display.newContainer( options.width+20, options.height+20 )
+    M.widgetDict[options.name]["container"]:translate( centerX, centerY ) -- center the container
     M.widgetDict[options.name]["touching"] = false
+    M.widgetDict[options.name]["container"].y = display.contentHeight * 2
 
     M.dialogInUse = true
-
-    if options.callBackOkay ~= nil then
-        M.widgetDict[options.name]["callBackOkay"] = options.callBackOkay
-    end
 
     if options.callBackCancel ~= nil then
         M.widgetDict[options.name]["callBackCancel"] = options.callBackCancel
@@ -2317,61 +2339,149 @@ function M.createDialog(options)
 
     x = 0
     y = 0
-    M.widgetDict[options.name]["container"]["rect"] = display.newRect( x, y, options.width * 0.9, (options.height * 0.9))
-    M.widgetDict[options.name]["container"]["rect"].strokeWidth = 4
-    M.widgetDict[options.name]["container"]["rect"]:setFillColor( unpack(options.backgroundColorOff) )
-    M.widgetDict[options.name]["container"]["rect"].name = options.name
-    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["container"]["rect"] )
+    local width = options.width * 0.98
+    local height = options.height * 0.98
+    local nr = width * 0.02
 
-    M.createRectButton({
-        name = "okay_dialog_button",
-        text = "Okay",
-        width = M.getScaleVal(75),
-        height = M.getScaleVal(50),
-        x = M.getScaleVal(50),
-        y = M.getScaleVal(0),
-        font = native.systemFont,
-        fillColor = { 0.17, 0.88, 0.12 },
-        textColor = { 1, 1, 1 },
-        touchpoint = true,
-        callBack = M.actionSwitchScene,
-        callBackData = { 
-            sceneDestination = "fun",
-            sceneTransitionColor = { 0, 0.73, 1 }
-        } -- scene fun.lua
-    })
+    M.widgetDict[options.name]["container"]["rrect2"] = display.newRoundedRect( x, y, options.width, options.height, nr )
+    if paint ~= nil then
+        local object = M.widgetDict[options.name]["container"]["rrect2"]
+       object.fill = paint
 
-    M.widgetDict[options.name]["container"]:insert( M.getWidgetBaseObject("okay_dialog_button") )
-
-    local rect = M.widgetDict[options.name]["container"]["rect"]
-
-    function rect:touch (event)
-        if ( event.phase == "began" ) then
-            M.interceptEventHandler = rect
-            M.updateUI(event)
-            if M.touching == false and false then
-                M.touching = true
-                if options.touchpoint ~= nil and options.touchpoint == true then
-                    M.widgetDict[options.basename]["radio"][options.name]["myCircle"].x = event.x - M.widgetDict[options.basename]["radio"][options.name]["mygroup"].x
-                    M.widgetDict[options.basename]["radio"][options.name]["myCircle"].y = event.y - M.widgetDict[options.basename]["radio"][options.name]["mygroup"].y
-                end
-                transition.to(rect,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
-            end
-        elseif ( event.phase == "ended" ) then
-            if M.isTouchPointOutOfRange( event ) then
-                event.phase = "offTarget"
-            else
-              event.phase = "onTarget"
-                if M.interceptMoved == false then
-                    event.target = M.widgetDict[options.name]["rect"]
-                    event.callBackData = options.callBackData
-                    assert( options.callBack )(event)
-                end
-            end
-        end
+        object.fill.effect = "filter.vignetteMask"
+        object.fill.effect.innerRadius = 1
+        object.fill.effect.outerRadius = 0.1
+        M.widgetDict[options.name]["container"]:insert( object )
     end
 
-    M.widgetDict[options.name]["container"]["rect"]:addEventListener( "touch", M.widgetDict[options.name]["container"]["rect"] )
+    M.widgetDict[options.name]["container"]["rrect"] = display.newRoundedRect( x, y, width, height, nr)
+    M.widgetDict[options.name]["container"]["rrect"].strokeWidth = 0
+    M.widgetDict[options.name]["container"]["rrect"]:setFillColor( unpack( options.backgroundColor ) )
+    M.widgetDict[options.name]["container"]["rrect"].name = options.name
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["container"]["rrect"] )
+
+    -- add text
+    if options.text ~= nil then
+        if options.textX == nil then
+            options.textX = 0
+        end
+        if options.textY == nil then
+            options.textY = 0
+        end
+        if options.font == nil then
+            options.font = systemFont
+        end
+        if options.fontSize == nil then
+            options.fontSize = M.getScaleVal(24)
+        end
+        local outerWidth = M.widgetDict[options.name]["container"]["rrect"].contentWidth
+        local outerHeight = M.widgetDict[options.name]["container"]["rrect"].contentHeight
+        M.widgetDict[options.name]["container2"] = display.newContainer( outerWidth, outerHeight - M.getScaleVal(90) )
+        M.widgetDict[options.name]["container2"]:translate( 0, M.getScaleVal(-30) ) -- center the container
+        M.widgetDict[options.name]["myText"] = display.newText( options.text, options.textX, options.textY, options.font, options.fontSize)
+        M.widgetDict[options.name]["myText"]:setFillColor( unpack( options.textColor ) )
+        M.widgetDict[options.name]["container2"]:insert( M.widgetDict[options.name]["myText"] )
+        M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["container2"] )
+    end
+
+    ---[[--
+    local bx = 0
+    local by = (M.widgetDict[options.name]["container"]["rrect"].contentHeight * 0.5) - M.getScaleVal(50)
+    if options.buttons ~= nil and options.buttons.okayButton ~= nil and options.buttons.cancelButton ~= nil then
+        bx = (M.widgetDict[options.name]["container"]["rrect"].contentWidth * 0.5) - M.getScaleVal(100)
+    else
+        bx = 0
+    end
+
+    if options.buttons ~= nil and options.buttons["okayButton"] ~= nil then
+        if options.buttons["okayButton"].callBackOkay ~= nil then
+            M.widgetDict[options.name]["callBackOkay"] = options.buttons["okayButton"].callBackOkay
+        end
+        if options.buttons["okayButton"].fillColor == nil then
+            options.buttons["okayButton"].fillColor = { 1, 0, 0 }
+        end
+        if options.buttons["okayButton"].textColor == nil then
+            options.buttons["okayButton"].textColor = { 1, 0, 0 }
+        end
+        M.createRRectButton({
+            name = "okay_dialog_button",
+            text = "Okay",
+            width = M.getScaleVal(100),
+            height = M.getScaleVal(50),
+            x = bx,
+            y = by,
+            font = native.systemFont,
+            fillColor = options.buttons["okayButton"].fillColor,
+            textColor = options.buttons["okayButton"].textColor,
+            touchpoint = true,
+            callBack = M.dialogOkayCallback,
+            callBackData = {
+                sceneDestination = "fun",
+                sceneTransitionColor = { 0, 0.73, 1 }
+            }, -- scene fun.lua
+            dialogName = options.name
+        })
+        M.widgetDict[options.name]["container"]:insert( M.getWidgetBaseObject("okay_dialog_button") )
+    end
+
+    ---[[--
+    if options.buttons ~= nil and options.buttons["cancelButton"] ~= nil then
+        if options.buttons["cancelButton"].callBackOkay ~= nil then
+            M.widgetDict[options.name]["callBackCancel"] = options.buttons["cancelButton"].callBackCancel
+        end
+        if options.buttons["cancelButton"].fillColor == nil then
+            options.buttons["cancelButton"].fillColor = { 1, 0, 0 }
+        end
+        if options.buttons["cancelButton"].textColor == nil then
+            options.buttons["cancelButton"].textColor = { 1, 0, 0 }
+        end
+        if bx > 0 then
+            bx = (bx - (bx * 0.1)) - M.getScaleVal(100)
+        end
+        M.createRRectButton({
+            name = "cancel_dialog_button",
+            text = "Cancel",
+            width = M.getScaleVal(100),
+            height = M.getScaleVal(50),
+            x = bx,
+            y = by,
+            font = native.systemFont,
+            fillColor = options.buttons["cancelButton"].fillColor,
+            textColor = options.buttons["cancelButton"].textColor,
+            touchpoint = true,
+            callBack = M.dialogCancelCallback,
+            dialogName = options.name
+        })
+        M.widgetDict[options.name]["container"]:insert( M.getWidgetBaseObject("cancel_dialog_button") )
+    end
+    --]]--
+    transition.to( M.widgetDict[options.name]["container"], { time=300, y = centerY } )
+end
+
+function M.dialogOkayCallback(e)
+    if M.dialogName == nil then return end
+    if M.widgetDict[M.dialogName]["callBackOkay"] ~= nil then
+       assert( M.widgetDict[M.dialogName]["callBackOkay"] )(e)
+    end
+    M.dialogClose(e)
+end
+
+function M.actionForOkayDialog(e)
+    print("actionForOkayDialog called")
+end
+
+function M.dialogCancelCallback(e)
+    if M.widgetDict[M.dialogName]["callBackCancel"] ~= nil then
+       assert( M.widgetDict[M.dialogName]["callBackCancel"] )(e)
+    end
+    M.dialogClose(e)
+end
+
+function M.dialogClose(e)
+    -- fade out and destroy it
+    if M.dialogName ~= nil then
+        transition.to( M.widgetDict[M.dialogName]["container"], { time=300, y = display.contentHeight * 2, onComplete=M.removeWidgetDialog } )
+    end
 end
 
 function M.hideNativeWidgets()
@@ -2408,7 +2518,7 @@ function M.removeWidgets()
             M.removeWidgetTextBox(widget)
         elseif widgetType == "ProgressBar" then
             M.removeWidgetProgressBar(widget)
-        elseif widgetType == "Switch" then
+        elseif widgetType == "ToggleSwitch" then
             M.removeWidgetToggleSwitch(widget)
         end
       end
@@ -2420,6 +2530,9 @@ function M.removeWidgetRRectButton(widgetName)
     if widgetName == nil then
         return
     end
+
+    if M.widgetDict[widgetName]["rrect"] == nil then return end
+
     M.widgetDict[widgetName]["rrect"]:removeEventListener("touch", M.widgetDict[widgetName]["rrect"])
     M.widgetDict[widgetName]["myCircle"]:removeSelf()
     M.widgetDict[widgetName]["myCircle"] = nil
@@ -2438,6 +2551,9 @@ function M.removeWidgetRectButton(widgetName)
     if widgetName == nil then
         return
     end
+
+    if M.widgetDict[widgetName]["rrect"] == nil then return end
+
     M.widgetDict[widgetName]["rrect"]:removeEventListener("touch", M.widgetDict[widgetName]["rrect"])
     M.widgetDict[widgetName]["myCircle"]:removeSelf()
     M.widgetDict[widgetName]["myCircle"] = nil
@@ -2454,6 +2570,9 @@ function M.removeWidgetIconButton(widgetName)
     if widgetName == nil then
         return
     end
+
+    if M.widgetDict[widgetName]["myText"] == nil then return end
+
     M.widgetDict[widgetName]["myText"]:removeEventListener("touch", M.widgetDict[widgetName]["myText"])
     M.widgetDict[widgetName]["myCircle"]:removeSelf()
     M.widgetDict[widgetName]["myCircle"] = nil
@@ -2544,6 +2663,12 @@ function M.removeWidgetTextField(widgetName)
     if widgetName == nil then
         return
     end
+    if M.widgetDict[widgetName]["textfieldfake"] == nil then
+        return
+    end
+
+    M.widgetDict[widgetName]["textfieldfake"].isVisible = false
+    M.widgetDict[widgetName]["textfieldfake"]:removeSelf()
     M.widgetDict[widgetName]["textfield"].isVisible = false
     M.widgetDict[widgetName]["textfield"]:removeSelf()
     M.widgetDict[widgetName]["textfield"] = nil
@@ -2567,6 +2692,10 @@ function M.removeWidgetProgressBar(widgetName)
     if widgetName == nil then
         return
     end
+    if M.widgetDict[widgetName]["progressbackdrop"] == nil then
+        return
+    end
+
     M.widgetDict[widgetName]["progressbackdrop"]:removeSelf()
     M.widgetDict[widgetName]["progressbackdrop"] = nil
     M.widgetDict[widgetName]["progressbar"]:removeSelf()
@@ -2584,6 +2713,9 @@ function M.removeWidgetToggleSwitch(widgetName)
     if widgetName == nil then
         return
     end
+    if M.widgetDict[widgetName]["mygroup"] == nil then
+        return
+    end
     M.widgetDict[widgetName]["mygroup"]["circle"]:removeSelf()
     M.widgetDict[widgetName]["mygroup"]["circle"] = nil
     M.widgetDict[widgetName]["mygroup"]["circle2"]:removeSelf()
@@ -2597,6 +2729,36 @@ function M.removeWidgetToggleSwitch(widgetName)
     M.widgetDict[widgetName]["mygroup"]:removeSelf()
     M.widgetDict[widgetName]["mygroup"] = nil
     M.widgetDict[widgetName] = nil
+end
+
+function M.removeWidgetDialog()
+    if M.dialogName == nil then
+        return
+    end
+    local widgetName = M.dialogName
+
+    if M.widgetDict[widgetName]["rectbackdrop"] == nil then
+        return
+    end
+
+    -- remove buttons
+    M.removeWidgetRRectButton("okay_dialog_button")
+    M.removeWidgetRRectButton("cancel_dialog_button")
+
+    -- remove the rest
+    -- M.widgetDict[widgetName]["container"]["myText"]:removeSelf()
+    -- M.widgetDict[widgetName]["container"]["myText"] = nil
+    M.widgetDict[widgetName]["rectbackdrop"]:removeSelf()
+    M.widgetDict[widgetName]["rectbackdrop"] = nil
+    M.widgetDict[widgetName]["container"]["rrect"]:removeSelf()
+    M.widgetDict[widgetName]["container"]["rrect"] = nil
+    M.widgetDict[widgetName]["container"]["rrect2"]:removeSelf()
+    M.widgetDict[widgetName]["container"]["rrect2"] = nil
+    M.widgetDict[widgetName]["container"]:removeSelf()
+    M.widgetDict[widgetName]["container"] = nil
+    M.widgetDict[widgetName] = nil
+    M.dialogName = nil
+    M.dialogInUse = false
 end
 
 return M

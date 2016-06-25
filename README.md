@@ -67,6 +67,7 @@ Available Methods
 -------------
 Please read Lua code to find all parameters and see example in the repo call menu.lua.  All methods below implement a callback and lots of configuration options.
 
+- `createDialog` - Create a dialog (modal) with content. Supports up to two buttons (Okay, Cancel) with callbacks. See menu.lua for an example.
 - `createIconButton` - Create an icon button using the material design icon font.  The demo shows a 'checkbox' as an example.
 - `createProgressBar` - Create an animated progress bar using "determinate" from Material Design. See menu.lua for an example. Includes linear call back (callBack) and later will support a repeating call back (repeatCallBack).
 - `createRadioGroup` - Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.

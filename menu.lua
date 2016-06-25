@@ -42,9 +42,47 @@ function scene:create( event )
     sceneGroup:insert( background )
 
     mui.init()
+
+    -- dialog box example
+    -- use mui.getWidgetBaseObject("dialog_demo") to get surface to add more content
+    local showDialog = function()
+        mui.createDialog({
+            name = "dialog_demo",
+            width = mui.getScaleVal(450),
+            height = mui.getScaleVal(300),
+            text = "Do you want to continue?",
+            textX = 0,
+            textY = 0,
+            textColor = { 0, 0, 0, 1 },
+            font = systemFont,
+            fontSize = mui.getScaleVal(32),
+            backgroundColor = { 1, 1, 1, 1 },
+            gradientBorderShadowColor1 = { 1, 1, 1, 0.4 },
+            gradientBorderShadowColor2 = { 0, 0, 0, 0.4 },
+            buttons = {
+                font = native.systemFont,
+                okayButton = {
+                    text = "Okay",
+                    textColor = { 0.01, 0.65, 0.08 },
+                    fillColor = { 1, 1, 1 },
+                    width = mui.getScaleVal(100),
+                    height = mui.getScaleVal(50),
+                    callBackOkay = mui.actionForOkayDialog
+                },
+                cancelButton = {
+                    text = "Cancel",
+                    textColor = { 0.01, 0.65, 0.08 },
+                    fillColor = { 1, 1, 1 },
+                    width = mui.getScaleVal(100),
+                    height = mui.getScaleVal(50)
+                }
+            }
+        })
+    end
+
     mui.createRRectButton({
-        name = "newGame",
-        text = "New Game",
+        name = "newDialog",
+        text = "Open Dialog",
         width = mui.getScaleVal(200),
         height = mui.getScaleVal(60),
         x = mui.getScaleVal(160),
@@ -55,7 +93,7 @@ function scene:create( event )
         gradientDirection = "up",
         textColor = { 1, 1, 1 },
         radius = 10,
-        callBack = mui.actionForButton
+        callBack = showDialog
     })
 
     mui.createRectButton({
@@ -222,21 +260,6 @@ function scene:create( event )
         hideBackdropWhenDone = false
     })
 
-    --[[-- do not use yet, this will crash :)
-    mui.createDialog({
-        name = "dialog_demo",
-        width = mui.getScaleVal(300),
-        height = mui.getScaleVal(300),
-        x = mui.getScaleVal(260),
-        y = mui.getScaleVal(320),
-        textColorOff = { 0.57, 0.85, 1, 1 },
-        textColor = { 0.25, 0.75, 1, 1 },
-        backgroundColor = { 0.74, 0.88, 0.99, 1 },
-        backgroundColorOff = { 0.82, 0.95, 0.98, 1 },
-        callBack = mui.actionForSwitch
-    })
-    --]]--
-
     -- show how to increase progress bar by percent using a timer or method after the above creation
     local function increaseMyProgressBar()
         print("increaseMyProgressBar")
@@ -244,6 +267,7 @@ function scene:create( event )
     end
     timer.performWithDelay(3000, increaseMyProgressBar, 1)
     -- increaseMyProgressBar() -- will be queued if already processing an increase
+
 end
 
 -- "scene:show()"

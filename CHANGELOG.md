@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.6] - 2016-06-25
+### Added
+- createDialog() - Create a dialog window with content. Supports up to two buttons (Okay, Cancel) with callbacks. See menu.lua for an example.
+
+### Change
+- Fixed some bugs and refactored parts of the code
+
 ## [0.1.5] - 2016-06-23
 ### Added
 - getWidgetByName("name_of_widget") - Returns the array of a named widget.

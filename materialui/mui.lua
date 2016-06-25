@@ -2461,7 +2461,7 @@ function M.createDialog(options)
         M.widgetDict[options.name]["container"]:insert( M.getWidgetBaseObject("cancel_dialog_button") )
     end
     --]]--
-    transition.to( M.widgetDict[options.name]["container"], { time=300, y = centerY } )
+    transition.to( M.widgetDict[options.name]["container"], { time=800, y = centerY, transition=easing.inOutCubic } )
 end
 
 function M.dialogOkayCallback(e)
@@ -2486,7 +2486,7 @@ end
 function M.dialogClose(e)
     -- fade out and destroy it
     if M.dialogName ~= nil then
-        transition.to( M.widgetDict[M.dialogName]["container"], { time=300, y = display.contentHeight * 2, onComplete=M.removeWidgetDialog } )
+        transition.to( M.widgetDict[M.dialogName]["container"], { time=800, y = display.contentHeight * 2, onComplete=M.removeWidgetDialog, transition=easing.inOutCubic } )
     end
 end
 

@@ -85,7 +85,8 @@ Helper Methods
 - `getWidgetByName` - returns the array of a named widget.
 - `getWidgetBaseObject` - returns the base object of a named widget created with one of the above methods. It can be inserted into another container, group, scrollview and moved around, etc.  Example: rectangle_surface:insert( mui.getWidgetBaseObject("okay_button") )
 
-Remove widget methods - these will remove the widget by name and release from the memory:
+Remove widget methods - these will remove the widget by name and release memory:
+- `removeWidgetDialog`
 - `removeWidgetIconButton`
 - `removeWidgetProgressBar`
 - `removeWidgetRadioButton`
@@ -94,6 +95,7 @@ Remove widget methods - these will remove the widget by name and release from th
 - `removeWidgetTableView`
 - `removeWidgetTextField`
 - `removeWidgetTextBox`
+- `removeWidgetToggleSwitch`
 - `removeWidgetToolbar`
 - `removeWidgetToolbarButton`
 - `removeWidgetSwitch`

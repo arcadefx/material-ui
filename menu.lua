@@ -67,14 +67,22 @@ function scene:create( event )
                     fillColor = { 1, 1, 1 },
                     width = mui.getScaleVal(100),
                     height = mui.getScaleVal(50),
-                    callBackOkay = mui.actionForOkayDialog
+                    callBackOkay = mui.actionForOkayDialog,
+                    clickAnimation = {
+                        colorBackground = { 0.4, 0.4, 0.4, 0.4 },
+                        time = 400
+                    }
                 },
                 cancelButton = {
                     text = "Cancel",
                     textColor = { 0.01, 0.65, 0.08 },
                     fillColor = { 1, 1, 1 },
                     width = mui.getScaleVal(100),
-                    height = mui.getScaleVal(50)
+                    height = mui.getScaleVal(50),
+                    clickAnimation = {
+                        colorBackground = { 0.4, 0.4, 0.4, 0.4 },
+                        time = 400
+                    }
                 }
             }
         })

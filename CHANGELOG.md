@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.7] - 2016-06-26
+### Added
+- Added simple fadeOut click animation (clickAnimation array) with timer to createRect and createRRect(). See menu.lua for an example.
+
+### Change
+- README documentation updated.
+
 ## [0.1.6] - 2016-06-25
 ### Added
 - createDialog() - Create a dialog window with content. Supports up to two buttons (Okay, Cancel) with callbacks. See menu.lua for an example.

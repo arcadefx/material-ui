@@ -515,6 +515,8 @@ function M.createRRectButton(options)
         textColor = options.textColor
     end
 
+    M.widgetDict[options.name]["clickAnimation"] = options.clickAnimation
+
     M.widgetDict[options.name]["font"] = font
     M.widgetDict[options.name]["fontSize"] = fontSize
     M.widgetDict[options.name]["textMargin"] = textMargin
@@ -557,10 +559,6 @@ function M.createRRectButton(options)
                 if options.clickAnimation ~= nil then
                     if options.clickAnimation["colorBackground"] ~= nil then
                         M.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.clickAnimation["colorBackground"]) )
-                        if options.clickAnimation["time"] == nil then
-                            options.clickAnimation["time"] = 400
-                        end
-                        transition.fadeOut(M.widgetDict[options.name]["rrect"],{time=options.clickAnimation["time"]})
                     end
                 end
                 if options.touchpoint ~= nil and options.touchpoint == true then
@@ -571,6 +569,8 @@ function M.createRRectButton(options)
                 M.widgetDict[options.name].myCircleTrans = transition.to( M.widgetDict[options.name]["myCircle"], { time=500,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
                 transition.to(M.widgetDict[options.name]["container"],{time=300, xScale=1.02, yScale=1.02, transition=easing.continuousLoop})
             end
+        elseif ( event.phase == "moved" ) then
+            M.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.fillColor) )
         elseif ( event.phase == "ended" ) then
             if M.isTouchPointOutOfRange( event ) then
                   event.phase = "offTarget"
@@ -579,6 +579,12 @@ function M.createRRectButton(options)
             else
                 event.phase = "onTarget"
                 if M.interceptMoved == false then
+                    if options.clickAnimation ~= nil then
+                        if options.clickAnimation["time"] == nil then
+                            options.clickAnimation["time"] = 400
+                        end
+                        transition.fadeOut(M.widgetDict[options.name]["rrect"],{time=options.clickAnimation["time"]})
+                    end
                     event.target = M.widgetDict[options.name]["rrect"]
                     event.callBackData = options.callBackData
                     assert( options.callBack )(event)
@@ -586,6 +592,7 @@ function M.createRRectButton(options)
             end
             M.interceptEventHandler = nil
             M.interceptMoved = false
+            M.touching = false
         end
     end
     M.widgetDict[options.name]["rrect"]:addEventListener( "touch", M.widgetDict[options.name]["rrect"] )
@@ -725,10 +732,6 @@ function M.createRectButton(options)
                 if options.clickAnimation ~= nil then
                     if options.clickAnimation["colorBackground"] ~= nil then
                         M.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.clickAnimation["colorBackground"]) )
-                        if options.clickAnimation["time"] == nil then
-                            options.clickAnimation["time"] = 400
-                        end
-                        transition.fadeOut(M.widgetDict[options.name]["rrect"],{time=options.clickAnimation["time"]})
                     end
                 end
                 if options.touchpoint ~= nil and options.touchpoint == true then
@@ -739,6 +742,8 @@ function M.createRectButton(options)
                 M.widgetDict[options.name].myCircleTrans = transition.to( M.widgetDict[options.name]["myCircle"], { time=500,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
                 transition.to(M.widgetDict[options.name]["container"],{time=500, xScale=1.02, yScale=1.02, transition=easing.continuousLoop})
             end
+        elseif ( event.phase == "moved" ) then
+            M.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.fillColor) )
         elseif ( event.phase == "ended" ) then
             if M.isTouchPointOutOfRange( event ) then
                 event.phase = "offTarget"
@@ -747,12 +752,19 @@ function M.createRectButton(options)
             else
               event.phase = "onTarget"
                 if M.interceptMoved == false then
+                    if options.clickAnimation ~= nil then
+                        if options.clickAnimation["time"] == nil then
+                            options.clickAnimation["time"] = 400
+                        end
+                        transition.fadeOut(M.widgetDict[options.name]["rrect"],{time=options.clickAnimation["time"]})
+                    end
                     event.target = M.widgetDict[options.name]["rrect"]
                     event.callBackData = options.callBackData
                     assert( options.callBack )(event)
                 end
                 M.interceptEventHandler = nil
                 M.interceptMoved = false
+                M.touching = false
             end
         end
     end
@@ -915,6 +927,7 @@ function M.createIconButton(options)
                 end
                 M.interceptEventHandler = nil
                 M.interceptMoved = false
+                M.touching = false
             end
         end
     end
@@ -1142,6 +1155,7 @@ function M.createRadioButton(options)
                 end
                 M.interceptEventHandler = nil
                 M.interceptMoved = false
+                M.touching = false
             end
         end
     end
@@ -1396,6 +1410,7 @@ function M.createToolbarButton( options )
                 end
                 M.interceptEventHandler = nil
                 M.interceptMoved = false
+                M.touching = false
             end
         end
     end
@@ -2239,6 +2254,9 @@ function M.createToggleSwitch(options)
                     event.callBackData = options.callBackData
                     assert( options.callBack )(event)
                 end
+                M.interceptEventHandler = nil
+                M.interceptMoved = false
+                M.touching = false
             end
         end
     end

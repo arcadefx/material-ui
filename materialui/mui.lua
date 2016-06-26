@@ -554,6 +554,15 @@ function M.createRRectButton(options)
             M.updateUI(event)
             if M.touching == false then
                 M.touching = true
+                if options.clickAnimation ~= nil then
+                    if options.clickAnimation["colorBackground"] ~= nil then
+                        M.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.clickAnimation["colorBackground"]) )
+                        if options.clickAnimation["time"] == nil then
+                            options.clickAnimation["time"] = 400
+                        end
+                        transition.fadeOut(M.widgetDict[options.name]["rrect"],{time=options.clickAnimation["time"]})
+                    end
+                end
                 if options.touchpoint ~= nil and options.touchpoint == true then
                     M.widgetDict[options.name]["myCircle"].x = event.x - M.widgetDict[options.name]["container"].x
                     M.widgetDict[options.name]["myCircle"].y = event.y - M.widgetDict[options.name]["container"].y
@@ -713,6 +722,15 @@ function M.createRectButton(options)
             M.updateUI(event)
             if M.touching == false then
                 M.touching = true
+                if options.clickAnimation ~= nil then
+                    if options.clickAnimation["colorBackground"] ~= nil then
+                        M.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.clickAnimation["colorBackground"]) )
+                        if options.clickAnimation["time"] == nil then
+                            options.clickAnimation["time"] = 400
+                        end
+                        transition.fadeOut(M.widgetDict[options.name]["rrect"],{time=options.clickAnimation["time"]})
+                    end
+                end
                 if options.touchpoint ~= nil and options.touchpoint == true then
                     M.widgetDict[options.name]["myCircle"].x = event.x - M.widgetDict[options.name]["container"].x
                     M.widgetDict[options.name]["myCircle"].y = event.y - M.widgetDict[options.name]["container"].y
@@ -2315,6 +2333,7 @@ function M.createDialog(options)
     M.widgetDict[options.name]["rectbackdrop"] = display.newRect( display.contentWidth * 0.5, display.contentHeight * 0.5, display.contentWidth, display.contentHeight)
     M.widgetDict[options.name]["rectbackdrop"].strokeWidth = 0
     M.widgetDict[options.name]["rectbackdrop"]:setFillColor( unpack( {0.4, 0.4, 0.4, 0.3} ) )
+    M.widgetDict[options.name]["rectbackdrop"].isVisible = true
 
     -- now for the rest of the dialog
     local centerX = (display.contentWidth * 0.5)
@@ -2406,7 +2425,7 @@ function M.createDialog(options)
         if options.buttons["okayButton"].text == nil then
             options.buttons["okayButton"].text = "Okay"
         end
-        M.createRRectButton({
+        M.createRectButton({
             name = "okay_dialog_button",
             text = options.buttons["okayButton"].text,
             width = M.getScaleVal(100),
@@ -2418,10 +2437,8 @@ function M.createDialog(options)
             textColor = options.buttons["okayButton"].textColor,
             touchpoint = true,
             callBack = M.dialogOkayCallback,
-            callBackData = {
-                sceneDestination = "fun",
-                sceneTransitionColor = { 0, 0.73, 1 }
-            }, -- scene fun.lua
+            callBackData = options.buttons["okayButton"].callBackData,
+            clickAnimation = options.buttons["okayButton"].clickAnimation,
             dialogName = options.name
         })
         M.widgetDict[options.name]["container"]:insert( M.getWidgetBaseObject("okay_dialog_button") )
@@ -2444,7 +2461,7 @@ function M.createDialog(options)
         if bx > 0 then
             bx = (bx - (bx * 0.1)) - M.getScaleVal(100)
         end
-        M.createRRectButton({
+        M.createRectButton({
             name = "cancel_dialog_button",
             text = options.buttons["cancelButton"].text,
             width = M.getScaleVal(100),
@@ -2455,12 +2472,16 @@ function M.createDialog(options)
             fillColor = options.buttons["cancelButton"].fillColor,
             textColor = options.buttons["cancelButton"].textColor,
             touchpoint = true,
+            clickAnimation = options.buttons["cancelButton"].clickAnimation,
             callBack = M.dialogCancelCallback,
+            callBackData = options.buttons["cancelButton"].callBackData,
             dialogName = options.name
         })
         M.widgetDict[options.name]["container"]:insert( M.getWidgetBaseObject("cancel_dialog_button") )
     end
     --]]--
+    M.widgetDict[options.name]["rectbackdrop"].isVisible = true
+    transition.fadeIn( M.widgetDict[options.name]["rectbackdrop"], { time=1500 } )
     transition.to( M.widgetDict[options.name]["container"], { time=800, y = centerY, transition=easing.inOutCubic } )
 end
 
@@ -2486,7 +2507,8 @@ end
 function M.dialogClose(e)
     -- fade out and destroy it
     if M.dialogName ~= nil then
-        transition.to( M.widgetDict[M.dialogName]["container"], { time=800, y = display.contentHeight * 2, onComplete=M.removeWidgetDialog, transition=easing.inOutCubic } )
+        transition.fadeIn( M.widgetDict[M.dialogName]["rectbackdrop"], { time=500 } )
+        transition.to( M.widgetDict[M.dialogName]["container"], { time=1100, y = display.contentHeight * 2, onComplete=M.removeWidgetDialog, transition=easing.inOutCubic } )
     end
 end
 
@@ -2748,8 +2770,8 @@ function M.removeWidgetDialog()
     end
 
     -- remove buttons
-    M.removeWidgetRRectButton("okay_dialog_button")
-    M.removeWidgetRRectButton("cancel_dialog_button")
+    M.removeWidgetRectButton("okay_dialog_button")
+    M.removeWidgetRectButton("cancel_dialog_button")
 
     -- remove the rest
     -- M.widgetDict[widgetName]["container"]["myText"]:removeSelf()

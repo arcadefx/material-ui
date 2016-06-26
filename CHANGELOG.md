@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.7] - 2016-06-26
+### Added
+- "clickAnimation" options to createRect and createRRect methods to fadeOut darken background when button is tapped. Choose darker color and when the button is tapped it will highlight in that color and fadeOut See menu.lua for an example.
+
+### Change
+- README documentation updated.
+
 ## [0.1.6] - 2016-06-25
 ### Added
 - createDialog() - Create a dialog window with content. Supports up to two buttons (Okay, Cancel) with callbacks. See menu.lua for an example.

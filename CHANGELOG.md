@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.1.7] - 2016-06-26
 ### Added
-- Added simple fadeOut click animation (clickAnimation array) with timer to createRect and createRRect(). See menu.lua for an example.
+- "clickAnimation" options to createRect and createRRect methods to fadeOut darken background when button is tapped. Choose darker color and when the button is tapped it will highlight in that color and fadeOut See menu.lua for an example.
 
 ### Change
 - README documentation updated.

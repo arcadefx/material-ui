@@ -570,7 +570,9 @@ function M.createRRectButton(options)
                 transition.to(M.widgetDict[options.name]["container"],{time=300, xScale=1.02, yScale=1.02, transition=easing.continuousLoop})
             end
         elseif ( event.phase == "moved" ) then
-            M.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.fillColor) )
+            if options.fillColor ~= nil then
+                M.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.fillColor) )
+            end
         elseif ( event.phase == "ended" ) then
             if M.isTouchPointOutOfRange( event ) then
                   event.phase = "offTarget"
@@ -743,7 +745,9 @@ function M.createRectButton(options)
                 transition.to(M.widgetDict[options.name]["container"],{time=500, xScale=1.02, yScale=1.02, transition=easing.continuousLoop})
             end
         elseif ( event.phase == "moved" ) then
-            M.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.fillColor) )
+            if options.fillColor ~= nil then
+                M.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.fillColor) )
+            end
         elseif ( event.phase == "ended" ) then
             if M.isTouchPointOutOfRange( event ) then
                 event.phase = "offTarget"

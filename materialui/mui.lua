@@ -1286,14 +1286,12 @@ function M.createToolbarButton( options )
         textColor = options.textColor
     end
 
-    local labelFont = native.systemFont
-    if options.labelFont ~= nil then
-        labelFont = options.labelFont
+    if options.labelFont ~= nil and options.labelText ~= nil then
+        font = options.labelFont
     end
 
-    local label = "???"
-    if options.label ~= nil then
-        label = options.label
+    if options.labelText ~= nil then
+        options.text = options.labelText
     end
 
     local labelColor = { 0, 0, 0 }
@@ -1464,7 +1462,9 @@ function M.createToolbar( options )
                 y = y,
                 isChecked = v.isChecked,
                 font = "MaterialIcons-Regular.ttf",
+                labelText = v.labelText,
                 labelFont = options.labelFont,
+                labelFontSize = options.labelFontSize,
                 textColor = options.labelColor,
                 textColorOff = options.labelColorOff,
                 textAlign = "center",

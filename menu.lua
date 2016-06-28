@@ -200,7 +200,8 @@ function scene:create( event )
             { key = "Home", value = "1", icon="home", isChecked = true},
             { key = "Newsroom", value = "2", icon="new_releases", isChecked = false },
             { key = "Location", value = "3", icon="location_searching", isChecked = false },
-            { key = "To-do List", value = "4", icon="view_list", isChecked = false }
+            { key = "To-do List", value = "4", icon="view_list", isChecked = false },
+            -- { key = "Viewer", value = "4", labelText="View", isChecked = false } -- uncomment to see View as text
         }
     })
 

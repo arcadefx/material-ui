@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.8] - 2016-06-28
+### Added
+- "labelFont" option to createToolbar
+- "labelText" option to createToolbar "list" attribute. Allows the mix of Material icon font and text/word
+font.  Label a button as "View" the button contain the text "View"
+
 ## [0.1.8] - 2016-06-27
 ### Added
 - "easing" option to createDialog and use easing library built-in corona sdk.

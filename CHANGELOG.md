@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [0.1.8] - 2016-06-27
 ### Added
 - "easing" option to createDialog and use easing library built-in corona sdk.
-- createSlider() - Create a slider for doing percentages 0..100. Calculate amount in call backs: callBackMove (call during movement) and callBack = at the end phase.  Values are in percent (0.20, 0.90 and 1 for 100%). Limitations: horizontal only and no labels (both to be addressed).  See fun.lua for two examples (2nd scene)
+- createSlider() - Create a slider for doing percentages 0..100. Calculate amount in call backs: callBackMove (call during movement) and callBack = at the end phase.  Values are in percent (0.20, 0.90 and 1 for 100%). Limitations: horizontal only and no labels (both to be addressed).  See fun.lua for two examples (2nd scene). See mui.lua and method sliderCallBackMove() to get current value of slider.
 
 ### Change
 - dialogClose() has a new method closeDialog() which will phase out dialogClose() in later releases.

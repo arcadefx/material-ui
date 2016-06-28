@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.8] - 2016-06-27
+### Added
+- "easing" option to createDialog and use easing library built-in corona sdk.
+- createSlider() - Create a slider for doing percentages 0..100. Calculate amount in call backs: callBackMove (call during movement) and callBack = at the end phase.  Values are in percent (0.20, 0.90 and 1 for 100%). Limitations: horizontal only and no labels (both to be addressed).  See fun.lua for two examples (2nd scene)
+
+### Change
+- dialogClose() has a new method closeDialog() which will phase out dialogClose() in later releases.
+
 ## [0.1.7] - 2016-06-26
 ### Added
 - "clickAnimation" options to createRect and createRRect methods to fadeOut darken background when button is tapped. Choose darker color and when the button is tapped it will highlight in that color and fadeOut See menu.lua for an example.

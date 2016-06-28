@@ -59,6 +59,7 @@ function scene:create( event )
             backgroundColor = { 1, 1, 1, 1 },
             gradientBorderShadowColor1 = { 1, 1, 1, 0.4 },
             gradientBorderShadowColor2 = { 0, 0, 0, 0.4 },
+            easing = easing.inOutCubic, -- this is default if omitted
             buttons = {
                 font = native.systemFont,
                 okayButton = {
@@ -105,8 +106,8 @@ function scene:create( event )
     })
 
     mui.createRectButton({
-        name = "playGame",
-        text = "Play Game",
+        name = "scene2",
+        text = "Switch Scene",
         width = mui.getScaleVal(200),
         height = mui.getScaleVal(60),
         x = mui.getScaleVal(160),

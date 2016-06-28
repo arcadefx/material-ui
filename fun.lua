@@ -54,6 +54,36 @@ function scene:create( event )
         } -- scene menu.lua
     })
 
+    -- horizontal slider (vertical in development)
+    ---[[--
+    mui.createSlider({
+        name = "slider_demo",
+        width = mui.getScaleVal(200),
+        height = mui.getScaleVal(4),
+        x = mui.getScaleVal(160),
+        y = mui.getScaleVal(400),
+        radius = mui.getScaleVal(12),
+        colorOff = { 1, 1, 1, 1 },
+        color = { 1, 0, 0, 1 },
+        startPercent = 30,
+        callBackMove = mui.sliderCallBackMove,
+        callBack = mui.sliderCallBack
+    })
+    mui.createSlider({
+        name = "slider_demo2",
+        width = mui.getScaleVal(200),
+        height = mui.getScaleVal(4),
+        x = mui.getScaleVal(160),
+        y = mui.getScaleVal(450),
+        radius = mui.getScaleVal(12),
+        colorOff = { 1, 1, 1, 1 },
+        color = { 0.31, 0.65, 0.03, 1 },
+        startPercent = 60,
+        callBackMove = mui.sliderCallBackMove,
+        callBack = mui.sliderCallBack
+    })
+    --]]--
+
 	-- Create the widget
 	local scrollWidth = display.contentWidth * 0.5
 	scrollView = widget.newScrollView(

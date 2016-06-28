@@ -132,6 +132,11 @@ function M.getWidgetBaseObject(name)
     return widgetData
 end
 
+function M.getWidgetValue(widgetName)
+    if widgetName == nil then return end
+    return M.widgetDict[widget]["value"]
+end
+
 function M.getScaleVal(n)
     if n == nil then n = 1 end
     return mathFloor(M.getSizeRatio() * n)
@@ -877,6 +882,8 @@ function M.createIconButton(options)
     if isChecked then
         M.widgetDict[options.name]["myText"].isChecked = isChecked
     end
+    M.widgetDict[options.name]["value"] = isChecked
+
     M.widgetDict[options.name]["mygroup"]:insert( M.widgetDict[options.name]["myText"], true )
 
     local circleColor = textColor
@@ -1997,6 +2004,11 @@ function M.createProgressBar(options)
     M.widgetDict[options.name]["mygroup"].y = y
     M.widgetDict[options.name]["touching"] = false
 
+    if options.scrollView ~= nil then
+        M.widgetDict[options.name]["scrollView"] = options.scrollView
+        M.widgetDict[options.name]["scrollView"]:insert( M.widgetDict[options.name]["mygroup"] )
+    end
+
     if options.labelText ~= nil and options.labelFontSize ~= nil then
         if options.labelAlign == nil then
             options.labelAlign = "center"
@@ -2336,6 +2348,10 @@ function M.createDialog(options)
         options.backgroundColor = { 1, 1, 1, 1 }
     end
 
+    if options.easing == nil then
+        options.easing = easing.inOutCubic
+    end
+
     -- paint normal or use gradient?
     local paint = nil
     if options.gradientBorderShadowColor1 ~= nil and options.gradientBorderShadowColor2 ~= nil then
@@ -2504,7 +2520,7 @@ function M.createDialog(options)
     --]]--
     M.widgetDict[options.name]["rectbackdrop"].isVisible = true
     transition.fadeIn( M.widgetDict[options.name]["rectbackdrop"], { time=1500 } )
-    transition.to( M.widgetDict[options.name]["container"], { time=800, y = centerY, transition=easing.inOutCubic } )
+    transition.to( M.widgetDict[options.name]["container"], { time=800, y = centerY, transition=options.easing } )
 end
 
 function M.dialogOkayCallback(e)
@@ -2512,7 +2528,7 @@ function M.dialogOkayCallback(e)
     if M.widgetDict[M.dialogName]["callBackOkay"] ~= nil then
        assert( M.widgetDict[M.dialogName]["callBackOkay"] )(e)
     end
-    M.dialogClose(e)
+    M.closeDialog(e)
 end
 
 function M.actionForOkayDialog(e)
@@ -2523,14 +2539,235 @@ function M.dialogCancelCallback(e)
     if M.widgetDict[M.dialogName]["callBackCancel"] ~= nil then
        assert( M.widgetDict[M.dialogName]["callBackCancel"] )(e)
     end
-    M.dialogClose(e)
+    M.closeDialog(e)
 end
 
-function M.dialogClose(e)
+function M.closeDialog(e)
     -- fade out and destroy it
     if M.dialogName ~= nil then
         transition.fadeIn( M.widgetDict[M.dialogName]["rectbackdrop"], { time=500 } )
         transition.to( M.widgetDict[M.dialogName]["container"], { time=1100, y = display.contentHeight * 2, onComplete=M.removeWidgetDialog, transition=easing.inOutCubic } )
+    end
+end
+
+function M.dialogClose(e)
+    -- fade out and destroy it
+    M.closeDialog(e)
+end
+
+function M.createSlider(options)
+    if options == nil then return end
+
+    local x,y = 160, 240
+    if options.x ~= nil then
+        x = options.x
+    end
+    if options.y ~= nil then
+        y = options.y
+    end
+
+    if options.width == nil then
+        options.width = M.getScaleVal(200)
+    end
+
+    if options.height == nil then
+        options.height = M.getScaleVal(4)
+    end
+
+    if options.position == nil then
+        options.position = "horizontal"
+    end
+
+    if options.radius == nil then
+        options.radius = M.getScaleVal(15)
+    end
+
+    if options.color == nil then
+        options.color = { 1, 0, 0, 1 }
+    end
+
+    if options.colorOff == nil then
+        options.colorOff = { 1, 1, 1, 1 }
+    end
+
+    M.widgetDict[options.name] = {}
+    M.widgetDict[options.name].name = options.name
+    M.widgetDict[options.name]["type"] = "Slider"
+    M.widgetDict[options.name]["touching"] = false
+
+    local circleWidth = options.radius * 2.5
+
+    -- fix x to be correct
+    x = x - options.width * 0.5
+
+    if options.position == "horizontal" then
+        M.widgetDict[options.name]["sliderrect"] = display.newRect( x + options.width * 0.5, y, options.width, circleWidth)
+    else
+        M.widgetDict[options.name]["sliderrect"] = display.newRect( 0, 0, circleWidth, options.height + (circleWidth + (circleWidth * 0.5)))
+    end
+    M.widgetDict[options.name]["sliderrect"]:setStrokeColor( unpack(options.color) )
+    M.widgetDict[options.name]["sliderrect"].strokeWidth = 0
+    M.widgetDict[options.name]["sliderrect"].name = options.name
+
+    M.widgetDict[options.name]["circleWidth"] = circleWidth
+    M.widgetDict[options.name]["circleRadius"] = options.radius
+    M.widgetDict[options.name]["container"] = display.newGroup()
+    M.widgetDict[options.name]["container"].x = x
+    M.widgetDict[options.name]["container"].y = y
+    --M.widgetDict[options.name]["container"]:translate( x, y ) -- center the container
+
+    if options.scrollView ~= nil then
+        M.widgetDict[options.name]["scrollView"] = options.scrollView
+        M.widgetDict[options.name]["scrollView"]:insert( M.widgetDict[options.name]["container"] )
+    end
+
+    -- the bar
+    if options.position == "horizontal" then
+        M.widgetDict[options.name]["sliderbar"] = display.newLine( 0, 0, options.width, 0 )
+    else
+        M.widgetDict[options.name]["sliderbar"] = display.newLine( 0, 0, 0, options.height )
+    end
+    M.widgetDict[options.name]["sliderbar"]:setStrokeColor( unpack(options.color) )
+    M.widgetDict[options.name]["sliderbar"].strokeWidth = options.height
+    M.widgetDict[options.name]["sliderbar"].isVisible = true
+
+    -- the circle which line goes thru center (vertical|horizontal)
+    M.widgetDict[options.name]["slidercircle"] = display.newCircle( 0, options.height * 0.5, options.radius )
+    M.widgetDict[options.name]["slidercircle"]:setStrokeColor( unpack(options.color) )
+    M.widgetDict[options.name]["slidercircle"]:setFillColor( unpack(options.colorOff) )
+
+    if options.position == "horizontal" then
+        M.widgetDict[options.name]["slidercircle"].strokeWidth = options.height
+    else
+        M.widgetDict[options.name]["slidercircle"].strokeWidth = options.width
+    end
+    --M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["sliderrect"] )
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["sliderbar"] )
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["slidercircle"] )
+
+    M.widgetDict[options.name]["value"] = 0
+
+    if options.startPercent ~= nil and options.startPercent > -1 then
+        local event = {}
+        local percent = options.startPercent / 100
+        local diffX = M.widgetDict[options.name]["container"].x - M.widgetDict[options.name]["container"].contentWidth
+        event.x = x + mathABS(diffX * percent)
+        M.widgetDict[options.name]["value"] = percent
+        M.sliderPercentComplete(event, options)
+    end
+
+    local sliderrect = M.widgetDict[options.name]["sliderrect"]
+
+    function sliderrect:touch (event)
+        if M.dialogInUse == true and options.dialogName ~= nil then return end
+        if ( event.phase == "began" ) then
+            -- set touch focus
+            display.getCurrentStage():setFocus( self )
+            self.isFocus = true
+            M.interceptEventHandler = sliderrect
+            M.updateUI(event)
+            if M.touching == false then
+                M.widgetDict[options.name]["slidercircle"]:setFillColor( unpack(options.color) )
+                M.touching = true
+                if options.touchpoint ~= nil and options.touchpoint == true and false then
+                    M.widgetDict[options.basename]["radio"][options.name]["myCircle"].x = event.x - M.widgetDict[options.basename]["radio"][options.name]["mygroup"].x
+                    M.widgetDict[options.basename]["radio"][options.name]["myCircle"].y = event.y - M.widgetDict[options.basename]["radio"][options.name]["mygroup"].y
+                    --M.widgetDict[options.basename]["radio"][options.name]["myCircle"].isVisible = true
+                    --M.widgetDict[options.basename]["radio"][options.name].myCircleTrans = transition.to( M.widgetDict[options.basename]["radio"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+                end
+            end
+            transition.to(M.widgetDict[options.name]["slidercircle"],{time=300, xScale=1.5, yScale=1.5, transition=easing.inOutCubic})
+        elseif ( event.phase == "moved" ) then
+
+            if M.widgetDict[options.name]["slidercircle"].xScale == 1 then
+                transition.to(M.widgetDict[options.name]["slidercircle"],{time=300, xScale=1.5, yScale=1.5, transition=easing.inOutCubic})
+            end
+
+            -- update bar with color (up/down/left/right)
+            M.sliderPercentComplete(event, options)
+
+            -- call user-defined move method
+            if options.callBackMove ~= nil then
+                event.target.name = options.name
+                assert( options.callBackMove )(event)
+            end
+
+        elseif ( event.phase == "ended" ) then
+            M.sliderPercentComplete(event, options)
+            transition.to(M.widgetDict[options.name]["slidercircle"],{time=300, xScale=1, yScale=1, transition=easing.inOutCubic})
+            if M.isTouchPointOutOfRange( event ) then
+                event.phase = "offTarget"
+                -- event.target:dispatchEvent(event)
+                -- print("Its out of the button area")
+            else
+              event.phase = "onTarget"
+                if M.interceptMoved == false then
+                    event.target = M.widgetDict[options.name]["slidercircle"]
+                    event.callBackData = options.callBackData
+                    if options.callBack ~= nil then
+                        event.target.name = options.name
+                        assert( options.callBack )(event)
+                    end
+                end
+                M.interceptEventHandler = nil
+                M.interceptMoved = false
+                M.touching = false
+            end
+            -- reset focus
+            display.getCurrentStage():setFocus( nil )
+            self.isFocus = false
+        end
+    end
+
+    sliderrect:addEventListener( "touch", sliderrect )
+end
+
+function M.sliderPercentComplete(event, options)
+    if event == nil or options == nil then return end
+
+    local circleRadius = M.widgetDict[options.name]["circleRadius"]
+    if options.position == "horizontal" then
+        local dx = event.x - M.widgetDict[options.name]["container"].x
+        if dx > circleRadius and dx <= (M.widgetDict[options.name]["sliderbar"].contentWidth - circleRadius) then
+            -- get percent
+            local percentComplete = dx / (M.widgetDict[options.name]["sliderbar"].contentWidth - circleRadius)
+            if percentComplete > -1 and percentComplete < 2 then
+                if percentComplete >= 0 and percentComplete <= 1 then
+                    M.widgetDict[options.name]["slidercircle"].x = dx
+                end
+                if percentComplete >= 1 then percentComplete = 1 end
+                if percentComplete < 0 then percentComplete = 0 end
+                M.widgetDict[options.name]["value"] = percentComplete
+                if percentComplete == 0 then
+                    M.widgetDict[options.name]["slidercircle"]:setFillColor( unpack(options.colorOff) )
+                else
+                    M.widgetDict[options.name]["slidercircle"]:setFillColor( unpack(options.color) )
+                end
+            end
+        else
+            if dx < circleRadius then
+                M.widgetDict[options.name]["slidercircle"].x = circleRadius
+                M.widgetDict[options.name]["slidercircle"]:setFillColor( unpack(options.colorOff) )
+                M.widgetDict[options.name]["value"] = 0
+            else
+                M.widgetDict[options.name]["slidercircle"].x = M.widgetDict[options.name]["sliderbar"].contentWidth - circleRadius
+                M.widgetDict[options.name]["value"] = 1
+            end
+        end
+    end
+end
+
+function M.sliderCallBackMove( event )
+    if event.target ~= nil and event.target.name ~= nil then
+        local name = event.target.name
+        print("sliderCallBackMove is: "..M.widgetDict[name]["value"])
+    end
+end
+
+function M.sliderCallBack( event )
+    if event.target ~= nil and event.target.name ~= nil then
+        local name = event.target.name
+        print("percentComplete is: "..M.widgetDict[name]["value"])
     end
 end
 
@@ -2570,6 +2807,8 @@ function M.removeWidgets()
             M.removeWidgetProgressBar(widget)
         elseif widgetType == "ToggleSwitch" then
             M.removeWidgetToggleSwitch(widget)
+        elseif widgetType == "Slider" then
+            M.removeWidgetSlider(widget)
         end
       end
   end
@@ -2774,6 +3013,7 @@ function M.removeWidgetToggleSwitch(widgetName)
     M.widgetDict[widgetName]["mygroup"]["circle1"] = nil
     M.widgetDict[widgetName]["mygroup"]["rect"]:removeSelf()
     M.widgetDict[widgetName]["mygroup"]["rect"] = nil
+    M.widgetDict[widgetName]["mygroup"]["rectmaster"]:removeEventListener("touch", M.widgetDict[widgetName]["rectmaster"])
     M.widgetDict[widgetName]["mygroup"]["rectmaster"]:removeSelf()
     M.widgetDict[widgetName]["mygroup"]["rectmaster"] = nil
     M.widgetDict[widgetName]["mygroup"]:removeSelf()
@@ -2809,6 +3049,23 @@ function M.removeWidgetDialog()
     M.widgetDict[widgetName] = nil
     M.dialogName = nil
     M.dialogInUse = false
+end
+
+function M.removeWidgetSlider(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    M.widgetDict[widgetName]["sliderrect"]:removeEventListener("touch", M.widgetDict[widgetName]["sliderrect"])
+    M.widgetDict[widgetName]["slidercircle"]:removeSelf()
+    M.widgetDict[widgetName]["slidercircle"] = nil
+    M.widgetDict[widgetName]["sliderbar"]:removeSelf()
+    M.widgetDict[widgetName]["sliderbar"] = nil
+    M.widgetDict[widgetName]["sliderrect"]:removeSelf()
+    M.widgetDict[widgetName]["sliderrect"] = nil
+    M.widgetDict[widgetName]["container"]:removeSelf()
+    M.widgetDict[widgetName]["container"] = nil
+    M.widgetDict[widgetName] = nil
 end
 
 return M

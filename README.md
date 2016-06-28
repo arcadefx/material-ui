@@ -73,6 +73,7 @@ Please read Lua code to find all parameters and see example in the repo call men
 - `createRadioGroup` - Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.
 - `createRectButton` - Create a rectangle button
 - `createRRectButton` - Create a rounded rectangle button
+- `createSlider() - Create a slider for doing percentages 0..100. Calculate amount in call backs: callBackMove (called during movement) and callBack = at the end phase.  Values are in percent (0.20, 0.90 and 1 for 100%). Limitations: horizontal only and no labels (both to be addressed).
 - `createTableView` - Create a scrollable table view
 - `createTextBox` - Create a text box with label above (for now) and includes "scrollView" support. See fun.lua for an example.
 - `createTextField` - Create a text field with label above (for now) and includes "scrollView" support.  See fun.lua for an example.
@@ -81,6 +82,7 @@ Please read Lua code to find all parameters and see example in the repo call men
 
 Helper Methods
 -------------
+- `closeDialog` - closes an open dialog and releases memory
 - `getScaleVal` - returns integer scaled value to fit resolution. Useful for dimensions and coordinates.
 - `getWidgetByName` - returns the array of a named widget.
 - `getWidgetBaseObject` - returns the base object of a named widget created with one of the above methods. It can be inserted into another container, group, scrollview and moved around, etc.  Example: rectangle_surface:insert( mui.getWidgetBaseObject("okay_button") )
@@ -98,6 +100,7 @@ Remove widget methods - these will remove the widget by name and release memory:
 - `removeWidgetToggleSwitch`
 - `removeWidgetToolbar`
 - `removeWidgetToolbarButton`
+- `removeWidgetSlider`
 - `removeWidgetSwitch`
 
 Built-In Callbacks

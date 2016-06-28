@@ -81,6 +81,7 @@ Please read Lua code to find all parameters and see example in the repo call men
 
 Helper Methods
 -------------
+- `closeDialog` - closes an open dialog and releases memory
 - `getScaleVal` - returns integer scaled value to fit resolution. Useful for dimensions and coordinates.
 - `getWidgetByName` - returns the array of a named widget.
 - `getWidgetBaseObject` - returns the base object of a named widget created with one of the above methods. It can be inserted into another container, group, scrollview and moved around, etc.  Example: rectangle_surface:insert( mui.getWidgetBaseObject("okay_button") )

@@ -88,6 +88,28 @@ function M.updateUI(event, skipName)
     end
 end
 
+function M.addBaseEventParameters(event, options)
+    if event == nil or options == nil or event.muiDict ~= nil then return end
+    M.setEventParameter(event, "name", options.name)
+    M.setEventParameter(event, "basename", options.basename)
+    M.setEventParameter(event, "targetName", options.name)
+    M.setEventParameter(event, "targetPrimary", event.target)
+    M.setEventParameter(event, "callBackData", options.callBackData)
+end
+
+function M.setEventParameter(event, key, value)
+    if event == nil or key == nil then return end
+    if event.muiDict == nil then event.muiDict = {} end
+    event.muiDict[key] = value
+end
+
+function M.getEventParameter(event, key)
+    if event ~= nil and event.muiDict ~= nil and key ~= nil then
+        return event.muiDict[key]
+    end
+    return nil
+end
+
 function M.getWidgetByName(name)
     if name ~= nil and string.len(name) > 1 then
         return M.widgetDict[name]
@@ -244,33 +266,48 @@ end
 --[[ end switch scene action ]]
 
 function M.actionForPlus( e )
-    if e.altTarget ~= nil then
-        if e.altTarget.isChecked == true then
-            e.altTarget.isChecked = false
-            e.altTarget.text = "add_circle"
+    local muiTarget = M.getEventParameter(e, "muiTarget")
+    local muiTargetValue = M.getEventParameter(e, "muiTargetValue")
+
+    if muiTarget ~= nil then
+        if muiTarget.isChecked == true then
+            muiTarget.isChecked = false
+            muiTarget.text = "add_circle"
          else
-            e.altTarget.isChecked = true
-            e.altTarget.text = "add_circle"
+            muiTarget.isChecked = true
+            muiTarget.text = "add_circle"
+            if muiTargetValue ~= nil then
+                print("checkbox value = "..muiTargetValue)
+            end
         end
     end
 end
 
 function M.actionForCheckbox( e )
-    if e.altTarget ~= nil then
-        if e.altTarget.isChecked == true then
-            e.altTarget.isChecked = false
-            e.altTarget.text = "check_box_outline_blank"
+    local muiTarget = M.getEventParameter(e, "muiTarget")
+    local muiTargetValue = M.getEventParameter(e, "muiTargetValue")
+
+    if muiTarget ~= nil then
+        if muiTarget.isChecked == true then
+            muiTarget.isChecked = false
+            muiTarget.text = "check_box_outline_blank"
          else
-            e.altTarget.isChecked = true
-            e.altTarget.text = "check_box"
+            muiTarget.isChecked = true
+            muiTarget.text = "check_box"
+            if muiTargetValue ~= nil then
+                print("checkbox value = "..muiTargetValue)
+            end
         end
     end
 end
 
 function M.actionForRadioButton( e )
-    if e.altTarget ~= nil then
+    local muiTarget = M.getEventParameter(e, "muiTarget")
+    local muiTargetValue = M.getEventParameter(e, "muiTargetValue")
+
+    if muiTarget ~= nil then
         -- uncheck all then check the one that is checked
-        local basename = e.myTargetBasename
+        local basename = M.getEventParameter(e, "basename")
         local foundName = false
 
         local list = M.widgetDict[basename]["radio"]
@@ -279,44 +316,64 @@ function M.actionForRadioButton( e )
             v["myText"].text = "radio_button_unchecked"
         end
 
-        if e.altTarget.isChecked == true then
-            e.altTarget.isChecked = false
-            e.altTarget.text = "radio_button_unchecked"
+        if muiTarget.isChecked == true then
+            muiTarget.isChecked = false
+            muiTarget.text = "radio_button_unchecked"
          else
-            e.altTarget.isChecked = true
-            e.altTarget.text = "radio_button_checked"
+            muiTarget.isChecked = true
+            muiTarget.text = "radio_button_checked"
+        end
+        if muiTargetValue ~= nil then
+            print("radio button value = "..muiTargetValue)
         end
     end
 end
 
 function M.actionForToolbar( options, e )
-    if e.altTarget ~= nil then
+    local target = M.getEventParameter(e, "muiTarget")
+    local target2 = M.getEventParameter(e, "muiTarget2")
+    if target ~= nil then
         -- uncheck all then check the one that is checked
-        local basename = e.myTargetBasename
+        local basename = M.getEventParameter(e, "basename")
         local foundName = false
         local list = M.widgetDict[basename]["toolbar"]
 
-        if e.altTarget.isChecked == true then
+        if target.isChecked == true then
             return
         end
         for k, v in pairs(list) do
             if v["myText"] ~= nil then
                 v["myText"]:setFillColor( unpack(M.widgetDict[basename]["toolbar"]["labelColorOff"]) )
-                v["myText2"]:setFillColor( unpack(M.widgetDict[basename]["toolbar"]["labelColorOff"]) )
+                if v["myText2"] ~= nil then
+                    v["myText2"]:setFillColor( unpack(M.widgetDict[basename]["toolbar"]["labelColorOff"]) )
+                end
                 v["myText"].isChecked = false
             end
         end
 
-        e.altTarget:setFillColor( unpack(M.widgetDict[basename]["toolbar"]["labelColor"]) )
-        e.altTarget2:setFillColor( unpack(M.widgetDict[basename]["toolbar"]["labelColor"]) )
-        e.altTarget.isChecked = true
+        target:setFillColor( unpack(M.widgetDict[basename]["toolbar"]["labelColor"]) )
+        if target2 ~= nil then
+            target2:setFillColor( unpack(M.widgetDict[basename]["toolbar"]["labelColor"]) )
+        end
+        target.isChecked = true
         assert( options.callBack )(e)
     end
 end
 
-function M.actionForToolbarDemo( e )
-    -- body
-    print("e.altTarget.text: " .. e.altTarget.text)
+function M.actionForToolbarDemo( event )
+    -- note:
+    -- event.<original attribute> remain untouched.
+    -- event.muiDict will be the only added variable (less conflicting)
+    --
+    local muiTarget = M.getEventParameter(event, "muiTarget")
+    local muiTargetValue = M.getEventParameter(event, "muiTargetValue")
+
+    if muiTarget ~= nil then
+        print("Toolbar button text: " .. muiTarget.text)
+    end
+    if muiTargetValue ~= nil then
+        print("Toolbar button value: " .. muiTargetValue)
+    end
 end
 
 function M.isTouchPointOutOfRange( event )
@@ -411,8 +468,30 @@ function M.onRowTouch( event )
         local scaleFactor = 2.5
         M.tableCircle.isVisible = true
         M.tableCircle.myCircleTrans = transition.to( M.tableCircle, { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
-        --tableCircle.isVisible = false
         row.myGlowTrans = transition.to( row, { time=300,delay=150,alpha=0.2, transition=easing.outCirc, onComplete=M.subtleGlowRect } )
+
+        M.setEventParameter(event, "muiTarget", row)
+        M.setEventParameter(event, "muiTargetIndex", event.target.index)
+        if row.params ~= nil then
+            M.setEventParameter(event, "muiTargetValue", row.params.name)
+        end
+        if row.params ~= nil and row.params.callBackTouch ~= nil then
+            assert( row.params.callBackTouch )(event)
+        end
+    end
+end
+
+function M.onRowTouchDemo(event)
+    local muiTarget = M.getEventParameter(event, "muiTarget")
+    local muiTargetValue = M.getEventParameter(event, "muiTargetValue")
+    local muiTargetIndex = M.getEventParameter(event, "muiTargetIndex")
+
+    if muiTargetIndex ~= nil then
+        print("row index: "..muiTargetIndex)
+    end
+
+    if muiTargetValue ~= nil then
+        print("row value: "..muiTargetValue)
     end
 end
 
@@ -561,6 +640,9 @@ function M.createRRectButton(options)
 
     function rrect:touch (event)
         if M.dialogInUse == true and options.dialogName == nil then return end
+
+        M.addBaseEventParameters(event, options)
+
         if ( event.phase == "began" ) then
             --event.target:takeFocus(event)
             -- if scrollView then use the below
@@ -601,6 +683,10 @@ function M.createRRectButton(options)
                     end
                     event.target = M.widgetDict[options.name]["rrect"]
                     event.callBackData = options.callBackData
+
+                    M.setEventParameter(event, "muiTargetValue", options.value)
+                    M.setEventParameter(event, "muiTarget", M.widgetDict[options.name]["rrect"])
+
                     assert( options.callBack )(event)
                 end
             end
@@ -738,6 +824,9 @@ function M.createRectButton(options)
 
     function rrect:touch (event)
         if M.dialogInUse == true and options.dialogName == nil then return end
+
+        M.addBaseEventParameters(event, options)
+
         if ( event.phase == "began" ) then
             M.interceptEventHandler = rrect
             M.updateUI(event)
@@ -776,6 +865,10 @@ function M.createRectButton(options)
                     end
                     event.target = M.widgetDict[options.name]["rrect"]
                     event.callBackData = options.callBackData
+
+                    M.setEventParameter(event, "muiTargetValue", options.value)
+                    M.setEventParameter(event, "muiTarget", M.widgetDict[options.name]["rrect"])
+
                     assert( options.callBack )(event)
                 end
                 M.interceptEventHandler = nil
@@ -916,6 +1009,9 @@ function M.createIconButton(options)
 
     function checkbox:touch (event)
         if M.dialogInUse == true and options.dialogName == nil then return end
+
+        M.addBaseEventParameters(event, options)
+
         if ( event.phase == "began" ) then
             M.interceptEventHandler = checkbox
             M.updateUI(event)
@@ -941,6 +1037,10 @@ function M.createIconButton(options)
                     event.altTarget = M.widgetDict[options.name]["myText"]
                     event.myTargetName = options.name
                     event.callBackData = options.callBackData
+
+                    M.setEventParameter(event, "muiTargetValue", options.value)
+                    M.setEventParameter(event, "muiTarget", M.widgetDict[options.name]["myText"])
+
                     assert( options.callBack )(event)
                 end
                 M.interceptEventHandler = nil
@@ -1143,6 +1243,9 @@ function M.createRadioButton(options)
 
     function checkbox:touch (event)
         if M.dialogInUse == true and options.dialogName == nil then return end
+
+        M.addBaseEventParameters(event, options)
+
         if ( event.phase == "began" ) then
             M.interceptEventHandler = checkbox
             M.updateUI(event)
@@ -1169,6 +1272,10 @@ function M.createRadioButton(options)
                     event.myTargetBasename = options.basename
                     event.altTarget = M.widgetDict[options.basename]["radio"][options.name]["myText"]
                     event.callBackData = options.callBackData
+
+                    M.setEventParameter(event, "muiTargetValue", options.value)
+                    M.setEventParameter(event, "muiTarget", M.widgetDict[options.basename]["radio"][options.name]["myText"])
+
                     assert( options.callBack )(event)
                 end
                 M.interceptEventHandler = nil
@@ -1303,11 +1410,11 @@ function M.createToolbarButton( options )
         useBothIconAndText = true
     end
 
-    if useBothIconAndText == false and options.labelFont ~= nil then
+    if useBothIconAndText == false and options.labelFont ~= nil and options.labelText ~= nil then
         font = options.labelFont
     end
 
-    if useBothIconAndText == false and options.labelFont ~= nil then
+    if useBothIconAndText == false and options.labelFont ~= nil and options.labelText ~= nil then
         options.text = options.labelText
     end
 
@@ -1436,6 +1543,9 @@ function M.createToolbarButton( options )
         if M.widgetDict[options.basename]["toolbar"][options.name]["myText"].isChecked == true then
             return
         end
+
+        M.addBaseEventParameters(event, options)
+
         if M.dialogInUse == true and options.dialogName == nil then return end
         if ( event.phase == "began" ) then
             M.interceptEventHandler = thebutton
@@ -1460,11 +1570,16 @@ function M.createToolbarButton( options )
                 if M.interceptMoved == false then
                     --event.target = M.widgetDict[options.name]["rrect"]
                     transition.to(M.widgetDict[options.basename]["toolbar"]["slider"],{time=350, x=button["mygroup"].x, transition=easing.inOutCubic})
+
                     event.myTargetName = options.name
                     event.myTargetBasename = options.basename
                     event.altTarget = M.widgetDict[options.basename]["toolbar"][options.name]["myText"]
                     event.altTarget2 = M.widgetDict[options.basename]["toolbar"][options.name]["myText2"]
                     event.callBackData = options.callBackData
+
+                    M.setEventParameter(event, "muiTargetValue", options.value)
+                    M.setEventParameter(event, "muiTarget", M.widgetDict[options.basename]["toolbar"][options.name]["myText"])
+                    M.setEventParameter(event, "muiTarget2", M.widgetDict[options.basename]["toolbar"][options.name]["myText2"])
                     M.actionForToolbar(options, event)
                 end
                 M.interceptEventHandler = nil
@@ -1571,7 +1686,7 @@ function M.createTableView( options )
             width = options.width,
             noLines = options.noLines,
             onRowRender = options.callBackRender,
-            onRowTouch = options.callBackTouch,
+            onRowTouch = M.onRowTouch,
             listener = options.scrollListener
         }
     )
@@ -1610,7 +1725,8 @@ function M.createTableView( options )
             params = {
                 basename = options.name,
                 name = v.value,
-                callBackData = options.callBackData
+                callBackData = options.callBackData,
+                callBackTouch = options.callBackTouch
             }
         }
         if v.key ~= nil then
@@ -1793,7 +1909,12 @@ function M.adjustScrollViewComplete(event)
 end
 
 function M.textfieldCallBack(event)
-    print("TextField contains: "..event.target.text)
+    local muiTarget = M.getEventParameter(event, "muiTarget")
+    local muiTargetValue = M.getEventParameter(event, "muiTargetValue")
+
+    if muiTargetValue ~= nil then
+        print("TextField contains: "..muiTargetValue)
+    end
 end
 
 function M.highlightTextField(widgetName, active)
@@ -1831,6 +1952,9 @@ end
 
 function M.textListener(event)
     local name = event.target.name
+
+    M.addBaseEventParameters(event, options)
+
     if ( event.phase == "began" ) then
         -- user begins editing defaultField
         M.updateUI(event, name)
@@ -1848,6 +1972,10 @@ function M.textListener(event)
             if M.widgetDict[name]["textfieldfake"] ~= nil then
                 M.widgetDict[name]["textfieldfake"].text = event.target.text
             end
+            M.setEventParameter(event, "muiTarget", M.widgetDict[name]["textfieldfake"])
+            M.setEventParameter(event, "muiTargetValue", event.target.text)
+            M.setEventParameter(event, "muiTargetNewCharacters", event.newCharacters)
+            M.setEventParameter(event, "muiTargetOldText", event.oldText)
             assert( event.target.callBack )(event)
         end
 
@@ -2289,6 +2417,9 @@ function M.createToggleSwitch(options)
 
     function rect:touch (event)
         if M.dialogInUse == true and options.dialogName ~= nil then return end
+
+        M.addBaseEventParameters(event, options)
+
         if ( event.phase == "began" ) then
             M.interceptEventHandler = rect
             M.updateUI(event)
@@ -2298,8 +2429,6 @@ function M.createToggleSwitch(options)
                     M.widgetDict[options.basename]["radio"][options.name]["myCircle"].x = event.x - M.widgetDict[options.basename]["radio"][options.name]["mygroup"].x
                     M.widgetDict[options.basename]["radio"][options.name]["myCircle"].y = event.y - M.widgetDict[options.basename]["radio"][options.name]["mygroup"].y
                 end
-                --M.widgetDict[options.basename]["radio"][options.name]["myCircle"].isVisible = true
-                --M.widgetDict[options.basename]["radio"][options.name].myCircleTrans = transition.to( M.widgetDict[options.basename]["radio"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
                 transition.to(rect,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
             end
         elseif ( event.phase == "ended" ) then
@@ -2313,10 +2442,14 @@ function M.createToggleSwitch(options)
                     event.target = M.widgetDict[options.name]["rect"]
                     if M.widgetDict[options.name]["isChecked"] == true then
                         M.widgetDict[options.name]["isChecked"] = false
+                        M.setEventParameter(event, "muiTargetValue", nil)
                     else
                         M.widgetDict[options.name]["isChecked"] = true
+                        M.setEventParameter(event, "muiTargetValue", options.value)
                     end
+                    M.setEventParameter(event, "muiTargetChecked", M.widgetDict[options.name]["isChecked"])
                     M.flipSwitch(options.name, nil)
+                    M.setEventParameter(event, "muiTarget", M.widgetDict[options.name]["rect"])
                     event.callBackData = options.callBackData
                     assert( options.callBack )(event)
                 end
@@ -2365,9 +2498,21 @@ function M.turnOffSwitch(e)
     M.widgetDict[e.name]["isChecked"] = false
 end
 
-function M.actionForSwitch(e)
-    -- use  M.widgetDict[e.name]["isChecked"] to test for boolean
-    print("switch event action")
+function M.actionForSwitch(event)
+    local muiTarget = M.getEventParameter(event, "muiTarget")
+    local muiTargetValue = M.getEventParameter(event, "muiTargetValue")
+    local muiTargetChecked = M.getEventParameter(event, "muiTargetChecked")
+
+    if muiTargetValue ~= nil then
+        print("toggle switch value: " .. muiTargetValue)
+    end
+
+    if muiTargetChecked == nil then muiTargetChecked = false end
+    if muiTargetChecked == true then
+        print("toggle switch on")
+    else
+        print("toggle switch off")
+    end
 end
 
 function M.createDialog(options)
@@ -2710,6 +2855,9 @@ function M.createSlider(options)
 
     function sliderrect:touch (event)
         if M.dialogInUse == true and options.dialogName ~= nil then return end
+
+        M.addBaseEventParameters(event, options)
+
         if ( event.phase == "began" ) then
             -- set touch focus
             display.getCurrentStage():setFocus( self )
@@ -2804,20 +2952,26 @@ function M.sliderPercentComplete(event, options)
                 M.widgetDict[options.name]["value"] = 1
             end
         end
+        M.setEventParameter(event, "muiTargetValue", M.widgetDict[options.name]["value"])
+        M.setEventParameter(event, "muiTarget", M.widgetDict[options.name]["slidercircle"])
     end
 end
 
 function M.sliderCallBackMove( event )
-    if event.target ~= nil and event.target.name ~= nil then
-        local name = event.target.name
-        print("sliderCallBackMove is: "..M.widgetDict[name]["value"])
+    local muiTarget = M.getEventParameter(event, "muiTarget")
+    local muiTargetValue = M.getEventParameter(event, "muiTargetValue")
+
+    if event.target ~= nil then
+        print("sliderCallBackMove is: "..muiTargetValue)
     end
 end
 
 function M.sliderCallBack( event )
-    if event.target ~= nil and event.target.name ~= nil then
-        local name = event.target.name
-        print("percentComplete is: "..M.widgetDict[name]["value"])
+    local muiTarget = M.getEventParameter(event, "muiTarget")
+    local muiTargetValue = M.getEventParameter(event, "muiTargetValue")
+
+    if muiTarget ~= nil then
+        print("percentComplete is: "..muiTargetValue)
     end
 end
 

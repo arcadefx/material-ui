@@ -87,6 +87,7 @@ Helper Methods
 - `getScaleVal` - returns integer scaled value to fit resolution. Useful for dimensions and coordinates.
 - `getWidgetByName` - returns the array of a named widget.
 - `getWidgetBaseObject` - returns the base object of a named widget created with one of the above methods. It can be inserted into another container, group, scrollview and moved around, etc.  Example: rectangle_surface:insert( mui.getWidgetBaseObject("okay_button") )
+- `getEventParameter` - returns the event MUI widget parameters for the current widget.  Get the event target, widget name, widget value ( ex: getEventParameter(event, "muiTargetValue") ).  The value is set when creating a widget.  See menu.lua for setting the values and mui.lua callBacks for getting values (example would be actionForSwitch() method).
 
 Remove widget methods - these will remove the widget by name and release memory:
 - `removeWidgetDialog`
@@ -118,6 +119,7 @@ Additional Features
 -------------
 * Touchpoints are included in several controls, but can be turned off.
 * Built-in callBacks are defined but can be overridden easily to do other tasks.
+* All widgets support a "value" and can be accessed in the callBacks by getEventParameter() method. See mui.lua for examples.
 * Scroll view support for widgets (widget.newScrollView()). Use parameter: scrollView = scroll_view
 * Colors can be adjusted and some controls support gradients.
 * Adjusts native widgets into scrollView visible area automatically.

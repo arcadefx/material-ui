@@ -147,6 +147,7 @@ function scene:create( event )
         font = "MaterialIcons-Regular.ttf",
         textColor = { 0.17, 0.88, 0.12 },
         textAlign = "center",
+        value = 500,
         callBack = mui.actionForCheckbox
     })
 
@@ -160,6 +161,7 @@ function scene:create( event )
         backgroundColor = { 0.74, 0.88, 0.99, 1 },
         backgroundColorOff = { 0.82, 0.95, 0.98, 1 },
         isChecked = true,
+        value = 100, -- if switch is in the on position it's 100 else nil
         callBack = mui.actionForSwitch
     })
 
@@ -198,7 +200,7 @@ function scene:create( event )
         sliderColor = { 1, 1, 1 },
         list = {
             { key = "Home", value = "1", icon="home", labelText="Home", isChecked = true},
-            { key = "Newsroom", value = "2", icon="new_releases", labelText="Newsroom", isChecked = false },
+            { key = "Newsroom", value = "2", icon="new_releases", isChecked = false },
             { key = "Location", value = "3", icon="location_searching", labelText="Location", isChecked = false },
             { key = "To-do", value = "4", icon="view_list", labelText="To-do", isChecked = false },
             -- { key = "Viewer", value = "4", labelText="View", isChecked = false } -- uncomment to see View as text
@@ -219,7 +221,7 @@ function scene:create( event )
         lineColor = { 1, 1, 1, 255 },
         rowColor = { default={1,1,1}, over={1,0.5,0,0.2} },
         rowHeight = mui.getScaleVal(60),
-        callBackTouch = mui.onRowTouch,
+        callBackTouch = mui.onRowTouchDemo,
         callBackRender = mui.onRowRender,
         scrollListener = nil,
         list = { -- if 'key' use it for 'id' in the table row

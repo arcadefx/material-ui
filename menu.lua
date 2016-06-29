@@ -200,7 +200,7 @@ function scene:create( event )
         sliderColor = { 1, 1, 1 },
         list = {
             { key = "Home", value = "1", icon="home", labelText="Home", isChecked = true},
-            { key = "Newsroom", value = "2", icon="new_releases", isChecked = false },
+            { key = "Newsroom", value = "2", icon="new_releases", labelText="News", isChecked = false },
             { key = "Location", value = "3", icon="location_searching", labelText="Location", isChecked = false },
             { key = "To-do", value = "4", icon="view_list", labelText="To-do", isChecked = false },
             -- { key = "Viewer", value = "4", labelText="View", isChecked = false } -- uncomment to see View as text

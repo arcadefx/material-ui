@@ -289,7 +289,7 @@ function M.actionForRadioButton( e )
     end
 end
 
-function M.actionForToolbar( e )
+function M.actionForToolbar( options, e )
     if e.altTarget ~= nil then
         -- uncheck all then check the one that is checked
         local basename = e.myTargetBasename
@@ -302,14 +302,21 @@ function M.actionForToolbar( e )
         for k, v in pairs(list) do
             if v["myText"] ~= nil then
                 v["myText"]:setFillColor( unpack(M.widgetDict[basename]["toolbar"]["labelColorOff"]) )
+                v["myText2"]:setFillColor( unpack(M.widgetDict[basename]["toolbar"]["labelColorOff"]) )
                 v["myText"].isChecked = false
             end
         end
 
         e.altTarget:setFillColor( unpack(M.widgetDict[basename]["toolbar"]["labelColor"]) )
+        e.altTarget2:setFillColor( unpack(M.widgetDict[basename]["toolbar"]["labelColor"]) )
         e.altTarget.isChecked = true
-        print("e.altTarget.text: " .. e.altTarget.text)
+        assert( options.callBack )(e)
     end
+end
+
+function M.actionForToolbarDemo( e )
+    -- body
+    print("e.altTarget.text: " .. e.altTarget.text)
 end
 
 function M.isTouchPointOutOfRange( event )
@@ -1235,10 +1242,15 @@ function M.createToolbarButton( options )
         y = options.y
     end
 
+    local barWidth = display.contentWidth
+    if options.width ~= nil then
+        barWidth = options.width
+    end
+
     if options.index ~= nil and options.index == 1 then
-        local rectBak = display.newRect( 0, 0, display.contentWidth * 3, options.buttonHeight )
+        local rectBak = display.newRect( 0, 0, barWidth, options.buttonHeight )
         rectBak:setFillColor( unpack( options.backgroundColor ) )
-        rectBak.x = x
+        rectBak.x = options.x + barWidth * 0.5
         rectBak.y = y
         M.widgetDict[options.basename]["toolbar"]["rectBak"] = rectBak
         --button["mygroup"]:insert( rectBak, true ) -- insert and center bkgd
@@ -1286,11 +1298,16 @@ function M.createToolbarButton( options )
         textColor = options.textColor
     end
 
-    if options.labelFont ~= nil and options.labelText ~= nil then
+    local useBothIconAndText = false
+    if options.text ~= nil and options.labelText ~= nil then
+        useBothIconAndText = true
+    end
+
+    if useBothIconAndText == false and options.labelFont ~= nil then
         font = options.labelFont
     end
 
-    if options.labelText ~= nil then
+    if useBothIconAndText == false and options.labelFont ~= nil then
         options.text = options.labelText
     end
 
@@ -1309,10 +1326,10 @@ function M.createToolbarButton( options )
     button["textMargin"] = textMargin
 
     -- scale font
-    -- Calculate a font size that will best fit the given text field's height
-    local checkbox = {contentHeight=options.buttonHeight * 0.60, contentWidth=options.buttonHeight * 0.60}
+    -- Calculate a font size that will best fit the given field's height
+    local field = {contentHeight=options.buttonHeight * 0.60, contentWidth=options.buttonHeight * 0.60}
     local textToMeasure = display.newText( options.text, 0, 0, font, fontSize )
-    local fontSize = fontSize * ( ( checkbox.contentHeight ) / textToMeasure.contentHeight )
+    local fontSize = fontSize * ( ( field.contentHeight ) / textToMeasure.contentHeight )
     local textWidth = textToMeasure.contentWidth
     textToMeasure:removeSelf()
     textToMeasure = nil
@@ -1321,7 +1338,8 @@ function M.createToolbarButton( options )
     if options.numberOfButtons ~= nil then
         numberOfButtons = options.numberOfButtons
     end
-    local buttonWidth = display.contentWidth / numberOfButtons
+
+    local buttonWidth = barWidth / numberOfButtons
     local rectangle = display.newRect( buttonWidth / 2, 0, buttonWidth, options.buttonHeight )
     rectangle:setFillColor( unpack(options.backgroundColor) )
     button["rectangle"] = rectangle
@@ -1331,10 +1349,17 @@ function M.createToolbarButton( options )
     button["buttonOffset"] = rectangle.contentWidth / 2
     button["mygroup"]:insert( rectangle, true ) -- insert and center bkgd
 
-    if options.index ~= nil and options.index == 1 then
+    if options.index ~= nil and options.index == 1 and x < button["buttonWidth"] then
         button["mygroup"].x = rectangle.contentWidth / 2
     elseif options.index ~= nil and options.index > 1 then
         button["buttonOffset"] = 0
+    end
+
+    local textY = 0
+    local textSize = fontSize
+    if useBothIconAndText == true then
+        textY = -rectangle.contentHeight * 0.18
+        textSize = fontSize * 0.9
     end
 
     local options2 = 
@@ -1342,9 +1367,9 @@ function M.createToolbarButton( options )
         --parent = textGroup,
         text = options.text,
         x = 0,
-        y = 0,
+        y = textY,
         font = font,
-        fontSize = fontSize,
+        fontSize = textSize,
         align = "center"
     }
 
@@ -1358,7 +1383,31 @@ function M.createToolbarButton( options )
         button["myText"]:setFillColor( unpack(options.labelColorOff) )
         button["myText"].isChecked = false
     end
-    button["mygroup"]:insert( button["myText"], true )
+    button["mygroup"]:insert( button["myText"], false )
+
+    if useBothIconAndText == true then
+        local options3 =
+        {
+            --parent = textGroup,
+            text = options.labelText,
+            x = 0,
+            y = rectangle.contentHeight * 0.2,
+            font = options.labelFont,
+            fontSize = fontSize * 0.45,
+            align = "center"
+        }
+        button["myText2"] = display.newText( options3 )
+        button["myText2"]:setFillColor( unpack(textColor) )
+        button["myText2"].isVisible = true
+        if isChecked then
+            button["myText2"]:setFillColor( unpack(options.labelColor) )
+            button["myText2"].isChecked = isChecked
+        else
+            button["myText2"]:setFillColor( unpack(options.labelColorOff) )
+            button["myText2"].isChecked = false
+        end
+        button["mygroup"]:insert( button["myText2"], false )
+    end
 
     -- add the animated circle
 
@@ -1375,13 +1424,13 @@ function M.createToolbarButton( options )
     button["myCircle"].alpha = 0.3
     button["mygroup"]:insert( button["myCircle"], true ) -- insert and center bkgd
 
-    local maxWidth = checkbox.contentWidth - (radius * 2.5)
+    local maxWidth = field.contentWidth - (radius * 2.5)
     local scaleFactor = ((maxWidth * 1.3) / radius) -- (since this is a radius of circle)
 
     thebutton = button["rectangle"]
-    checkbox = button["myText"]
+    field = button["myText"]
     thebutton.name = options.name
-    checkbox.name = options.name
+    field.name = options.name
 
     function thebutton:touch (event)
         if M.widgetDict[options.basename]["toolbar"][options.name]["myText"].isChecked == true then
@@ -1396,10 +1445,10 @@ function M.createToolbarButton( options )
                 if options.touchpoint ~= nil and options.touchpoint == true then
                     M.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].x = event.x - M.widgetDict[options.basename]["radio"][options.name]["mygroup"].x
                     M.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].y = event.y - M.widgetDict[options.basename]["toolbar"][options.name]["mygroup"].y
+                    M.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].isVisible = true
+                    M.widgetDict[options.basename]["toolbar"][options.name].myCircleTrans = transition.to( M.widgetDict[options.basename]["toolbar"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
                 end
-                M.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].isVisible = true
-                M.widgetDict[options.basename]["toolbar"][options.name].myCircleTrans = transition.to( M.widgetDict[options.basename]["toolbar"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
-                transition.to(checkbox,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
+                transition.to(field,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
             end
         elseif ( event.phase == "ended" ) then
             if M.isTouchPointOutOfRange( event ) then
@@ -1414,8 +1463,9 @@ function M.createToolbarButton( options )
                     event.myTargetName = options.name
                     event.myTargetBasename = options.basename
                     event.altTarget = M.widgetDict[options.basename]["toolbar"][options.name]["myText"]
+                    event.altTarget2 = M.widgetDict[options.basename]["toolbar"][options.name]["myText2"]
                     event.callBackData = options.callBackData
-                    assert( options.callBack )(event)
+                    M.actionForToolbar(options, event)
                 end
                 M.interceptEventHandler = nil
                 M.interceptMoved = false
@@ -2927,6 +2977,10 @@ function M.removeWidgetToolbarButton(widgetDict, toolbarName, name)
             widgetDict[toolbarName]["toolbar"][name]["rectangle"] = nil
             widgetDict[toolbarName]["toolbar"][name]["myText"]:removeSelf()
             widgetDict[toolbarName]["toolbar"][name]["myText"] = nil
+            if widgetDict[toolbarName]["toolbar"][name]["myText2"] ~= nil then
+                widgetDict[toolbarName]["toolbar"][name]["myText2"]:removeSelf()
+                widgetDict[toolbarName]["toolbar"][name]["myText2"] = nil
+            end
             widgetDict[toolbarName]["toolbar"][name]["myCircle"]:removeSelf()
             widgetDict[toolbarName]["toolbar"][name]["myCircle"] = nil
             widgetDict[toolbarName]["toolbar"][name]["mygroup"]:removeSelf()

@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.9] - 2016-06-29
+### Added
+- "labelFont" option to createToolbar
+- "labelText" option to createToolbar "list" of buttons. Allows a button to contain: Icon only, Text only or Icon with Text beneath.
+
+### Change
+- "x" option to createToolbar now works as expected. Set to 0 if wanting to use a toolbar that is 100% width of display.
+- "width" option to createToolbar now works as expected. If width is omitted the toolbar width defaults to 100% or display.contentWidth
+- "touchpoint" option to createToolbar now works as expected.
+- "callBack" for createToolbar works as expected. It will do the animation and then call the user-defined callBack.
+
 ## [0.1.8] - 2016-06-28
 ### Added
 - "labelFont" option to createToolbar

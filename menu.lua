@@ -184,7 +184,7 @@ function scene:create( event )
     local buttonHeight = mui.getScaleVal(70)
     mui.createToolbar({
         name = "toolbar_demo",
-        width = mui.getScaleVal(20), -- default to 100% for now
+        --width = mui.getScaleVal(500), -- defaults to display.contentWidth
         height = mui.getScaleVal(20),
         buttonHeight = buttonHeight,
         x = 0,
@@ -194,13 +194,13 @@ function scene:create( event )
         color = { 0.67, 0, 1 },
         labelColor = { 1, 1, 1 },
         labelColorOff = { 0.41, 0.03, 0.49 },
-        callBack = mui.actionForToolbar,
+        callBack = mui.actionForToolbarDemo,
         sliderColor = { 1, 1, 1 },
         list = {
-            { key = "Home", value = "1", icon="home", isChecked = true},
-            { key = "Newsroom", value = "2", icon="new_releases", isChecked = false },
-            { key = "Location", value = "3", icon="location_searching", isChecked = false },
-            { key = "To-do List", value = "4", icon="view_list", isChecked = false },
+            { key = "Home", value = "1", icon="home", labelText="Home", isChecked = true},
+            { key = "Newsroom", value = "2", icon="new_releases", labelText="Newsroom", isChecked = false },
+            { key = "Location", value = "3", icon="location_searching", labelText="Location", isChecked = false },
+            { key = "To-do", value = "4", icon="view_list", labelText="To-do", isChecked = false },
             -- { key = "Viewer", value = "4", labelText="View", isChecked = false } -- uncomment to see View as text
         }
     })

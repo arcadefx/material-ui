@@ -38,6 +38,19 @@ local mathFloor = math.floor
 local mathMod = math.fmod
 local mathABS = math.abs
 
+function M.eventSuperListner(event)
+    if (event.phase == "ended" or event.phase == "cancelled") and M.currentTargetName ~= nil and M.currentTargetName ~= M.lastTargetName then
+        M.lastTargetName = M.currentTargetName
+        -- find name in list and type, if slider then force the end!
+        for widget in pairs(M.widgetDict) do
+            widgetType = M.widgetDict[widget]["type"]
+            if widgetType == "Slider" and M.widgetDict[widget].name == M.currentTargetName then
+                M.widgetDict[widget]["sliderrect"]:dispatchEvent(event)
+                break
+            end
+        end
+    end
+end
 
 function M.init(data)
   M.environment = system.getInfo("environment")
@@ -52,6 +65,8 @@ function M.init(data)
   M.widgetDict = {}
   M.progressbarDict = {}
   M.currentNativeFieldName = ""
+  M.currentTargetName = ""
+  M.lastTargetName = ""
   M.interceptEventHandler = nil
   M.interceptMoved = false
   M.dialogInUse = false
@@ -59,6 +74,7 @@ function M.init(data)
 
   M.scene = composer.getScene(composer.getSceneName("current"))
   M.scene.name = composer.getSceneName("current")
+  Runtime:addEventListener( "touch", M.eventSuperListner )
 end
 
 function M.updateEventHandler( event )
@@ -95,6 +111,8 @@ function M.addBaseEventParameters(event, options)
     M.setEventParameter(event, "targetName", options.name)
     M.setEventParameter(event, "targetPrimary", event.target)
     M.setEventParameter(event, "callBackData", options.callBackData)
+    M.currentTargetName = options.name
+    M.lastTargetName = ""
 end
 
 function M.setEventParameter(event, key, value)
@@ -2862,6 +2880,7 @@ function M.createSlider(options)
             -- set touch focus
             display.getCurrentStage():setFocus( self )
             self.isFocus = true
+            event.target.isFocus = true
             M.interceptEventHandler = sliderrect
             M.updateUI(event)
             if M.touching == false then
@@ -2891,29 +2910,24 @@ function M.createSlider(options)
             end
 
         elseif ( event.phase == "ended" ) then
-            M.sliderPercentComplete(event, options)
+            M.currentTargetName = nil
             transition.to(M.widgetDict[options.name]["slidercircle"],{time=300, xScale=1, yScale=1, transition=easing.inOutCubic})
-            if M.isTouchPointOutOfRange( event ) then
-                event.phase = "offTarget"
-                -- event.target:dispatchEvent(event)
-                -- print("Its out of the button area")
-            else
-              event.phase = "onTarget"
-                if M.interceptMoved == false then
-                    event.target = M.widgetDict[options.name]["slidercircle"]
-                    event.callBackData = options.callBackData
-                    if options.callBack ~= nil then
-                        event.target.name = options.name
-                        assert( options.callBack )(event)
-                    end
+            if M.interceptMoved == false then
+                event.target = M.widgetDict[options.name]["slidercircle"]
+                event.callBackData = options.callBackData
+                if options.callBack ~= nil then
+                    event.target.name = options.name
+                    assert( options.callBack )(event)
                 end
-                M.interceptEventHandler = nil
-                M.interceptMoved = false
-                M.touching = false
             end
+            M.interceptEventHandler = nil
+            M.interceptMoved = false
+            M.touching = false
             -- reset focus
             display.getCurrentStage():setFocus( nil )
             self.isFocus = false
+            event.target.isFocus = false
+            M.sliderPercentComplete(event, options)
         end
     end
 
@@ -3016,6 +3030,8 @@ function M.removeWidgets()
         end
       end
   end
+  Runtime:removeEventListener( "touch", M.eventSuperListner )
+
 end
 
 

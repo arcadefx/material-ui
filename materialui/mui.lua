@@ -2992,6 +2992,8 @@ end
 function M.createToast( options )
     if options == nil then return end
 
+    if M.widgetDict[options.name] ~= nil then return end
+
     if options.width == nil then
         options.width = M.getScaleVal(200)
     end

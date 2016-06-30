@@ -77,6 +77,7 @@ Please read Lua code to find all parameters and see example in the repo call men
 - `createTableView` - Create a scrollable table view
 - `createTextBox` - Create a text box with label above (for now) and includes "scrollView" support. See fun.lua for an example.
 - `createTextField` - Create a text field with label above (for now) and includes "scrollView" support.  See fun.lua for an example.
+- `createToast` - Create simple "toast" notifications on screen. Colors, dimensions and fonts can be specified.  See fun.lua for an example run the demo and tap "Switch Scene" button. Tap "Show Toast"
 - `createToggleSwitch` - Create a toggle switch. See menu.lua for an example.
 - `createToolbar` - Create a horizontal toolbar with icon buttons using the material design icon font. Each toolbar button supports either material design icon or use "labelText" to use a normal text/word instead of icon. Mixing both on the same toolbar is supported.  To specify alternate font use "labelFont" attribute.  See menu.lua example (1 option is commented out, uncomment to see it work).
 Usage of Icon and Text together is supported (Icon on top and text beneath).
@@ -101,6 +102,7 @@ Remove widget methods - these will remove the widget by name and release memory:
 - `removeWidgetTableView`
 - `removeWidgetTextField`
 - `removeWidgetTextBox`
+- `removeWidgetToast`
 - `removeWidgetToggleSwitch`
 - `removeWidgetToolbar`
 - `removeWidgetToolbarButton`

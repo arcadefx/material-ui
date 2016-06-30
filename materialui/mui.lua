@@ -2989,6 +2989,147 @@ function M.sliderCallBack( event )
     end
 end
 
+function M.createToast( options )
+    if options == nil then return end
+
+    if options.width == nil then
+        options.width = M.getScaleVal(200)
+    end
+
+    if options.height == nil then
+        options.height = M.getScaleVal(4)
+    end
+
+    if options.radius == nil then
+        options.radius = M.getScaleVal(15)
+    end
+
+    local left,top = (display.contentWidth-options.width) * 0.5, display.contentHeight * 0.5
+    if options.left ~= nil then
+        left = options.left
+    end
+
+    if options.textColor == nil then
+        options.textColor = { 1, 1, 1, 1 }
+    end
+
+    if options.fillColor == nil then
+        options.fillColor = { 0.06, 0.56, 0.15, 1 }
+    end
+
+    if options.font == nil then
+        options.font = native.systemFont
+    end
+
+    if options.top == nil then
+        options.top = M.getScaleVal(80)
+    end
+
+    M.widgetDict[options.name] = {}
+    M.widgetDict[options.name]["type"] = "Toast"
+
+    M.widgetDict[options.name]["container"] = widget.newScrollView(
+        {
+            top = -options.height,
+            left = left,
+            width = options.width + (options.width * 0.10),
+            height = options.height + (options.height * 0.10),
+            scrollWidth = options.width,
+            scrollHeight = options.height,
+            hideBackground = true,
+            hideScrollBar = true,
+            isLocked = true
+        }
+    )
+
+    M.widgetDict[options.name]["touching"] = false
+
+    local radius = options.height * 0.2
+    if options.radius ~= nil and options.radius < options.height and options.radius > 1 then
+        radius = options.radius
+    end
+
+    local newX = M.widgetDict[options.name]["container"].contentWidth * 0.5
+    local newY = M.widgetDict[options.name]["container"].contentHeight * 0.5
+
+    M.widgetDict[options.name]["rrect"] = display.newRoundedRect( newX, newY, options.width, options.height, radius )
+    M.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.fillColor) )
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["rrect"] )
+
+    local rrect = M.widgetDict[options.name]["rrect"]
+
+    local fontSize = 24
+    if options.fontSize ~= nil then
+        fontSize = options.fontSize
+    end
+
+    local font = native.systemFont
+    if options.font ~= nil then
+        font = options.font
+    end
+
+    M.widgetDict[options.name]["font"] = font
+    M.widgetDict[options.name]["fontSize"] = fontSize
+
+    M.widgetDict[options.name]["myText"] = display.newText( options.text, newX, newY, font, fontSize )
+    M.widgetDict[options.name]["myText"]:setFillColor( unpack(options.textColor) )
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["myText"], true )
+
+    function rrect:touch (event)
+        if M.dialogInUse == true and options.dialogName == nil then return end
+
+        M.addBaseEventParameters(event, options)
+
+        if ( event.phase == "began" ) then
+            --event.target:takeFocus(event)
+            -- if scrollView then use the below
+            M.interceptEventHandler = rrect
+            M.updateUI(event)
+            if M.touching == false then
+                M.touching = true
+            end
+        elseif ( event.phase == "ended" ) then
+            if M.isTouchPointOutOfRange( event ) then
+                  event.phase = "offTarget"
+                  -- print("Its out of the button area")
+                  -- event.target:dispatchEvent(event)
+            else
+                event.phase = "onTarget"
+                if M.interceptMoved == false then
+                    if options.easingOut == nil then
+                        options.easingOut = 500
+                    end
+                    M.widgetDict[options.name]["container"].name = options.name
+                    transition.to(M.widgetDict[options.name]["container"],{time=options.easingOut, y=-(options.top), transition=easing.inOutCubic, onComplete=M.removeToast})
+                    event.target = M.widgetDict[options.name]["rrect"]
+                    event.callBackData = options.callBackData
+
+                    M.setEventParameter(event, "muiTargetValue", options.value)
+                    M.setEventParameter(event, "muiTarget", M.widgetDict[options.name]["rrect"])
+
+                    assert( options.callBack )(event)
+                end
+            end
+            M.interceptEventHandler = nil
+            M.interceptMoved = false
+            M.touching = false
+        end
+    end
+    M.widgetDict[options.name]["rrect"]:addEventListener( "touch", M.widgetDict[options.name]["rrect"] )
+
+    if options.easingIn == nil then
+        options.easingIn = 500
+    end
+    transition.to(M.widgetDict[options.name]["container"],{time=options.easingIn, y=options.top, transition=easing.inOutCubic})
+end
+
+function M.removeToast(event)
+    local muiName = event.name
+    if muiName ~= nil then
+        M.removeWidgetToast(muiName)
+    end
+end
+
 function M.hideNativeWidgets()
   for widget in pairs(M.widgetDict) do
       local widgetType = M.widgetDict[widget]["type"]
@@ -3027,6 +3168,8 @@ function M.removeWidgets()
             M.removeWidgetToggleSwitch(widget)
         elseif widgetType == "Slider" then
             M.removeWidgetSlider(widget)
+        elseif widgetType == "Toast" then
+            M.removeWidgetToast(widget)
         end
       end
   end
@@ -3287,6 +3430,21 @@ function M.removeWidgetSlider(widgetName)
     M.widgetDict[widgetName]["sliderbar"] = nil
     M.widgetDict[widgetName]["sliderrect"]:removeSelf()
     M.widgetDict[widgetName]["sliderrect"] = nil
+    M.widgetDict[widgetName]["container"]:removeSelf()
+    M.widgetDict[widgetName]["container"] = nil
+    M.widgetDict[widgetName] = nil
+end
+
+function M.removeWidgetToast(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    M.widgetDict[widgetName]["rrect"]:removeEventListener("touch", M.widgetDict[widgetName]["sliderrect"])
+    M.widgetDict[widgetName]["myText"]:removeSelf()
+    M.widgetDict[widgetName]["myText"] = nil
+    M.widgetDict[widgetName]["rrect"]:removeSelf()
+    M.widgetDict[widgetName]["rrect"] = nil
     M.widgetDict[widgetName]["container"]:removeSelf()
     M.widgetDict[widgetName]["container"] = nil
     M.widgetDict[widgetName] = nil

@@ -43,7 +43,7 @@ function scene:create( event )
         width = mui.getScaleVal(200),
         height = mui.getScaleVal(60),
         x = mui.getScaleVal(160),
-        y = mui.getScaleVal(220),
+        y = mui.getScaleVal(100),
         font = native.systemFont,
         fillColor = { 0, 0.82, 1 },
         textColor = { 1, 1, 1 },
@@ -52,6 +52,40 @@ function scene:create( event )
             sceneDestination = "menu",
             sceneTransitionColor = { 0, 0.73, 1 }
         } -- scene menu.lua
+    })
+
+    -- show a "toast" message, yes I said toast like HTML 5 Toast
+    -- recommend 40 percent ratio for one liners (20 radius/50 height = 0.40)
+    local showToast = function()
+        mui.createToast({
+            name = "toast_demo",
+            text = "New Messages!",
+            radius = 20,
+            width = mui.getScaleVal(220),
+            height = mui.getScaleVal(50),
+            font = native.systemFont,
+            fontSize = mui.getScaleVal(24),
+            fillColor = { 0, 0, 0, 1 },
+            textColor = { 1, 1, 1, 1 },
+            top = mui.getScaleVal(80),
+            easingIn = 500,
+            easingOut = 500,
+            callBack = mui.actionForButton
+        })
+    end
+
+    mui.createRRectButton({
+        name = "newToast",
+        text = "Show Toast",
+        width = mui.getScaleVal(200),
+        height = mui.getScaleVal(60),
+        x = mui.getScaleVal(160),
+        y = mui.getScaleVal(220),
+        font = native.systemFont,
+        textColor = { 1, 1, 1, 1 },
+        fillColor = { 0.26, 0.71, 0.68, 1 },
+        radius = 10,
+        callBack = showToast
     })
 
     -- horizontal slider (vertical in development)
@@ -85,6 +119,7 @@ function scene:create( event )
     --]]--
 
 	-- Create the widget
+    ---[[--
 	local scrollWidth = display.contentWidth * 0.5
 	scrollView = widget.newScrollView(
 	    {
@@ -112,6 +147,7 @@ function scene:create( event )
         callBack = mui.textfieldCallBack,
         scrollView = scrollView
     })
+    --]]--
 
     mui.createTextField({
         name = "textfield_demo3",

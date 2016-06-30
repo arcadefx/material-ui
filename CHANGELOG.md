@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.12] - 2016-06-30
+### Added
+- `createToast` - Create simple "toast" notifications on screen. Colors, dimensions and fonts can be specified.  See fun.lua for an example run the demo and tap "Switch Scene" button. Tap "Show Toast"
+
 ## [0.1.11] - 2016-06-30
 ### Change
 - Fixed createSlider() event issue with not always firing the "ended" event.

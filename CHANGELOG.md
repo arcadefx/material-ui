@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.11] - 2016-06-30
+### Change
+- Fixed createSlider() event issue with not always firing the "ended" event.
+
 ## [0.1.10] - 2016-06-29
 ### Added
 - `getEventParameter` - returns the event MUI widget parameters for the current widget.  Get the event target, widget name, widget value ( ex: getEventParameter(event, "muiTargetValue") ).  The value is set when creating a widget.  See menu.lua for setting the values and mui.lua callBacks for getting values (example would be actionForSwitch() method).

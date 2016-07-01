@@ -161,7 +161,8 @@ function scene:create( event )
         activeColor = { 0.12, 0.67, 0.27, 1 },
         inactiveColor = { 0.4, 0.4, 0.4, 1 },
         callBack = mui.textfieldCallBack,
-        scrollView = scrollView
+        scrollView = scrollView,
+        isSecure = true
     })
 
     mui.createTextField({
@@ -181,8 +182,8 @@ function scene:create( event )
 
     mui.createTextField({
         name = "textfield_demo5",
-        labelText = "My Topic 2",
-        text = "Hello from below!",
+        labelText = "Numbers Only",
+        text = "12345",
         font = native.systemFont,
         width = mui.getScaleVal(400),
         height = mui.getScaleVal(46),
@@ -191,7 +192,8 @@ function scene:create( event )
         activeColor = { 0.12, 0.67, 0.27, 1 },
         inactiveColor = { 0.4, 0.4, 0.4, 1 },
         callBack = mui.textfieldCallBack,
-        scrollView = scrollView
+        scrollView = scrollView,
+        inputType = "number"
     })
 
     mui.createTextBox({

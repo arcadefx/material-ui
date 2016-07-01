@@ -47,6 +47,11 @@ function M.eventSuperListner(event)
             if widgetType == "Slider" and M.widgetDict[widget].name == M.currentTargetName then
                 M.widgetDict[widget]["sliderrect"]:dispatchEvent(event)
                 break
+            elseif widgetType == "Selector" and M.widgetDict[widget].name == M.currentTargetName then
+                M.widgetDict[M.currentTargetName]["mygroup"].isVisible = false
+                M.currentTargetName = nil
+                M.lastTargetName = ""
+                break
             end
         end
     end
@@ -164,6 +169,10 @@ function M.getWidgetBaseObject(name)
             elseif widgetType == "ToggleSwitch" then
                widgetData = M.widgetDict[widget]["mygroup"]
             elseif widgetType == "Dialog" then
+               widgetData = M.widgetDict[widget]["container"]
+            elseif widgetType == "Slider" then
+               widgetData = M.widgetDict[widget]["container"]
+            elseif widgetType == "Toast" then
                widgetData = M.widgetDict[widget]["container"]
             end
           end
@@ -416,59 +425,83 @@ function M.onRowRender( event )
 
     -- need to use the colors passed in as params here.
  
-   -- line underneath label
-   row.bg1 = display.newRect( 0, 0, display.contentWidth, M.getScaleVal(59) )
-   row.bg1.anchorX = 0
-   row.bg1.anchorY = 0
-   row.bg1:setFillColor( 0.9, 0.9, 0.9, 255 ) -- transparent
-   row:insert( row.bg1 )
+    noLines = false
+    lineHeight = M.getScaleVal(4)
+    lineColor = { 0.9, 0.9, 0.9 }
+    rowColor = { 1, 1, 1, 1 }
+    textColor = { 0, 0, 0, 1 }
+    font = native.systemFont
 
-   -- the block above line
-   ---[[--
-   row.bg2 = display.newRect( 0, 0, display.contentWidth, M.getScaleVal(50) )
-   row.bg2.anchorX = 0
-   row.bg2.anchorY = 0
-   row.bg2:setFillColor( 1, 1, 1 ) -- transparent
-   row:insert( row.bg2 )
-   --]]--
+    if row.params ~= nil then
+        if row.params.noLines ~= nil then noLines = row.params.noLines end
 
-   -- the block above line
-   row.bg3 = display.newRect( 0, 0, display.contentWidth, M.getScaleVal(51) )
-   row.bg3.anchorX = 0
-   row.bg3.anchorY = 0
-   row.bg3:setFillColor( 1, 1, 1, 255 ) -- transparent
-    row:insert( row.bg3 )
+        if row.params.lineHeight ~= nil then
+            lineHeight = row.params.lineHeight
+            if lineHeight == 1 then lineHeight = 2 end
+        end
 
-    local rowRect = row.bg3
-    function rowRect:touch (event)
+        if row.params.lineColor ~= nil then lineColor = row.params.lineColor end
+
+        if row.params.rowColor ~= nil then
+            rowColor = row.params.rowColor
+        end
+
+        if row.params.textColor ~= nil then textColor = row.params.textColor end
+        if row.params.font ~= nil then font = row.params.font end
+    end
+
+    if noLines == false and lineHeight > 0 then
+        -- line underneath label
+        row.bg1 = display.newRect( 0, 0, row.contentWidth, row.contentHeight - M.getScaleVal(1) )
+        row.bg1.anchorX = 0
+        row.bg1.anchorY = 0
+        row.bg1:setFillColor( unpack( lineColor ) ) -- transparent
+        row:insert( row.bg1 )
+
+        -- the block above line
+        row.bg2 = display.newRect( 0, 0, row.contentWidth, row.contentHeight - M.getScaleVal(lineHeight) )
+        row.bg2.anchorX = 0
+        row.bg2.anchorY = 0
+        row.bg2:setFillColor( unpack( rowColor ) ) -- transparent
+        row:insert( row.bg2 )
+    else
+        row.bg1 = display.newRect( 0, 0, row.contentWidth, row.contentHeight)
+        row.bg1.anchorX = 0
+        row.bg1.anchorY = 0
+        row.bg1:setFillColor( unpack( rowColor ) ) -- transparent
+        row:insert( row.bg1 )
+    end
+
+    function row:touch (event)
         if ( event.phase == "began" ) then
             row.miscEvent = {}
+            row.miscEvent.name = row.params.name
             row.miscEvent.x = event.x
             row.miscEvent.y = event.y
             row.miscEvent.minRadius = M.getScaleVal(60) * 0.25
         end
     end
-    row.bg3:addEventListener( "touch", row.bg3 )
+    row:addEventListener( "touch", row )
 
     -- Cache the row "contentWidth" and "contentHeight" because the row bounds can change as children objects are added
     local rowHeight = row.contentHeight
     local rowWidth = row.contentWidth
 
-    local rowTitle = display.newText( row, "Row " .. row.index, 0, 0, nil, M.getScaleVal(30) )
-    rowTitle:setFillColor( 0 )
+    local rowTitle = display.newText( row, row.params.text, 0, 0, font, M.getScaleVal(30) )
+    rowTitle:setFillColor( unpack( textColor ) )
 
     -- Align the label left and vertically centered
     rowTitle.anchorX = 0
     rowTitle.x = 0
     rowTitle.y = rowHeight * 0.5
-    -- M.widgetDict[row.params.basename]["tableview"][row.params.name]["title"] = rowTitle
-
 end
 
 function M.onRowTouch( event )
     local phase = event.phase
  
     if M.dialogInUse == true then return end
+    local row = event.row
+
     if "press" == phase and M.touching == false then
         M.touching = true
         M.updateUI(event)
@@ -491,7 +524,7 @@ function M.onRowTouch( event )
         M.setEventParameter(event, "muiTarget", row)
         M.setEventParameter(event, "muiTargetIndex", event.target.index)
         if row.params ~= nil then
-            M.setEventParameter(event, "muiTargetValue", row.params.name)
+            M.setEventParameter(event, "muiTargetValue", row.params.value)
         end
         if row.params ~= nil and row.params.callBackTouch ~= nil then
             assert( row.params.callBackTouch )(event)
@@ -510,6 +543,27 @@ function M.onRowTouchDemo(event)
 
     if muiTargetValue ~= nil then
         print("row value: "..muiTargetValue)
+    end
+end
+
+function M.onRowTouchSelector(event)
+    local muiTarget = M.getEventParameter(event, "muiTarget")
+    local muiTargetValue = M.getEventParameter(event, "muiTargetValue")
+    local muiTargetIndex = M.getEventParameter(event, "muiTargetIndex")
+
+    if muiTargetIndex ~= nil then
+        print("row index: "..muiTargetIndex)
+    end
+
+    if muiTargetValue ~= nil then
+        print("row value: "..muiTargetValue)
+    end
+
+    if event.row.miscEvent ~= nil and event.row.miscEvent.name ~= nil then
+        local parentName = string.gsub(event.row.miscEvent.name, "-List", "")
+
+        M.widgetDict[parentName]["selectorfieldfake"].text = muiTargetValue
+        timer.performWithDelay(500, function() M.widgetDict[parentName]["mygroup"].isVisible=false end, 1)
     end
 end
 
@@ -1679,17 +1733,33 @@ function M.createTableView( options )
     -- The "onRowRender" function may go here (see example under "Inserting Rows", above)
 
     if options.noLines == nil then
-        options.noLines = true
+        options.noLines = false
     end
 
     if options.circleColor == nil then
         options.circleColor = { 0.4, 0.4, 0.4 }
     end
 
-   M.tableCircle = display.newCircle( 0, 0, M.getScaleVal(20) )
-   M.tableCircle:setFillColor( unpack(options.circleColor) )
-   M.tableCircle.isVisible = false
-   M.tableCircle.alpha = 0.55
+    if options.touchpointColor ~= nil then
+        options.circleColor = options.touchpointColor
+    end
+
+    if options.font == nil then
+        options.font = native.systemFont
+    end
+
+    if options.strokeWidth == nil then
+        options.strokeWidth = 0
+    end
+
+    if options.strokeColor == nil then
+        options.strokeColor = { 0, 0, 0, 1 }
+    end
+
+    M.tableCircle = display.newCircle( 0, 0, M.getScaleVal(20) )
+    M.tableCircle:setFillColor( unpack(options.circleColor) )
+    M.tableCircle.isVisible = false
+    M.tableCircle.alpha = 0.55
 
     -- Create the widget
     M.widgetDict[options.name] = {}
@@ -1705,7 +1775,7 @@ function M.createTableView( options )
             noLines = options.noLines,
             onRowRender = options.callBackRender,
             onRowTouch = M.onRowTouch,
-            listener = options.scrollListener
+            listener = options.scrollListener,
         }
     )
     tableView.isVisible = false
@@ -1742,7 +1812,14 @@ function M.createTableView( options )
             lineColor = lineColor,
             params = {
                 basename = options.name,
-                name = v.value,
+                name = options.name,
+                text = v.text,
+                font = options.font,
+                value = v.value,
+                noLines = options.noLines,
+                lineHeight = options.lineHeight,
+                rowColor = v.backgroundColor,
+                textColor = options.textColor,
                 callBackData = options.callBackData,
                 callBackTouch = options.callBackTouch
             }
@@ -1775,6 +1852,14 @@ function M.createTextField(options)
 
     if options.font == nil then
         options.font = native.systemFont
+    end
+
+    if options.isSecure == nil then
+        options.isSecure = false
+    end
+
+    if options.inputType == nil then
+        options.inputType = "default"
     end
 
     M.widgetDict[options.name] = {}
@@ -1828,10 +1913,13 @@ function M.createTextField(options)
     if M.environment == "simulator" then
         scaleFontSize = 0.75
     end
+    M.widgetDict[options.name]["isSecure"] = options.isSecure
     M.widgetDict[options.name]["textfield"] = native.newTextField( 0, 0, options.width, options.height * scaleFontSize )
     M.widgetDict[options.name]["textfield"].name = options.name
     M.widgetDict[options.name]["textfield"].hasBackground = false
     M.widgetDict[options.name]["textfield"].isVisible = false
+    M.widgetDict[options.name]["textfield"].inputType = options.inputType
+    M.widgetDict[options.name]["textfield"].isSecure = false
     M.widgetDict[options.name]["textfield"].text = options.text
     M.widgetDict[options.name]["textfield"]:setTextColor( unpack(M.widgetDict[options.name]["textlabel"].inactiveColor) )
 
@@ -1874,6 +1962,7 @@ function M.showNativeInput(event)
 
         M.widgetDict[name]["textfieldfake"].isVisible = false
         M.widgetDict[name]["textfield"].isVisible = true
+        M.widgetDict[name]["textfield"].isSecure = M.widgetDict[name]["isSecure"]
         if madeAdjustment == false then
             timer.performWithDelay(100, function() native.setKeyboardFocus(M.widgetDict[name]["textfield"]) end, 1)
         end
@@ -1984,11 +2073,20 @@ function M.textListener(event)
     elseif ( event.phase == "ended" or event.phase == "submitted" ) then
         -- do something with text
         -- print( event.target.text )
+        M.widgetDict[name]["textfield"].isSecure = false
         M.highlightTextField(name, false)
         if event.target.callBack ~= nil then
             M.updateUI(event)
             if M.widgetDict[name]["textfieldfake"] ~= nil then
-                M.widgetDict[name]["textfieldfake"].text = event.target.text
+                local text = event.target.text
+                if M.widgetDict[name]["isSecure"] == true then
+                    local length = string.len(text)
+                    text = ""
+                    for i=1, length do
+                        text = text .. "*"
+                    end
+                end
+                M.widgetDict[name]["textfieldfake"].text = text
             end
             M.setEventParameter(event, "muiTarget", M.widgetDict[name]["textfieldfake"])
             M.setEventParameter(event, "muiTargetValue", event.target.text)
@@ -2113,7 +2211,6 @@ function M.createTextBox(options)
     M.widgetDict[options.name]["textfield"]:addEventListener( "userInput", M.textListener )
     M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textfield"] )
 end
-
 
 --
 -- createProgressBar
@@ -3132,6 +3229,185 @@ function M.removeToast(event)
     end
 end
 
+function M.createSelector(options)
+
+    local x,y = 160, 240
+    if options.x ~= nil then
+        x = options.x
+    end
+    if options.y ~= nil then
+        y = options.y
+    end
+
+    if options.text == nil then
+        options.text = ""
+    end
+
+    if options.font == nil then
+        options.font = native.systemFont
+    end
+
+    if options.fieldBackgroundColor == nil then
+        options.fieldBackgroundColor = { 1, 1, 1, 1 }
+    end
+
+    M.widgetDict[options.name] = {}
+    M.widgetDict[options.name].name = options.name
+    M.widgetDict[options.name]["type"] = "Selector"
+
+    M.widgetDict[options.name]["container"] = display.newContainer(options.width+4, options.height + options.listHeight)
+    M.widgetDict[options.name]["container"]:translate( x, y ) -- center the container
+
+    M.widgetDict[options.name]["mygroup"] = display.newGroup() -- options.width+4, options.height + options.listHeight)
+    M.widgetDict[options.name]["mygroup"].x = x
+    M.widgetDict[options.name]["mygroup"].y = y
+
+    M.widgetDict[options.name]["touching"] = false
+
+    if options.scrollView ~= nil then
+        M.widgetDict[options.name]["scrollView"] = options.scrollView
+        M.widgetDict[options.name]["scrollView"]:insert( M.widgetDict[options.name]["container"] )
+        M.widgetDict[options.name]["scrollView"]:insert( M.widgetDict[options.name]["mygroup"] )
+    end
+
+    if options.inactiveColor == nil then
+        options.inactiveColor = { 0.4, 0.4, 0.4, 1 }
+    end
+
+    if options.activeColor == nil then
+        options.activeColor = { 0.12, 0.67, 0.27, 1 }
+    end
+
+    M.widgetDict[options.name]["rect"] = display.newRect( 0, 0, options.width, options.height )
+    M.widgetDict[options.name]["rect"].strokeWidth = 1
+    M.widgetDict[options.name]["rect"]:setFillColor( unpack( options.fieldBackgroundColor ) )
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["rect"] )
+
+    local rect = M.widgetDict[options.name]["rect"]
+    M.widgetDict[options.name]["line"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
+    M.widgetDict[options.name]["line"].strokeWidth = 4
+    M.widgetDict[options.name]["line"]:setStrokeColor( unpack(options.inactiveColor) )
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["line"] )
+
+    local labelOptions =
+    {
+        --parent = textGroup,
+        text = options.labelText,
+        x = -(rect.contentWidth * 0.25),
+        y = -(rect.contentHeight * 0.95),
+        width = rect.contentWidth * 0.5,     --required for multi-line and alignment
+        font = options.font,
+        fontSize = options.height * 0.55,
+        align = "left"  --new alignment parameter
+    }
+    M.widgetDict[options.name]["textlabel"] = display.newText( labelOptions )
+    M.widgetDict[options.name]["textlabel"]:setFillColor( unpack(options.inactiveColor) )
+    M.widgetDict[options.name]["textlabel"].inactiveColor = options.inactiveColor
+    M.widgetDict[options.name]["textlabel"].activeColor = options.activeColor
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textlabel"] )
+
+    local scaleFontSize = 1
+    if M.environment == "simulator" then
+        scaleFontSize = 0.75
+    end
+
+    if options.listHeight > display.contentHeight then
+        options.listHeight = display.contentHeight * 0.75
+    end
+
+    -- table view to hold pick list keyboard_arrow_down
+    M.createTableView({
+        name = options.name.."-List",
+        width = options.width,
+        height = options.listHeight,
+        top = M.getScaleVal(40),
+        left = 0,
+        labelFont = options.font,
+        color = options.color,
+        labelColor = options.labelColor,
+        labelColorOff = options.labelColorOff,
+        strokeColor = options.inactiveColor,
+        strokeWidth = 1,
+        lineHeight = 0,
+        noLines = true,
+        rowColor = options.rowColor,
+        rowHeight = options.height,
+        callBackTouch = options.callBackTouch,
+        callBackRender = options.callBackRender,
+        scrollListener = options.listener,
+        categoryColor = options.categoryColor,
+        categoryLineColor = options.categoryLineColor,
+        touchpointColor = options.touchpointColor,
+        list = options.list
+    })
+
+
+    M.widgetDict[options.name]["rect2"] = display.newRect( options.width * 0.5, (options.listHeight * 0.45) + options.height, options.width, options.listHeight + (options.height * 0.5))
+    M.widgetDict[options.name]["rect2"].strokeWidth = 1
+    M.widgetDict[options.name]["rect2"]:setStrokeColor( 0 )
+    M.widgetDict[options.name]["mygroup"]:insert( M.widgetDict[options.name]["rect2"] )
+
+    M.widgetDict[options.name]["mygroup"].x = M.widgetDict[options.name]["mygroup"].x - options.width * 0.5
+    M.widgetDict[options.name]["mygroup"]:insert( M.widgetDict[options.name.."-List"]["tableview"] )
+
+    local dy = mathABS(M.widgetDict[options.name.."-List"]["tableview"].contentHeight - M.widgetDict[options.name]["mygroup"].y)
+    local h = M.widgetDict[options.name.."-List"]["tableview"].contentHeight + M.widgetDict[options.name]["mygroup"].y
+
+    if h > display.contentHeight then
+        local hd = mathABS(display.contentHeight - h)
+        dy = M.widgetDict[options.name]["mygroup"].y - (hd + options.height)
+        M.widgetDict[options.name]["mygroup"].y = dy
+    else
+        dy = M.widgetDict[options.name]["mygroup"].y - options.height
+    end
+    M.widgetDict[options.name]["mygroup"].y = dy
+
+    M.widgetDict[options.name]["mygroup"].isVisible = false
+
+    local textOptions =
+    {
+        --parent = textGroup,
+        text = options.text,
+        x = 0,
+        y = 0,
+        width = options.width,
+        font = options.font,
+        fontSize = options.height * 0.55,
+        align = "left"  --new alignment parameter
+    }
+    M.widgetDict[options.name]["selectorfieldfake"] = display.newText( textOptions )
+    M.widgetDict[options.name]["selectorfieldfake"]:setFillColor( unpack(M.widgetDict[options.name]["textlabel"].inactiveColor) )
+    M.widgetDict[options.name]["selectorfieldfake"]:addEventListener("touch", M.selectorListener)
+    M.widgetDict[options.name]["selectorfieldfake"].name = options.name
+    M.widgetDict[options.name]["selectorfieldfake"].dialogName = options.dialogName
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["selectorfieldfake"] )
+
+    -- use codepoints like keyboard_arrow_down
+    textOptions =
+    {
+        --parent = textGroup,
+        text = "keyboard_arrow_down",
+        x = 0,
+        y = 0,
+        width = options.width,
+        font = "MaterialIcons-Regular.ttf",
+        fontSize = options.height * 0.55,
+        align = "right"  --new alignment parameter
+    }
+    M.widgetDict[options.name]["selectorfieldarrow"] = display.newText( textOptions )
+    M.widgetDict[options.name]["selectorfieldarrow"]:setFillColor( unpack(M.widgetDict[options.name]["textlabel"].inactiveColor) )
+    M.widgetDict[options.name]["selectorfieldarrow"].name = options.name
+    M.widgetDict[options.name]["selectorfieldarrow"].dialogName = options.dialogName
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["selectorfieldarrow"] )
+end
+
+function M.selectorListener( event )
+    if event.phase == "began" then
+        M.currentTargetName = event.target.name
+        M.widgetDict[event.target.name]["mygroup"].isVisible = true
+    end
+end
+
 function M.hideNativeWidgets()
   for widget in pairs(M.widgetDict) do
       local widgetType = M.widgetDict[widget]["type"]
@@ -3172,6 +3448,8 @@ function M.removeWidgets()
             M.removeWidgetSlider(widget)
         elseif widgetType == "Toast" then
             M.removeWidgetToast(widget)
+        elseif widgetType == "Selector" then
+            M.removeWidgetSelector(widget)
         end
       end
   end
@@ -3447,6 +3725,31 @@ function M.removeWidgetToast(widgetName)
     M.widgetDict[widgetName]["myText"] = nil
     M.widgetDict[widgetName]["rrect"]:removeSelf()
     M.widgetDict[widgetName]["rrect"] = nil
+    M.widgetDict[widgetName]["container"]:removeSelf()
+    M.widgetDict[widgetName]["container"] = nil
+    M.widgetDict[widgetName] = nil
+end
+
+function M.removeWidgetSelector(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    M.removeWidgetTableView(widgetName .. "-List")
+    M.widgetDict[widgetName]["selectorfieldfake"]:removeEventListener("touch", M.selectorListener)
+
+    M.widgetDict[widgetName]["selectorfieldarrow"]:removeSelf()
+    M.widgetDict[widgetName]["selectorfieldarrow"] = nil
+    M.widgetDict[widgetName]["selectorfieldfake"]:removeSelf()
+    M.widgetDict[widgetName]["selectorfieldfake"] = nil
+    M.widgetDict[widgetName]["textlabel"]:removeSelf()
+    M.widgetDict[widgetName]["textlabel"] = nil
+    M.widgetDict[widgetName]["rect"]:removeSelf()
+    M.widgetDict[widgetName]["rect"] = nil
+    M.widgetDict[widgetName]["line"]:removeSelf()
+    M.widgetDict[widgetName]["line"] = nil
+    M.widgetDict[widgetName]["mygroup"]:removeSelf()
+    M.widgetDict[widgetName]["mygroup"] = nil
     M.widgetDict[widgetName]["container"]:removeSelf()
     M.widgetDict[widgetName]["container"] = nil
     M.widgetDict[widgetName] = nil

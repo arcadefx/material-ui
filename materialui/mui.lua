@@ -1510,6 +1510,9 @@ function M.createToolbarButton( options )
     if options.isChecked ~= nil then
         isChecked = options.isChecked
     end
+    if options.isActive ~= nil then
+        isChecked = options.isActive
+    end
 
     button["font"] = font
     button["fontSize"] = fontSize
@@ -1680,6 +1683,7 @@ function M.createToolbar( options )
     local x, y = options.x, options.y
     local buttonWidth = 1
     local buttonOffset = 0
+    local activeX = 0
 
     if options.isChecked == nil then
         options.isChecked = false
@@ -1709,6 +1713,7 @@ function M.createToolbar( options )
                 x = x,
                 y = y,
                 isChecked = v.isChecked,
+                isActive = v.isActive,
                 font = "MaterialIcons-Regular.ttf",
                 labelText = v.labelText,
                 labelFont = options.labelFont,
@@ -1730,12 +1735,16 @@ function M.createToolbar( options )
             else
                 y = y + button["buttonHeight"]
             end
+            if v.isChecked == true or v.isActive == true then
+                activeX = button["mygroup"].x
+            end
         end
 
         -- slider highlight
         local sliderHeight = options.buttonHeight * 0.05
         M.widgetDict[options.name]["toolbar"]["slider"] = display.newRect( buttonOffset, display.contentHeight - (sliderHeight * 0.5), buttonWidth, sliderHeight )
         M.widgetDict[options.name]["toolbar"]["slider"]:setFillColor( unpack( options.sliderColor ) )
+        transition.to(M.widgetDict[options.name]["toolbar"]["slider"],{time=0, x=activeX, transition=easing.inOutCubic})
     end
 end
 

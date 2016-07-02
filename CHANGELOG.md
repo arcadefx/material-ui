@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.13] - 2016-07-01
+### Added
+- `createSelect` - Create a select drop down list (dropdown list). Colors, dimensions and fonts can be specified.  See fun.lua for an example. Run the demo and tap "Switch Scene" button.
+
+### Change
+- createTextBox supports inputType from Corona SDK. Example password fields.
+- createTableView supports row colors, line separator and color and many bug fixes.
+
 ## [0.1.12] - 2016-06-30
 ### Added
 - `createToast` - Create simple "toast" notifications on screen. Colors, dimensions and fonts can be specified.  See fun.lua for an example run the demo and tap "Switch Scene" button. Tap "Show Toast"

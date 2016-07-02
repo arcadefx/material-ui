@@ -98,6 +98,7 @@ Remove widget methods - these will remove the widget by name and release memory:
 - `removeWidgetRadioButton`
 - `removeWidgetRectButton`
 - `removeWidgetRRectButton`
+- `removeWidgetSelect`
 - `removeWidgetSlider`
 - `removeWidgetSwitch`
 - `removeWidgetTableView`

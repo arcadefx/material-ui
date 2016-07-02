@@ -3628,6 +3628,8 @@ function M.removeWidgetTableView(widgetName)
     if widgetName == nil then
         return
     end
+    if M.widgetDict[widgetName] == nil then return end
+    
     if M.widgetDict[widgetName]["tableview"] == nil then
         return
     end

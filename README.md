@@ -68,8 +68,8 @@ Available Methods
 Please read Lua code to find all parameters and see example in the repo call menu.lua.  All methods below implement a callback and lots of configuration options.
 
 | Method        | Short Description | Example  |
-| ------------- |:-------------:| -----:|
-| `createDialog` Create a dialog (modal) with content. Supports up to two buttons (Okay, Cancel) with callbacks.      | right-aligned | menu.lua |
+| ------------- | ------------- | :-----:|
+| `createDialog` Create a dialog (modal) with content. Supports up to two buttons (Okay, Cancel) with callbacks.       | menu.lua |
 | `createIconButton`      | Create an icon button using the material design icon font. | menu.lua |
 | `createProgressBar` | Create an animated progress bar using "determinate" from Material Design.      |    menu.lua |
 | `createRadioGroup` | Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.      |    menu.lua |
@@ -83,9 +83,6 @@ Please read Lua code to find all parameters and see example in the repo call men
 | `createToast` | Create simple "toast" notifications on screen. Colors, dimensions and fonts can be specified.      |    fun.lua |
 | `createToggleSwitch` | Create a toggle switch.      |    menu.lua |
 | `createToolbar` | Create a horizontal toolbar with icon, text or icon + text (icon on top, text on bottom) buttons      |    menu.lua |
-| zebra stripes | are neat      |    $1 |
-| zebra stripes | are neat      |    $1 |
-| zebra stripes | are neat      |    $1 |
 
 Helper Methods
 -------------

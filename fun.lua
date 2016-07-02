@@ -43,7 +43,7 @@ function scene:create( event )
         width = mui.getScaleVal(200),
         height = mui.getScaleVal(60),
         x = mui.getScaleVal(160),
-        y = mui.getScaleVal(100),
+        y = mui.getScaleVal(90),
         font = native.systemFont,
         fillColor = { 0, 0.82, 1 },
         textColor = { 1, 1, 1 },
@@ -80,12 +80,48 @@ function scene:create( event )
         width = mui.getScaleVal(200),
         height = mui.getScaleVal(60),
         x = mui.getScaleVal(160),
-        y = mui.getScaleVal(220),
+        y = mui.getScaleVal(210),
         font = native.systemFont,
         textColor = { 1, 1, 1, 1 },
         fillColor = { 0.26, 0.71, 0.68, 1 },
         radius = 10,
         callBack = showToast
+    })
+
+    -- create a drop down list
+    local numOfRowsToShow = 3
+    mui.createSelect({
+        name = "selector_demo1",
+        labelText = "Favorite Food",
+        text = "Apple",
+        font = native.systemFont,
+        textColor = { 0.4, 0.4, 0.4 },
+        fieldBackgroundColor = { 1, 1, 1, 1 },
+        rowColor = { default={ 1, 1, 1, 1 }, over={ 1, 0.5, 0, 0.2 } }, -- default is the highlighting
+        touchpointColor = { 0.4, 0.4, 0.4 }, -- the touchpoint color
+        activeColor = { 0.12, 0.67, 0.27, 1 },
+        inactiveColor = { 0.4, 0.4, 0.4, 1 },
+        strokeColor = { 0.4, 0.4, 0.4, 1 },
+        strokeWidth = 2,
+        width = mui.getScaleVal(400),
+        height = mui.getScaleVal(46),
+        listHeight = mui.getScaleVal(46) * numOfRowsToShow,
+        x = mui.getScaleVal(240),
+        y = mui.getScaleVal(350),
+        callBackTouch = mui.onRowTouchSelector,
+        callBackRender = mui.onRowRender,
+        scrollListener = nil,
+        list = { -- if 'key' use it for 'id' in the table row
+            { key = "Row1", text = "Apple", value = "Apple", isCategory = false },
+            { key = "Row2", text = "Cookie", value = "Cookie", isCategory = false },
+            { key = "Row3", text = "Pizza", value = "Pizza", isCategory = false },
+            { key = "Row4", text = "Shake", value = "Shake", isCategory = false },
+            { key = "Row5", text = "Shake 2", value = "Shake 2", isCategory = false },
+            { key = "Row6", text = "Shake 3", value = "Shake 3", isCategory = false },
+            { key = "Row7", text = "Shake 4", value = "Shake 4", isCategory = false },
+            { key = "Row8", text = "Shake 5", value = "Shake 5", isCategory = false },
+            { key = "Row9", text = "Shake 6", value = "Shake 6", isCategory = false },
+        },
     })
 
     -- horizontal slider (vertical in development)
@@ -95,7 +131,7 @@ function scene:create( event )
         width = mui.getScaleVal(200),
         height = mui.getScaleVal(4),
         x = mui.getScaleVal(160),
-        y = mui.getScaleVal(400),
+        y = mui.getScaleVal(440),
         radius = mui.getScaleVal(12),
         colorOff = { 1, 1, 1, 1 },
         color = { 1, 0, 0, 1 },
@@ -108,7 +144,7 @@ function scene:create( event )
         width = mui.getScaleVal(200),
         height = mui.getScaleVal(4),
         x = mui.getScaleVal(160),
-        y = mui.getScaleVal(450),
+        y = mui.getScaleVal(490),
         radius = mui.getScaleVal(12),
         colorOff = { 1, 1, 1, 1 },
         color = { 0.31, 0.65, 0.03, 1 },

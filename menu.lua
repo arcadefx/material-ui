@@ -254,39 +254,6 @@ function scene:create( event )
         callBack = mui.textfieldCallBack
     })
 
-    local numOfRowsToShow = 5
-    mui.createSelector({
-        name = "selector_demo1",
-        labelText = "Favorite Food",
-        text = "Apple",
-        font = native.systemFont,
-        width = mui.getScaleVal(400),
-        height = mui.getScaleVal(46),
-        listHeight = mui.getScaleVal(46) * numOfRowsToShow,
-        x = mui.getScaleVal(240),
-        y = mui.getScaleVal(300),
-        color = { 0.67, 0, 1 },
-        fieldBackgroundColor = { 1, 1, 1, 1 },
-        labelColor = { 1, 1, 1, 1 },
-        labelColorOff = { 0.41, 0.03, 0.49 },
-        rowColor = { default={ 1, 1, 1, 1 }, over={ 1, 0.5, 0, 0.2 } }, -- default is the highlighting
-        touchpointColor = { 0.4, 0.4, 0.4 }, -- the touchpoint color
-        callBackTouch = mui.onRowTouchSelector,
-        callBackRender = mui.onRowRender,
-        scrollListener = nil,
-        list = { -- if 'key' use it for 'id' in the table row
-            { key = "Row1", text = "Apple", value = "Apple", isCategory = false },
-            { key = "Row2", text = "Cookie", value = "Cookie", isCategory = false },
-            { key = "Row3", text = "Pizza", value = "Pizza", isCategory = false },
-            { key = "Row4", text = "Shake", value = "Shake", isCategory = false },
-            { key = "Row5", text = "Shake 2", value = "Shake 2", isCategory = false },
-            { key = "Row6", text = "Shake 3", value = "Shake 3", isCategory = false },
-            { key = "Row7", text = "Shake 4", value = "Shake 4", isCategory = false },
-            { key = "Row8", text = "Shake 5", value = "Shake 5", isCategory = false },
-            { key = "Row9", text = "Shake 6", value = "Shake 6", isCategory = false },
-        },
-    })
-
     -- create and animate the intial value (1% is always required due to scaling method)
     mui.createProgressBar({
         name = "progressbar_demo",

@@ -48,10 +48,18 @@ function M.eventSuperListner(event)
                 M.widgetDict[widget]["sliderrect"]:dispatchEvent(event)
                 break
             elseif widgetType == "Selector" and M.widgetDict[widget].name == M.currentTargetName then
-                M.widgetDict[M.currentTargetName]["mygroup"].isVisible = false
-                M.currentTargetName = nil
-                M.lastTargetName = ""
+                if M.widgetDict[M.currentTargetName]["mygroup"] ~= nil then
+                    M.widgetDict[M.currentTargetName]["mygroup"].isVisible = false
+                    M.currentTargetName = nil
+                    M.lastTargetName = ""
+                    M.removeWidgetSelector(widget, "listonly")
+                end
                 break
+            elseif widgetType == "Selector" and M.widgetDict[widget] ~= nil then
+                if M.widgetDict[widget]["mygroup"] ~= nil and M.widgetDict[widget]["mygroup"].isVisible == true then
+                    M.widgetDict[widget]["mygroup"].isVisible = false
+                    M.removeWidgetSelector(widget, "listonly")
+                end
             end
         end
     end
@@ -563,8 +571,13 @@ function M.onRowTouchSelector(event)
         local parentName = string.gsub(event.row.miscEvent.name, "-List", "")
 
         M.widgetDict[parentName]["selectorfieldfake"].text = muiTargetValue
-        timer.performWithDelay(500, function() M.widgetDict[parentName]["mygroup"].isVisible=false end, 1)
+        timer.performWithDelay(500, function() M.finishSelector(parentName) end, 1)
     end
+end
+
+function M.finishSelector(parentName)
+    M.widgetDict[parentName]["mygroup"].isVisible = false
+    M.removeWidgetSelector(parentName, "listonly")
 end
 
 --[[
@@ -1753,7 +1766,7 @@ function M.createTableView( options )
     end
 
     if options.strokeColor == nil then
-        options.strokeColor = { 0, 0, 0, 1 }
+        options.strokeColor = { 0.8, 0.8, 0.8, .4 }
     end
 
     M.tableCircle = display.newCircle( 0, 0, M.getScaleVal(20) )
@@ -1888,7 +1901,7 @@ function M.createTextField(options)
 
     local rect = M.widgetDict[options.name]["rect"]
     M.widgetDict[options.name]["line"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
-    M.widgetDict[options.name]["line"].strokeWidth = 4
+    M.widgetDict[options.name]["line"].strokeWidth = M.getScaleVal(4)
     M.widgetDict[options.name]["line"]:setStrokeColor( unpack(options.inactiveColor) )
     M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["line"] )
 
@@ -2155,7 +2168,7 @@ function M.createTextBox(options)
 
     local rect = M.widgetDict[options.name]["rect"]
     M.widgetDict[options.name]["line"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
-    M.widgetDict[options.name]["line"].strokeWidth = 4
+    M.widgetDict[options.name]["line"].strokeWidth = M.getScaleVal(4)
     M.widgetDict[options.name]["line"]:setStrokeColor( unpack(options.inactiveColor) )
     M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["line"] )
 
@@ -3229,7 +3242,11 @@ function M.removeToast(event)
     end
 end
 
-function M.createSelector(options)
+function M.createDropDown(options)
+    M.createSelector(options)
+end
+
+function M.createSelect(options)
 
     local x,y = 160, 240
     if options.x ~= nil then
@@ -3257,11 +3274,6 @@ function M.createSelector(options)
 
     M.widgetDict[options.name]["container"] = display.newContainer(options.width+4, options.height + options.listHeight)
     M.widgetDict[options.name]["container"]:translate( x, y ) -- center the container
-
-    M.widgetDict[options.name]["mygroup"] = display.newGroup() -- options.width+4, options.height + options.listHeight)
-    M.widgetDict[options.name]["mygroup"].x = x
-    M.widgetDict[options.name]["mygroup"].y = y
-
     M.widgetDict[options.name]["touching"] = false
 
     if options.scrollView ~= nil then
@@ -3278,14 +3290,21 @@ function M.createSelector(options)
         options.activeColor = { 0.12, 0.67, 0.27, 1 }
     end
 
+    if options.strokeWidth == nil then
+        options.strokeWidth = M.getScaleVal(1)
+    end
+
+    if options.strokeColor == nil then
+        options.strokeColor = { 0.4, 0.4, 0.4, 1 }
+    end
+
     M.widgetDict[options.name]["rect"] = display.newRect( 0, 0, options.width, options.height )
-    M.widgetDict[options.name]["rect"].strokeWidth = 1
     M.widgetDict[options.name]["rect"]:setFillColor( unpack( options.fieldBackgroundColor ) )
     M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["rect"] )
 
     local rect = M.widgetDict[options.name]["rect"]
     M.widgetDict[options.name]["line"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
-    M.widgetDict[options.name]["line"].strokeWidth = 4
+    M.widgetDict[options.name]["line"].strokeWidth = M.getScaleVal(4)
     M.widgetDict[options.name]["line"]:setStrokeColor( unpack(options.inactiveColor) )
     M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["line"] )
 
@@ -3310,59 +3329,6 @@ function M.createSelector(options)
     if M.environment == "simulator" then
         scaleFontSize = 0.75
     end
-
-    if options.listHeight > display.contentHeight then
-        options.listHeight = display.contentHeight * 0.75
-    end
-
-    -- table view to hold pick list keyboard_arrow_down
-    M.createTableView({
-        name = options.name.."-List",
-        width = options.width,
-        height = options.listHeight,
-        top = M.getScaleVal(40),
-        left = 0,
-        labelFont = options.font,
-        color = options.color,
-        labelColor = options.labelColor,
-        labelColorOff = options.labelColorOff,
-        strokeColor = options.inactiveColor,
-        strokeWidth = 1,
-        lineHeight = 0,
-        noLines = true,
-        rowColor = options.rowColor,
-        rowHeight = options.height,
-        callBackTouch = options.callBackTouch,
-        callBackRender = options.callBackRender,
-        scrollListener = options.listener,
-        categoryColor = options.categoryColor,
-        categoryLineColor = options.categoryLineColor,
-        touchpointColor = options.touchpointColor,
-        list = options.list
-    })
-
-
-    M.widgetDict[options.name]["rect2"] = display.newRect( options.width * 0.5, (options.listHeight * 0.45) + options.height, options.width, options.listHeight + (options.height * 0.5))
-    M.widgetDict[options.name]["rect2"].strokeWidth = 1
-    M.widgetDict[options.name]["rect2"]:setStrokeColor( 0 )
-    M.widgetDict[options.name]["mygroup"]:insert( M.widgetDict[options.name]["rect2"] )
-
-    M.widgetDict[options.name]["mygroup"].x = M.widgetDict[options.name]["mygroup"].x - options.width * 0.5
-    M.widgetDict[options.name]["mygroup"]:insert( M.widgetDict[options.name.."-List"]["tableview"] )
-
-    local dy = mathABS(M.widgetDict[options.name.."-List"]["tableview"].contentHeight - M.widgetDict[options.name]["mygroup"].y)
-    local h = M.widgetDict[options.name.."-List"]["tableview"].contentHeight + M.widgetDict[options.name]["mygroup"].y
-
-    if h > display.contentHeight then
-        local hd = mathABS(display.contentHeight - h)
-        dy = M.widgetDict[options.name]["mygroup"].y - (hd + options.height)
-        M.widgetDict[options.name]["mygroup"].y = dy
-    else
-        dy = M.widgetDict[options.name]["mygroup"].y - options.height
-    end
-    M.widgetDict[options.name]["mygroup"].y = dy
-
-    M.widgetDict[options.name]["mygroup"].isVisible = false
 
     local textOptions =
     {
@@ -3399,12 +3365,87 @@ function M.createSelector(options)
     M.widgetDict[options.name]["selectorfieldarrow"].name = options.name
     M.widgetDict[options.name]["selectorfieldarrow"].dialogName = options.dialogName
     M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["selectorfieldarrow"] )
+
+    if options.listHeight > display.contentHeight then
+        options.listHeight = display.contentHeight * 0.75
+    end
+
+    M.widgetDict[options.name]["options"] = options
+end
+
+function M.revealTableViewForSelector(name, options)
+    -- table view to hold pick list keyboard_arrow_down
+    M.widgetDict[options.name]["mygroup"] = display.newGroup() -- options.width+4, options.height + options.listHeight)
+
+    local x = options.x
+    local y = options.y
+    if M.widgetDict[options.name]["calculated"] ~= nil and M.widgetDict[options.name]["calculated"].y ~= nil then
+        x = M.widgetDict[options.name]["calculated"].x
+        y = M.widgetDict[options.name]["calculated"].y
+    end
+
+    M.widgetDict[options.name]["mygroup"].x = x
+    M.widgetDict[options.name]["mygroup"].y = y
+
+    M.createTableView({
+        name = options.name.."-List",
+        width = options.width - M.getScaleVal(5),
+        height = options.listHeight,
+        font = options.font,
+        top = M.getScaleVal(40),
+        left = 0,
+        textColor = options.textColor,
+        strokeColor = options.inactiveColor,
+        strokeWidth = 1,
+        lineHeight = 0,
+        noLines = true,
+        rowColor = options.rowColor,
+        rowHeight = options.height,
+        callBackTouch = options.callBackTouch,
+        callBackRender = options.callBackRender,
+        scrollListener = options.listener,
+        categoryColor = options.categoryColor,
+        categoryLineColor = options.categoryLineColor,
+        touchpointColor = options.touchpointColor,
+        list = options.list
+    })
+
+    M.widgetDict[options.name]["rect2"] = display.newRect( options.width * 0.5, (options.listHeight * 0.45) + options.height, options.width, options.listHeight + (options.height * 0.5))
+    M.widgetDict[options.name]["rect2"].strokeWidth = options.strokeWidth
+    M.widgetDict[options.name]["rect2"]:setStrokeColor( unpack( options.strokeColor ) )
+    M.widgetDict[options.name]["mygroup"]:insert( M.widgetDict[options.name]["rect2"] )
+
+    if M.widgetDict[options.name]["calculated"] == nil then
+        M.widgetDict[options.name]["calculated"] = {}
+        M.widgetDict[options.name]["mygroup"].x = M.widgetDict[options.name]["mygroup"].x - options.width * 0.5
+
+        local dy = mathABS(M.widgetDict[options.name.."-List"]["tableview"].contentHeight - M.widgetDict[options.name]["mygroup"].y)
+        local h = M.widgetDict[options.name.."-List"]["tableview"].contentHeight + M.widgetDict[options.name]["mygroup"].y
+
+        if h > display.contentHeight then
+            local hd = mathABS(display.contentHeight - h)
+            if options.scrollView ~= nil then
+                hd = mathABS(options.scrollView.contentHeight - h)
+            end
+            dy = M.widgetDict[options.name]["mygroup"].y - (hd + options.height)
+            M.widgetDict[options.name]["mygroup"].y = dy
+        else
+            dy = M.widgetDict[options.name]["mygroup"].y - options.height
+        end
+        M.widgetDict[options.name]["mygroup"].y = dy
+        M.widgetDict[options.name]["calculated"].x = M.widgetDict[options.name]["mygroup"].x
+        M.widgetDict[options.name]["calculated"].y = M.widgetDict[options.name]["mygroup"].y
+    end
+    M.widgetDict[options.name]["mygroup"]:insert( M.widgetDict[options.name.."-List"]["tableview"] )
+    M.widgetDict[options.name]["mygroup"].isVisible = false
 end
 
 function M.selectorListener( event )
     if event.phase == "began" then
-        M.currentTargetName = event.target.name
-        M.widgetDict[event.target.name]["mygroup"].isVisible = true
+        local name = event.target.name
+        M.currentTargetName = name
+        M.revealTableViewForSelector(name, M.widgetDict[name]["options"])
+        M.widgetDict[name]["mygroup"].isVisible = true
     end
 end
 
@@ -3730,12 +3771,18 @@ function M.removeWidgetToast(widgetName)
     M.widgetDict[widgetName] = nil
 end
 
-function M.removeWidgetSelector(widgetName)
+function M.removeWidgetSelector(widgetName, listonly)
     if widgetName == nil then
         return
     end
 
-    M.removeWidgetTableView(widgetName .. "-List")
+    if listonly ~= nil then
+        M.removeWidgetTableView(widgetName .. "-List")
+        M.removeSelectorGroup(widgetName)
+        return
+    else
+        M.removeWidgetTableView(widgetName .. "-List")
+    end
     M.widgetDict[widgetName]["selectorfieldfake"]:removeEventListener("touch", M.selectorListener)
 
     M.widgetDict[widgetName]["selectorfieldarrow"]:removeSelf()
@@ -3748,11 +3795,25 @@ function M.removeWidgetSelector(widgetName)
     M.widgetDict[widgetName]["rect"] = nil
     M.widgetDict[widgetName]["line"]:removeSelf()
     M.widgetDict[widgetName]["line"] = nil
-    M.widgetDict[widgetName]["mygroup"]:removeSelf()
-    M.widgetDict[widgetName]["mygroup"] = nil
+    M.removeSelectorGroup(widgetName)
     M.widgetDict[widgetName]["container"]:removeSelf()
     M.widgetDict[widgetName]["container"] = nil
     M.widgetDict[widgetName] = nil
+end
+
+function M.removeSelectorGroup(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if M.widgetDict[widgetName]["rect2"] ~= nil then
+        M.widgetDict[widgetName]["rect2"]:removeSelf()
+        M.widgetDict[widgetName]["rect2"] = nil
+    end
+    if M.widgetDict[widgetName]["mygroup"] ~= nil then
+        M.widgetDict[widgetName]["mygroup"]:removeSelf()
+        M.widgetDict[widgetName]["mygroup"] = nil
+    end
 end
 
 return M

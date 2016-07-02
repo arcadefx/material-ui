@@ -49,7 +49,6 @@ function M.eventSuperListner(event)
                 break
             elseif widgetType == "Selector" and M.widgetDict[widget].name == M.currentTargetName then
                 if M.widgetDict[M.currentTargetName]["mygroup"] ~= nil then
-                    M.widgetDict[M.currentTargetName]["mygroup"].isVisible = false
                     M.currentTargetName = nil
                     M.lastTargetName = ""
                     M.removeWidgetSelector(widget, "listonly")
@@ -57,7 +56,6 @@ function M.eventSuperListner(event)
                 break
             elseif widgetType == "Selector" and M.widgetDict[widget] ~= nil then
                 if M.widgetDict[widget]["mygroup"] ~= nil and M.widgetDict[widget]["mygroup"].isVisible == true then
-                    M.widgetDict[widget]["mygroup"].isVisible = false
                     M.removeWidgetSelector(widget, "listonly")
                 end
             end
@@ -527,7 +525,7 @@ function M.onRowTouch( event )
         local scaleFactor = 2.5
         M.tableCircle.isVisible = true
         M.tableCircle.myCircleTrans = transition.to( M.tableCircle, { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
-        row.myGlowTrans = transition.to( row, { time=300,delay=150,alpha=0.2, transition=easing.outCirc, onComplete=M.subtleGlowRect } )
+        row.myGlowTrans = transition.to( row, { time=300,delay=150,alpha=0.4, transition=easing.outCirc, onComplete=M.subtleGlowRect } )
 
         M.setEventParameter(event, "muiTarget", row)
         M.setEventParameter(event, "muiTargetIndex", event.target.index)
@@ -576,7 +574,7 @@ function M.onRowTouchSelector(event)
 end
 
 function M.finishSelector(parentName)
-    M.widgetDict[parentName]["mygroup"].isVisible = false
+    if M.widgetDict[parentName] == nil then return end
     M.removeWidgetSelector(parentName, "listonly")
 end
 
@@ -3629,7 +3627,7 @@ function M.removeWidgetTableView(widgetName)
         return
     end
     if M.widgetDict[widgetName] == nil then return end
-    
+
     if M.widgetDict[widgetName]["tableview"] == nil then
         return
     end

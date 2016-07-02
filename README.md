@@ -67,21 +67,25 @@ Available Methods
 -------------
 Please read Lua code to find all parameters and see example in the repo call menu.lua.  All methods below implement a callback and lots of configuration options.
 
-- `createDialog` - Create a dialog (modal) with content. Supports up to two buttons (Okay, Cancel) with callbacks. See menu.lua for an example.
-- `createIconButton` - Create an icon button using the material design icon font.  The demo shows a 'checkbox' as an example.
-- `createProgressBar` - Create an animated progress bar using "determinate" from Material Design. See menu.lua for an example. Includes linear call back (callBack) and later will support a repeating call back (repeatCallBack).
-- `createRadioGroup` - Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.
-- `createRectButton` - Create a rectangle button
-- `createRRectButton` - Create a rounded rectangle button
-- `createSelect` - Create a select drop down list (dropdown list). Colors, dimensions and fonts can be specified.  See fun.lua for an example. Run the demo and tap "Switch Scene" button.
-- `createSlider()` - Create a slider for doing percentages 0..100. Calculate amount in call backs: callBackMove (called during movement) and callBack = at the end phase.  Values are in percent (0.20, 0.90 and 1 for 100%). Limitations: horizontal only and no labels (both to be addressed).  See mui.lua and method sliderCallBackMove() to get current value of slider.
-- `createTableView` - Create a scrollable table view
-- `createTextBox` - Create a text box with label above (for now) and includes "scrollView" support. See fun.lua for an example.
-- `createTextField` - Create a text field with label above (for now) and includes "scrollView" support.  See fun.lua for an example.
-- `createToast` - Create simple "toast" notifications on screen. Colors, dimensions and fonts can be specified.  See fun.lua for an example run the demo and tap "Switch Scene" button. Tap "Show Toast"
-- `createToggleSwitch` - Create a toggle switch. See menu.lua for an example.
-- `createToolbar` - Create a horizontal toolbar with icon buttons using the material design icon font. Each toolbar button supports either material design icon or use "labelText" to use a normal text/word instead of icon. Mixing both on the same toolbar is supported.  To specify alternate font use "labelFont" attribute.  See menu.lua example (1 option is commented out, uncomment to see it work).
-Usage of Icon and Text together is supported (Icon on top and text beneath).
+| Method        | Short Description | Example  |
+| ------------- |:-------------:| -----:|
+| `createDialog` Create a dialog (modal) with content. Supports up to two buttons (Okay, Cancel) with callbacks.      | right-aligned | menu.lua |
+| `createIconButton`      | Create an icon button using the material design icon font. | menu.lua |
+| `createProgressBar` | Create an animated progress bar using "determinate" from Material Design.      |    menu.lua |
+| `createRadioGroup` | Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.      |    menu.lua |
+| `createRectButton` | Create a rectangle button      |    menu.lua/fun.lua |
+| `createRRectButton` | Create a rounded rectangle button     |    menu.lua/fun.lua |
+| `createSelect` | Create a select drop down list (dropdown list). Colors, dimensions and fonts can be specified.      |    fun.lua |
+| `createSlider()` | Create a slider for doing percentages 0..100. Calculate amount in call backs: callBackMove (called during movement) and callBack = at the end phase.  Values are in percent (0.20, 0.90 and 1 for 100%). See method sliderCallBackMove() to get current value of slider.       |    fun.lua |
+| `createTableView` | Create a scrollable table view      |    menu.lua/fun.lua |
+| `createTextBox` | Create a text box with label above (for now)      |    fun.lua |
+| `createTextField` | Create a text field with label above (for now)      |    menu.lua/fun.lua |
+| `createToast` | Create simple "toast" notifications on screen. Colors, dimensions and fonts can be specified.      |    fun.lua |
+| `createToggleSwitch` | Create a toggle switch.      |    menu.lua |
+| `createToolbar` | Create a horizontal toolbar with icon, text or icon + text (icon on top, text on bottom) buttons      |    menu.lua |
+| zebra stripes | are neat      |    $1 |
+| zebra stripes | are neat      |    $1 |
+| zebra stripes | are neat      |    $1 |
 
 Helper Methods
 -------------

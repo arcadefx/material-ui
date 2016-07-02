@@ -212,27 +212,31 @@ function scene:create( event )
         name = "tableview_demo",
         width = mui.getScaleVal(300),
         height = mui.getScaleVal(300),
-        top = 40,
+        top = mui.getScaleVal(40),
         left = display.contentWidth - mui.getScaleVal(315),
-        labelFont = native.systemFont,
-        color = { 0.67, 0, 1 },
-        labelColor = { 1, 1, 1 },
-        labelColorOff = { 0.41, 0.03, 0.49 },
-        lineColor = { 1, 1, 1, 255 },
+        font = native.systemFont,
+        textColor = { 0, 0, 0, 1 },
+        lineColor = { 1, 1, 1, 1 },
+        lineHeight = mui.getScaleVal(4),
         rowColor = { default={1,1,1}, over={1,0.5,0,0.2} },
         rowHeight = mui.getScaleVal(60),
+        noLines = false,
         callBackTouch = mui.onRowTouchDemo,
         callBackRender = mui.onRowRender,
         scrollListener = nil,
         list = { -- if 'key' use it for 'id' in the table row
-            { key = "Row1", value = "Row 1", isCategory = false },
-            { key = "Row2", value = "Row 2", isCategory = false },
-            { key = "Row3", value = "Row 3", isCategory = false },
-            { key = "Row4", value = "Row 4", isCategory = false }
+            { key = "Row1", text = "Row 1", value = "1", isCategory = false },
+            { key = "Row2", text = "Row 2", value = "2", isCategory = false },
+            { key = "Row3", text = "Row 3", value = "3", isCategory = false },
+            { key = "Row4", text = "Row 4", value = "4", isCategory = false },
+            -- below are rows with different background colors
+            -- set "noLines" to true above to omit line border
+            -- { key = "Row2", text = "Row 2", value = "5", isCategory = false, backgroundColor = { 0.67, 0.98, 0.65, 0.2 } },
+            -- { key = "Row3", text = "Row 3", value = "6", isCategory = false, backgroundColor = { 1, 0, 0, 0.2 }  },
         },
         categoryColor = { default={0.8,0.8,0.8,0.8} },
         categoryLineColor = { 1, 1, 1, 0 },
-        circleColor = { 0.4, 0.4, 0.4 }
+        touchpointColor = { 0.4, 0.4, 0.4 }
     })
     --]]--
 

@@ -73,6 +73,7 @@ Please read Lua code to find all parameters and see example in the repo call men
 - `createRadioGroup` - Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.
 - `createRectButton` - Create a rectangle button
 - `createRRectButton` - Create a rounded rectangle button
+- `createSelect` - Create a select drop down list (dropdown list). Colors, dimensions and fonts can be specified.  See fun.lua for an example. Run the demo and tap "Switch Scene" button.
 - `createSlider()` - Create a slider for doing percentages 0..100. Calculate amount in call backs: callBackMove (called during movement) and callBack = at the end phase.  Values are in percent (0.20, 0.90 and 1 for 100%). Limitations: horizontal only and no labels (both to be addressed).  See mui.lua and method sliderCallBackMove() to get current value of slider.
 - `createTableView` - Create a scrollable table view
 - `createTextBox` - Create a text box with label above (for now) and includes "scrollView" support. See fun.lua for an example.

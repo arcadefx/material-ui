@@ -177,33 +177,9 @@ function scene:create( event )
         labelColor = { 0, 0, 0 },
         callBack = mui.actionForRadioButton,
         list = {
-            { key = "Cookie", value = "1", isChecked = true },
+            { key = "Cookie", value = "1", isChecked = false },
             { key = "Fruit Snack", value = "2", isChecked = false },
-            { key = "Grape", value = "3", isChecked = false }
-        }
-    })
-
-    local buttonHeight = mui.getScaleVal(70)
-    mui.createToolbar({
-        name = "toolbar_demo",
-        --width = mui.getScaleVal(500), -- defaults to display.contentWidth
-        height = mui.getScaleVal(20),
-        buttonHeight = buttonHeight,
-        x = 0,
-        y = (display.contentHeight - (buttonHeight * 0.5)),
-        layout = "horizontal",
-        labelFont = native.systemFont,
-        color = { 0.67, 0, 1 },
-        labelColor = { 1, 1, 1 },
-        labelColorOff = { 0.41, 0.03, 0.49 },
-        callBack = mui.actionForToolbarDemo,
-        sliderColor = { 1, 1, 1 },
-        list = {
-            { key = "Home", value = "1", icon="home", labelText="Home", isChecked = false },
-            { key = "Newsroom", value = "2", icon="new_releases", labelText="News", isChecked = true },
-            { key = "Location", value = "3", icon="location_searching", labelText="Location", isChecked = false },
-            { key = "To-do", value = "4", icon="view_list", labelText="To-do", isChecked = false },
-            -- { key = "Viewer", value = "4", labelText="View", isChecked = false } -- uncomment to see View as text
+            { key = "Grape", value = "3", isChecked = true }
         }
     })
 
@@ -284,6 +260,112 @@ function scene:create( event )
     timer.performWithDelay(3000, increaseMyProgressBar, 1)
     -- increaseMyProgressBar() -- will be queued if already processing an increase
 
+    -- on bottom and stay on top of other widgets.
+    local buttonHeight = mui.getScaleVal(70)
+    mui.createToolbar({
+        name = "toolbar_demo",
+        --width = mui.getScaleVal(500), -- defaults to display.contentWidth
+        height = mui.getScaleVal(20),
+        buttonHeight = buttonHeight,
+        x = 0,
+        y = (display.contentHeight - (buttonHeight * 0.5)),
+        layout = "horizontal",
+        labelFont = native.systemFont,
+        color = { 0.67, 0, 1 },
+        labelColor = { 1, 1, 1 },
+        labelColorOff = { 0.41, 0.03, 0.49 },
+        callBack = mui.actionForToolbarDemo,
+        sliderColor = { 1, 1, 1 },
+        list = {
+            { key = "Home", value = "1", icon="home", labelText="Home", isActive = true },
+            { key = "Newsroom", value = "2", icon="new_releases", labelText="News", isActive = false },
+            { key = "Location", value = "3", icon="location_searching", labelText="Location", isActive = false },
+            { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
+            -- { key = "Viewer", value = "4", labelText="View", isActive = false } -- uncomment to see View as text
+        }
+    })
+
+    -- put navbar on bottom. this is to stay on top of other widgets.
+    -- supported widget types are : "RRectButton", "RectButton", "IconButton", "Slider", "TextField"
+    mui.createNavbar({
+        name = "navbar_demo",
+        --width = mui.getScaleVal(500), -- defaults to display.contentWidth
+        height = mui.getScaleVal(70),
+        left = 0,
+        top = 0,
+        fillColor = { 0.63, 0.81, 0.181 },
+        activeTextColor = { 1, 1, 1, 1 },
+        padding = mui.getScaleVal(10),
+    })
+    mui.createIconButton({
+        name = "menu",
+        text = "menu",
+        width = mui.getScaleVal(50),
+        height = mui.getScaleVal(50),
+        x = mui.getScaleVal(0),
+        y = mui.getScaleVal(0),
+        font = "MaterialIcons-Regular.ttf",
+        textColor = { 1, 1, 1 },
+        textAlign = "center",
+        callBack = mui.actionForButton
+    })
+    mui.attachToNavBar( "navbar_demo", {
+        widgetName = "menu",
+        widgetType = "IconButton",
+        align = "left",  -- left | right supported
+    })
+    mui.createIconButton({
+        name = "refresh",
+        text = "refresh",
+        width = mui.getScaleVal(50),
+        height = mui.getScaleVal(50),
+        x = mui.getScaleVal(0),
+        y = mui.getScaleVal(0),
+        font = "MaterialIcons-Regular.ttf",
+        textColor = { 1, 1, 1 },
+        textAlign = "center",
+        callBack = mui.actionForButton
+    })
+    mui.attachToNavBar( "navbar_demo", {
+        widgetName = "refresh",
+        widgetType = "IconButton",
+        align = "left",  -- left | right supported
+    })
+    mui.createTextField({
+        name = "textfield_nav",
+        text = "",
+        placeholder = "Search",
+        font = native.systemFont,
+        width = mui.getScaleVal(400),
+        height = mui.getScaleVal(46),
+        x = mui.getScaleVal(0),
+        y = mui.getScaleVal(0),
+        activeColor = { 0.12, 0.67, 0.27, 1 },
+        inactiveColor = { 0.4, 0.4, 0.4, 1 },
+        callBack = mui.textfieldCallBack
+    })
+    mui.attachToNavBar( "navbar_demo", {
+        widgetName = "textfield_nav",
+        widgetType = "TextField",
+        align = "left",  -- left | right supported
+    })
+    mui.createIconButton({
+        name = "help",
+        text = "help",
+        width = mui.getScaleVal(50),
+        height = mui.getScaleVal(50),
+        x = mui.getScaleVal(0),
+        y = mui.getScaleVal(0),
+        font = "MaterialIcons-Regular.ttf",
+        textColor = { 1, 1, 1 },
+        textAlign = "center",
+        callBack = mui.actionForButton
+    })
+    mui.attachToNavBar( "navbar_demo", {
+        widgetName = "help",
+        widgetType = "IconButton",
+        align = "right",  -- left | right supported
+    })
 end
 
 -- "scene:show()"

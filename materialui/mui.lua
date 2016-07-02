@@ -82,6 +82,7 @@ function M.init(data)
   M.interceptMoved = false
   M.dialogInUse = false
   M.dialogName = nil
+  M.navbarSupportedTypes = { "RRectButton", "RectButton", "IconButton", "Slider", "TextField" }
 
   M.scene = composer.getScene(composer.getSceneName("current"))
   M.scene.name = composer.getSceneName("current")
@@ -1748,6 +1749,132 @@ function M.createToolbar( options )
     end
 end
 
+function M.getNavbarSupportedTypes()
+    return M.navbarSupportedTypes
+end
+
+function M.createNavbar( options )
+    if options == nil then return end
+
+    if M.widgetDict[options.name] ~= nil then return end
+
+    if options.width == nil then
+        options.width = display.contentWidth
+    end
+
+    if options.height == nil then
+        options.height = M.getScaleVal(4)
+    end
+
+    local left,top = (display.contentWidth-options.width) * 0.5, display.contentHeight * 0.5
+    if options.left ~= nil then
+        left = options.left
+    end
+
+    if options.fillColor == nil then
+        options.fillColor = { 0.06, 0.56, 0.15, 1 }
+    end
+
+    if options.top == nil then
+        options.top = M.getScaleVal(80)
+    end
+
+    if options.padding == nil then
+        options.padding = M.getScaleVal(10)
+    end
+
+    M.widgetDict[options.name] = {}
+    M.widgetDict[options.name]["type"] = "Navbar"
+    M.widgetDict[options.name]["list"] = {}
+    M.widgetDict[options.name]["lastWidgetLeftX"] = 0
+    M.widgetDict[options.name]["lastWidgetRightX"] = 0
+    M.widgetDict[options.name]["padding"] = options.padding
+
+    M.widgetDict[options.name]["container"] = widget.newScrollView(
+        {
+            top = options.top,
+            left = 0,
+            width = options.width,
+            height = options.height,
+            scrollWidth = options.width,
+            scrollHeight = options.height,
+            hideBackground = true,
+            hideScrollBar = true,
+            isLocked = true
+        }
+    )
+
+    local newX = M.widgetDict[options.name]["container"].contentWidth * 0.5
+    local newY = M.widgetDict[options.name]["container"].contentHeight * 0.5
+
+    M.widgetDict[options.name]["rect"] = display.newRect( newX, newY, options.width, options.height )
+    M.widgetDict[options.name]["rect"]:setFillColor( unpack(options.fillColor) )
+    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["rect"] )
+
+end
+
+function M.attachToNavBar(navbar_name, options )
+    if navbar_name == nil or options == nil or options.widgetName == nil then return end
+    local newX = 0
+    local newY = 0 
+    local widget = nil
+    local widgetName = options.widgetName
+    local nh = M.widgetDict[navbar_name]["container"].contentHeight
+    local nw = M.widgetDict[navbar_name]["container"].contentWidth
+
+    local isTypeSupported = false
+    for i, widgetType in ipairs(M.navbarSupportedTypes) do
+        if widgetType == options.widgetType then
+            isTypeSupported = true
+            break
+        end
+    end
+
+    if isTypeSupported == false then
+        if options.widgetType == nil then options.widgetType = "unknown widget" end
+        print("Warning: attachToNavBar does not support type of "..options.widgetType)
+        return
+    end
+
+    widget = M.getWidgetBaseObject(widgetName)
+    newY = (nh - widget.contentHeight) * 0.5
+
+    -- keep tabs on the toolbar objects
+    M.widgetDict[navbar_name]["list"][widgetName] = options.widgetType
+
+    if options.align == nil then
+        options.align = "left"
+    end
+
+    if options.align == "left" then
+        if M.widgetDict[navbar_name]["lastWidgetLeftX"] > 0 then
+            if options.padding ~= nil then
+                newX = newX + options.padding
+            else
+                newX = newX + M.widgetDict[navbar_name]["padding"]
+            end
+        end
+        newX = newX + M.widgetDict[navbar_name]["lastWidgetLeftX"]
+        widget.x = widget.contentWidth * 0.5 + newX
+        widget.y = widget.contentHeight * 0.5 + newY
+        M.widgetDict[navbar_name]["lastWidgetLeftX"] = widget.x + widget.contentWidth * 0.5
+    else
+        newX = nw
+        if M.widgetDict[navbar_name]["lastWidgetRightX"] > 0 then
+            if options.padding ~= nil then
+                newX = newX - options.padding
+            else
+                newX = newX - M.widgetDict[navbar_name]["padding"]
+            end
+        end
+        newX = newX - M.widgetDict[navbar_name]["lastWidgetRightX"]
+        widget.x = newX - widget.contentWidth * 0.5
+        widget.y = widget.contentHeight * 0.5 + newY
+        M.widgetDict[navbar_name]["lastWidgetRightX"] = widget.x - widget.contentWidth * 0.5
+    end
+    M.widgetDict[navbar_name]["container"]:insert( widget, true )
+end
+
 function M.createTableView( options )
     local screenRatio = M.getSizeRatio()
     -- The "onRowRender" function may go here (see example under "Inserting Rows", above)
@@ -1901,6 +2028,8 @@ function M.createTextField(options)
         options.activeColor = { 0.12, 0.67, 0.27, 1 }
     end
 
+    M.widgetDict[options.name]["options"] = options
+
     M.widgetDict[options.name]["rect"] = display.newRect( 0, 0, options.width, options.height )
     M.widgetDict[options.name]["rect"].strokeWidth = 0
     M.widgetDict[options.name]["rect"]:setFillColor( 1, 1, 1 )
@@ -1923,11 +2052,13 @@ function M.createTextField(options)
         fontSize = options.height * 0.55,
         align = "left"  --new alignment parameter
     }
-    M.widgetDict[options.name]["textlabel"] = display.newText( labelOptions )
-    M.widgetDict[options.name]["textlabel"]:setFillColor( unpack(options.inactiveColor) )
-    M.widgetDict[options.name]["textlabel"].inactiveColor = options.inactiveColor
-    M.widgetDict[options.name]["textlabel"].activeColor = options.activeColor
-    M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textlabel"] )
+    if options.labelText ~= nil then
+        M.widgetDict[options.name]["textlabel"] = display.newText( labelOptions )
+        M.widgetDict[options.name]["textlabel"]:setFillColor( unpack(options.inactiveColor) )
+        M.widgetDict[options.name]["textlabel"].inactiveColor = options.inactiveColor
+        M.widgetDict[options.name]["textlabel"].activeColor = options.activeColor
+        M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["textlabel"] )
+    end
 
     local scaleFontSize = 1
     if M.environment == "simulator" then
@@ -1941,7 +2072,7 @@ function M.createTextField(options)
     M.widgetDict[options.name]["textfield"].inputType = options.inputType
     M.widgetDict[options.name]["textfield"].isSecure = false
     M.widgetDict[options.name]["textfield"].text = options.text
-    M.widgetDict[options.name]["textfield"]:setTextColor( unpack(M.widgetDict[options.name]["textlabel"].inactiveColor) )
+    M.widgetDict[options.name]["textfield"]:setTextColor( unpack(options.inactiveColor) )
 
     local textOptions =
     {
@@ -1955,7 +2086,7 @@ function M.createTextField(options)
         align = "left"  --new alignment parameter
     }
     M.widgetDict[options.name]["textfieldfake"] = display.newText( textOptions )
-    M.widgetDict[options.name]["textfieldfake"]:setFillColor( unpack(M.widgetDict[options.name]["textlabel"].inactiveColor) )
+    M.widgetDict[options.name]["textfieldfake"]:setFillColor( unpack(options.inactiveColor) )
     M.widgetDict[options.name]["textfieldfake"]:addEventListener("touch", M.showNativeInput)
     M.widgetDict[options.name]["textfieldfake"].name = options.name
     M.widgetDict[options.name]["textfieldfake"].dialogName = options.dialogName
@@ -2060,15 +2191,20 @@ function M.highlightTextField(widgetName, active)
 
     local widget = M.widgetDict[name]
     local color = nil
+    local options = M.widgetDict[name]["options"]
     if active then
-        color = widget["textlabel"].activeColor
+        color = options.activeColor
+        if widget["textlabel"] ~= nil then
+            widget["textlabel"]:setFillColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
+        end
         widget["textfield"]:setTextColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
-        widget["textlabel"]:setFillColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
         widget["line"]:setStrokeColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
     else
-        color = widget["textlabel"].inactiveColor
+        color = options.inactiveColor
+        if widget["textlabel"] ~= nil then
+            widget["textlabel"]:setFillColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
+        end
         widget["textfield"]:setTextColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
-        widget["textlabel"]:setFillColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
         widget["line"]:setStrokeColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
         if widget["textfieldfake"] ~= nil then
             widget["textfieldfake"]:setFillColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
@@ -2167,6 +2303,8 @@ function M.createTextBox(options)
     if options.isEditable == nil then
         options.isEditable = false
     end
+
+    M.widgetDict[options.name]["options"] = options
 
     M.widgetDict[options.name]["rect"] = display.newRect( 0, 0, options.width, options.height )
     M.widgetDict[options.name]["rect"].strokeWidth = 0
@@ -3456,6 +3594,33 @@ function M.selectorListener( event )
     end
 end
 
+function M.hideWidget(widgetName, options)
+  if showWidget == nil then showWidget = false end
+  for widget in pairs(M.widgetDict) do
+      local widgetType = M.widgetDict[widget]["type"]
+      if widgetType ~= nil then
+        if widgetType == "RRectButton" or widgetType == "RectButton" then
+            M.widgetDict[widget]["container"].isVisible = showWidget
+        elseif widgetType == "IconButton" or widgetType == "RadioButton" then
+            M.widgetDict[widget]["mygroup"].isVisible = showWidget
+        elseif widgetType == "Toolbar" then
+            -- not yet supported
+        elseif widgetType == "TableView" then
+            M.widgetDict[widget]["tableview"].isVisible = showWidget
+        elseif widgetType == "TextField" or widgetType == "TextBox" then
+            M.widgetDict[widget]["container"].isVisible = showWidget
+        elseif widgetType == "ProgressBar" or widgetType == "ToggleSwitch" then
+            M.widgetDict[widget]["mygroup"].isVisible = showWidget
+        elseif widgetType == "Slider" then
+            M.widgetDict[widget]["sliderrect"].isVisible = showWidget
+            M.widgetDict[widget]["container"].isVisible = showWidget
+        elseif widgetType == "Toast" or widgetType == "Selector" then
+            M.widgetDict[widget]["container"].isVisible = showWidget
+        end
+      end
+  end
+end
+
 function M.hideNativeWidgets()
   for widget in pairs(M.widgetDict) do
       local widgetType = M.widgetDict[widget]["type"]
@@ -3471,7 +3636,7 @@ function M.removeWidgets()
   print("Removing widgets")
   for widget in pairs(M.widgetDict) do
       local widgetType = M.widgetDict[widget]["type"]
-      if widgetType ~= nil then
+      if widgetType ~= nil and M.widgetDict[widget] ~= nil then
         if widgetType == "RRectButton" then
             M.removeWidgetRRectButton(widget)
         elseif widgetType == "RectButton" then
@@ -3498,6 +3663,8 @@ function M.removeWidgets()
             M.removeWidgetToast(widget)
         elseif widgetType == "Selector" then
             M.removeWidgetSelector(widget)
+        elseif widgetType == "Navbar" then
+            M.removeNavbar(widget)
         end
       end
   end
@@ -3658,8 +3825,10 @@ function M.removeWidgetTextField(widgetName)
     M.widgetDict[widgetName]["textfield"].isVisible = false
     M.widgetDict[widgetName]["textfield"]:removeSelf()
     M.widgetDict[widgetName]["textfield"] = nil
-    M.widgetDict[widgetName]["textlabel"]:removeSelf()
-    M.widgetDict[widgetName]["textlabel"] = nil
+    if M.widgetDict[widgetName]["textlabel"] ~= nil then
+        M.widgetDict[widgetName]["textlabel"]:removeSelf()
+        M.widgetDict[widgetName]["textlabel"] = nil
+    end
     M.widgetDict[widgetName]["line"]:removeSelf()
     M.widgetDict[widgetName]["line"] = nil
     M.widgetDict[widgetName]["rect"]:removeEventListener("touch", M.widgetDict[widgetName]["rect"])
@@ -3822,6 +3991,41 @@ function M.removeSelectorGroup(widgetName)
     if M.widgetDict[widgetName]["mygroup"] ~= nil then
         M.widgetDict[widgetName]["mygroup"]:removeSelf()
         M.widgetDict[widgetName]["mygroup"] = nil
+    end
+end
+
+function M.removeNavbar(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if M.widgetDict[widgetName]["list"] == nil then return end
+
+    -- remove objects from the bar
+    -- M.navbarSupportedTypes = { "RRectButton", "RectButton", "IconButton", "Slider", "TextField" }
+    for name, widgetType in pairs(M.widgetDict[widgetName]["list"]) do
+        if M.widgetDict[name] ~= nil then
+            if widgetType == "RRectButton" then
+                M.removeWidgetRRectButton(name)
+            elseif widgetType == "RectButton" then
+                M.removeWidgetRectButton(name)
+            elseif widgetType == "IconButton" then
+                M.removeWidgetIconButton(name)
+            elseif widgetType == "RectButton" then
+                M.removeWidgetSlider(name)
+            elseif widgetType == "RectButton" then
+                M.removeWidgetTextField(name)
+            end
+        end
+    end
+
+    if M.widgetDict[widgetName]["rect"] ~= nil then
+        M.widgetDict[widgetName]["rect"]:removeSelf()
+        M.widgetDict[widgetName]["rect"] = nil
+    end
+    if M.widgetDict[widgetName]["container"] ~= nil then
+        M.widgetDict[widgetName]["container"]:removeSelf()
+        M.widgetDict[widgetName]["container"] = nil
     end
 end
 

@@ -123,6 +123,7 @@ Special Considerations
 -------------
 * Scroll views must contain the method mui.updateEventHandler( event ) before the check for event began. See fun.lua for an example.
 * Scroll views must contain the method mui.updateUI(event) in "moved" phase. See fun.lua for an example.
+* Navigation bars should be added last so they reside on top of most elements/widgets. This follows Corona SDK.
 
 Additional Features
 -------------

@@ -71,6 +71,7 @@ Please read Lua code to find all parameters and see example in the repo call men
 | ------------- | ------------- | :-----:|
 | `createDialog` | Create a dialog (modal) with content. Supports up to two buttons (Okay, Cancel) with callbacks.       | menu.lua |
 | `createIconButton`      | Create an icon button using the material design icon font. | menu.lua |
+| `createNavbar`      | Create a navigation bar. Allows left and right alignment of attached widgets. Supports widget types: RRectButton, RectButton, IconButton, Slider, TextField. Additional widget types will be added. | fun.lua |
 | `createProgressBar` | Create an animated progress bar using "determinate" from Material Design.      |    menu.lua |
 | `createRadioGroup` | Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.      |    menu.lua |
 | `createRectButton` | Create a rectangle button      |    menu.lua/fun.lua |
@@ -86,15 +87,18 @@ Please read Lua code to find all parameters and see example in the repo call men
 
 Helper Methods
 -------------
+- `attachToNavBar` - attaches widget to navigation bar.
 - `closeDialog` - closes an open dialog and releases memory
 - `getScaleVal` - returns integer scaled value to fit resolution. Useful for dimensions and coordinates.
 - `getWidgetByName` - returns the array of a named widget.
 - `getWidgetBaseObject` - returns the base object of a named widget created with one of the above methods. It can be inserted into another container, group, scrollview and moved around, etc.  Example: rectangle_surface:insert( mui.getWidgetBaseObject("okay_button") )
 - `getEventParameter` - returns the event MUI widget parameters for the current widget.  Get the event target, widget name, widget value ( ex: getEventParameter(event, "muiTargetValue") ).  The value is set when creating a widget.  See menu.lua for setting the values and mui.lua callBacks for getting values (example would be actionForSwitch() method).
+- `hideWidget` - hide a widget by name. It will hide/show a widget by setting the isVisible attribute.
 
 Remove widget methods - these will remove the widget by name and release memory:
 - `removeWidgetDialog`
 - `removeWidgetIconButton`
+- `removeWidgetNavbar`
 - `removeWidgetProgressBar`
 - `removeWidgetRadioButton`
 - `removeWidgetRectButton`

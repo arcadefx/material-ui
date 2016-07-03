@@ -43,7 +43,7 @@ function scene:create( event )
         width = mui.getScaleVal(200),
         height = mui.getScaleVal(60),
         x = mui.getScaleVal(160),
-        y = mui.getScaleVal(90),
+        y = mui.getScaleVal(120),
         font = native.systemFont,
         fillColor = { 0, 0.82, 1 },
         textColor = { 1, 1, 1 },
@@ -262,7 +262,90 @@ function scene:create( event )
     }
     infoText = display.newText( textOptions )
     infoText:setFillColor( 0.4, 0.4, 0.4 )
-	
+
+    -- put navbar on bottom. this is to stay on top of other widgets.
+    -- supported widget types are : "RRectButton", "RectButton", "IconButton", "Slider", "TextField"
+    mui.createNavbar({
+        name = "navbar_demo",
+        --width = mui.getScaleVal(500), -- defaults to display.contentWidth
+        height = mui.getScaleVal(70),
+        left = 0,
+        top = 0,
+        fillColor = { 0.63, 0.81, 0.181 },
+        activeTextColor = { 1, 1, 1, 1 },
+        padding = mui.getScaleVal(10),
+    })
+    mui.createIconButton({
+        name = "menu",
+        text = "menu",
+        width = mui.getScaleVal(50),
+        height = mui.getScaleVal(50),
+        x = mui.getScaleVal(0),
+        y = mui.getScaleVal(0),
+        font = "MaterialIcons-Regular.ttf",
+        textColor = { 1, 1, 1 },
+        textAlign = "center",
+        callBack = mui.actionForButton
+    })
+    mui.attachToNavBar( "navbar_demo", {
+        widgetName = "menu",
+        widgetType = "IconButton",
+        align = "left",  -- left | right supported
+    })
+    mui.createIconButton({
+        name = "refresh",
+        text = "refresh",
+        width = mui.getScaleVal(50),
+        height = mui.getScaleVal(50),
+        x = mui.getScaleVal(0),
+        y = mui.getScaleVal(0),
+        font = "MaterialIcons-Regular.ttf",
+        textColor = { 1, 1, 1 },
+        textAlign = "center",
+        callBack = mui.actionForButton
+    })
+    mui.attachToNavBar( "navbar_demo", {
+        widgetName = "refresh",
+        widgetType = "IconButton",
+        align = "left",  -- left | right supported
+    })
+    mui.createTextField({
+        name = "textfield_nav",
+        text = "",
+        placeholder = "Search",
+        font = native.systemFont,
+        width = mui.getScaleVal(400),
+        height = mui.getScaleVal(46),
+        x = mui.getScaleVal(0),
+        y = mui.getScaleVal(0),
+        activeColor = { 1, 1, 1, 1 },
+        inactiveColor = { 1, 1, 1, 0.8 },
+        fillColor = { 0.63, 0.81, 0.181 },
+        callBack = mui.textfieldCallBack
+    })
+    mui.attachToNavBar( "navbar_demo", {
+        widgetName = "textfield_nav",
+        widgetType = "TextField",
+        align = "left",  -- left | right supported
+    })
+    mui.createIconButton({
+        name = "help",
+        text = "help",
+        width = mui.getScaleVal(50),
+        height = mui.getScaleVal(50),
+        x = mui.getScaleVal(0),
+        y = mui.getScaleVal(0),
+        font = "MaterialIcons-Regular.ttf",
+        textColor = { 1, 1, 1 },
+        textAlign = "center",
+        callBack = mui.actionForButton
+    })
+    mui.attachToNavBar( "navbar_demo", {
+        widgetName = "help",
+        widgetType = "IconButton",
+        align = "right",  -- left | right supported
+    })
+
 	sceneGroup:insert( background )
 end
 

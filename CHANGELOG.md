@@ -2,12 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.14] - 2016-07-02
+### Added
+- `createNavbar` - Create a navigation bar. Allows left and right alignment of attached widgets. See fun.lua for an example. Supports widget types: RRectButton, RectButton, IconButton, Slider, TextField. Additional widget types will be added.
+
+### Change
+- createTextField improved password field handling.
+- createTextField background color can be set by fillColor. It was hard coded to be white.
+
 ## [0.1.13] - 2016-07-01
 ### Added
 - `createSelect` - Create a select drop down list (dropdown list). Colors, dimensions and fonts can be specified.  See fun.lua for an example. Run the demo and tap "Switch Scene" button.
 
 ### Change
-- createTextBox supports inputType from Corona SDK. Example password fields.
+- createTextField supports inputType from Corona SDK. Example password fields.
 - createTableView supports row colors, line separator and color and many bug fixes.
 
 ## [0.1.12] - 2016-06-30

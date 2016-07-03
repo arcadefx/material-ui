@@ -82,6 +82,7 @@ function M.init(data)
   M.interceptMoved = false
   M.dialogInUse = false
   M.dialogName = nil
+  M.navbarHeight = 0
   M.navbarSupportedTypes = { "RRectButton", "RectButton", "IconButton", "Slider", "TextField" }
 
   M.scene = composer.getScene(composer.getSceneName("current"))
@@ -1783,6 +1784,10 @@ function M.createNavbar( options )
         options.padding = M.getScaleVal(10)
     end
 
+    if options.top > display.contentHeight * 0.5 then
+        M.navbarHeight = options.height
+    end
+
     M.widgetDict[options.name] = {}
     M.widgetDict[options.name]["type"] = "Navbar"
     M.widgetDict[options.name]["list"] = {}
@@ -2009,6 +2014,10 @@ function M.createTextField(options)
         options.inputType = "default"
     end
 
+    if options.fillColor == nil then
+        options.fillColor = { 1, 1, 1, 0.1}
+    end
+
     M.widgetDict[options.name] = {}
     M.widgetDict[options.name]["type"] = "TextField"
     M.widgetDict[options.name]["container"] = display.newContainer( options.width+4, options.height * 4)
@@ -2032,7 +2041,7 @@ function M.createTextField(options)
 
     M.widgetDict[options.name]["rect"] = display.newRect( 0, 0, options.width, options.height )
     M.widgetDict[options.name]["rect"].strokeWidth = 0
-    M.widgetDict[options.name]["rect"]:setFillColor( 1, 1, 1 )
+    M.widgetDict[options.name]["rect"]:setFillColor( unpack(options.fillColor) )
     M.widgetDict[options.name]["container"]:insert( M.widgetDict[options.name]["rect"] )
 
     local rect = M.widgetDict[options.name]["rect"]
@@ -2067,6 +2076,9 @@ function M.createTextField(options)
     M.widgetDict[options.name]["isSecure"] = options.isSecure
     M.widgetDict[options.name]["textfield"] = native.newTextField( 0, 0, options.width, options.height * scaleFontSize )
     M.widgetDict[options.name]["textfield"].name = options.name
+    if options.placeholder ~= nil then
+       M.widgetDict[options.name]["textfield"].placeholder = options.placeholder 
+    end
     M.widgetDict[options.name]["textfield"].hasBackground = false
     M.widgetDict[options.name]["textfield"].isVisible = false
     M.widgetDict[options.name]["textfield"].inputType = options.inputType
@@ -2074,10 +2086,24 @@ function M.createTextField(options)
     M.widgetDict[options.name]["textfield"].text = options.text
     M.widgetDict[options.name]["textfield"]:setTextColor( unpack(options.inactiveColor) )
 
+    local fadeText = options.text
+    if options.placeholder ~= nil and options.text ~= nil and string.len(options.text) < 1 then
+       fadeText = options.placeholder
+    end
+
+    if M.widgetDict[options.name]["isSecure"] == true then
+        local length = string.len(fadeText)
+        text = ""
+        for i=1, length do
+            text = text .. "*"
+        end
+        fadeText = text
+    end
+
     local textOptions =
     {
         --parent = textGroup,
-        text = options.text,
+        text = fadeText,
         x = 0,
         y = 0,
         width = options.width,
@@ -3566,11 +3592,12 @@ function M.revealTableViewForSelector(name, options)
 
         local dy = mathABS(M.widgetDict[options.name.."-List"]["tableview"].contentHeight - M.widgetDict[options.name]["mygroup"].y)
         local h = M.widgetDict[options.name.."-List"]["tableview"].contentHeight + M.widgetDict[options.name]["mygroup"].y
-
-        if h > display.contentHeight then
-            local hd = mathABS(display.contentHeight - h)
+        local maxHeight =  display.contentHeight - M.navbarHeight
+        if h > maxHeight then
+            local hd = mathABS(maxHeight - h)
             if options.scrollView ~= nil then
-                hd = mathABS(options.scrollView.contentHeight - h)
+                maxHeight =  display.contentHeight - M.navbarHeight
+                hd = mathABS(maxHeight - h)
             end
             dy = M.widgetDict[options.name]["mygroup"].y - (hd + options.height)
             M.widgetDict[options.name]["mygroup"].y = dy

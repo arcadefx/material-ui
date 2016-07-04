@@ -196,10 +196,11 @@ function scene:create( event )
         lineHeight = mui.getScaleVal(4),
         rowColor = { default={1,1,1}, over={1,0.5,0,0.2} },
         rowHeight = mui.getScaleVal(60),
+        -- rowAnimation = false, -- turn on rowAnimation
         noLines = false,
         callBackTouch = mui.onRowTouchDemo,
-        callBackRender = mui.onRowRender,
-        scrollListener = nil,
+        callBackRender = mui.onRowRenderDemo,
+        scrollListener = mui.scrollListener,  -- needed if using buttons, etc within the row!
         list = { -- if 'key' use it for 'id' in the table row
             { key = "Row1", text = "Row 1", value = "1", isCategory = false },
             { key = "Row2", text = "Row 2", value = "2", isCategory = false },
@@ -212,7 +213,7 @@ function scene:create( event )
         },
         categoryColor = { default={0.8,0.8,0.8,0.8} },
         categoryLineColor = { 1, 1, 1, 0 },
-        touchpointColor = { 0.4, 0.4, 0.4 }
+        touchpointColor = { 0.4, 0.4, 0.4 },
     })
     --]]--
 
@@ -265,13 +266,14 @@ function scene:create( event )
     mui.createToolbar({
         name = "toolbar_demo",
         --width = mui.getScaleVal(500), -- defaults to display.contentWidth
-        height = mui.getScaleVal(20),
+        height = mui.getScaleVal(70),
         buttonHeight = buttonHeight,
         x = 0,
         y = (display.contentHeight - (buttonHeight * 0.5)),
         layout = "horizontal",
         labelFont = native.systemFont,
         color = { 0.67, 0, 1 },
+        fillColor = { 0.67, 0, 1 },
         labelColor = { 1, 1, 1 },
         labelColorOff = { 0.41, 0.03, 0.49 },
         callBack = mui.actionForToolbarDemo,

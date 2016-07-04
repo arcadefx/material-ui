@@ -432,7 +432,6 @@ function M.onRowRender( event )
     local row = event.row
 
     -- need to use the colors passed in as params here.
- 
     noLines = false
     lineHeight = M.getScaleVal(4)
     lineColor = { 0.9, 0.9, 0.9 }
@@ -491,7 +490,16 @@ function M.onRowRender( event )
     end
     row:addEventListener( "touch", row )
 
+    if row.params ~= nil and row.params.callBackRender ~= nil then
+        assert( row.params.callBackRender )(event)
+    end
+end
+
+function M.onRowRenderSelect( event )
+    local row = event.row
+
     -- Cache the row "contentWidth" and "contentHeight" because the row bounds can change as children objects are added
+
     local rowHeight = row.contentHeight
     local rowWidth = row.contentWidth
 
@@ -502,6 +510,107 @@ function M.onRowRender( event )
     rowTitle.anchorX = 0
     rowTitle.x = 0
     rowTitle.y = rowHeight * 0.5
+end
+
+function M.onRowRenderDemo( event )
+    local row = event.row
+
+    -- Cache the row "contentWidth" and "contentHeight" because the row bounds can change as children objects are added
+
+    local rowHeight = row.contentHeight
+    local rowWidth = row.contentWidth
+
+    --[[-- demo attaching widget to a row
+    M.createIconButton({
+        name = "plus"..row.index,
+        text = "add_circle",
+        width = M.getScaleVal(40),
+        height = M.getScaleVal(40),
+        x = 0,
+        y = 0,
+        font = "MaterialIcons-Regular.ttf",
+        textColor = { 1, 0, 0.4 },
+        textAlign = "center",
+        callBack = M.actionForButton
+    })
+    M.attachToRow( row, {
+        widgetName = "plus"..row.index,
+        widgetType = "IconButton",
+        align = "left",  -- left | right supported
+        params = row.params
+    })
+    --]]--
+
+    local rowTitle = display.newText( row, row.params.text, 0, 0, font, M.getScaleVal(30) )
+    rowTitle:setFillColor( unpack( textColor ) )
+
+    -- Align the label left and vertically centered
+    rowTitle.anchorX = 0
+    rowTitle.x = 0
+    rowTitle.y = rowHeight * 0.5
+end
+
+function M.attachToRow(row, options )
+    if row == nil or options == nil or options.widgetName == nil then return end
+    local newX = 0
+    local newY = 0
+    local widget = nil
+    local basename = options.params.basename
+    local widgetName = options.widgetName
+    local rowName = "row" .. row.index
+    local padding = options.params.padding
+    local nh = row.contentHeight
+    local nw = row.contentWidth
+
+    local isTypeSupported = false
+    for i, widgetType in ipairs(M.navbarSupportedTypes) do
+        if widgetType == options.widgetType then
+            isTypeSupported = true
+            break
+        end
+    end
+
+    if isTypeSupported == false then
+        if options.widgetType == nil then options.widgetType = "unknown widget" end
+        print("Warning: attachToRow does not support type of "..options.widgetType)
+        return
+    end
+
+    widget = M.getWidgetBaseObject(widgetName)
+    newY = (nh - widget.contentHeight) * 0.5
+
+    -- keep tabs on the toolbar objects
+    if M.widgetDict[basename]["list"] == nil then M.widgetDict[basename]["list"] = {} end
+    if M.widgetDict[basename]["list"][rowName] == nil then
+        M.widgetDict[basename]["list"][rowName] = {}
+        M.widgetDict[basename]["list"][rowName]["lastWidgetLeftX"] = 0
+        M.widgetDict[basename]["list"][rowName]["lastWidgetRightY"] = 0
+    end
+    M.widgetDict[basename]["list"][rowName][widgetName] = options.widgetType
+
+    if options.align == nil then
+        options.align = "left"
+    end
+
+    if options.align == "left" then
+        if M.widgetDict[basename]["list"][rowName]["lastWidgetLeftX"] > 0 then
+            newX = newX + padding
+        end
+        newX = newX + M.widgetDict[basename]["list"][rowName]["lastWidgetLeftX"]
+        widget.x = widget.contentWidth * 0.5 + newX
+        widget.y = widget.contentHeight * 0.5 + newY
+        M.widgetDict[basename]["list"][rowName]["lastWidgetLeftX"] = widget.x + widget.contentWidth * 0.5
+    else
+        newX = nw
+        if M.widgetDict[basename]["list"][rowName]["lastWidgetRightX"] > 0 then
+            newX = newX - padding
+        end
+        newX = newX - M.widgetDict[basename]["list"][rowName]["lastWidgetRightX"]
+        widget.x = newX - widget.contentWidth * 0.5
+        widget.y = widget.contentHeight * 0.5 + newY
+        M.widgetDict[basename]["list"][rowName]["lastWidgetRightX"] = widget.x - widget.contentWidth * 0.5
+    end
+    row:insert( widget, false )
 end
 
 function M.onRowTouch( event )
@@ -518,16 +627,23 @@ function M.onRowTouch( event )
     elseif "release" == phase then
         local row = event.row
 
-        M.tableCircle:toFront()
+        local rowAnimation = true
+        if row.params ~= nil and row.params.rowAnimation ~= nil then
+            rowAnimation = row.params.rowAnimation
+        end
 
-        M.tableCircle.alpha = 0.55
-        if row.miscEvent == nil then return end
-        M.tableCircle.x = row.miscEvent.x
-        M.tableCircle.y = row.miscEvent.y
-        local scaleFactor = 2.5
-        M.tableCircle.isVisible = true
-        M.tableCircle.myCircleTrans = transition.to( M.tableCircle, { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
-        row.myGlowTrans = transition.to( row, { time=300,delay=150,alpha=0.4, transition=easing.outCirc, onComplete=M.subtleGlowRect } )
+        if rowAnimation == true then
+            M.tableCircle:toFront()
+
+            M.tableCircle.alpha = 0.55
+            if row.miscEvent == nil then return end
+            M.tableCircle.x = row.miscEvent.x
+            M.tableCircle.y = row.miscEvent.y
+            local scaleFactor = 2.5
+            M.tableCircle.isVisible = true
+            M.tableCircle.myCircleTrans = transition.to( M.tableCircle, { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+            row.myGlowTrans = transition.to( row, { time=300,delay=150,alpha=0.4, transition=easing.outCirc, onComplete=M.subtleGlowRect } )
+        end
 
         M.setEventParameter(event, "muiTarget", row)
         M.setEventParameter(event, "muiTargetIndex", event.target.index)
@@ -1908,6 +2024,14 @@ function M.createTableView( options )
         options.strokeColor = { 0.8, 0.8, 0.8, .4 }
     end
 
+    if options.padding == nil then
+        options.padding = M.getScaleVal(15)
+    end
+
+    if options.rowAnimation == nil then
+        options.rowAnimation = true
+    end
+
     M.tableCircle = display.newCircle( 0, 0, M.getScaleVal(20) )
     M.tableCircle:setFillColor( unpack(options.circleColor) )
     M.tableCircle.isVisible = false
@@ -1925,7 +2049,7 @@ function M.createTableView( options )
             height = options.height,
             width = options.width,
             noLines = options.noLines,
-            onRowRender = options.callBackRender,
+            onRowRender = M.onRowRender,
             onRowTouch = M.onRowTouch,
             listener = options.scrollListener,
         }
@@ -1968,12 +2092,15 @@ function M.createTableView( options )
                 text = v.text,
                 font = options.font,
                 value = v.value,
+                padding = options.padding,
                 noLines = options.noLines,
                 lineHeight = options.lineHeight,
                 rowColor = v.backgroundColor,
                 textColor = options.textColor,
+                rowAnimation = options.rowAnimation,
                 callBackData = options.callBackData,
-                callBackTouch = options.callBackTouch
+                callBackTouch = options.callBackTouch,
+                callBackRender = options.callBackRender
             }
         }
         if v.key ~= nil then
@@ -1983,6 +2110,34 @@ function M.createTableView( options )
     end
     tableView.isVisible = true
 
+end
+
+function M.scrollListener( event )
+    local phase = event.phase
+    if event.phase == nil then return end
+
+    M.updateEventHandler( event )
+
+    if ( phase == "began" ) then
+        -- skip it
+    elseif ( phase == "moved" ) then
+        M.updateUI(event)
+    elseif ( phase == "ended" ) then
+        -- print( "Scroll view was released" )
+    end
+
+    -- In the event a scroll limit is reached...
+    --[[--
+    if ( event.limitReached ) then
+        if ( event.direction == "up" ) then print( "Reached bottom limit" )
+        elseif ( event.direction == "down" ) then print( "Reached top limit" )
+        elseif ( event.direction == "left" ) then print( "Reached right limit" )
+        elseif ( event.direction == "right" ) then print( "Reached left limit" )
+        end
+    end
+    --]]--
+
+    return true
 end
 
 --
@@ -3573,7 +3728,7 @@ function M.revealTableViewForSelector(name, options)
         rowColor = options.rowColor,
         rowHeight = options.height,
         callBackTouch = options.callBackTouch,
-        callBackRender = options.callBackRender,
+        callBackRender = M.onRowRenderSelect,
         scrollListener = options.listener,
         categoryColor = options.categoryColor,
         categoryLineColor = options.categoryLineColor,
@@ -3761,6 +3916,9 @@ function M.removeWidgetRadioButton(widgetName)
     if widgetName == nil then
         return
     end
+
+    if M.widgetDict[widgetName]["radio"] == nil then return end
+
     for name in pairs(M.widgetDict[widgetName]["radio"]) do
         M.widgetDict[widgetName]["radio"][name]["myText"]:removeEventListener( "touch", M.widgetDict[widgetName]["radio"][name]["myText"] )
         M.widgetDict[widgetName]["radio"][name]["myCircle"]:removeSelf()
@@ -3949,6 +4107,8 @@ function M.removeWidgetSlider(widgetName)
         return
     end
 
+    if M.widgetDict[widgetName]["sliderrect"] == nil then return end
+
     M.widgetDict[widgetName]["sliderrect"]:removeEventListener("touch", M.widgetDict[widgetName]["sliderrect"])
     M.widgetDict[widgetName]["slidercircle"]:removeSelf()
     M.widgetDict[widgetName]["slidercircle"] = nil
@@ -3981,6 +4141,8 @@ function M.removeWidgetSelector(widgetName, listonly)
         return
     end
 
+    if M.widgetDict[widgetName]["selectorfieldfake"] == nil then return end
+
     if listonly ~= nil then
         M.removeWidgetTableView(widgetName .. "-List")
         M.removeSelectorGroup(widgetName)
@@ -3988,6 +4150,7 @@ function M.removeWidgetSelector(widgetName, listonly)
     else
         M.removeWidgetTableView(widgetName .. "-List")
     end
+
     M.widgetDict[widgetName]["selectorfieldfake"]:removeEventListener("touch", M.selectorListener)
 
     M.widgetDict[widgetName]["selectorfieldarrow"]:removeSelf()

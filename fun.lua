@@ -109,7 +109,6 @@ function scene:create( event )
         x = mui.getScaleVal(240),
         y = mui.getScaleVal(350),
         callBackTouch = mui.onRowTouchSelector,
-        callBackRender = mui.onRowRender,
         scrollListener = nil,
         list = { -- if 'key' use it for 'id' in the table row
             { key = "Row1", text = "Apple", value = "Apple", isCategory = false },

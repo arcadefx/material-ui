@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.15] - 2016-07-03
+### Added
+- `onRowRenderDemo` - this is used to render the createTableView and add all the content on a row. 
+- `attachToRow` - For createTableView it will attach a MUI widget to a row. Supports widget types: RRectButton, RectButton, IconButton, Slider, TextField. Additional widget types will be added. See onRowRenderDemo for an example.
+- createTableView has option "rowAnimation = false" to turn off touchpoint and row fade.
+
+### Change
+- createSelect no longer needs onRowRender as param. It will handle rendering internally.
+- improved removal of widgets
+
 ## [0.1.14] - 2016-07-02
 ### Added
 - `createNavbar` - Create a navigation bar. Allows left and right alignment of attached widgets. See fun.lua for an example. Supports widget types: RRectButton, RectButton, IconButton, Slider, TextField. Additional widget types will be added.

@@ -88,6 +88,7 @@ Please read Lua code to find all parameters and see example in the repo call men
 Helper Methods
 -------------
 - `attachToNavBar` - attaches widget to navigation bar.
+- `attachToRow` - attaches widget to table view row.
 - `closeDialog` - closes an open dialog and releases memory
 - `getScaleVal` - returns integer scaled value to fit resolution. Useful for dimensions and coordinates.
 - `getWidgetByName` - returns the array of a named widget.

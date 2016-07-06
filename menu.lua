@@ -19,7 +19,6 @@ local widget = require( "widget" )
 
 -- -------------------------------------------------------------------------------
 
-
 -- "scene:create()"
 function scene:create( event )
 
@@ -56,7 +55,7 @@ function scene:create( event )
             textColor = { 0, 0, 0, 1 },
             font = systemFont,
             fontSize = mui.getScaleVal(32),
-            backgroundColor = { 1, 1, 1, 1 },
+            fillColor = { 1, 1, 1, 1 },
             gradientBorderShadowColor1 = { 1, 1, 1, 0.4 },
             gradientBorderShadowColor2 = { 0, 0, 0, 0.4 },
             easing = easing.inOutCubic, -- this is default if omitted
@@ -70,7 +69,7 @@ function scene:create( event )
                     height = mui.getScaleVal(50),
                     callBackOkay = mui.actionForOkayDialog,
                     clickAnimation = {
-                        colorBackground = { 0.4, 0.4, 0.4, 0.4 },
+                        fillColor = { 0.4, 0.4, 0.4, 0.4 },
                         time = 400
                     }
                 },
@@ -81,7 +80,7 @@ function scene:create( event )
                     width = mui.getScaleVal(100),
                     height = mui.getScaleVal(50),
                     clickAnimation = {
-                        colorBackground = { 0.4, 0.4, 0.4, 0.4 },
+                        fillColor = { 0.4, 0.4, 0.4, 0.4 },
                         time = 400
                     }
                 }
@@ -206,10 +205,10 @@ function scene:create( event )
             { key = "Row2", text = "Row 2", value = "2", isCategory = false },
             { key = "Row3", text = "Row 3", value = "3", isCategory = false },
             { key = "Row4", text = "Row 4", value = "4", isCategory = false },
-            -- below are rows with different background colors
+            -- below are rows with different colors
             -- set "noLines" to true above to omit line border
-            -- { key = "Row2", text = "Row 2", value = "5", isCategory = false, backgroundColor = { 0.67, 0.98, 0.65, 0.2 } },
-            -- { key = "Row3", text = "Row 3", value = "6", isCategory = false, backgroundColor = { 1, 0, 0, 0.2 }  },
+            -- { key = "Row5", text = "Row 5", value = "5", isCategory = false, fillColor = { 0.67, 0.98, 0.65, 0.2 } },
+            -- { key = "Row6", text = "Row 6", value = "6", isCategory = false, fillColor = { 1, 0, 0, 0.2 }  },
         },
         categoryColor = { default={0.8,0.8,0.8,0.8} },
         categoryLineColor = { 1, 1, 1, 0 },

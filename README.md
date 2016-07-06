@@ -70,7 +70,7 @@ Please read Lua code to find all parameters and see example in the repo call men
 | Method        | Short Description | Example  |
 | ------------- | ------------- | :-----:|
 | `createDialog` | Create a dialog (modal) with content. Supports up to two buttons (Okay, Cancel) with callbacks.       | menu.lua |
-| `createIconButton`      | Create an icon button using the material design icon font. | menu.lua |
+| `createIconButton`      | Create an icon button using the material design icon font. Use this to create check boxes and more. | menu.lua |
 | `createNavbar`      | Create a navigation bar. Allows left and right alignment of attached widgets. Supports widget types: RRectButton, RectButton, IconButton, Slider, TextField. Additional widget types will be added. | fun.lua |
 | `createProgressBar` | Create an animated progress bar using "determinate" from Material Design.      |    menu.lua |
 | `createRadioGroup` | Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.      |    menu.lua |

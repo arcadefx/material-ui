@@ -128,6 +128,7 @@ Special Considerations
 
 Additional Features
 -------------
+* All methods can be accessed from other modules (methods are shared through one end point). See menu.lua and any module in the "materialui/" folder.
 * Touchpoints are included in several controls, but can be turned off.
 * Built-in callBacks are defined but can be overridden easily to do other tasks.
 * All widgets support a "value" and can be accessed in the callBacks by getEventParameter() method. See mui.lua for examples.
@@ -135,12 +136,15 @@ Additional Features
 * Colors can be adjusted and some controls support gradients.
 * Adjusts native widgets into scrollView visible area automatically.
 * To use Material font icons, refer to 'icon-font/codepoints' and place the codepoint as the 'text' of a button.  See http://google.github.io/material-design-icons/ for more information.
+* Ability to create additional modules using a simple template. materialui/mui-example.lua is the template.
+* Ability to specify which modules are needed by a scene. Include a table ({}) in the mui.init() for the modules needed. If "none" are specified then all modules are loaded. See mui.lua for sample list.
 
 Contributing
 -------------
 * Feel free to contribute code, testing and feedback.
 * Once we get additional authors they will be included in the repo and get recognition for their efforts.
 * Please follow the licensing terms for any software included.
+* See materialui/mui-example.lua for creating additional modules or review any mui-<name>.lua module to see the format.
 
 Change Log
 -------------

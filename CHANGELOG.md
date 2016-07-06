@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.16] - 2016-07-06
+### Added
+- Re-factored the layout of the modules. Widgets are now in separate .lua files to help with maintainability.  New files (.lua assumed): mui-button, mui-dialog, mui-navbar, mui-progressbar, mui-select, mui-slider, mui-switch, mui-tableview, mui-textinput, mui-toast, mui-toolbar
+- Added mui-data.lua to be the internal global space.
+- Ability to create additional modules using a simple template. mui-example.lua is the template.
+- Ability to specify which modules are needed by a scene. Include a table ({}) in the mui.init() for the modules needed. If "none" are specified then all modules are loaded. See mui.lua for sample list.
+
+### Change
+- createDialog - fixed fadeOut when dialog is closed.
+
 ## [0.1.15] - 2016-07-03
 ### Added
 - `onRowRenderDemo` - this is used to render the createTableView and add all the content on a row. 

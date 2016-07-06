@@ -65,7 +65,6 @@ function M.loadModule(mui, parents)
       local value = parent[key]
       if value ~= nil then
         rawset(self, key, value)
-        print("set "..key)
         return value
       end
     end

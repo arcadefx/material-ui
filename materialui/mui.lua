@@ -31,7 +31,7 @@
 --]]--
 
 -- mui
-local muiData = require( "mui-data" )
+local muiData = require( "materialui.mui-data" )
 
 local mathFloor = math.floor
 local mathMod = math.fmod
@@ -76,7 +76,7 @@ end
 
 function M.init(mui_modules)
     local baseModules = {
-      "mui-base"
+      "materialui.mui-base"
     }
     for i=1, #baseModules do
         table.insert(parents, require(baseModules[i]))

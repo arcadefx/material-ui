@@ -9,7 +9,6 @@ local composer = require( "composer" )
 local widget = require( "widget" )
 
 -- mui
-local muiData = require( "mui-data" )
 local mui = require( "materialui.mui" )
 
 local scene = composer.newScene()

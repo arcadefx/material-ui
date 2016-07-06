@@ -34,7 +34,7 @@
 local widget = require( "widget" )
 
 -- mui
-local muiData = require( "mui-data" )
+local muiData = require( "materialui.mui-data" )
 
 local mathFloor = math.floor
 local mathMod = math.fmod

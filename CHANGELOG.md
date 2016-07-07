@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.16] - 2016-07-06
+## [0.1.17] - 2016-07-07
 ### Added
 - Generic/User defined widgets can be added to navigation bars. See fun.lua for an example.
 

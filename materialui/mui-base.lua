@@ -629,7 +629,7 @@ function M.removeWidgetTableView(widgetName)
         return
     end
     if muiData.widgetDict[widgetName] == nil then return end
-
+    if muiData.widgetDict[widgetName]["tableview"] == nil then return end
     muiData.widgetDict[widgetName]["tableview"]:deleteAllRows()
     muiData.widgetDict[widgetName]["tableview"]:removeSelf()
     muiData.widgetDict[widgetName]["tableview"] = nil

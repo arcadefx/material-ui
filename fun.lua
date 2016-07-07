@@ -22,6 +22,14 @@ local background = nil
 local scrollView = nil
 local infoText = nil
 
+local function destroyDemoText( demoText )
+    print("destroyDemoText called")
+    if demoText ~= nil then
+        demoText:removeSelf()
+        demoText = nil
+    end
+end
+
 function scene:create( event )
 
 	-- Called when the scene's view does not exist.
@@ -345,6 +353,30 @@ function scene:create( event )
     mui.attachToNavBar( "navbar_demo", {
         widgetName = "help",
         widgetType = "IconButton",
+        align = "right",  -- left | right supported
+    })
+
+    --
+    -- create a Generic User-defined widget and attach to navbar
+    --
+    local textOptions =
+    {
+        --parent = textGroup,
+        text = "Ready",
+        x = 0,
+        y = 0,
+        font = native.systemFont,
+        fontSize = mui.getScaleVal(40) * 0.55,
+        align = "left"  --new alignment parameter
+    }
+    local demoText = display.newText( textOptions )
+    demoText:setFillColor( unpack( {1, 1,1 ,1} ) )
+    mui.attachToNavBar( "navbar_demo", {
+        widgetName = "demoText",
+        widgetType = "Generic",
+        widgetObject = demoText,
+        destroyCallBack = destroyDemoText, -- user supplied method, must be defined otherwise it will not free memory
+        padding = mui.getScaleVal(20),
         align = "right",  -- left | right supported
     })
 

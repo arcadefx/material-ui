@@ -63,7 +63,7 @@ function M.init_base(data)
   muiData.dialogInUse = false
   muiData.dialogName = nil
   muiData.navbarHeight = 0
-  muiData.navbarSupportedTypes = { "RRectButton", "RectButton", "IconButton", "Slider", "TextField" }
+  muiData.navbarSupportedTypes = { "RRectButton", "RectButton", "IconButton", "Slider", "TextField", "Generic" }
 
   muiData.scene = composer.getScene(composer.getSceneName("current"))
   muiData.scene.name = composer.getSceneName("current")
@@ -498,7 +498,7 @@ function M.removeWidgetRRectButton(widgetName)
         return
     end
 
-    if muiData.widgetDict[widgetName]["rrect"] == nil then return end
+    if muiData.widgetDict[widgetName] == nil then return end
 
     muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["rrect"])
     muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
@@ -519,7 +519,7 @@ function M.removeWidgetRectButton(widgetName)
         return
     end
 
-    if muiData.widgetDict[widgetName]["rrect"] == nil then return end
+    if muiData.widgetDict[widgetName] == nil then return end
 
     muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["rrect"])
     muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
@@ -538,7 +538,7 @@ function M.removeWidgetIconButton(widgetName)
         return
     end
 
-    if muiData.widgetDict[widgetName]["myText"] == nil then return end
+    if muiData.widgetDict[widgetName] == nil then return end
 
     muiData.widgetDict[widgetName]["myText"]:removeEventListener("touch", muiData.widgetDict[widgetName]["myText"])
     muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
@@ -555,7 +555,7 @@ function M.removeWidgetRadioButton(widgetName)
         return
     end
 
-    if muiData.widgetDict[widgetName]["radio"] == nil then return end
+    if muiData.widgetDict[widgetName] == nil then return end
 
     for name in pairs(muiData.widgetDict[widgetName]["radio"]) do
         muiData.widgetDict[widgetName]["radio"][name]["myText"]:removeEventListener( "touch", muiData.widgetDict[widgetName]["radio"][name]["myText"] )
@@ -575,6 +575,9 @@ function M.removeWidgetToolbar(widgetName)
     if widgetName == nil then
         return
     end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
     for name in pairs(muiData.widgetDict[widgetName]["toolbar"]) do
         M.removeWidgetToolbarButton(muiData.widgetDict, widgetName, name)
         if name ~= "slider" and name ~= "rectBak" then
@@ -627,9 +630,6 @@ function M.removeWidgetTableView(widgetName)
     end
     if muiData.widgetDict[widgetName] == nil then return end
 
-    if muiData.widgetDict[widgetName]["tableview"] == nil then
-        return
-    end
     muiData.widgetDict[widgetName]["tableview"]:deleteAllRows()
     muiData.widgetDict[widgetName]["tableview"]:removeSelf()
     muiData.widgetDict[widgetName]["tableview"] = nil
@@ -639,9 +639,8 @@ function M.removeWidgetTextField(widgetName)
     if widgetName == nil then
         return
     end
-    if muiData.widgetDict[widgetName]["textfieldfake"] == nil then
-        return
-    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
 
     muiData.widgetDict[widgetName]["textfieldfake"].isVisible = false
     muiData.widgetDict[widgetName]["textfieldfake"]:removeSelf()
@@ -670,9 +669,8 @@ function M.removeWidgetProgressBar(widgetName)
     if widgetName == nil then
         return
     end
-    if muiData.widgetDict[widgetName]["progressbackdrop"] == nil then
-        return
-    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
 
     muiData.widgetDict[widgetName]["progressbackdrop"]:removeSelf()
     muiData.widgetDict[widgetName]["progressbackdrop"] = nil
@@ -691,9 +689,9 @@ function M.removeWidgetToggleSwitch(widgetName)
     if widgetName == nil then
         return
     end
-    if muiData.widgetDict[widgetName]["mygroup"] == nil then
-        return
-    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
     muiData.widgetDict[widgetName]["mygroup"]["circle"]:removeSelf()
     muiData.widgetDict[widgetName]["mygroup"]["circle"] = nil
     muiData.widgetDict[widgetName]["mygroup"]["circle2"]:removeSelf()
@@ -716,9 +714,7 @@ function M.removeWidgetDialog()
     end
     local widgetName = muiData.dialogName
 
-    if muiData.widgetDict[widgetName]["rectbackdrop"] == nil then
-        return
-    end
+    if muiData.widgetDict[widgetName] == nil then return end
 
     -- remove buttons
     M.removeWidgetRectButton("okay_dialog_button")
@@ -745,7 +741,7 @@ function M.removeWidgetSlider(widgetName)
         return
     end
 
-    if muiData.widgetDict[widgetName]["sliderrect"] == nil then return end
+    if muiData.widgetDict[widgetName] == nil then return end
 
     muiData.widgetDict[widgetName]["sliderrect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["sliderrect"])
     muiData.widgetDict[widgetName]["slidercircle"]:removeSelf()
@@ -764,6 +760,8 @@ function M.removeWidgetToast(widgetName)
         return
     end
 
+    if muiData.widgetDict[widgetName] == nil then return end
+
     muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["sliderrect"])
     muiData.widgetDict[widgetName]["myText"]:removeSelf()
     muiData.widgetDict[widgetName]["myText"] = nil
@@ -779,7 +777,7 @@ function M.removeWidgetSelector(widgetName, listonly)
         return
     end
 
-    if muiData.widgetDict[widgetName]["selectorfieldfake"] == nil then return end
+    if muiData.widgetDict[widgetName] == nil then return end
 
     if listonly ~= nil then
         M.removeWidgetTableView(widgetName .. "-List")
@@ -812,6 +810,8 @@ function M.removeSelectorGroup(widgetName)
         return
     end
 
+    if muiData.widgetDict[widgetName] == nil then return end
+
     if muiData.widgetDict[widgetName]["rect2"] ~= nil then
         muiData.widgetDict[widgetName]["rect2"]:removeSelf()
         muiData.widgetDict[widgetName]["rect2"] = nil
@@ -827,12 +827,13 @@ function M.removeNavbar(widgetName)
         return
     end
 
+    if muiData.widgetDict[widgetName] == nil then return end
     if muiData.widgetDict[widgetName]["list"] == nil then return end
 
     -- remove objects from the bar
-    -- muiData.navbarSupportedTypes = { "RRectButton", "RectButton", "IconButton", "Slider", "TextField" }
+    -- muiData.navbarSupportedTypes = { "RRectButton", "RectButton", "IconButton", "Slider", "TextField", "Generic" }
     for name, widgetType in pairs(muiData.widgetDict[widgetName]["list"]) do
-        if muiData.widgetDict[name] ~= nil then
+        if muiData.widgetDict[widgetName]["list"][name] ~= nil then
             if widgetType == "RRectButton" then
                 M.removeWidgetRRectButton(name)
             elseif widgetType == "RectButton" then
@@ -843,6 +844,10 @@ function M.removeNavbar(widgetName)
                 M.removeWidgetSlider(name)
             elseif widgetType == "RectButton" then
                 M.removeWidgetTextField(name)
+            elseif widgetType == "Generic" then
+              if muiData.widgetDict[widgetName]["destroy"] ~= nil and muiData.widgetDict[widgetName]["destroy"][name] ~= nil then
+                assert( muiData.widgetDict[widgetName]["destroy"][name] )(event)
+              end
             end
         end
     end

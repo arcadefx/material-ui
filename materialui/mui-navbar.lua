@@ -133,23 +133,31 @@ function M.attachToNavBar(navbar_name, options )
         return
     end
 
-    widget = M.getWidgetBaseObject(widgetName)
+    if options.widgetObject == nil then
+        widget = M.getWidgetBaseObject(widgetName)
+    else
+        widget = options.widgetObject
+    end
     newY = (nh - widget.contentHeight) * 0.5
 
     -- keep tabs on the toolbar objects
     muiData.widgetDict[navbar_name]["list"][widgetName] = options.widgetType
+    if muiData.widgetDict[navbar_name]["destroy"] == nil then
+        muiData.widgetDict[navbar_name]["destroy"] = {}
+    end
+    muiData.widgetDict[navbar_name]["destroy"][widgetName] = options.destroyCallBack
 
     if options.align == nil then
         options.align = "left"
     end
 
+    if options.padding == nil then
+        options.padding = muiData.widgetDict[navbar_name]["padding"]
+    end
+
     if options.align == "left" then
         if muiData.widgetDict[navbar_name]["lastWidgetLeftX"] > 0 then
-            if options.padding ~= nil then
-                newX = newX + options.padding
-            else
-                newX = newX + muiData.widgetDict[navbar_name]["padding"]
-            end
+            newX = newX + options.padding
         end
         newX = newX + muiData.widgetDict[navbar_name]["lastWidgetLeftX"]
         widget.x = widget.contentWidth * 0.5 + newX
@@ -158,16 +166,12 @@ function M.attachToNavBar(navbar_name, options )
     else
         newX = nw
         if muiData.widgetDict[navbar_name]["lastWidgetRightX"] > 0 then
-            if options.padding ~= nil then
-                newX = newX - options.padding
-            else
-                newX = newX - muiData.widgetDict[navbar_name]["padding"]
-            end
+            newX = newX - options.padding
         end
         newX = newX - muiData.widgetDict[navbar_name]["lastWidgetRightX"]
         widget.x = newX - widget.contentWidth * 0.5
         widget.y = widget.contentHeight * 0.5 + newY
-        muiData.widgetDict[navbar_name]["lastWidgetRightX"] = widget.x - widget.contentWidth * 0.5
+        muiData.widgetDict[navbar_name]["lastWidgetRightX"] = options.padding + muiData.widgetDict[navbar_name]["lastWidgetRightX"] + widget.contentWidth * 0.5
     end
     muiData.widgetDict[navbar_name]["container"]:insert( widget, true )
 end

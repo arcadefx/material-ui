@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.17] - 2016-07-07
+### Added
+- Generic/User defined widgets can be added to navigation bars. See fun.lua for an example.
+
+### Change
+- Fixed bugs.
+
 ## [0.1.16] - 2016-07-06
 ### Added
 - Re-factored the layout of the modules. Widgets are now in separate .lua files to help with maintainability.  New files (.lua assumed): mui-button, mui-dialog, mui-navbar, mui-progressbar, mui-select, mui-slider, mui-switch, mui-tableview, mui-textinput, mui-toast, mui-toolbar

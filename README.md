@@ -135,6 +135,7 @@ Additional Features
 * Scroll view support for widgets (widget.newScrollView()). Use parameter: scrollView = scroll_view
 * Colors can be adjusted and some controls support gradients.
 * Adjusts native widgets into scrollView visible area automatically.
+* Generic/User defined widgets can be added to navigation bars. See fun.lua for an example.
 * To use Material font icons, refer to 'icon-font/codepoints' and place the codepoint as the 'text' of a button.  See http://google.github.io/material-design-icons/ for more information.
 * Ability to create additional modules using a simple template. materialui/mui-example.lua is the template.
 * Ability to specify which modules are needed by a scene. Include a table ({}) in the mui.init() for the modules needed. If "none" are specified then all modules are loaded. See mui.lua for sample list.

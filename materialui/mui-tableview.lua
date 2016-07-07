@@ -310,6 +310,10 @@ function M.attachToRow(row, options )
         options.align = "left"
     end
 
+    if options.padding == nil then
+        padding = M.getScaleVal(10)
+    end
+
     if options.align == "left" then
         if muiData.widgetDict[basename]["list"][rowName]["lastWidgetLeftX"] > 0 then
             newX = newX + padding
@@ -326,7 +330,7 @@ function M.attachToRow(row, options )
         newX = newX - muiData.widgetDict[basename]["list"][rowName]["lastWidgetRightX"]
         widget.x = newX - widget.contentWidth * 0.5
         widget.y = widget.contentHeight * 0.5 + newY
-        muiData.widgetDict[basename]["list"][rowName]["lastWidgetRightX"] = widget.x - widget.contentWidth * 0.5
+        muiData.widgetDict[basename]["list"][rowName]["lastWidgetRightX"] = padding + muiData.widgetDict[basename]["list"][rowName]["lastWidgetRightX"] + widget.contentWidth * 0.5
     end
     row:insert( widget, false )
 end

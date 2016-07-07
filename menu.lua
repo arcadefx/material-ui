@@ -53,7 +53,7 @@ function scene:create( event )
             textX = 0,
             textY = 0,
             textColor = { 0, 0, 0, 1 },
-            font = systemFont,
+            font = native.systemFont,
             fontSize = mui.getScaleVal(32),
             fillColor = { 1, 1, 1, 1 },
             gradientBorderShadowColor1 = { 1, 1, 1, 0.4 },

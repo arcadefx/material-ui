@@ -195,7 +195,7 @@ function scene:create( event )
         parent = "groupBottom",
         group = groupBottom,
         slides = 2, -- number of slides
-        shape = "rect", -- rect or circle
+        shape = "circle", -- rect or circle
         size = mui.getScaleVal(25),
         fillColor = { 0, 0, 0 },
         y = screenH + mui.getScaleVal(60)

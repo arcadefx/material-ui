@@ -233,8 +233,11 @@ function M.createRRectButton(options)
 
                     M.setEventParameter(event, "muiTargetValue", options.value)
                     M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["rrect"])
+                    M.setEventParameter(event, "callBackData", options.callBackData)
 
-                    assert( options.callBack )(event)
+                    if options.callBack ~= nil then
+                        assert( options.callBack )(event)
+                    end
                 end
             end
             muiData.interceptEventHandler = nil
@@ -419,7 +422,9 @@ function M.createRectButton(options)
                     M.setEventParameter(event, "muiTargetValue", options.value)
                     M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["rrect"])
 
-                    assert( options.callBack )(event)
+                    if options.callBack ~= nil then
+                       assert( options.callBack )(event)
+                    end
                 end
                 muiData.interceptEventHandler = nil
                 muiData.interceptMoved = false
@@ -514,7 +519,7 @@ function M.createIconButton(options)
     textToMeasure:removeSelf()
     textToMeasure = nil
 
-    local options2 = 
+    local options2 =
     {
         --parent = textGroup,
         text = options.text,
@@ -591,7 +596,9 @@ function M.createIconButton(options)
                     M.setEventParameter(event, "muiTargetValue", options.value)
                     M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["myText"])
 
-                    assert( options.callBack )(event)
+                    if options.callBack ~= nil then
+                        assert( options.callBack )(event)
+                    end
                 end
                 muiData.interceptEventHandler = nil
                 muiData.interceptMoved = false
@@ -615,6 +622,164 @@ function M.createCheckBox(options)
         textAlign = "center",
         callBack = M.actionForCheckbox
     })
+end
+
+function M.createCircleButton(options)
+
+    local x,y = 160, 240
+    if options.x ~= nil then
+        x = options.x
+    end
+    if options.y ~= nil then
+        y = options.y
+    end
+
+    muiData.widgetDict[options.name] = {}
+    muiData.widgetDict[options.name]["type"] = "CircleButton"
+    muiData.widgetDict[options.name]["mygroup"] = display.newGroup()
+    muiData.widgetDict[options.name]["mygroup"].x = x
+    muiData.widgetDict[options.name]["mygroup"].y = y
+    muiData.widgetDict[options.name]["touching"] = false
+
+    if options.scrollView ~= nil then
+        muiData.widgetDict[options.name]["scrollView"] = options.scrollView
+        muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+    end
+
+    if options.radius == nil then
+        radius = M.getScaleVal(46) * 0.60
+    else
+        radius = options.radius * 0.60
+    end
+
+    local fontSize = options.radius
+    if options.fontSize ~= nil then
+        fontSize = options.fontSize
+    end
+    fontSize = mathFloor(tonumber(fontSize))
+
+    local font = native.systemFont
+    if options.font ~= nil then
+        font = options.font
+    end
+
+    local textColor = { 0, 0.82, 1 }
+    if options.textColor ~= nil then
+        textColor = options.textColor
+    end
+
+    local fillColor = { 0, 0, 0 }
+    if options.fillColor ~= nil then
+        fillColor = options.fillColor
+    end
+
+    local isChecked = false
+    if options.isChecked ~= nil then
+        isChecked = options.isChecked
+    end
+
+    muiData.widgetDict[options.name]["font"] = font
+    muiData.widgetDict[options.name]["fontSize"] = fontSize
+    muiData.widgetDict[options.name]["textMargin"] = textMargin
+
+    -- scale font
+    -- Calculate a font size that will best fit the given text field's height
+    local tempSize = {contentHeight=options.radius, contentWidth=options.radius}
+    local textToMeasure = display.newText( options.text, 0, 0, font, fontSize )
+    local fontSize = fontSize * ( ( tempSize.contentHeight ) / textToMeasure.contentHeight )
+    local tw = textToMeasure.contentWidth
+    local th = textToMeasure.contentHeight
+
+    textToMeasure:removeSelf()
+    textToMeasure = nil
+
+    local options2 =
+    {
+        --parent = textGroup,
+        text = options.text,
+        x = 0,
+        y = 0,
+        font = font,
+        width = tw,
+        fontSize = fontSize,
+        align = "center"
+    }
+
+    muiData.widgetDict[options.name]["circlemain"] = display.newCircle( 0, 0, radius )
+    muiData.widgetDict[options.name]["circlemain"]:setFillColor( unpack(fillColor) )
+    muiData.widgetDict[options.name]["circlemain"].isVisible = true
+    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["circlemain"], true )
+
+    muiData.widgetDict[options.name]["myText"] = display.newText( options2 )
+    muiData.widgetDict[options.name]["myText"]:setFillColor( unpack(textColor) )
+    muiData.widgetDict[options.name]["myText"].isVisible = true
+    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myText"], true )
+
+    local circleColor = textColor
+    if options.circleColor ~= nil then
+        circleColor = options.circleColor
+    end
+
+    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( 0, 0, radius )
+    muiData.widgetDict[options.name]["myCircle"]:setFillColor( unpack(circleColor) )
+
+    muiData.widgetDict[options.name]["myCircle"].isVisible = false
+    muiData.widgetDict[options.name]["myCircle"].x = 0
+    muiData.widgetDict[options.name]["myCircle"].y = 0
+    muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
+    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
+
+    local circle = muiData.widgetDict[options.name]["circlemain"]
+
+    local radiusOffset = 2.5
+    if muiData.masterRatio > 1 then radiusOffset = 2.0 end
+    local maxWidth = circle.contentWidth - (radius * radiusOffset)
+    local scaleFactor = ((maxWidth * (1.3 * muiData.masterRatio)) / radius) -- (since this is a radius of circle)
+
+    function circle:touch (event)
+        if muiData.dialogInUse == true and options.dialogName == nil then return end
+
+        M.addBaseEventParameters(event, options)
+
+        if ( event.phase == "began" ) then
+            muiData.interceptEventHandler = circle
+            M.updateUI(event)
+            if muiData.touching == false then
+                muiData.touching = true
+                if options.touchpoint ~= nil and options.touchpoint == true then
+                    muiData.widgetDict[options.name]["myCircle"].x = event.x - muiData.widgetDict[options.name]["mygroup"].x
+                    muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["mygroup"].y
+                end
+                muiData.widgetDict[options.name]["myCircle"].isVisible = true
+                muiData.widgetDict[options.name].myCircleTrans = transition.to( muiData.widgetDict[options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+                transition.to(circle,{time=500, xScale=1.1, yScale=1.1, transition=easing.continuousLoop})
+            end
+        elseif ( event.phase == "ended" ) then
+            if M.isTouchPointOutOfRange( event ) then
+                event.phase = "offTarget"
+                -- event.target:dispatchEvent(event)
+                -- print("Its out of the button area")
+            else
+              event.phase = "onTarget"
+                if muiData.interceptMoved == false then
+                    event.target = muiData.widgetDict[options.name]["circlemain"]
+                    event.myTargetName = options.name
+                    event.callBackData = options.callBackData
+
+                    M.setEventParameter(event, "muiTargetValue", options.value)
+                    M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["circlemain"])
+
+                    if options.callBack ~= nil then
+                        assert( options.callBack )(event)
+                    end
+                end
+                muiData.interceptEventHandler = nil
+                muiData.interceptMoved = false
+                muiData.touching = false
+            end
+        end
+    end
+    muiData.widgetDict[options.name]["circlemain"]:addEventListener( "touch", muiData.widgetDict[options.name]["circlemain"] )
 end
 
 --[[
@@ -717,7 +882,7 @@ function M.createRadioButton(options)
     textToMeasure:removeSelf()
     textToMeasure = nil
 
-    local options2 = 
+    local options2 =
     {
         --parent = textGroup,
         text = options.text,
@@ -826,7 +991,9 @@ function M.createRadioButton(options)
                     M.setEventParameter(event, "muiTargetValue", options.value)
                     M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.basename]["radio"][options.name]["myText"])
 
-                    assert( options.callBack )(event)
+                    if options.callBack ~= nil then
+                        assert( options.callBack )(event)
+                    end
                 end
                 muiData.interceptEventHandler = nil
                 muiData.interceptMoved = false
@@ -871,7 +1038,7 @@ function M.createRadioGroup(options)
                 isChecked = v.isChecked,
                 font = "MaterialIcons-Regular.ttf",
                 labelFont = options.labelFont,
-                textColor = { 1, 0, 0.4 },
+                textColor = options.textColor,
                 textAlign = "center",
                 labelColor = options.labelColor,
                 callBack = options.callBack

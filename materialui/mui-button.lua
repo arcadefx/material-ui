@@ -233,8 +233,11 @@ function M.createRRectButton(options)
 
                     M.setEventParameter(event, "muiTargetValue", options.value)
                     M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["rrect"])
+                    M.setEventParameter(event, "callBackData", options.callBackData)
 
-                    assert( options.callBack )(event)
+                    if options.callBack ~= nil then
+                        assert( options.callBack )(event)
+                    end
                 end
             end
             muiData.interceptEventHandler = nil
@@ -419,7 +422,9 @@ function M.createRectButton(options)
                     M.setEventParameter(event, "muiTargetValue", options.value)
                     M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["rrect"])
 
-                    assert( options.callBack )(event)
+                    if options.callBack ~= nil then
+                       assert( options.callBack )(event)
+                    end
                 end
                 muiData.interceptEventHandler = nil
                 muiData.interceptMoved = false
@@ -591,7 +596,9 @@ function M.createIconButton(options)
                     M.setEventParameter(event, "muiTargetValue", options.value)
                     M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["myText"])
 
-                    assert( options.callBack )(event)
+                    if options.callBack ~= nil then
+                        assert( options.callBack )(event)
+                    end
                 end
                 muiData.interceptEventHandler = nil
                 muiData.interceptMoved = false
@@ -826,7 +833,9 @@ function M.createRadioButton(options)
                     M.setEventParameter(event, "muiTargetValue", options.value)
                     M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.basename]["radio"][options.name]["myText"])
 
-                    assert( options.callBack )(event)
+                    if options.callBack ~= nil then
+                        assert( options.callBack )(event)
+                    end
                 end
                 muiData.interceptEventHandler = nil
                 muiData.interceptMoved = false

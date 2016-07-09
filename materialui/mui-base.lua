@@ -64,6 +64,7 @@ function M.init_base(data)
   muiData.dialogName = nil
   muiData.navbarHeight = 0
   muiData.navbarSupportedTypes = { "RRectButton", "RectButton", "IconButton", "Slider", "TextField", "Generic" }
+  muiData.onBoardData = nil
 
   muiData.scene = composer.getScene(composer.getSceneName("current"))
   muiData.scene.name = composer.getSceneName("current")
@@ -160,7 +161,9 @@ function M.getWidgetBaseObject(name)
         for widget in pairs(muiData.widgetDict) do
           local widgetType = muiData.widgetDict[widget]["type"]
           if widgetType ~= nil and widget == name then
-            if widgetType == "RRectButton" then
+            if widgetType == "BasicText" then
+               widgetData = muiData.widgetDict[widget]["text"]
+            elseif widgetType == "RRectButton" then
                widgetData = muiData.widgetDict[widget]["container"]
             elseif widgetType == "RectButton" then
                widgetData = muiData.widgetDict[widget]["container"]
@@ -220,6 +223,40 @@ function M.getSizeRatio()
   return muiData.masterRatio
 end
 
+function M.split(str, sep)
+   local result = {}
+   local regex = ("([^%s]+)"):format(sep)
+   for each in str:gmatch(regex) do
+      table.insert(result, each)
+   end
+   return result
+end
+
+function M.getTextWidth(options)
+  local width = display.contentWidth
+
+  if options == nil then return display.contentWidth end
+
+  local lines = M.split(options.text, "\n")
+  local longest = 0
+  local lineLength = 0
+  local text = ""
+  for _,line in ipairs(lines) do
+     lineLength = string.len(line)
+     if lineLength > longest then
+        longest = lineLength
+        text = line
+     end
+  end
+  -- scale font
+  -- Calculate a font size that will best fit the given text field's height
+  local textToMeasure = display.newText( text, 0, 0, options.font, options.fontSize )
+  width = textToMeasure.contentWidth
+  textToMeasure:removeSelf()
+  textToMeasure = nil
+  return width
+end
+
 function M.tableLength(T)
   local count = 0
   for _ in pairs(T) do count = count + 1 end
@@ -267,9 +304,7 @@ end
 --[[ switch scene action ]]
 
 function M.actionSwitchScene( e )
-    print("actionSwitchScene 1")
     if muiData.circleSceneSwitchComplete == true then return end
-    print("actionSwitchScene 2")
     local circleColor = { 1, 0.58, 0 }
     M.hideNativeWidgets()
 
@@ -296,11 +331,24 @@ function M.finalActionForSwitchScene(e)
     muiData.circleSceneSwitch:removeSelf()
     muiData.circleSceneSwitch = nil
     muiData.circleSceneSwitchComplete = true
+    if e.callBackData == nil then
+    end
     if e.callBackData ~= nil and e.callBackData.sceneDestination ~= nil then
         composer.removeScene( muiData.scene.name )
         composer.gotoScene( e.callBackData.sceneDestination )
     end
 end
+
+function M.goToScene(callBackData)
+    if muiData.circleSceneSwitchComplete == true then return end
+    if callBackData ~= nil and callBackData.onCompleteData ~= nil then
+        local e = {
+            callBackData = callBackData.onCompleteData
+        }
+        M.actionSwitchScene( e )
+    end
+end
+
 --[[ end switch scene action ]]
 
 function M.isTouchPointOutOfRange( event )
@@ -485,9 +533,17 @@ function M.removeWidgets()
             M.removeWidgetSelector(widget)
         elseif widgetType == "Navbar" then
             M.removeNavbar(widget)
+        elseif widgetType == "BasicText" then
+            M.removeWidgetBasicText(widget)
         end
       end
   end
+
+  -- remove onBoarding if used.
+  if muiData.onBoardData ~= nil then
+    M.removeWidgetOnBoarding()
+  end
+
   Runtime:removeEventListener( "touch", M.eventSuperListner )
 
 end
@@ -860,6 +916,23 @@ function M.removeNavbar(widgetName)
         muiData.widgetDict[widgetName]["container"]:removeSelf()
         muiData.widgetDict[widgetName]["container"] = nil
     end
+end
+
+function M.removeWidgetOnBoarding()
+    if muiData.onBoardData == nil then return end
+
+    for i, groups in pairs(muiData.onBoardData) do
+        if groups ~= nil then
+            for j, group in pairs(groups) do
+                if group ~= nil then
+                    group:removeSelf()
+                    group = nil
+                end
+            end
+            groups = nil
+        end
+    end
+    muiData.onBoardData = nil
 end
 
 return M

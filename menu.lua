@@ -124,7 +124,7 @@ function scene:create( event )
 
     mui.createIconButton({
         name = "plus",
-        text = "add_circle",
+        text = "help",
         width = mui.getScaleVal(50),
         height = mui.getScaleVal(50),
         x = mui.getScaleVal(60),
@@ -132,7 +132,12 @@ function scene:create( event )
         font = "MaterialIcons-Regular.ttf",
         textColor = { 1, 0, 0.4 },
         textAlign = "center",
-        callBack = mui.actionForPlus
+        callBack = mui.actionSwitchScene,
+        callBackData = {
+            sceneDestination = "onboard",
+            sceneTransitionColor = { 0.08, 0.9, 0.31 }
+        } -- scene fun.lua
+        -- callBack = mui.actionForPlus
     })
 
     -- simulates a checkbox but can be other toggle buttons too!

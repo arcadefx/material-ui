@@ -46,12 +46,14 @@ local modules = {
   "materialui.mui-button",
   "materialui.mui-dialog",
   "materialui.mui-navbar",
+  "materialui.mui-onboarding",
   "materialui.mui-progressbar",
   "materialui.mui-select",
   "materialui.mui-slider",
   "materialui.mui-switch",
   "materialui.mui-tableview",
   "materialui.mui-textinput",
+  "materialui.mui-text",
   "materialui.mui-toast",
   "materialui.mui-toolbar"
 }

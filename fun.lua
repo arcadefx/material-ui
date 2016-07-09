@@ -56,7 +56,7 @@ function scene:create( event )
         x = mui.getScaleVal(160),
         y = mui.getScaleVal(120),
         font = native.systemFont,
-        fillColor = { 0, 0.82, 1 },
+        fillColor = { 0.31, 0.65, 0.03, 1 },
         textColor = { 1, 1, 1 },
         callBack = mui.actionSwitchScene,
         callBackData = { 
@@ -94,7 +94,7 @@ function scene:create( event )
         y = mui.getScaleVal(210),
         font = native.systemFont,
         textColor = { 1, 1, 1, 1 },
-        fillColor = { 0.26, 0.71, 0.68, 1 },
+        fillColor = { 0.63, 0.81, 0.181 },
         radius = 10,
         callBack = showToast
     })
@@ -144,7 +144,7 @@ function scene:create( event )
         y = mui.getScaleVal(440),
         radius = mui.getScaleVal(12),
         colorOff = { 1, 1, 1, 1 },
-        color = { 1, 0, 0, 1 },
+        color = { 0.63, 0.81, 0.181 },
         startPercent = 30,
         callBackMove = mui.sliderCallBackMove,
         callBack = mui.sliderCallBack

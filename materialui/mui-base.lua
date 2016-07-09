@@ -65,6 +65,8 @@ function M.init_base(data)
   muiData.navbarHeight = 0
   muiData.navbarSupportedTypes = { "RRectButton", "RectButton", "IconButton", "Slider", "TextField", "Generic" }
   muiData.onBoardData = nil
+  muiData.slideData = nil
+  muiData.currentSlide = 0
 
   muiData.scene = composer.getScene(composer.getSceneName("current"))
   muiData.scene.name = composer.getSceneName("current")
@@ -163,6 +165,8 @@ function M.getWidgetBaseObject(name)
           if widgetType ~= nil and widget == name then
             if widgetType == "BasicText" then
                widgetData = muiData.widgetDict[widget]["text"]
+            elseif widgetType == "CircleButton" then
+               widgetData = muiData.widgetDict[widget]["circlemain"]
             elseif widgetType == "RRectButton" then
                widgetData = muiData.widgetDict[widget]["container"]
             elseif widgetType == "RectButton" then
@@ -467,7 +471,9 @@ function M.hideWidget(widgetName, options)
   for widget in pairs(muiData.widgetDict) do
       local widgetType = muiData.widgetDict[widget]["type"]
       if widgetType ~= nil then
-        if widgetType == "RRectButton" or widgetType == "RectButton" then
+        if widgetType == "CircleButton" then
+            muiData.widgetDict[widget]["circlemain"].isVisible = showWidget
+        elseif widgetType == "RRectButton" or widgetType == "RectButton" then
             muiData.widgetDict[widget]["container"].isVisible = showWidget
         elseif widgetType == "IconButton" or widgetType == "RadioButton" then
             muiData.widgetDict[widget]["mygroup"].isVisible = showWidget
@@ -505,7 +511,9 @@ function M.removeWidgets()
   for widget in pairs(muiData.widgetDict) do
       local widgetType = muiData.widgetDict[widget]["type"]
       if widgetType ~= nil and muiData.widgetDict[widget] ~= nil then
-        if widgetType == "RRectButton" then
+        if widgetType == "CircleButton" then
+            M.removeWidgetCircleButton(widget)
+        elseif widgetType == "RRectButton" then
             M.removeWidgetRRectButton(widget)
         elseif widgetType == "RectButton" then
             M.removeWidgetRectButton(widget)
@@ -586,6 +594,25 @@ function M.removeWidgetRectButton(widgetName)
     muiData.widgetDict[widgetName]["rrect"] = nil
     muiData.widgetDict[widgetName]["container"]:removeSelf()
     muiData.widgetDict[widgetName]["container"] = nil
+    muiData.widgetDict[widgetName] = nil
+end
+
+function M.removeWidgetCircleButton(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
+    muiData.widgetDict[widgetName]["circlemain"]:removeEventListener("touch", muiData.widgetDict[widgetName]["circlemain"])
+    muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
+    muiData.widgetDict[widgetName]["myCircle"] = nil
+    muiData.widgetDict[widgetName]["myText"]:removeSelf()
+    muiData.widgetDict[widgetName]["myText"] = nil
+    muiData.widgetDict[widgetName]["circlemain"]:removeSelf()
+    muiData.widgetDict[widgetName]["circlemain"] = nil
+    muiData.widgetDict[widgetName]["mygroup"]:removeSelf()
+    muiData.widgetDict[widgetName]["mygroup"] = nil
     muiData.widgetDict[widgetName] = nil
 end
 

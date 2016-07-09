@@ -63,7 +63,7 @@ function scene:create( event )
                 font = native.systemFont,
                 okayButton = {
                     text = "Okay",
-                    textColor = { 0.01, 0.65, 0.08 },
+                    textColor = { 0, 0.46, 1 },
                     fillColor = { 1, 1, 1 },
                     width = mui.getScaleVal(100),
                     height = mui.getScaleVal(50),
@@ -75,7 +75,7 @@ function scene:create( event )
                 },
                 cancelButton = {
                     text = "Cancel",
-                    textColor = { 0.01, 0.65, 0.08 },
+                    textColor = { 0, 0.46, 1 },
                     fillColor = { 1, 1, 1 },
                     width = mui.getScaleVal(100),
                     height = mui.getScaleVal(50),
@@ -112,7 +112,7 @@ function scene:create( event )
         x = mui.getScaleVal(160),
         y = mui.getScaleVal(120),
         font = native.systemFont,
-        fillColor = { 0.17, 0.88, 0.12 },
+        fillColor = { 0.25, 0.75, 1, 1 },
         textColor = { 1, 1, 1 },
         touchpoint = true,
         callBack = mui.actionSwitchScene,
@@ -130,7 +130,7 @@ function scene:create( event )
         x = mui.getScaleVal(60),
         y = mui.getScaleVal(40),
         font = "MaterialIcons-Regular.ttf",
-        textColor = { 1, 0, 0.4 },
+        textColor = { 0.25, 0.75, 1, 1 },
         textAlign = "center",
         callBack = mui.actionSwitchScene,
         callBackData = {
@@ -138,6 +138,32 @@ function scene:create( event )
             sceneTransitionColor = { 0.08, 0.9, 0.31 }
         } -- scene fun.lua
         -- callBack = mui.actionForPlus
+    })
+
+    mui.createCircleButton({
+        name = "alice-button",
+        text = "A",
+        radius = mui.getScaleVal(46),
+        x = mui.getScaleVal(500),
+        y = mui.getScaleVal(120),
+        font = native.systemFont,
+        textColor = { 1, 1, 1, 1 },
+        fillColor = { 0.25, 0.75, 1, 1 },
+        textAlign = "center",
+        callBack = mui.actionForButton
+    })
+
+    mui.createCircleButton({
+        name = "bueler-button",
+        text = "B",
+        radius = mui.getScaleVal(46),
+        x = mui.getScaleVal(500),
+        y = mui.getScaleVal(220),
+        font = native.systemFont,
+        textColor = { 1, 1, 1, 1 },
+        fillColor = { 0, 0.46, 1 },
+        textAlign = "center",
+        callBack = mui.actionForButton
     })
 
     -- simulates a checkbox but can be other toggle buttons too!
@@ -149,7 +175,7 @@ function scene:create( event )
         x = mui.getScaleVal(360),
         y = mui.getScaleVal(120),
         font = "MaterialIcons-Regular.ttf",
-        textColor = { 0.17, 0.88, 0.12 },
+        textColor = { 0.3, 0.3, 0.3 },
         textAlign = "center",
         value = 500,
         callBack = mui.actionForCheckbox
@@ -177,7 +203,7 @@ function scene:create( event )
         y = mui.getScaleVal(40),
         layout = "horizontal",
         labelFont = native.systemFont,
-        textColor = { 1, 0, 0.4 },
+        textColor = { 0, 0, 0 },
         labelColor = { 0, 0, 0 },
         callBack = mui.actionForRadioButton,
         list = {
@@ -230,7 +256,7 @@ function scene:create( event )
         height = mui.getScaleVal(46),
         x = mui.getScaleVal(240),
         y = mui.getScaleVal(400),
-        activeColor = { 0.12, 0.67, 0.27, 1 },
+        activeColor = { 0, 0, 0, 1 },
         inactiveColor = { 0.4, 0.4, 0.4, 1 },
         callBack = mui.textfieldCallBack
     })
@@ -276,8 +302,8 @@ function scene:create( event )
         y = (display.contentHeight - (buttonHeight * 0.5)),
         layout = "horizontal",
         labelFont = native.systemFont,
-        color = { 0.67, 0, 1 },
-        fillColor = { 0.67, 0, 1 },
+        color = { 0, 0.46, 1 },
+        fillColor = { 0, 0.46, 1 },
         labelColor = { 1, 1, 1 },
         labelColorOff = { 0.41, 0.03, 0.49 },
         callBack = mui.actionForToolbarDemo,

@@ -169,13 +169,13 @@ function scene:create( event )
 
     mui.createIconButton({
         name = "continue-button",
-        text = "touch_app",
+        text = "arrow_forward",
         width = mui.getScaleVal(50),
         height = mui.getScaleVal(50),
         x = backgroundBottom.contentWidth * 0.5,
         y = screenH + mui.getScaleVal(150),
         font = "MaterialIcons-Regular.ttf",
-        textColor = { 1, 0, 0.4 },
+        textColor = { 0, 0, 0 },
         textAlign = "center",
         callBack = nil,
         callBackData = slideConfig
@@ -187,6 +187,20 @@ function scene:create( event )
     end
     backgroundBottom:addEventListener( "touch", backgroundBottom )
     groupBottom:insert( mui.getWidgetBaseObject("continue-button") )
+
+    --
+    -- Elipses / progress indicator
+    --
+    mui.createElipsesForProgress({
+        parent = "groupBottom",
+        group = groupBottom,
+        slides = 2, -- number of slides
+        shape = "rect", -- rect or circle
+        size = mui.getScaleVal(25),
+        fillColor = { 0, 0, 0 },
+        y = screenH + mui.getScaleVal(60)
+    })
+
     transition.to( groupBottom, { time=800, y=-(screenH * 0.4), transition=easing.outExpo } )
 
     --sceneGroup:insert( groupBottom )

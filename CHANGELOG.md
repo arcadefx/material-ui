@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.18] - 2016-07-09
+### Added
+- Onboarding - The onboarding/walkthrough screens for first-time users. Introduce the app and demonstrate what it does.  Go to the Demo and on the first scene tap the "?" to see it in action.
+- 'createParentOnBoard', 'addChildOnBoard' and other supported onboarding methods.
+- 'createCircleButton' - Create a circle button with a single character or even a word
+
+### Change
+- Applied a single theme to each scene. Instead of mashing colors. :)
+- Fixed callBacks. If a callBack is omitted it won't crash.
+- Bug fixes.
+
 ## [0.1.17] - 2016-07-07
 ### Added
 - Generic/User defined widgets can be added to navigation bars. See fun.lua for an example.

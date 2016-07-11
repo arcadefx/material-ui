@@ -308,7 +308,7 @@ end
 --[[ switch scene action ]]
 
 function M.actionSwitchScene( e )
-    if muiData.circleSceneSwitchComplete == true then return end
+    if muiData.circleSceneSwitchComplete == true or muiData.circleSceneSwitch ~= nil then return end
     local circleColor = { 1, 0.58, 0 }
     M.hideNativeWidgets()
 

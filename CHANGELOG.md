@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.19] - 2016-07-11
+### Added
+- Added touchpoint to toolbar.
+
+### Change
+- Fixed touchpoint scaling for smoother radials.
+
 ## [0.1.18] - 2016-07-09
 ### Added
 - Onboarding - The onboarding/walkthrough screens for first-time users. Introduce the app and demonstrate what it does.  Go to the Demo and on the first scene tap the "?" to see it in action.

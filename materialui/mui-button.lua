@@ -173,14 +173,13 @@ function M.createRRectButton(options)
         circleColor = options.circleColor
     end
 
-    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( options.height, options.height, radius )
+    local maxWidth = muiData.widgetDict[options.name]["rrect"].path.width - (radius * 2)
+
+    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( options.height, options.height, maxWidth)
     muiData.widgetDict[options.name]["myCircle"]:setFillColor( unpack(circleColor) )
     muiData.widgetDict[options.name]["myCircle"].isVisible = false
     muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
-
-    local maxWidth = muiData.widgetDict[options.name]["rrect"].path.width - (radius * 2)
-    local scaleFactor = (maxWidth / radius) * 0.5 -- (since this is a radius of circle)
 
     function rrect:touch (event)
         if muiData.dialogInUse == true and options.dialogName == nil then return end
@@ -207,7 +206,8 @@ function M.createRRectButton(options)
                     muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["container"].y
                 end
                 muiData.widgetDict[options.name]["myCircle"].isVisible = true
-                muiData.widgetDict[options.name].myCircleTrans = transition.to( muiData.widgetDict[options.name]["myCircle"], { time=500,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+                local scaleFactor = 0.1
+                muiData.widgetDict[options.name].myCircleTrans = transition.from( muiData.widgetDict[options.name]["myCircle"], { time=500,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
                 transition.to(muiData.widgetDict[options.name]["container"],{time=300, xScale=1.02, yScale=1.02, transition=easing.continuousLoop})
             end
         elseif ( event.phase == "moved" ) then
@@ -363,14 +363,13 @@ function M.createRectButton(options)
         radius = options.radius
     end
 
-    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( options.height, options.height, radius )
+    local maxWidth = muiData.widgetDict[options.name]["rrect"].path.width - (radius * 2)
+
+    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( options.height, options.height, maxWidth )
     muiData.widgetDict[options.name]["myCircle"]:setFillColor( unpack(circleColor) )
     muiData.widgetDict[options.name]["myCircle"].isVisible = false
     muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
-
-    local maxWidth = (muiData.widgetDict[options.name]["rrect"].path.width * 2) - (radius * 2)
-    local scaleFactor = (maxWidth / radius) * 0.5 -- (since this is a radius of circle)
 
     function rrect:touch (event)
         if muiData.dialogInUse == true and options.dialogName == nil then return end
@@ -395,7 +394,8 @@ function M.createRectButton(options)
                     muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["container"].y
                 end
                 muiData.widgetDict[options.name]["myCircle"].isVisible = true
-                muiData.widgetDict[options.name].myCircleTrans = transition.to( muiData.widgetDict[options.name]["myCircle"], { time=500,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+                local scaleFactor = 0.1
+                muiData.widgetDict[options.name].myCircleTrans = transition.from( muiData.widgetDict[options.name]["myCircle"], { time=500,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
                 transition.to(muiData.widgetDict[options.name]["container"],{time=500, xScale=1.02, yScale=1.02, transition=easing.continuousLoop})
             end
         elseif ( event.phase == "moved" ) then
@@ -541,12 +541,18 @@ function M.createIconButton(options)
 
     muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myText"], true )
 
+    checkbox = muiData.widgetDict[options.name]["myText"]
+
+    local radiusOffset = 2.5
+    if muiData.masterRatio > 1 then radiusOffset = 2.0 end
+    local maxWidth = checkbox.contentWidth - (radius * radiusOffset)
+
     local circleColor = textColor
     if options.circleColor ~= nil then
         circleColor = options.circleColor
     end
 
-    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( 0, 0, radius )
+    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( 0, 0, maxWidth + M.getScaleVal(5))
     muiData.widgetDict[options.name]["myCircle"]:setFillColor( unpack(circleColor) )
 
     muiData.widgetDict[options.name]["myCircle"].isVisible = false
@@ -554,13 +560,6 @@ function M.createIconButton(options)
     muiData.widgetDict[options.name]["myCircle"].y = 0
     muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
     muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
-
-    checkbox = muiData.widgetDict[options.name]["myText"]
-
-    local radiusOffset = 2.5
-    if muiData.masterRatio > 1 then radiusOffset = 2.0 end
-    local maxWidth = checkbox.contentWidth - (radius * radiusOffset)
-    local scaleFactor = ((maxWidth * (1.3 * muiData.masterRatio)) / radius) -- (since this is a radius of circle)
 
     function checkbox:touch (event)
         if muiData.dialogInUse == true and options.dialogName == nil then return end
@@ -577,7 +576,8 @@ function M.createIconButton(options)
                     muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["mygroup"].y
                 end
                 muiData.widgetDict[options.name]["myCircle"].isVisible = true
-                muiData.widgetDict[options.name].myCircleTrans = transition.to( muiData.widgetDict[options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+                local scaleFactor = 0.1
+                muiData.widgetDict[options.name].myCircleTrans = transition.from( muiData.widgetDict[options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
                 transition.to(checkbox,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
             end
         elseif ( event.phase == "ended" ) then
@@ -715,12 +715,18 @@ function M.createCircleButton(options)
     muiData.widgetDict[options.name]["myText"].isVisible = true
     muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myText"], true )
 
+    local circle = muiData.widgetDict[options.name]["circlemain"]
+
+    local radiusOffset = 2.5
+    if muiData.masterRatio > 1 then radiusOffset = 2.0 end
+    local maxWidth = circle.contentWidth - (radius * radiusOffset)
+
     local circleColor = textColor
     if options.circleColor ~= nil then
         circleColor = options.circleColor
     end
 
-    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( 0, 0, radius )
+    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( 0, 0, maxWidth + M.getScaleVal(5))
     muiData.widgetDict[options.name]["myCircle"]:setFillColor( unpack(circleColor) )
 
     muiData.widgetDict[options.name]["myCircle"].isVisible = false
@@ -728,13 +734,6 @@ function M.createCircleButton(options)
     muiData.widgetDict[options.name]["myCircle"].y = 0
     muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
     muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
-
-    local circle = muiData.widgetDict[options.name]["circlemain"]
-
-    local radiusOffset = 2.5
-    if muiData.masterRatio > 1 then radiusOffset = 2.0 end
-    local maxWidth = circle.contentWidth - (radius * radiusOffset)
-    local scaleFactor = ((maxWidth * (1.3 * muiData.masterRatio)) / radius) -- (since this is a radius of circle)
 
     function circle:touch (event)
         if muiData.dialogInUse == true and options.dialogName == nil then return end
@@ -751,7 +750,8 @@ function M.createCircleButton(options)
                     muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["mygroup"].y
                 end
                 muiData.widgetDict[options.name]["myCircle"].isVisible = true
-                muiData.widgetDict[options.name].myCircleTrans = transition.to( muiData.widgetDict[options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+                local scaleFactor = 0.1
+                muiData.widgetDict[options.name].myCircleTrans = transition.from( muiData.widgetDict[options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
                 transition.to(circle,{time=500, xScale=1.1, yScale=1.1, transition=easing.continuousLoop})
             end
         elseif ( event.phase == "ended" ) then
@@ -936,6 +936,8 @@ function M.createRadioButton(options)
     radioButton["myLabel"].isVisible = true
     radioButton["mygroup"]:insert( radioButton["myLabel"], false )
 
+    local maxWidth = checkbox.contentWidth - (radius * 2.5)
+
     -- add the animated circle
 
     local circleColor = textColor
@@ -943,16 +945,13 @@ function M.createRadioButton(options)
         circleColor = options.circleColor
     end
 
-    radioButton["myCircle"] = display.newCircle( options.height, options.height, radius )
+    radioButton["myCircle"] = display.newCircle( options.height, options.height, maxWidth + M.getScaleVal(5) )
     radioButton["myCircle"]:setFillColor( unpack(circleColor) )
     radioButton["myCircle"].isVisible = false
     radioButton["myCircle"].x = 0
     radioButton["myCircle"].y = 0
     radioButton["myCircle"].alpha = 0.3
     radioButton["mygroup"]:insert( radioButton["myCircle"], true ) -- insert and center bkgd
-
-    local maxWidth = checkbox.contentWidth - (radius * 2.5)
-    local scaleFactor = ((maxWidth * 1.3) / radius) -- (since this is a radius of circle)
 
     checkbox = radioButton["myText"]
 
@@ -971,7 +970,8 @@ function M.createRadioButton(options)
                     muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].y = event.y - muiData.widgetDict[options.basename]["radio"][options.name]["mygroup"].y
                 end
                 muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].isVisible = true
-                muiData.widgetDict[options.basename]["radio"][options.name].myCircleTrans = transition.to( muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+                local scaleFactor = 0.1
+                muiData.widgetDict[options.basename]["radio"][options.name].myCircleTrans = transition.from( muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
                 transition.to(checkbox,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
             end
         elseif ( event.phase == "ended" ) then

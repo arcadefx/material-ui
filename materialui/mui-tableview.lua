@@ -78,7 +78,7 @@ function M.createTableView( options )
         options.rowAnimation = true
     end
 
-    muiData.tableCircle = display.newCircle( 0, 0, M.getScaleVal(20) )
+    muiData.tableCircle = display.newCircle( 0, 0, M.getScaleVal(20 * 2.5) )
     muiData.tableCircle:setFillColor( unpack(options.circleColor) )
     muiData.tableCircle.isVisible = false
     muiData.tableCircle.alpha = 0.55
@@ -361,9 +361,9 @@ function M.onRowTouch( event )
             if row.miscEvent == nil then return end
             muiData.tableCircle.x = row.miscEvent.x
             muiData.tableCircle.y = row.miscEvent.y
-            local scaleFactor = 2.5
+            local scaleFactor = 0.1 --2.5
             muiData.tableCircle.isVisible = true
-            muiData.tableCircle.myCircleTrans = transition.to( muiData.tableCircle, { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+            muiData.tableCircle.myCircleTrans = transition.from( muiData.tableCircle, { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
             row.myGlowTrans = transition.to( row, { time=300,delay=150,alpha=0.4, transition=easing.outCirc, onComplete=M.subtleGlowRect } )
         end
 

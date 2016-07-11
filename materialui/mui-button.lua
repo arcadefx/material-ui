@@ -545,7 +545,7 @@ function M.createIconButton(options)
 
     local radiusOffset = 2.5
     if muiData.masterRatio > 1 then radiusOffset = 2.0 end
-    local maxWidth = checkbox.contentWidth - (radius * radiusOffset)
+    local maxWidth = checkbox.contentWidth * 0.6 -- - (radius * radiusOffset)
 
     local circleColor = textColor
     if options.circleColor ~= nil then

@@ -194,6 +194,8 @@ function M.createToolbarButton( options )
     end
     button["mygroup"]:insert( button["myText"], false )
 
+    local maxWidth = field.contentWidth * 2.5 -- (radius * 2.5)
+
     if useBothIconAndText == true then
         local options3 =
         {
@@ -225,16 +227,13 @@ function M.createToolbarButton( options )
         circleColor = options.circleColor
     end
 
-    button["myCircle"] = display.newCircle( options.height, options.height, radius )
+    button["myCircle"] = display.newCircle( options.height, options.height, maxWidth + M.getScaleVal(5) )
     button["myCircle"]:setFillColor( unpack(circleColor) )
     button["myCircle"].isVisible = false
     button["myCircle"].x = 0
     button["myCircle"].y = 0
     button["myCircle"].alpha = 0.3
     button["mygroup"]:insert( button["myCircle"], true ) -- insert and center bkgd
-
-    local maxWidth = field.contentWidth - (radius * 2.5)
-    local scaleFactor = ((maxWidth * 1.3) / radius) -- (since this is a radius of circle)
 
     thebutton = button["rectangle"]
     field = button["myText"]
@@ -255,10 +254,11 @@ function M.createToolbarButton( options )
             if muiData.touching == false then
                 muiData.touching = true
                 if options.touchpoint ~= nil and options.touchpoint == true then
-                    muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].x = event.x - muiData.widgetDict[options.basename]["radio"][options.name]["mygroup"].x
-                    muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].y = event.y - muiData.widgetDict[options.basename]["toolbar"][options.name]["mygroup"].y
+                    muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].x = 0 --muiData.widgetDict[options.basename]["toolbar"][options.name]["mygroup"].x
+                    muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].y = 0 --muiData.widgetDict[options.basename]["toolbar"][options.name]["mygroup"].y
                     muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].isVisible = true
-                    muiData.widgetDict[options.basename]["toolbar"][options.name].myCircleTrans = transition.to( muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+                    local scaleFactor = 0.1
+                    muiData.widgetDict[options.basename]["toolbar"][options.name].myCircleTrans = transition.from( muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
                 end
                 transition.to(field,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
             end
@@ -328,6 +328,7 @@ function M.createToolbar( options )
                 buttonHeight = options.buttonHeight,
                 x = x,
                 y = y,
+                touchpoint = options.touchpoint,
                 isChecked = v.isChecked,
                 isActive = v.isActive,
                 font = "MaterialIcons-Regular.ttf",

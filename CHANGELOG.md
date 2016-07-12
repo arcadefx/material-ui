@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.20] - 2016-07-12
+### Added
+- Added textfield animation when activating a field (fade in).
+
+### Change
+- Fixed placeholder text being empty after editing and leaving entry blank.
+- Fixed scene switch issue where circle would be present on next scene.
+
 ## [0.1.19] - 2016-07-11
 ### Added
 - Added touchpoint to toolbar.

@@ -210,8 +210,8 @@ function M.highlightTextField(widgetName, active)
 
         widget["lineanim"]:setStrokeColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
         transition.to(widget["lineanim"],{time=0, alpha=0.01})
-        transition.from(widget["lineanim"],{time=800, alpha=0.01})
         widget["lineanim"].isVisible = true
+        transition.from(widget["lineanim"],{time=800, alpha=0.01})
     else
         muiData.widgetDict[options.name]["lineanim"].isVisible = false
         color = options.inactiveColor
@@ -237,9 +237,6 @@ function M.textListener(event)
         M.updateUI(event, name)
         muiData.currentNativeFieldName = name
         M.highlightTextField(name, true)
-        if event.target.text ~= nil and string.len(event.target.text) > 0 then
-            event.target.placeholder = ''
-        end
     elseif ( event.phase == "ended" or event.phase == "submitted" ) then
         -- do something with text
         -- print( event.target.text )
@@ -256,7 +253,12 @@ function M.textListener(event)
                         text = text .. "*"
                     end
                 end
-                muiData.widgetDict[name]["textfieldfake"].text = text
+                if text ~= nil and string.len(text) > 0 then
+                    muiData.widgetDict[name]["textfieldfake"].text = text
+                else
+                    print("HERE???")
+                    muiData.widgetDict[name]["textfieldfake"].text = muiData.widgetDict[name]["textfield"].placeholder
+                end
             end
             M.setEventParameter(event, "muiTarget", muiData.widgetDict[name]["textfieldfake"])
             M.setEventParameter(event, "muiTargetValue", event.target.text)

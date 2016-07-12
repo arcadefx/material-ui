@@ -256,7 +256,6 @@ function M.textListener(event)
                 if text ~= nil and string.len(text) > 0 then
                     muiData.widgetDict[name]["textfieldfake"].text = text
                 else
-                    print("HERE???")
                     muiData.widgetDict[name]["textfieldfake"].text = muiData.widgetDict[name]["textfield"].placeholder
                 end
             end

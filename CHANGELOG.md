@@ -21,7 +21,7 @@ All notable changes to this project will be documented in this file.
 - Added touchpoint to toolbar.
 
 ### Change
-- Fixed touchpoint scaling for smoother radials.
+- Fixed touchpoint scaling for smoother/crisper animation.
 
 ## [0.1.18] - 2016-07-09
 ### Added

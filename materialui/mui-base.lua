@@ -552,6 +552,12 @@ function M.removeWidgets()
     M.removeWidgetOnBoarding()
   end
 
+  -- remove circle if present
+  if muiData.tableCircle ~= nil then
+    muiData.tableCircle.isVisible = false
+    muiData.tableCircle:removeSelf()
+  end
+
   Runtime:removeEventListener( "touch", M.eventSuperListner )
 
 end

@@ -104,6 +104,12 @@ function M.createTextField(options)
     muiData.widgetDict[options.name]["line"]:setStrokeColor( unpack(options.inactiveColor) )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["line"] )
 
+    muiData.widgetDict[options.name]["lineanim"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
+    muiData.widgetDict[options.name]["lineanim"].strokeWidth = M.getScaleVal(4)
+    muiData.widgetDict[options.name]["lineanim"]:setStrokeColor( unpack(options.inactiveColor) )
+    muiData.widgetDict[options.name]["lineanim"].isVisible = false
+    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["lineanim"] )
+
     local labelOptions =
     {
         --parent = textGroup,
@@ -201,8 +207,13 @@ function M.highlightTextField(widgetName, active)
             widget["textlabel"]:setFillColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
         end
         widget["textfield"]:setTextColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
-        widget["line"]:setStrokeColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
+
+        widget["lineanim"]:setStrokeColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
+        transition.to(widget["lineanim"],{time=0, alpha=0.01})
+        transition.from(widget["lineanim"],{time=800, alpha=0.01})
+        widget["lineanim"].isVisible = true
     else
+        muiData.widgetDict[options.name]["lineanim"].isVisible = false
         color = options.inactiveColor
         if widget["textlabel"] ~= nil then
             widget["textlabel"]:setFillColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
@@ -319,6 +330,12 @@ function M.createTextBox(options)
     muiData.widgetDict[options.name]["line"].strokeWidth = M.getScaleVal(4)
     muiData.widgetDict[options.name]["line"]:setStrokeColor( unpack(options.inactiveColor) )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["line"] )
+
+    muiData.widgetDict[options.name]["lineanim"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
+    muiData.widgetDict[options.name]["lineanim"].strokeWidth = M.getScaleVal(4)
+    muiData.widgetDict[options.name]["lineanim"]:setStrokeColor( unpack(options.inactiveColor) )
+    muiData.widgetDict[options.name]["lineanim"].isVisible = false
+    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["lineanim"] )
 
     local labelOptions =
     {

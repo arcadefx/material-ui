@@ -734,6 +734,8 @@ function M.removeWidgetTextField(widgetName)
         muiData.widgetDict[widgetName]["textlabel"]:removeSelf()
         muiData.widgetDict[widgetName]["textlabel"] = nil
     end
+    muiData.widgetDict[widgetName]["lineanim"]:removeSelf()
+    muiData.widgetDict[widgetName]["lineanim"] = nil
     muiData.widgetDict[widgetName]["line"]:removeSelf()
     muiData.widgetDict[widgetName]["line"] = nil
     muiData.widgetDict[widgetName]["rect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["rect"])

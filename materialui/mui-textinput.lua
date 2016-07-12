@@ -400,4 +400,36 @@ function M.textfieldCallBack(event)
     end
 end
 
+function M.removeWidgetTextField(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
+    muiData.widgetDict[widgetName]["textfieldfake"].isVisible = false
+    muiData.widgetDict[widgetName]["textfieldfake"]:removeSelf()
+    muiData.widgetDict[widgetName]["textfield"].isVisible = false
+    muiData.widgetDict[widgetName]["textfield"]:removeSelf()
+    muiData.widgetDict[widgetName]["textfield"] = nil
+    if muiData.widgetDict[widgetName]["textlabel"] ~= nil then
+        muiData.widgetDict[widgetName]["textlabel"]:removeSelf()
+        muiData.widgetDict[widgetName]["textlabel"] = nil
+    end
+    muiData.widgetDict[widgetName]["lineanim"]:removeSelf()
+    muiData.widgetDict[widgetName]["lineanim"] = nil
+    muiData.widgetDict[widgetName]["line"]:removeSelf()
+    muiData.widgetDict[widgetName]["line"] = nil
+    muiData.widgetDict[widgetName]["rect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["rect"])
+    muiData.widgetDict[widgetName]["rect"]:removeSelf()
+    muiData.widgetDict[widgetName]["rect"] = nil
+    muiData.widgetDict[widgetName]["container"]:removeSelf()
+    muiData.widgetDict[widgetName]["container"] = nil
+    muiData.widgetDict[widgetName] = nil
+end
+
+function M.removeWidgetTextBox(widgetName)
+    M.removeWidgetTextField(widgetName)
+end
+
 return M

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.21] - 2016-07-12
+### Change
+- Fixed button action not firing when previously on TableView or ScrollView.
+- Deprecated the prior event variable storage. Use the methods 'setEventParameter' and 'getEventParameter' for variables.
+- Moved all remove widget calls into the appropriate mui-<name>.lua modules.
+
 ## [0.1.20] - 2016-07-12
 ### Added
 - Added textfield animation when activating a field (fade in).

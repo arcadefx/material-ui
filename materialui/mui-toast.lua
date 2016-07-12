@@ -185,4 +185,21 @@ function M.removeToast(event)
     end
 end
 
+function M.removeWidgetToast(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
+    muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["sliderrect"])
+    muiData.widgetDict[widgetName]["myText"]:removeSelf()
+    muiData.widgetDict[widgetName]["myText"] = nil
+    muiData.widgetDict[widgetName]["rrect"]:removeSelf()
+    muiData.widgetDict[widgetName]["rrect"] = nil
+    muiData.widgetDict[widgetName]["container"]:removeSelf()
+    muiData.widgetDict[widgetName]["container"] = nil
+    muiData.widgetDict[widgetName] = nil
+end
+
 return M

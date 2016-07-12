@@ -173,9 +173,9 @@ function M.createElipsesForProgress( options )
 	    block.strokeWidth = M.getScaleVal(4)
 	    block:setStrokeColor( unpack( options.fillColor ) )
 		if i == 1 then
-			block:setFillColor( unpack( options.fillColor ) )
+            block:setFillColor( unpack( {1,0,0,0} ) )
 		else
-			block:setFillColor( unpack( {1,0,0,0} ) )
+            block:setFillColor( unpack( options.fillColor ) )
 		end
 	    options.group:insert( block )
 	    if options.shape == "rect" then
@@ -196,12 +196,29 @@ function M.updateSlideIndicator()
 		slideIndicator = muiData.onBoardData[muiData.slideData.slideIndicator]["block-"..i]
 		if slideIndicator ~= nil then
 			if i == muiData.currentSlide then
-				slideIndicator:setFillColor( unpack( muiData.slideData.fillColor ) )
+                slideIndicator:setFillColor( unpack( { 1, 0, 0, 0 } ) )
 			else
-				slideIndicator:setFillColor( unpack( { 1, 0, 0, 0 } ) )
+                slideIndicator:setFillColor( unpack( muiData.slideData.fillColor ) )
 			end
 	    end
     end
+end
+
+function M.removeWidgetOnBoarding()
+    if muiData.onBoardData == nil then return end
+
+    for i, groups in pairs(muiData.onBoardData) do
+        if groups ~= nil then
+            for j, group in pairs(groups) do
+                if group ~= nil then
+                    group:removeSelf()
+                    group = nil
+                end
+            end
+            groups = nil
+        end
+    end
+    muiData.onBoardData = nil
 end
 
 return M

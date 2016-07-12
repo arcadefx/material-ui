@@ -392,4 +392,15 @@ function M.onRowTouchDemo(event)
     end
 end
 
+function M.removeWidgetTableView(widgetName)
+    if widgetName == nil then
+        return
+    end
+    if muiData.widgetDict[widgetName] == nil then return end
+    if muiData.widgetDict[widgetName]["tableview"] == nil then return end
+    muiData.widgetDict[widgetName]["tableview"]:deleteAllRows()
+    muiData.widgetDict[widgetName]["tableview"]:removeSelf()
+    muiData.widgetDict[widgetName]["tableview"] = nil
+end
+
 return M

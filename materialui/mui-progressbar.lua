@@ -263,4 +263,24 @@ function M.postProgressCallBack( object )
     print("postProgressCallBack")
 end
 
+function M.removeWidgetProgressBar(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
+    muiData.widgetDict[widgetName]["progressbackdrop"]:removeSelf()
+    muiData.widgetDict[widgetName]["progressbackdrop"] = nil
+    muiData.widgetDict[widgetName]["progressbar"]:removeSelf()
+    muiData.widgetDict[widgetName]["progressbar"] = nil
+    if muiData.widgetDict[widgetName]["label"] ~= nil then
+        muiData.widgetDict[widgetName]["label"]:removeSelf()
+        muiData.widgetDict[widgetName]["label"] = nil
+    end
+    muiData.widgetDict[widgetName]["mygroup"]:removeSelf()
+    muiData.widgetDict[widgetName]["mygroup"] = nil
+    muiData.widgetDict[widgetName] = nil
+end
+
 return M

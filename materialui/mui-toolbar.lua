@@ -412,4 +412,57 @@ function M.actionForToolbarDemo( event )
     end
 end
 
+function M.removeWidgetToolbar(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
+    for name in pairs(muiData.widgetDict[widgetName]["toolbar"]) do
+        M.removeWidgetToolbarButton(muiData.widgetDict, widgetName, name)
+        if name ~= "slider" and name ~= "rectBak" then
+            muiData.widgetDict[widgetName]["toolbar"][name] = nil
+        end
+    end
+    if muiData.widgetDict[widgetName]["toolbar"]["slider"] ~= nil then
+        muiData.widgetDict[widgetName]["toolbar"]["slider"]:removeSelf()
+        muiData.widgetDict[widgetName]["toolbar"]["slider"] = nil
+    end
+    if muiData.widgetDict[widgetName]["toolbar"]["rectBak"] ~= nil then
+        muiData.widgetDict[widgetName]["toolbar"]["rectBak"]:removeSelf()
+        muiData.widgetDict[widgetName]["toolbar"]["rectBak"] = nil
+    end
+end
+
+function M.removeWidgetToolbarButton(widgetDict, toolbarName, name)
+    if toolbarName == nil then
+        return
+    end
+    if name == nil then
+        return
+    end
+    if widgetDict[toolbarName]["toolbar"][name] == nil then
+        return
+    end
+    if type(widgetDict[toolbarName]["toolbar"][name]) == "table" then
+        if widgetDict[toolbarName]["toolbar"][name]["rectangle"] ~= nil then
+            widgetDict[toolbarName]["toolbar"][name]["rectangle"]:removeEventListener( "touch", muiData.widgetDict[toolbarName]["toolbar"][name]["rectangle"] )
+            widgetDict[toolbarName]["toolbar"][name]["rectangle"]:removeSelf()
+            widgetDict[toolbarName]["toolbar"][name]["rectangle"] = nil
+            widgetDict[toolbarName]["toolbar"][name]["myText"]:removeSelf()
+            widgetDict[toolbarName]["toolbar"][name]["myText"] = nil
+            if widgetDict[toolbarName]["toolbar"][name]["myText2"] ~= nil then
+                widgetDict[toolbarName]["toolbar"][name]["myText2"]:removeSelf()
+                widgetDict[toolbarName]["toolbar"][name]["myText2"] = nil
+            end
+            widgetDict[toolbarName]["toolbar"][name]["myCircle"]:removeSelf()
+            widgetDict[toolbarName]["toolbar"][name]["myCircle"] = nil
+            widgetDict[toolbarName]["toolbar"][name]["mygroup"]:removeSelf()
+            widgetDict[toolbarName]["toolbar"][name]["mygroup"] = nil
+            widgetDict[toolbarName]["toolbar"][name] = nil
+        end
+    end
+end
+
 return M

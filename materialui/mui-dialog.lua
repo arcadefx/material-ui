@@ -280,4 +280,32 @@ function M.dialogClose(e)
     M.closeDialog(e)
 end
 
+function M.removeWidgetDialog()
+    if muiData.dialogName == nil then
+        return
+    end
+    local widgetName = muiData.dialogName
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
+    -- remove buttons
+    M.removeWidgetRectButton("okay_dialog_button")
+    M.removeWidgetRectButton("cancel_dialog_button")
+
+    -- remove the rest
+    -- muiData.widgetDict[widgetName]["container"]["myText"]:removeSelf()
+    -- muiData.widgetDict[widgetName]["container"]["myText"] = nil
+    muiData.widgetDict[widgetName]["rectbackdrop"]:removeSelf()
+    muiData.widgetDict[widgetName]["rectbackdrop"] = nil
+    muiData.widgetDict[widgetName]["container"]["rrect"]:removeSelf()
+    muiData.widgetDict[widgetName]["container"]["rrect"] = nil
+    muiData.widgetDict[widgetName]["container"]["rrect2"]:removeSelf()
+    muiData.widgetDict[widgetName]["container"]["rrect2"] = nil
+    muiData.widgetDict[widgetName]["container"]:removeSelf()
+    muiData.widgetDict[widgetName]["container"] = nil
+    muiData.widgetDict[widgetName] = nil
+    muiData.dialogName = nil
+    muiData.dialogInUse = false
+end
+
 return M

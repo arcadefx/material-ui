@@ -294,4 +294,54 @@ function M.finishSelector(parentName)
     M.removeWidgetSelector(parentName, "listonly")
 end
 
+function M.removeWidgetSelector(widgetName, listonly)
+    if widgetName == nil then
+        return
+    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
+    if listonly ~= nil then
+        M.removeWidgetTableView(widgetName .. "-List")
+        M.removeSelectorGroup(widgetName)
+        return
+    else
+        M.removeWidgetTableView(widgetName .. "-List")
+    end
+
+    muiData.widgetDict[widgetName]["selectorfieldfake"]:removeEventListener("touch", M.selectorListener)
+
+    muiData.widgetDict[widgetName]["selectorfieldarrow"]:removeSelf()
+    muiData.widgetDict[widgetName]["selectorfieldarrow"] = nil
+    muiData.widgetDict[widgetName]["selectorfieldfake"]:removeSelf()
+    muiData.widgetDict[widgetName]["selectorfieldfake"] = nil
+    muiData.widgetDict[widgetName]["textlabel"]:removeSelf()
+    muiData.widgetDict[widgetName]["textlabel"] = nil
+    muiData.widgetDict[widgetName]["rect"]:removeSelf()
+    muiData.widgetDict[widgetName]["rect"] = nil
+    muiData.widgetDict[widgetName]["line"]:removeSelf()
+    muiData.widgetDict[widgetName]["line"] = nil
+    M.removeSelectorGroup(widgetName)
+    muiData.widgetDict[widgetName]["container"]:removeSelf()
+    muiData.widgetDict[widgetName]["container"] = nil
+    muiData.widgetDict[widgetName] = nil
+end
+
+function M.removeSelectorGroup(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
+    if muiData.widgetDict[widgetName]["rect2"] ~= nil then
+        muiData.widgetDict[widgetName]["rect2"]:removeSelf()
+        muiData.widgetDict[widgetName]["rect2"] = nil
+    end
+    if muiData.widgetDict[widgetName]["mygroup"] ~= nil then
+        muiData.widgetDict[widgetName]["mygroup"]:removeSelf()
+        muiData.widgetDict[widgetName]["mygroup"] = nil
+    end
+end
+
 return M

@@ -176,4 +176,44 @@ function M.attachToNavBar(navbar_name, options )
     muiData.widgetDict[navbar_name]["container"]:insert( widget, true )
 end
 
+function M.removeNavbar(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+    if muiData.widgetDict[widgetName]["list"] == nil then return end
+
+    -- remove objects from the bar
+    -- muiData.navbarSupportedTypes = { "RRectButton", "RectButton", "IconButton", "Slider", "TextField", "Generic" }
+    for name, widgetType in pairs(muiData.widgetDict[widgetName]["list"]) do
+        if muiData.widgetDict[widgetName]["list"][name] ~= nil then
+            if widgetType == "RRectButton" then
+                M.removeWidgetRRectButton(name)
+            elseif widgetType == "RectButton" then
+                M.removeWidgetRectButton(name)
+            elseif widgetType == "IconButton" then
+                M.removeWidgetIconButton(name)
+            elseif widgetType == "RectButton" then
+                M.removeWidgetSlider(name)
+            elseif widgetType == "RectButton" then
+                M.removeWidgetTextField(name)
+            elseif widgetType == "Generic" then
+              if muiData.widgetDict[widgetName]["destroy"] ~= nil and muiData.widgetDict[widgetName]["destroy"][name] ~= nil then
+                assert( muiData.widgetDict[widgetName]["destroy"][name] )(event)
+              end
+            end
+        end
+    end
+
+    if muiData.widgetDict[widgetName]["rect"] ~= nil then
+        muiData.widgetDict[widgetName]["rect"]:removeSelf()
+        muiData.widgetDict[widgetName]["rect"] = nil
+    end
+    if muiData.widgetDict[widgetName]["container"] ~= nil then
+        muiData.widgetDict[widgetName]["container"]:removeSelf()
+        muiData.widgetDict[widgetName]["container"] = nil
+    end
+end
+
 return M

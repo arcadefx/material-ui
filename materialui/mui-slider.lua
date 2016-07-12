@@ -260,4 +260,23 @@ function M.sliderCallBack( event )
     end
 end
 
+function M.removeWidgetSlider(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
+    muiData.widgetDict[widgetName]["sliderrect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["sliderrect"])
+    muiData.widgetDict[widgetName]["slidercircle"]:removeSelf()
+    muiData.widgetDict[widgetName]["slidercircle"] = nil
+    muiData.widgetDict[widgetName]["sliderbar"]:removeSelf()
+    muiData.widgetDict[widgetName]["sliderbar"] = nil
+    muiData.widgetDict[widgetName]["sliderrect"]:removeSelf()
+    muiData.widgetDict[widgetName]["sliderrect"] = nil
+    muiData.widgetDict[widgetName]["container"]:removeSelf()
+    muiData.widgetDict[widgetName]["container"] = nil
+    muiData.widgetDict[widgetName] = nil
+end
+
 return M

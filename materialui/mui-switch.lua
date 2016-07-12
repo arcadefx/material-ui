@@ -233,4 +233,27 @@ function M.actionForSwitch(event)
     end
 end
 
+function M.removeWidgetToggleSwitch(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
+    muiData.widgetDict[widgetName]["mygroup"]["circle"]:removeSelf()
+    muiData.widgetDict[widgetName]["mygroup"]["circle"] = nil
+    muiData.widgetDict[widgetName]["mygroup"]["circle2"]:removeSelf()
+    muiData.widgetDict[widgetName]["mygroup"]["circle2"] = nil
+    muiData.widgetDict[widgetName]["mygroup"]["circle1"]:removeSelf()
+    muiData.widgetDict[widgetName]["mygroup"]["circle1"] = nil
+    muiData.widgetDict[widgetName]["mygroup"]["rect"]:removeSelf()
+    muiData.widgetDict[widgetName]["mygroup"]["rect"] = nil
+    muiData.widgetDict[widgetName]["mygroup"]["rectmaster"]:removeEventListener("touch", muiData.widgetDict[widgetName]["rectmaster"])
+    muiData.widgetDict[widgetName]["mygroup"]["rectmaster"]:removeSelf()
+    muiData.widgetDict[widgetName]["mygroup"]["rectmaster"] = nil
+    muiData.widgetDict[widgetName]["mygroup"]:removeSelf()
+    muiData.widgetDict[widgetName]["mygroup"] = nil
+    muiData.widgetDict[widgetName] = nil
+end
+
 return M

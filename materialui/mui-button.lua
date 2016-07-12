@@ -229,11 +229,11 @@ function M.createRRectButton(options)
                         transition.fadeOut(muiData.widgetDict[options.name]["rrect"],{time=options.clickAnimation["time"]})
                     end
                     event.target = muiData.widgetDict[options.name]["rrect"]
-                    event.callBackData = options.callBackData
+                    --event.callBackData = options.callBackData
 
                     M.setEventParameter(event, "muiTargetValue", options.value)
                     M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["rrect"])
-                    M.setEventParameter(event, "callBackData", options.callBackData)
+                    M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
 
                     if options.callBack ~= nil then
                         assert( options.callBack )(event)
@@ -417,10 +417,10 @@ function M.createRectButton(options)
                         transition.fadeOut(muiData.widgetDict[options.name]["rrect"],{time=options.clickAnimation["time"]})
                     end
                     event.target = muiData.widgetDict[options.name]["rrect"]
-                    event.callBackData = options.callBackData
 
                     M.setEventParameter(event, "muiTargetValue", options.value)
                     M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["rrect"])
+                    M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
 
                     if options.callBack ~= nil then
                        assert( options.callBack )(event)
@@ -591,10 +591,10 @@ function M.createIconButton(options)
                     event.target = muiData.widgetDict[options.name]["checkbox"]
                     event.altTarget = muiData.widgetDict[options.name]["myText"]
                     event.myTargetName = options.name
-                    event.callBackData = options.callBackData
 
                     M.setEventParameter(event, "muiTargetValue", options.value)
                     M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["myText"])
+                    M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
 
                     if options.callBack ~= nil then
                         assert( options.callBack )(event)
@@ -764,10 +764,10 @@ function M.createCircleButton(options)
                 if muiData.interceptMoved == false then
                     event.target = muiData.widgetDict[options.name]["circlemain"]
                     event.myTargetName = options.name
-                    event.callBackData = options.callBackData
 
                     M.setEventParameter(event, "muiTargetValue", options.value)
                     M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["circlemain"])
+                    M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
 
                     if options.callBack ~= nil then
                         assert( options.callBack )(event)
@@ -986,10 +986,10 @@ function M.createRadioButton(options)
                     event.myTargetName = options.name
                     event.myTargetBasename = options.basename
                     event.altTarget = muiData.widgetDict[options.basename]["radio"][options.name]["myText"]
-                    event.callBackData = options.callBackData
 
                     M.setEventParameter(event, "muiTargetValue", options.value)
                     M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.basename]["radio"][options.name]["myText"])
+                    M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
 
                     if options.callBack ~= nil then
                         assert( options.callBack )(event)
@@ -1122,6 +1122,103 @@ end
 
 function M.actionForButton( e )
     print("button action!")
+end
+
+function M.removeWidgetRRectButton(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
+    muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["rrect"])
+    muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
+    muiData.widgetDict[widgetName]["myCircle"] = nil
+    muiData.widgetDict[widgetName]["myText"]:removeSelf()
+    muiData.widgetDict[widgetName]["myText"] = nil
+    muiData.widgetDict[widgetName]["rrect"]:removeSelf()
+    muiData.widgetDict[widgetName]["rrect"] = nil
+    muiData.widgetDict[widgetName]["rrect2"]:removeSelf()
+    muiData.widgetDict[widgetName]["rrect2"] = nil
+    muiData.widgetDict[widgetName]["container"]:removeSelf()
+    muiData.widgetDict[widgetName]["container"] = nil
+    muiData.widgetDict[widgetName] = nil
+end
+
+function M.removeWidgetRectButton(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
+    muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["rrect"])
+    muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
+    muiData.widgetDict[widgetName]["myCircle"] = nil
+    muiData.widgetDict[widgetName]["myText"]:removeSelf()
+    muiData.widgetDict[widgetName]["myText"] = nil
+    muiData.widgetDict[widgetName]["rrect"]:removeSelf()
+    muiData.widgetDict[widgetName]["rrect"] = nil
+    muiData.widgetDict[widgetName]["container"]:removeSelf()
+    muiData.widgetDict[widgetName]["container"] = nil
+    muiData.widgetDict[widgetName] = nil
+end
+
+function M.removeWidgetCircleButton(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
+    muiData.widgetDict[widgetName]["circlemain"]:removeEventListener("touch", muiData.widgetDict[widgetName]["circlemain"])
+    muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
+    muiData.widgetDict[widgetName]["myCircle"] = nil
+    muiData.widgetDict[widgetName]["myText"]:removeSelf()
+    muiData.widgetDict[widgetName]["myText"] = nil
+    muiData.widgetDict[widgetName]["circlemain"]:removeSelf()
+    muiData.widgetDict[widgetName]["circlemain"] = nil
+    muiData.widgetDict[widgetName]["mygroup"]:removeSelf()
+    muiData.widgetDict[widgetName]["mygroup"] = nil
+    muiData.widgetDict[widgetName] = nil
+end
+
+function M.removeWidgetIconButton(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
+    muiData.widgetDict[widgetName]["myText"]:removeEventListener("touch", muiData.widgetDict[widgetName]["myText"])
+    muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
+    muiData.widgetDict[widgetName]["myCircle"] = nil
+    muiData.widgetDict[widgetName]["myText"]:removeSelf()
+    muiData.widgetDict[widgetName]["myText"] = nil
+    muiData.widgetDict[widgetName]["mygroup"]:removeSelf()
+    muiData.widgetDict[widgetName]["mygroup"] = nil
+    muiData.widgetDict[widgetName] = nil
+end
+
+function M.removeWidgetRadioButton(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
+    for name in pairs(muiData.widgetDict[widgetName]["radio"]) do
+        muiData.widgetDict[widgetName]["radio"][name]["myText"]:removeEventListener( "touch", muiData.widgetDict[widgetName]["radio"][name]["myText"] )
+        muiData.widgetDict[widgetName]["radio"][name]["myCircle"]:removeSelf()
+        muiData.widgetDict[widgetName]["radio"][name]["myCircle"] = nil
+        muiData.widgetDict[widgetName]["radio"][name]["myText"]:removeSelf()
+        muiData.widgetDict[widgetName]["radio"][name]["myText"] = nil
+        muiData.widgetDict[widgetName]["radio"][name]["myLabel"]:removeSelf()
+        muiData.widgetDict[widgetName]["radio"][name]["myLabel"] = nil
+        muiData.widgetDict[widgetName]["radio"][name]["mygroup"]:removeSelf()
+        muiData.widgetDict[widgetName]["radio"][name]["mygroup"] = nil
+        muiData.widgetDict[widgetName]["radio"][name] = nil
+    end
 end
 
 return M

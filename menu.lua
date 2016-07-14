@@ -160,11 +160,11 @@ function scene:create( event )
     end
     mui.createCircleButton({
         name = "alice-button",
-        text = "D",
+        text = "date_range",
         radius = mui.getScaleVal(46),
         x = mui.getScaleVal(500),
         y = mui.getScaleVal(120),
-        font = native.systemFont,
+        font = "MaterialIcons-Regular.ttf",
         textColor = { 1, 1, 1, 1 },
         fillColor = { 0.25, 0.75, 1, 1 },
         callBack = showDatePicker
@@ -189,11 +189,11 @@ function scene:create( event )
     end
     mui.createCircleButton({
         name = "bueler-button",
-        text = "T",
+        text = "av_timer",
         radius = mui.getScaleVal(46),
         x = mui.getScaleVal(500),
         y = mui.getScaleVal(220),
-        font = native.systemFont,
+        font = "MaterialIcons-Regular.ttf",
         textColor = { 1, 1, 1, 1 },
         fillColor = { 0, 0.46, 1 },
         textAlign = "center",

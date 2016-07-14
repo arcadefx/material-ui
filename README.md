@@ -70,7 +70,6 @@ Please read Lua code to find all parameters and see example in the repo call men
 | Method        | Short Description | Example  |
 | ------------- | ------------- | :-----:|
 | `createCircleButton` | Create a circle button with a single character or even a word.| menu.lua |
-| `createDatePicker` | Create a date wheel picker.| menu.lua |
 | `createDialog` | Create a dialog (modal) with content. Supports up to two buttons (Okay, Cancel) with callbacks.       | menu.lua |
 | `createIconButton`      | Create an icon button using the material design icon font. Use this to create check boxes and more. | menu.lua |
 | `createNavbar`      | Create a navigation bar. Allows left and right alignment of attached widgets. Supports widget types: BasicText, CircleButton, IconButton, RRectButton, RectButton, Slider, TextField. Additional widget types will be added. | fun.lua |
@@ -83,7 +82,6 @@ Please read Lua code to find all parameters and see example in the repo call men
 | `createTableView` | Create a scrollable table view      |    menu.lua/fun.lua |
 | `createTextBox` | Create a text box with label above (for now)      |    fun.lua |
 | `createTextField` | Create a text field with label above (for now)      |    menu.lua/fun.lua |
-| `createTimePicker` | Create a time wheel picker. (set militaryTime = true for 24 hour selection | menu.lua |
 | `createToast` | Create simple "toast" notifications on screen. Colors, dimensions and fonts can be specified.      |    fun.lua |
 | `createToggleSwitch` | Create a toggle switch.      |    menu.lua |
 | `createToolbar` | Create a horizontal toolbar with icon, text or icon + text (icon on top, text on bottom) buttons      |    menu.lua |

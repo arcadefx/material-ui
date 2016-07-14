@@ -160,14 +160,14 @@ function scene:create( event )
     end
     mui.createCircleButton({
         name = "alice-button",
-        text = "date_range",
+        text = "A",
         radius = mui.getScaleVal(46),
         x = mui.getScaleVal(500),
         y = mui.getScaleVal(120),
-        font = "MaterialIcons-Regular.ttf",
+        font = native.systemFont,
         textColor = { 1, 1, 1, 1 },
         fillColor = { 0.25, 0.75, 1, 1 },
-        callBack = showDatePicker
+        callBack = nil -- do not like wheel picker on native device.
     })
 
     -- time picker example
@@ -189,15 +189,15 @@ function scene:create( event )
     end
     mui.createCircleButton({
         name = "bueler-button",
-        text = "av_timer",
+        text = "B",
         radius = mui.getScaleVal(46),
         x = mui.getScaleVal(500),
         y = mui.getScaleVal(220),
-        font = "MaterialIcons-Regular.ttf",
+        font = native.systemFont,
         textColor = { 1, 1, 1, 1 },
         fillColor = { 0, 0.46, 1 },
         textAlign = "center",
-        callBack = showTimePicker
+        callBack = nil -- do not like wheel picker on native device.
     })
 
     -- simulates a checkbox but can be other toggle buttons too!

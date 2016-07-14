@@ -87,8 +87,7 @@ function M.createToggleSwitch(options)
     muiData.widgetDict[options.name].name = options.name
     muiData.widgetDict[options.name]["type"] = "ToggleSwitch"
     muiData.widgetDict[options.name]["mygroup"] = display.newGroup()
-    muiData.widgetDict[options.name]["mygroup"].x = x
-    muiData.widgetDict[options.name]["mygroup"].y = y
+    muiData.widgetDict[options.name]["mygroup"]:translate( x, y )
     muiData.widgetDict[options.name]["touching"] = false
 
     if options.callBack ~= nil then

@@ -140,22 +140,62 @@ function scene:create( event )
         -- callBack = mui.actionForPlus
     })
 
+    -- date picker example
+    local showDatePicker = function(event)
+        mui.createDatePicker({
+            name = "datepicker-demo",
+            font = native.systemFont,
+            fontSize = mui.getScaleVal(26),
+            fontColor = { 0.7, 0.7, 0.7, 1 }, -- non-select items
+            fontColorSelected = { 0, 0, 0, 1 }, -- selected items
+            columnColor = { 1, 1, 1, 1 }, -- background color for columns
+            strokeColor = { 0.25, 0.75, 1, 1 }, -- the border color around widget
+            horizontalAlign = "left", -- left or right
+            verticalAlign = "center", -- center, top, bottom,
+            targetOrigin = event.target, -- required for placement
+            fromYear = 1969,
+            toYear = 2020,
+            startMonth = 11,
+            startDay = 15,
+            startYear = 2015,
+            callBack = mui.datePickerCallBack,
+        })
+    end
     mui.createCircleButton({
         name = "alice-button",
-        text = "A",
+        text = "D",
         radius = mui.getScaleVal(46),
         x = mui.getScaleVal(500),
         y = mui.getScaleVal(120),
         font = native.systemFont,
         textColor = { 1, 1, 1, 1 },
         fillColor = { 0.25, 0.75, 1, 1 },
-        textAlign = "center",
-        callBack = mui.actionForButton
+        callBack = showDatePicker
     })
 
+    -- date picker example
+    local showTimePicker = function(event)
+        mui.createTimePicker({
+            name = "timepicker-demo",
+            font = native.systemFont,
+            fontSize = mui.getScaleVal(26),
+            fontColor = { 0.7, 0.7, 0.7, 1 }, -- non-select items
+            fontColorSelected = { 0, 0, 0, 1 }, -- selected items
+            columnColor = { 1, 1, 1, 1 }, -- background color for columns
+            strokeColor = { 0.25, 0.75, 1, 1 }, -- the border color around widget
+            horizontalAlign = "left", -- left or right
+            verticalAlign = "center", -- center, top, bottom,
+            targetOrigin = event.target, -- required for placement
+            startHour = 11,
+            startMinute = 15,
+            startSecond = 0,
+            startAMPM = "am",
+            callBack = mui.timePickerCallBack,
+        })
+    end
     mui.createCircleButton({
         name = "bueler-button",
-        text = "B",
+        text = "T",
         radius = mui.getScaleVal(46),
         x = mui.getScaleVal(500),
         y = mui.getScaleVal(220),
@@ -163,7 +203,7 @@ function scene:create( event )
         textColor = { 1, 1, 1, 1 },
         fillColor = { 0, 0.46, 1 },
         textAlign = "center",
-        callBack = mui.actionForButton
+        callBack = showTimePicker
     })
 
     -- simulates a checkbox but can be other toggle buttons too!

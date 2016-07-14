@@ -421,7 +421,6 @@ function M.createRectButton(options)
                     M.setEventParameter(event, "muiTargetValue", options.value)
                     M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["rrect"])
                     M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
-
                     if options.callBack ~= nil then
                        assert( options.callBack )(event)
                     end

@@ -2,12 +2,6 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.22] - 2016-07-13
-### Added
-- A date wheel picker using Corona SDK wheel picker. Use method createDatePicker(), see menu.lua
-- A time wheel picker using Corona SDK wheel picker. Use method createTimePicker(), see menu.lua
-- Time picker can specify 24 hours setting militaryTime = true in options.
-
 ## [0.1.21] - 2016-07-12
 ### Change
 - Fixed button action not firing when previously on TableView or ScrollView.

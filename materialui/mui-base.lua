@@ -147,6 +147,8 @@ end
 function M.getEventParameter(event, key)
     if event ~= nil and event.muiDict ~= nil and key ~= nil then
         return event.muiDict[key]
+    else
+      print("nothing for key "..key)
     end
     return nil
 end
@@ -169,6 +171,8 @@ function M.getWidgetBaseObject(name)
                widgetData = muiData.widgetDict[widget]["text"]
             elseif widgetType == "CircleButton" then
                widgetData = muiData.widgetDict[widget]["circlemain"]
+            elseif widgetType == "DatePicker" then
+               widgetData = muiData.widgetDict[widget]["container"]
             elseif widgetType == "RRectButton" then
                widgetData = muiData.widgetDict[widget]["container"]
             elseif widgetType == "RectButton" then
@@ -185,6 +189,8 @@ function M.getWidgetBaseObject(name)
             elseif widgetType == "TextField" then
                widgetData = muiData.widgetDict[widget]["container"]
             elseif widgetType == "TextBox" then
+               widgetData = muiData.widgetDict[widget]["container"]
+            elseif widgetType == "TimePicker" then
                widgetData = muiData.widgetDict[widget]["container"]
             elseif widgetType == "ProgressBar" then
                widgetData = muiData.widgetDict[widget]["mygroup"]
@@ -377,6 +383,17 @@ function M.isTouchPointOutOfRange( event )
     return success
 end
 
+function M.getWidthForFontWithText(options)
+  if options == nil then return 125 end
+
+  local textToMeasure = display.newText( options.text, 0, 0, options.font, options.fontSize )
+  local width = textToMeasure.contentWidth
+  textToMeasure:removeSelf()
+  textToMeasure = nil
+
+  return width
+end
+
 function M.scrollListener( event )
     local phase = event.phase
     if event.phase == nil then return end
@@ -520,6 +537,8 @@ function M.removeWidgets()
       if widgetType ~= nil and muiData.widgetDict[widget] ~= nil then
         if widgetType == "CircleButton" then
             M.removeWidgetCircleButton(widget)
+        elseif widgetType == "DatePicker" then
+            M.removeWidgetDatePicker(widget)
         elseif widgetType == "RRectButton" then
             M.removeWidgetRRectButton(widget)
         elseif widgetType == "RectButton" then
@@ -536,6 +555,8 @@ function M.removeWidgets()
             M.removeWidgetTextField(widget)
         elseif widgetType == "TextBox" then
             M.removeWidgetTextBox(widget)
+        elseif widgetType == "TimePicker" then
+            M.removeWidgetTimePicker(widget)
         elseif widgetType == "ProgressBar" then
             M.removeWidgetProgressBar(widget)
         elseif widgetType == "ToggleSwitch" then

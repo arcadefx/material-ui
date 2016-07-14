@@ -150,9 +150,6 @@ function scene:create( event )
             fontColorSelected = { 0, 0, 0, 1 }, -- selected items
             columnColor = { 1, 1, 1, 1 }, -- background color for columns
             strokeColor = { 0.25, 0.75, 1, 1 }, -- the border color around widget
-            horizontalAlign = "left", -- left or right
-            verticalAlign = "center", -- center, top, bottom,
-            targetOrigin = event.target, -- required for placement
             fromYear = 1969,
             toYear = 2020,
             startMonth = 11,
@@ -173,7 +170,7 @@ function scene:create( event )
         callBack = showDatePicker
     })
 
-    -- date picker example
+    -- time picker example
     local showTimePicker = function(event)
         mui.createTimePicker({
             name = "timepicker-demo",
@@ -183,9 +180,6 @@ function scene:create( event )
             fontColorSelected = { 0, 0, 0, 1 }, -- selected items
             columnColor = { 1, 1, 1, 1 }, -- background color for columns
             strokeColor = { 0.25, 0.75, 1, 1 }, -- the border color around widget
-            horizontalAlign = "left", -- left or right
-            verticalAlign = "center", -- center, top, bottom,
-            targetOrigin = event.target, -- required for placement
             startHour = 11,
             startMinute = 15,
             startSecond = 0,

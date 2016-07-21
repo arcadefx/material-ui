@@ -172,7 +172,7 @@ function M.getWidgetBaseObject(name)
             elseif widgetType == "CircleButton" then
                widgetData = muiData.widgetDict[widget]["circlemain"]
             elseif widgetType == "DatePicker" then
-               widgetData = muiData.widgetDict[widget]["container"]
+               widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "RRectButton" then
                widgetData = muiData.widgetDict[widget]["container"]
             elseif widgetType == "RectButton" then
@@ -191,7 +191,7 @@ function M.getWidgetBaseObject(name)
             elseif widgetType == "TextBox" then
                widgetData = muiData.widgetDict[widget]["container"]
             elseif widgetType == "TimePicker" then
-               widgetData = muiData.widgetDict[widget]["container"]
+               widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "ProgressBar" then
                widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "ToggleSwitch" then
@@ -497,6 +497,8 @@ function M.hideWidget(widgetName, options)
       if widgetType ~= nil then
         if widgetType == "CircleButton" then
             muiData.widgetDict[widget]["circlemain"].isVisible = showWidget
+        elseif widgetType == "DatePicker" or widgetType == "TimePicker" then
+            muiData.widgetDict[widget]["mygroup"].isVisible = showWidget
         elseif widgetType == "RRectButton" or widgetType == "RectButton" then
             muiData.widgetDict[widget]["container"].isVisible = showWidget
         elseif widgetType == "IconButton" or widgetType == "RadioButton" then

@@ -192,6 +192,8 @@ function M.removeNavbar(widgetName)
                 M.removeWidgetRRectButton(name)
             elseif widgetType == "RectButton" then
                 M.removeWidgetRectButton(name)
+            elseif widgetType == "CircleButton" then
+                M.removeWidgetCircleButton(name)
             elseif widgetType == "IconButton" then
                 M.removeWidgetIconButton(name)
             elseif widgetType == "RectButton" then

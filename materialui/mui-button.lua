@@ -181,71 +181,78 @@ function M.createRRectButton(options)
     muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
 
-    function rrect:touch (event)
-        if muiData.dialogInUse == true and options.dialogName == nil then return end
+    rrect.muiOptions = options
+    muiData.widgetDict[options.name]["rrect"]:addEventListener( "touch", M.touchRRectButton )
+end
 
-        M.addBaseEventParameters(event, options)
-
-        if ( event.phase == "began" ) then
-            --event.target:takeFocus(event)
-            -- if scrollView then use the below
-            muiData.interceptEventHandler = rrect
-            M.updateUI(event)
-            if muiData.touching == false then
-                muiData.touching = true
-                if options.clickAnimation ~= nil then
-                    if options.clickAnimation["backgroundColor"] ~= nil then
-                        options.clickAnimation["fillColor"] = options.clickAnimation["backgroundColor"]
-                    end
-                    if options.clickAnimation["fillColor"] ~= nil then
-                        muiData.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.clickAnimation["fillColor"]) )
-                    end
-                end
-                if options.touchpoint ~= nil and options.touchpoint == true then
-                    muiData.widgetDict[options.name]["myCircle"].x = event.x - muiData.widgetDict[options.name]["container"].x
-                    muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["container"].y
-                end
-                muiData.widgetDict[options.name]["myCircle"].isVisible = true
-                local scaleFactor = 0.1
-                muiData.widgetDict[options.name].myCircleTrans = transition.from( muiData.widgetDict[options.name]["myCircle"], { time=500,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
-                transition.to(muiData.widgetDict[options.name]["container"],{time=300, xScale=1.02, yScale=1.02, transition=easing.continuousLoop})
-            end
-        elseif ( event.phase == "moved" ) then
-            if options.fillColor ~= nil then
-                muiData.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.fillColor) )
-            end
-        elseif ( event.phase == "ended" ) then
-            if M.isTouchPointOutOfRange( event ) then
-                  event.phase = "offTarget"
-                  -- print("Its out of the button area")
-                  -- event.target:dispatchEvent(event)
-            else
-                event.phase = "onTarget"
-                if muiData.interceptMoved == false then
-                    if options.clickAnimation ~= nil then
-                        if options.clickAnimation["time"] == nil then
-                            options.clickAnimation["time"] = 400
-                        end
-                        transition.fadeOut(muiData.widgetDict[options.name]["rrect"],{time=options.clickAnimation["time"]})
-                    end
-                    event.target = muiData.widgetDict[options.name]["rrect"]
-                    --event.callBackData = options.callBackData
-
-                    M.setEventParameter(event, "muiTargetValue", options.value)
-                    M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["rrect"])
-                    M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
-
-                    if options.callBack ~= nil then
-                        assert( options.callBack )(event)
-                    end
-                end
-            end
-            muiData.interceptEventHandler = nil
-            muiData.interceptMoved = false
-            muiData.touching = false
-        end
+function M.touchRRectButton (event)
+    local options = nil
+    if event.target ~= nil then
+        options = event.target.muiOptions
     end
-    muiData.widgetDict[options.name]["rrect"]:addEventListener( "touch", muiData.widgetDict[options.name]["rrect"] )
+
+    if muiData.dialogInUse == true and options.dialogName == nil then return end
+
+    M.addBaseEventParameters(event, options)
+
+    if ( event.phase == "began" ) then
+        --event.target:takeFocus(event)
+        -- if scrollView then use the below
+        muiData.interceptEventHandler = event.target
+        M.updateUI(event)
+        if muiData.touching == false then
+            muiData.touching = true
+            if options.clickAnimation ~= nil then
+                if options.clickAnimation["backgroundColor"] ~= nil then
+                    options.clickAnimation["fillColor"] = options.clickAnimation["backgroundColor"]
+                end
+                if options.clickAnimation["fillColor"] ~= nil then
+                    muiData.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.clickAnimation["fillColor"]) )
+                end
+            end
+            if options.touchpoint ~= nil and options.touchpoint == true then
+                muiData.widgetDict[options.name]["myCircle"].x = event.x - muiData.widgetDict[options.name]["container"].x
+                muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["container"].y
+            end
+            muiData.widgetDict[options.name]["myCircle"].isVisible = true
+            local scaleFactor = 0.1
+            muiData.widgetDict[options.name].myCircleTrans = transition.from( muiData.widgetDict[options.name]["myCircle"], { time=500,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+            transition.to(muiData.widgetDict[options.name]["container"],{time=300, xScale=1.02, yScale=1.02, transition=easing.continuousLoop})
+        end
+    elseif ( event.phase == "moved" ) then
+        if options.fillColor ~= nil then
+            muiData.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.fillColor) )
+        end
+    elseif ( event.phase == "ended" ) then
+        if M.isTouchPointOutOfRange( event ) then
+              event.phase = "offTarget"
+              -- print("Its out of the button area")
+              -- event.target:dispatchEvent(event)
+        else
+            event.phase = "onTarget"
+            if muiData.interceptMoved == false then
+                if options.clickAnimation ~= nil then
+                    if options.clickAnimation["time"] == nil then
+                        options.clickAnimation["time"] = 400
+                    end
+                    transition.fadeOut(muiData.widgetDict[options.name]["rrect"],{time=options.clickAnimation["time"]})
+                end
+                event.target = muiData.widgetDict[options.name]["rrect"]
+                --event.callBackData = options.callBackData
+
+                M.setEventParameter(event, "muiTargetValue", options.value)
+                M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["rrect"])
+                M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
+
+                if options.callBack ~= nil then
+                    assert( options.callBack )(event)
+                end
+            end
+        end
+        muiData.interceptEventHandler = nil
+        muiData.interceptMoved = false
+        muiData.touching = false
+    end
 end
 
 --[[
@@ -371,67 +378,8 @@ function M.createRectButton(options)
     muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
 
-    function rrect:touch (event)
-        if muiData.dialogInUse == true and options.dialogName == nil then return end
-
-        M.addBaseEventParameters(event, options)
-
-        if ( event.phase == "began" ) then
-            muiData.interceptEventHandler = rrect
-            M.updateUI(event)
-            if muiData.touching == false then
-                muiData.touching = true
-                if options.clickAnimation ~= nil then
-                    if options.clickAnimation["backgroundColor"] ~= nil then
-                        options.clickAnimation["fillColor"] = options.clickAnimation["backgroundColor"]
-                    end
-                    if options.clickAnimation["fillColor"] ~= nil then
-                        muiData.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.clickAnimation["fillColor"]) )
-                    end
-                end
-                if options.touchpoint ~= nil and options.touchpoint == true then
-                    muiData.widgetDict[options.name]["myCircle"].x = event.x - muiData.widgetDict[options.name]["container"].x
-                    muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["container"].y
-                end
-                muiData.widgetDict[options.name]["myCircle"].isVisible = true
-                local scaleFactor = 0.1
-                muiData.widgetDict[options.name].myCircleTrans = transition.from( muiData.widgetDict[options.name]["myCircle"], { time=500,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
-                transition.to(muiData.widgetDict[options.name]["container"],{time=500, xScale=1.02, yScale=1.02, transition=easing.continuousLoop})
-            end
-        elseif ( event.phase == "moved" ) then
-            if options.fillColor ~= nil then
-                muiData.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.fillColor) )
-            end
-        elseif ( event.phase == "ended" ) then
-            if M.isTouchPointOutOfRange( event ) then
-                event.phase = "offTarget"
-                -- print("Its out of the button area")
-                -- event.target:dispatchEvent(event)
-            else
-              event.phase = "onTarget"
-                if muiData.interceptMoved == false then
-                    if options.clickAnimation ~= nil then
-                        if options.clickAnimation["time"] == nil then
-                            options.clickAnimation["time"] = 400
-                        end
-                        transition.fadeOut(muiData.widgetDict[options.name]["rrect"],{time=options.clickAnimation["time"]})
-                    end
-                    event.target = muiData.widgetDict[options.name]["rrect"]
-
-                    M.setEventParameter(event, "muiTargetValue", options.value)
-                    M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["rrect"])
-                    M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
-                    if options.callBack ~= nil then
-                       assert( options.callBack )(event)
-                    end
-                end
-                muiData.interceptEventHandler = nil
-                muiData.interceptMoved = false
-                muiData.touching = false
-            end
-        end
-    end
-    muiData.widgetDict[options.name]["rrect"]:addEventListener( "touch", muiData.widgetDict[options.name]["rrect"] )
+    rrect.muiOptions = options
+    muiData.widgetDict[options.name]["rrect"]:addEventListener( "touch", M.touchRRectButton )
 end
 
 
@@ -560,52 +508,59 @@ function M.createIconButton(options)
     muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
     muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
 
-    function checkbox:touch (event)
-        if muiData.dialogInUse == true and options.dialogName == nil then return end
+    checkbox.muiOptions = options
+    muiData.widgetDict[options.name]["myText"]:addEventListener( "touch", M.touchIconButton )
+end
 
-        M.addBaseEventParameters(event, options)
+function M.touchIconButton (event)
+    local options = nil
+    if event.target ~= nil then
+        options = event.target.muiOptions
+    end
 
-        if ( event.phase == "began" ) then
-            muiData.interceptEventHandler = checkbox
-            M.updateUI(event)
-            if muiData.touching == false then
-                muiData.touching = true
-                if options.touchpoint ~= nil and options.touchpoint == true then
-                    muiData.widgetDict[options.name]["myCircle"].x = event.x - muiData.widgetDict[options.name]["mygroup"].x
-                    muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["mygroup"].y
-                end
-                muiData.widgetDict[options.name]["myCircle"].isVisible = true
-                local scaleFactor = 0.1
-                muiData.widgetDict[options.name].myCircleTrans = transition.from( muiData.widgetDict[options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
-                transition.to(checkbox,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
+    if muiData.dialogInUse == true and options.dialogName == nil then return end
+
+    M.addBaseEventParameters(event, options)
+
+    if ( event.phase == "began" ) then
+        muiData.interceptEventHandler = event.target
+        M.updateUI(event)
+        if muiData.touching == false then
+            muiData.touching = true
+            if options.touchpoint ~= nil and options.touchpoint == true then
+                muiData.widgetDict[options.name]["myCircle"].x = event.x - muiData.widgetDict[options.name]["mygroup"].x
+                muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["mygroup"].y
             end
-        elseif ( event.phase == "ended" ) then
-            if M.isTouchPointOutOfRange( event ) then
-                event.phase = "offTarget"
-                -- event.target:dispatchEvent(event)
-                -- print("Its out of the button area")
-            else
-              event.phase = "onTarget"
-                if muiData.interceptMoved == false then
-                    event.target = muiData.widgetDict[options.name]["checkbox"]
-                    event.altTarget = muiData.widgetDict[options.name]["myText"]
-                    event.myTargetName = options.name
+            muiData.widgetDict[options.name]["myCircle"].isVisible = true
+            local scaleFactor = 0.1
+            muiData.widgetDict[options.name].myCircleTrans = transition.from( muiData.widgetDict[options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+            transition.to(event.target,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
+        end
+    elseif ( event.phase == "ended" ) then
+        if M.isTouchPointOutOfRange( event ) then
+            event.phase = "offTarget"
+            -- event.target:dispatchEvent(event)
+            -- print("Its out of the button area")
+        else
+          event.phase = "onTarget"
+            if muiData.interceptMoved == false then
+                event.target = muiData.widgetDict[options.name]["checkbox"]
+                event.altTarget = muiData.widgetDict[options.name]["myText"]
+                event.myTargetName = options.name
 
-                    M.setEventParameter(event, "muiTargetValue", options.value)
-                    M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["myText"])
-                    M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
+                M.setEventParameter(event, "muiTargetValue", options.value)
+                M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["myText"])
+                M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
 
-                    if options.callBack ~= nil then
-                        assert( options.callBack )(event)
-                    end
+                if options.callBack ~= nil then
+                    assert( options.callBack )(event)
                 end
-                muiData.interceptEventHandler = nil
-                muiData.interceptMoved = false
-                muiData.touching = false
             end
+            muiData.interceptEventHandler = nil
+            muiData.interceptMoved = false
+            muiData.touching = false
         end
     end
-    muiData.widgetDict[options.name]["myText"]:addEventListener( "touch", muiData.widgetDict[options.name]["myText"] )
 end
 
 function M.createCheckBox(options)
@@ -734,51 +689,57 @@ function M.createCircleButton(options)
     muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
     muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
 
-    function circle:touch (event)
-        if muiData.dialogInUse == true and options.dialogName == nil then return end
+    circle.muiOptions = options
+    muiData.widgetDict[options.name]["circlemain"]:addEventListener( "touch", M.touchCircleButton )
+end
 
-        M.addBaseEventParameters(event, options)
+function M.touchCircleButton (event)
+    local options = nil
+    if event.target ~= nil then
+        options = event.target.muiOptions
+    end
+    if muiData.dialogInUse == true and options.dialogName == nil then return end
 
-        if ( event.phase == "began" ) then
-            muiData.interceptEventHandler = circle
-            M.updateUI(event)
-            if muiData.touching == false then
-                muiData.touching = true
-                if options.touchpoint ~= nil and options.touchpoint == true then
-                    muiData.widgetDict[options.name]["myCircle"].x = event.x - muiData.widgetDict[options.name]["mygroup"].x
-                    muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["mygroup"].y
-                end
-                muiData.widgetDict[options.name]["myCircle"].isVisible = true
-                local scaleFactor = 0.1
-                muiData.widgetDict[options.name].myCircleTrans = transition.from( muiData.widgetDict[options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
-                transition.to(circle,{time=500, xScale=1.1, yScale=1.1, transition=easing.continuousLoop})
+    M.addBaseEventParameters(event, options)
+
+    if ( event.phase == "began" ) then
+        muiData.interceptEventHandler = event.target
+        M.updateUI(event)
+        if muiData.touching == false then
+            muiData.touching = true
+            if options.touchpoint ~= nil and options.touchpoint == true then
+                muiData.widgetDict[options.name]["myCircle"].x = event.x - muiData.widgetDict[options.name]["mygroup"].x
+                muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["mygroup"].y
             end
-        elseif ( event.phase == "ended" ) then
-            if M.isTouchPointOutOfRange( event ) then
-                event.phase = "offTarget"
-                -- event.target:dispatchEvent(event)
-                -- print("Its out of the button area")
-            else
-              event.phase = "onTarget"
-                if muiData.interceptMoved == false then
-                    event.target = muiData.widgetDict[options.name]["circlemain"]
-                    event.myTargetName = options.name
+            muiData.widgetDict[options.name]["myCircle"].isVisible = true
+            local scaleFactor = 0.1
+            muiData.widgetDict[options.name].myCircleTrans = transition.from( muiData.widgetDict[options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+            transition.to(event.target,{time=500, xScale=1.1, yScale=1.1, transition=easing.continuousLoop})
+        end
+    elseif ( event.phase == "ended" ) then
+        if M.isTouchPointOutOfRange( event ) then
+            event.phase = "offTarget"
+            -- event.target:dispatchEvent(event)
+            -- print("Its out of the button area")
+        else
+          event.phase = "onTarget"
+            if muiData.interceptMoved == false then
+                event.target = muiData.widgetDict[options.name]["circlemain"]
+                event.myTargetName = options.name
 
-                    M.setEventParameter(event, "muiTargetValue", options.value)
-                    M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["circlemain"])
-                    M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
+                M.setEventParameter(event, "muiTargetValue", options.value)
+                M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["circlemain"])
+                M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
 
-                    if options.callBack ~= nil then
-                        assert( options.callBack )(event)
-                    end
+                if options.callBack ~= nil then
+                    assert( options.callBack )(event)
                 end
-                muiData.interceptEventHandler = nil
-                muiData.interceptMoved = false
-                muiData.touching = false
             end
+            muiData.interceptEventHandler = nil
+            muiData.interceptMoved = false
+            muiData.touching = false
         end
     end
-    muiData.widgetDict[options.name]["circlemain"]:addEventListener( "touch", muiData.widgetDict[options.name]["circlemain"] )
 end
 
 --[[
@@ -953,55 +914,60 @@ function M.createRadioButton(options)
     radioButton["mygroup"]:insert( radioButton["myCircle"], true ) -- insert and center bkgd
 
     checkbox = radioButton["myText"]
+    checkbox.muiOptions = options
+    muiData.widgetDict[options.basename]["radio"][options.name]["myText"]:addEventListener( "touch", M.touchCheckbox )
 
-    function checkbox:touch (event)
-        if muiData.dialogInUse == true and options.dialogName == nil then return end
+end
 
-        M.addBaseEventParameters(event, options)
+function M.touchCheckbox (event)
+    local options = nil
+    if event.target ~= nil then
+        options = event.target.muiOptions
+    end
+    if muiData.dialogInUse == true and options.dialogName == nil then return end
 
-        if ( event.phase == "began" ) then
-            muiData.interceptEventHandler = checkbox
-            M.updateUI(event)
-            if muiData.touching == false then
-                muiData.touching = true
-                if options.touchpoint ~= nil and options.touchpoint == true then
-                    muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].x = event.x - muiData.widgetDict[options.basename]["radio"][options.name]["mygroup"].x
-                    muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].y = event.y - muiData.widgetDict[options.basename]["radio"][options.name]["mygroup"].y
-                end
-                muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].isVisible = true
-                local scaleFactor = 0.1
-                muiData.widgetDict[options.basename]["radio"][options.name].myCircleTrans = transition.from( muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
-                transition.to(checkbox,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
+    M.addBaseEventParameters(event, options)
+
+    if ( event.phase == "began" ) then
+        muiData.interceptEventHandler = event.target
+        M.updateUI(event)
+        if muiData.touching == false then
+            muiData.touching = true
+            if options.touchpoint ~= nil and options.touchpoint == true then
+                muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].x = event.x - muiData.widgetDict[options.basename]["radio"][options.name]["mygroup"].x
+                muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].y = event.y - muiData.widgetDict[options.basename]["radio"][options.name]["mygroup"].y
             end
-        elseif ( event.phase == "ended" ) then
-            if M.isTouchPointOutOfRange( event ) then
-                event.phase = "offTarget"
-                -- event.target:dispatchEvent(event)
-                -- print("Its out of the button area")
-            else
-              event.phase = "onTarget"
-                if muiData.interceptMoved == false then
-                    --event.target = muiData.widgetDict[options.name]["rrect"]
-                    event.myTargetName = options.name
-                    event.myTargetBasename = options.basename
-                    event.altTarget = muiData.widgetDict[options.basename]["radio"][options.name]["myText"]
+            muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].isVisible = true
+            local scaleFactor = 0.1
+            muiData.widgetDict[options.basename]["radio"][options.name].myCircleTrans = transition.from( muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+            transition.to(event.target,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
+        end
+    elseif ( event.phase == "ended" ) then
+        if M.isTouchPointOutOfRange( event ) then
+            event.phase = "offTarget"
+            -- event.target:dispatchEvent(event)
+            -- print("Its out of the button area")
+        else
+          event.phase = "onTarget"
+            if muiData.interceptMoved == false then
+                --event.target = muiData.widgetDict[options.name]["rrect"]
+                event.myTargetName = options.name
+                event.myTargetBasename = options.basename
+                event.altTarget = muiData.widgetDict[options.basename]["radio"][options.name]["myText"]
 
-                    M.setEventParameter(event, "muiTargetValue", options.value)
-                    M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.basename]["radio"][options.name]["myText"])
-                    M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
+                M.setEventParameter(event, "muiTargetValue", options.value)
+                M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.basename]["radio"][options.name]["myText"])
+                M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
 
-                    if options.callBack ~= nil then
-                        assert( options.callBack )(event)
-                    end
+                if options.callBack ~= nil then
+                    assert( options.callBack )(event)
                 end
-                muiData.interceptEventHandler = nil
-                muiData.interceptMoved = false
-                muiData.touching = false
             end
+            muiData.interceptEventHandler = nil
+            muiData.interceptMoved = false
+            muiData.touching = false
         end
     end
-    muiData.widgetDict[options.basename]["radio"][options.name]["myText"]:addEventListener( "touch", muiData.widgetDict[options.basename]["radio"][options.name]["myText"] )
-
 end
 
 
@@ -1130,7 +1096,7 @@ function M.removeWidgetRRectButton(widgetName)
 
     if muiData.widgetDict[widgetName] == nil then return end
 
-    muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["rrect"])
+    muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", M.touchRRectButton)
     muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
     muiData.widgetDict[widgetName]["myCircle"] = nil
     muiData.widgetDict[widgetName]["myText"]:removeSelf()
@@ -1151,7 +1117,7 @@ function M.removeWidgetRectButton(widgetName)
 
     if muiData.widgetDict[widgetName] == nil then return end
 
-    muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["rrect"])
+    muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", M.touchRRectButton)
     muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
     muiData.widgetDict[widgetName]["myCircle"] = nil
     muiData.widgetDict[widgetName]["myText"]:removeSelf()
@@ -1170,7 +1136,7 @@ function M.removeWidgetCircleButton(widgetName)
 
     if muiData.widgetDict[widgetName] == nil then return end
 
-    muiData.widgetDict[widgetName]["circlemain"]:removeEventListener("touch", muiData.widgetDict[widgetName]["circlemain"])
+    muiData.widgetDict[widgetName]["circlemain"]:removeEventListener("touch", M.touchCircleButton)
     muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
     muiData.widgetDict[widgetName]["myCircle"] = nil
     muiData.widgetDict[widgetName]["myText"]:removeSelf()
@@ -1189,7 +1155,7 @@ function M.removeWidgetIconButton(widgetName)
 
     if muiData.widgetDict[widgetName] == nil then return end
 
-    muiData.widgetDict[widgetName]["myText"]:removeEventListener("touch", muiData.widgetDict[widgetName]["myText"])
+    muiData.widgetDict[widgetName]["myText"]:removeEventListener("touch", M.touchIconButton)
     muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
     muiData.widgetDict[widgetName]["myCircle"] = nil
     muiData.widgetDict[widgetName]["myText"]:removeSelf()
@@ -1207,7 +1173,7 @@ function M.removeWidgetRadioButton(widgetName)
     if muiData.widgetDict[widgetName] == nil then return end
 
     for name in pairs(muiData.widgetDict[widgetName]["radio"]) do
-        muiData.widgetDict[widgetName]["radio"][name]["myText"]:removeEventListener( "touch", muiData.widgetDict[widgetName]["radio"][name]["myText"] )
+        muiData.widgetDict[widgetName]["radio"][name]["myText"]:removeEventListener( "touch", M.touchCheckbox )
         muiData.widgetDict[widgetName]["radio"][name]["myCircle"]:removeSelf()
         muiData.widgetDict[widgetName]["radio"][name]["myCircle"] = nil
         muiData.widgetDict[widgetName]["radio"][name]["myText"]:removeSelf()

@@ -240,60 +240,68 @@ function M.createToolbarButton( options )
     thebutton.name = options.name
     field.name = options.name
 
-    function thebutton:touch (event)
-        if muiData.widgetDict[options.basename]["toolbar"][options.name]["myText"].isChecked == true then
-            return
-        end
-
-        M.addBaseEventParameters(event, options)
-
-        if muiData.dialogInUse == true and options.dialogName == nil then return end
-        if ( event.phase == "began" ) then
-            muiData.interceptEventHandler = thebutton
-            M.updateUI(event)
-            if muiData.touching == false then
-                muiData.touching = true
-                if options.touchpoint ~= nil and options.touchpoint == true then
-                    muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].x = 0 --muiData.widgetDict[options.basename]["toolbar"][options.name]["mygroup"].x
-                    muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].y = 0 --muiData.widgetDict[options.basename]["toolbar"][options.name]["mygroup"].y
-                    muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].isVisible = true
-                    local scaleFactor = 0.1
-                    muiData.widgetDict[options.basename]["toolbar"][options.name].myCircleTrans = transition.from( muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
-                end
-                transition.to(field,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
-            end
-        elseif ( event.phase == "ended" ) then
-            if M.isTouchPointOutOfRange( event ) then
-                event.phase = "offTarget"
-                -- event.target:dispatchEvent(event)
-                -- print("Its out of the button area")
-            else
-                event.phase = "onTarget"
-                if muiData.interceptMoved == false then
-                    --event.target = muiData.widgetDict[options.name]["rrect"]
-                    transition.to(muiData.widgetDict[options.basename]["toolbar"]["slider"],{time=350, x=button["mygroup"].x, transition=easing.inOutCubic})
-
-                    event.myTargetName = options.name
-                    event.myTargetBasename = options.basename
-                    event.altTarget = muiData.widgetDict[options.basename]["toolbar"][options.name]["myText"]
-                    event.altTarget2 = muiData.widgetDict[options.basename]["toolbar"][options.name]["myText2"]
-                    event.callBackData = options.callBackData
-
-                    M.setEventParameter(event, "muiTargetValue", options.value)
-                    M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.basename]["toolbar"][options.name]["myText"])
-                    M.setEventParameter(event, "muiTarget2", muiData.widgetDict[options.basename]["toolbar"][options.name]["myText2"])
-                    M.actionForToolbar(options, event)
-                end
-                muiData.interceptEventHandler = nil
-                muiData.interceptMoved = false
-                muiData.touching = false
-            end
-        end
-    end
-
-    muiData.widgetDict[options.basename]["toolbar"][options.name]["rectangle"]:addEventListener( "touch", muiData.widgetDict[options.basename]["toolbar"][options.name]["rectangle"] )
+    thebutton.muiOptions = options
+    thebutton.muiButton = button
+    muiData.widgetDict[options.basename]["toolbar"][options.name]["rectangle"]:addEventListener( "touch", M.toolBarButton )
 end
 
+function M.toolBarButton (event)
+    local options = nil
+    local button = nil
+    if event.target ~= nil then
+        options = event.target.muiOptions
+        button = event.target.muiButton
+    end
+
+    if muiData.widgetDict[options.basename]["toolbar"][options.name]["myText"].isChecked == true then
+        return
+    end
+
+    M.addBaseEventParameters(event, options)
+
+    if muiData.dialogInUse == true and options.dialogName == nil then return end
+    if ( event.phase == "began" ) then
+        muiData.interceptEventHandler = event.target
+        M.updateUI(event)
+        if muiData.touching == false then
+            muiData.touching = true
+            if options.touchpoint ~= nil and options.touchpoint == true then
+                muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].x = 0 --muiData.widgetDict[options.basename]["toolbar"][options.name]["mygroup"].x
+                muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].y = 0 --muiData.widgetDict[options.basename]["toolbar"][options.name]["mygroup"].y
+                muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].isVisible = true
+                local scaleFactor = 0.1
+                muiData.widgetDict[options.basename]["toolbar"][options.name].myCircleTrans = transition.from( muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+            end
+            -- transition.to(event.target,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
+        end
+    elseif ( event.phase == "ended" ) then
+        if M.isTouchPointOutOfRange( event ) then
+            event.phase = "offTarget"
+            -- event.target:dispatchEvent(event)
+            -- print("Its out of the button area")
+        else
+            event.phase = "onTarget"
+            if muiData.interceptMoved == false then
+                --event.target = muiData.widgetDict[options.name]["rrect"]
+                transition.to(muiData.widgetDict[options.basename]["toolbar"]["slider"],{time=350, x=button["mygroup"].x, transition=easing.inOutCubic})
+
+                event.myTargetName = options.name
+                event.myTargetBasename = options.basename
+                event.altTarget = muiData.widgetDict[options.basename]["toolbar"][options.name]["myText"]
+                event.altTarget2 = muiData.widgetDict[options.basename]["toolbar"][options.name]["myText2"]
+                event.callBackData = options.callBackData
+
+                M.setEventParameter(event, "muiTargetValue", options.value)
+                M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.basename]["toolbar"][options.name]["myText"])
+                M.setEventParameter(event, "muiTarget2", muiData.widgetDict[options.basename]["toolbar"][options.name]["myText2"])
+                M.actionForToolbar(options, event)
+            end
+            muiData.interceptEventHandler = nil
+            muiData.interceptMoved = false
+            muiData.touching = false
+        end
+    end
+end
 
 function M.createToolbar( options )
     local x, y = options.x, options.y
@@ -447,7 +455,7 @@ function M.removeWidgetToolbarButton(widgetDict, toolbarName, name)
     end
     if type(widgetDict[toolbarName]["toolbar"][name]) == "table" then
         if widgetDict[toolbarName]["toolbar"][name]["rectangle"] ~= nil then
-            widgetDict[toolbarName]["toolbar"][name]["rectangle"]:removeEventListener( "touch", muiData.widgetDict[toolbarName]["toolbar"][name]["rectangle"] )
+            widgetDict[toolbarName]["toolbar"][name]["rectangle"]:removeEventListener( "touch", M.toolBarButton )
             widgetDict[toolbarName]["toolbar"][name]["rectangle"]:removeSelf()
             widgetDict[toolbarName]["toolbar"][name]["rectangle"] = nil
             widgetDict[toolbarName]["toolbar"][name]["myText"]:removeSelf()

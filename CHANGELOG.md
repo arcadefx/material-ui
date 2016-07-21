@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.22] - 2016-07-20
+### Added
+- Added date and time pickers. This took a while to develop and will be improved.  There will be a another date and time picker following material lite design.  In the end there will be two sets to choose from.  See main scene with circle button icons for date and time.  Use method 'pickerGetCurrentValue(<control name>)' to get current date / time.
+
+### Change
+- Reduced number of event methods for all widgets, etc.  One internal event method to handle Rectangle buttons for example.
+- Bug fixes and stability improvements.
+
 ## [0.1.21] - 2016-07-12
 ### Change
 - Fixed button action not firing when previously on TableView or ScrollView.

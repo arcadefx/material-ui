@@ -142,67 +142,71 @@ function M.createSlider(options)
 
     local sliderrect = muiData.widgetDict[options.name]["sliderrect"]
 
-    function sliderrect:touch (event)
-        if muiData.dialogInUse == true and options.dialogName ~= nil then return end
+    sliderrect.muiOptions = options
+    sliderrect:addEventListener( "touch", M.sliderTouch )
+end
 
-        M.addBaseEventParameters(event, options)
-
-        if ( event.phase == "began" ) then
-            -- set touch focus
-            display.getCurrentStage():setFocus( self )
-            self.isFocus = true
-            event.target.isFocus = true
-            muiData.interceptEventHandler = sliderrect
-            M.updateUI(event)
-            if muiData.touching == false then
-                muiData.widgetDict[options.name]["slidercircle"]:setFillColor( unpack(options.color) )
-                muiData.touching = true
-                if options.touchpoint ~= nil and options.touchpoint == true and false then
-                    muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].x = event.x - muiData.widgetDict[options.basename]["radio"][options.name]["mygroup"].x
-                    muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].y = event.y - muiData.widgetDict[options.basename]["radio"][options.name]["mygroup"].y
-                    --muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].isVisible = true
-                    --muiData.widgetDict[options.basename]["radio"][options.name].myCircleTrans = transition.to( muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
-                end
-            end
-            transition.to(muiData.widgetDict[options.name]["slidercircle"],{time=300, xScale=1.5, yScale=1.5, transition=easing.inOutCubic})
-        elseif ( event.phase == "moved" ) then
-
-            if muiData.widgetDict[options.name]["slidercircle"].xScale == 1 then
-                transition.to(muiData.widgetDict[options.name]["slidercircle"],{time=300, xScale=1.5, yScale=1.5, transition=easing.inOutCubic})
-            end
-
-            -- update bar with color (up/down/left/right)
-            M.sliderPercentComplete(event, options)
-
-            -- call user-defined move method
-            if options.callBackMove ~= nil then
-                event.target.name = options.name
-                assert( options.callBackMove )(event)
-            end
-
-        elseif ( event.phase == "ended" ) then
-            muiData.currentTargetName = nil
-            transition.to(muiData.widgetDict[options.name]["slidercircle"],{time=300, xScale=1, yScale=1, transition=easing.inOutCubic})
-            if muiData.interceptMoved == false then
-                event.target = muiData.widgetDict[options.name]["slidercircle"]
-                event.callBackData = options.callBackData
-                if options.callBack ~= nil then
-                    event.target.name = options.name
-                    assert( options.callBack )(event)
-                end
-            end
-            muiData.interceptEventHandler = nil
-            muiData.interceptMoved = false
-            muiData.touching = false
-            -- reset focus
-            display.getCurrentStage():setFocus( nil )
-            self.isFocus = false
-            event.target.isFocus = false
-            M.sliderPercentComplete(event, options)
-        end
+function M.sliderTouch (event)
+    local options = nil
+    if event.target ~= nil then
+        options = event.target.muiOptions
     end
 
-    sliderrect:addEventListener( "touch", sliderrect )
+    if muiData.dialogInUse == true and options.dialogName ~= nil then return end
+
+    M.addBaseEventParameters(event, options)
+
+    if ( event.phase == "began" ) then
+        -- set touch focus
+        display.getCurrentStage():setFocus( event.target )
+        event.target.isFocus = true
+        muiData.interceptEventHandler = event.target
+        M.updateUI(event)
+        if muiData.touching == false then
+            muiData.widgetDict[options.name]["slidercircle"]:setFillColor( unpack(options.color) )
+            muiData.touching = true
+            if options.touchpoint ~= nil and options.touchpoint == true and false then
+                muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].x = event.x - muiData.widgetDict[options.basename]["radio"][options.name]["mygroup"].x
+                muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].y = event.y - muiData.widgetDict[options.basename]["radio"][options.name]["mygroup"].y
+                --muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].isVisible = true
+                --muiData.widgetDict[options.basename]["radio"][options.name].myCircleTrans = transition.to( muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+            end
+        end
+        transition.to(muiData.widgetDict[options.name]["slidercircle"],{time=300, xScale=1.5, yScale=1.5, transition=easing.inOutCubic})
+    elseif ( event.phase == "moved" ) then
+
+        if muiData.widgetDict[options.name]["slidercircle"].xScale == 1 then
+            transition.to(muiData.widgetDict[options.name]["slidercircle"],{time=300, xScale=1.5, yScale=1.5, transition=easing.inOutCubic})
+        end
+
+        -- update bar with color (up/down/left/right)
+        M.sliderPercentComplete(event, options)
+
+        -- call user-defined move method
+        if options.callBackMove ~= nil then
+            event.target.name = options.name
+            assert( options.callBackMove )(event)
+        end
+
+    elseif ( event.phase == "ended" ) then
+        muiData.currentTargetName = nil
+        transition.to(muiData.widgetDict[options.name]["slidercircle"],{time=300, xScale=1, yScale=1, transition=easing.inOutCubic})
+        if muiData.interceptMoved == false then
+            event.target = muiData.widgetDict[options.name]["slidercircle"]
+            event.callBackData = options.callBackData
+            if options.callBack ~= nil then
+                event.target.name = options.name
+                assert( options.callBack )(event)
+            end
+        end
+        muiData.interceptEventHandler = nil
+        muiData.interceptMoved = false
+        muiData.touching = false
+        -- reset focus
+        display.getCurrentStage():setFocus( nil )
+        event.target.isFocus = false
+        M.sliderPercentComplete(event, options)
+    end
 end
 
 function M.sliderPercentComplete(event, options)
@@ -267,7 +271,7 @@ function M.removeWidgetSlider(widgetName)
 
     if muiData.widgetDict[widgetName] == nil then return end
 
-    muiData.widgetDict[widgetName]["sliderrect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["sliderrect"])
+    muiData.widgetDict[widgetName]["sliderrect"]:removeEventListener("touch", M.sliderTouch)
     muiData.widgetDict[widgetName]["slidercircle"]:removeSelf()
     muiData.widgetDict[widgetName]["slidercircle"] = nil
     muiData.widgetDict[widgetName]["sliderbar"]:removeSelf()

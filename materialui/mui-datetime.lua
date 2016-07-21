@@ -723,6 +723,7 @@ function M.pickerCreateColumn(options)
             height = nH,
             width = rowWidth,
             noLines = true,
+            hideScrollBar = true,
             onRowRender = M.pickerOnRowRender,
             onRowTouch = M.pickerOnRowTouch,
             listener = M.pickerScrollListener,

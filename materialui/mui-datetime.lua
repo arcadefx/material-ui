@@ -610,9 +610,6 @@ function M.createPickerWheel( x, y, options )
     -- paint normal or use gradient?
     local paint = nil
     if options.gradientBorderShadowColor1 ~= nil and options.gradientBorderShadowColor2 ~= nil then
-        if options.gradientDirection == nil then
-            options.gradientDirection = "down"
-        end
         options.gradientDirection = "up"
         paint = {
             type = "gradient",
@@ -636,9 +633,6 @@ function M.createPickerWheel( x, y, options )
     muiData.widgetDict[options.name]["mygroup"]["rect3"] = display.newRect( 0, (rect.contentHeight * 0.25), rect.contentWidth, rect.contentHeight * 0.5)
     local paint2 = nil
     if options.gradientBorderShadowColor1 ~= nil and options.gradientBorderShadowColor2 ~= nil then
-        if options.gradientDirection == nil then
-            options.gradientDirection = "down"
-        end
         options.gradientDirection = "down"
         paint2 = {
             type = "gradient",

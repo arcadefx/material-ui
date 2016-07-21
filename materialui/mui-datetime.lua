@@ -72,8 +72,8 @@ function M.createDatePicker(options)
         options.toYear = 2019
     end
 
-    options.width = 600
-    options.height = 400
+    options.width = options.width or M.getScaleVal(600)
+    options.height = options.height or M.getScaleVal(400)
 
     local textToMeasure = display.newText( "September", 0, 0, options.font, options.fontSize )
     local width = textToMeasure.contentWidth
@@ -459,8 +459,8 @@ function M.createPickerWheel( x, y, options )
 
     local nW, nH
 
-    nW = options.width or M.getScaleVal(500)
-    nH = options.height or M.getScaleVal(300)
+    nW = options.width or M.getScaleVal(600)
+    nH = options.height or M.getScaleVal(400)
 
     muiData.widgetDict[options.name]["rect"] = display.newRect( 0, 0, nW, nH )
     muiData.widgetDict[options.name]["rect"].strokeWidth = M.getScaleVal(options.strokeWidth)

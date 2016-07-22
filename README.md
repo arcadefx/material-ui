@@ -28,7 +28,7 @@ local mui = require( "materialui.mui" )
 * In the scene create function add in the initializer and any user-interface elements
 ```
     mui.init()
-    mui.createRRectButton({
+    mui.newRoundedRectButton({
         name = "newGame",
         text = "New Game",
         width = mui.getScaleVal(200),

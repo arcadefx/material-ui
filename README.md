@@ -41,7 +41,7 @@ local mui = require( "materialui.mui" )
         callBack = mui.actionForButton
     })
 ```
-* In the scene destroy function add in the remove method to destroy all user-interface elements in the scene
+* In the scene destroy function add in the destroy method to remove all user-interface elements in the scene.
 ```
     mui.destroy()
 ```

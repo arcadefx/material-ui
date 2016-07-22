@@ -580,18 +580,7 @@ function M.createCheckBox(options)
 end
 
 function M.newCheckBox(options)
-    M.newIconButton({
-        name = options.name,
-        text = "check_box_outline_blank",
-        width = options.width,
-        height = options.height,
-        x = options.x,
-        y = options.y,
-        font = "MaterialIcons-Regular.ttf",
-        textColor = options.textColor,
-        textAlign = "center",
-        callBack = M.actionForCheckbox
-    })
+    M.newIconButton(options)
 end
 
 function M.createCircleButton(options)

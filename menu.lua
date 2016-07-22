@@ -225,7 +225,7 @@ function scene:create( event )
     })
 
     -- simulates a checkbox but can be other toggle buttons too!
-    mui.newIconButton({
+    mui.newCheckBox({
         name = "check",
         text = "check_box_outline_blank",
         width = mui.getScaleVal(50),

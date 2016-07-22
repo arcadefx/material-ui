@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.24] - 2016-07-22
+### Added
+- new methods newCheckBox() and removeCheckBox()
+
 ## [0.1.23] - 2016-07-22
 ### Change
 - Put back the toggle switch in the demo.

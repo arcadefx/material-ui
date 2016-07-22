@@ -1191,6 +1191,10 @@ function M.removeWidgetIconButton(widgetName)
     M.removeIconButton(widgetName)
 end
 
+function M.removeCheckBox(widgetName)
+    M.removeIconButton(widgetName)
+end
+
 function M.removeIconButton(widgetName)
     if widgetName == nil then
         return

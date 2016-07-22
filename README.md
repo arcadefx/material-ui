@@ -69,25 +69,25 @@ Please read Lua code to find all parameters and see example in the repo call men
 
 | Method        | Short Description | Example  |
 | ------------- | ------------- | :-----:|
-| `createCircleButton` | Create a circle button with a single character or even a word.| menu.lua |
-| `createDatePicker` | Create a date picker. Use pickerGetCurrentValue() method to get current value in a table format. | menu.lua / mui-datetime.lua |
-| `createDialog` | Create a dialog (modal) with content. Supports up to two buttons (Okay, Cancel) with callbacks.       | menu.lua |
-| `createIconButton`      | Create an icon button using the material design icon font. Use this to create check boxes and more. | menu.lua |
-| `createNavbar`      | Create a navigation bar. Allows left and right alignment of attached widgets. Supports widget types: BasicText, CircleButton, IconButton, RRectButton, RectButton, Slider, TextField. Additional widget types will be added. | fun.lua |
-| `createProgressBar` | Create an animated progress bar using "determinate" from Material Design.      |    menu.lua |
-| `createRadioGroup` | Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.      |    menu.lua |
-| `createRectButton` | Create a rectangle button      |    menu.lua/fun.lua |
-| `createRRectButton` | Create a rounded rectangle button     |    menu.lua/fun.lua |
-| `createSelect` | Create a select drop down list (dropdown list). Colors, dimensions and fonts can be specified.      |    fun.lua |
-| `createSlider()` | Create a slider for doing percentages 0..100. Calculate amount in call backs: callBackMove (called during movement) and callBack = at the end phase.  Values are in percent (0.20, 0.90 and 1 for 100%). See method sliderCallBackMove() to get current value of slider.       |    fun.lua |
-| `createTableView` | Create a scrollable table view      |    menu.lua/fun.lua |
-| `createTextBox` | Create a text box with label above (for now)      |    fun.lua |
-| `createTextField` | Create a text field with label above (for now)      |    menu.lua/fun.lua |
-| `createTimePicker` | Create a time picker. Use pickerGetCurrentValue() method to get current value in a table format. | menu.lua / mui-datetime.lua |
-| `createToast` | Create simple "toast" notifications on screen. Colors, dimensions and fonts can be specified.      |    fun.lua |
-| `createToggleSwitch` | Create a toggle switch.      |    menu.lua |
-| `createToolbar` | Create a horizontal toolbar with icon, text or icon + text (icon on top, text on bottom) buttons      |    menu.lua |
-| `createParentOnBoard` | Create an "onboarding" scene. The onboarding/walkthrough screens for first-time users. Introduce the app and demonstrate what it does. Used in conjunction with `addChildOnBoard`. Tap "?" in the demo's first scene. Supports progress indicators (rectangle and circles) Please "read" the comments near the top of the example. |    onboard.lua |
+| `newCircleButton` | Create a circle button with a single character or even a word.| menu.lua |
+| `newDatePicker` | Create a date picker. Use pickerGetCurrentValue() method to get current value in a table format. | menu.lua / mui-datetime.lua |
+| `newDialog` | Create a dialog (modal) with content. Supports up to two buttons (Okay, Cancel) with callbacks.       | menu.lua |
+| `newIconButton`      | Create an icon button using the material design icon font. Use this to create check boxes and more. | menu.lua |
+| `newNavbar`      | Create a navigation bar. Allows left and right alignment of attached widgets. Supports widget types: BasicText, CircleButton, IconButton, RRectButton, RectButton, Slider, TextField. Additional widget types will be added. | fun.lua |
+| `newProgressBar` | Create an animated progress bar using "determinate" from Material Design.      |    menu.lua |
+| `newRadioGroup` | Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.      |    menu.lua |
+| `newRectButton` | Create a rectangle button      |    menu.lua/fun.lua |
+| `newRoundedRectButton` | Create a rounded rectangle button     |    menu.lua/fun.lua |
+| `newSelect` | Create a select drop down list (dropdown list). Colors, dimensions and fonts can be specified.      |    fun.lua |
+| `newSlider` | Create a slider for doing percentages 0..100. Calculate amount in call backs: callBackMove (called during movement) and callBack = at the end phase.  Values are in percent (0.20, 0.90 and 1 for 100%). See method sliderCallBackMove() to get current value of slider.       |    fun.lua |
+| `newTableView` | Create a scrollable table view      |    menu.lua/fun.lua |
+| `newTextBox` | Create a text box with label above (for now)      |    fun.lua |
+| `newTextField` | Create a text field with label above (for now)      |    menu.lua/fun.lua |
+| `newTimePicker` | Create a time picker. Use pickerGetCurrentValue() method to get current value in a table format. | menu.lua / mui-datetime.lua |
+| `newToast` | Create simple "toast" notifications on screen. Colors, dimensions and fonts can be specified.      |    fun.lua |
+| `newToggleSwitch` | Create a toggle switch.      |    menu.lua |
+| `newToolbar` | Create a horizontal toolbar with icon, text or icon + text (icon on top, text on bottom) buttons      |    menu.lua |
+| `newParentOnBoard` | Create an "onboarding" scene. The onboarding/walkthrough screens for first-time users. Introduce the app and demonstrate what it does. Used in conjunction with `addChildOnBoard`. Tap "?" in the demo's first scene. Supports progress indicators (rectangle and circles) Please "read" the comments near the top of the example. |    onboard.lua |
 
 Helper Methods
 -------------
@@ -101,25 +101,25 @@ Helper Methods
 - `hideWidget` - hide a widget by name. It will hide/show a widget by setting the isVisible attribute.
 
 Remove widget methods - these will remove the widget by name and release memory:
-- `removeWidgetCircleButton`
-- `removeWidgetDialog`
-- `removeWidgetIconButton`
-- `removeWidgetNavbar`
-- `removeWidgetOnBoarding`
-- `removeWidgetProgressBar`
-- `removeWidgetRadioButton`
-- `removeWidgetRectButton`
-- `removeWidgetRRectButton`
-- `removeWidgetSelect`
-- `removeWidgetSlider`
-- `removeWidgetSwitch`
-- `removeWidgetTableView`
-- `removeWidgetTextField`
-- `removeWidgetTextBox`
-- `removeWidgetToast`
-- `removeWidgetToggleSwitch`
-- `removeWidgetToolbar`
-- `removeWidgetToolbarButton`
+- `removeCircleButton`
+- `removeDialog`
+- `removeIconButton`
+- `removeNavbar`
+- `removeOnBoarding`
+- `removeProgressBar`
+- `removeRadioButton`
+- `removeRectButton`
+- `removeRRectButton`
+- `removeSelect`
+- `removeSlider`
+- `removeSwitch`
+- `removeTableView`
+- `removeTextField`
+- `removeTextBox`
+- `removeToast`
+- `removeToggleSwitch`
+- `removeToolbar`
+- `removeToolbarButton`
 
 Built-In Callbacks
 -------------

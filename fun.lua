@@ -47,7 +47,7 @@ function scene:create( event )
 	background:setFillColor( unpack(colorFill) )
 
     mui.init()
-    mui.createRRectButton({
+    mui.newRoundedRectButton({
         scrollView = scrollView,
         name = "goBack",
         text = "Go Back",
@@ -68,7 +68,7 @@ function scene:create( event )
     -- show a "toast" message, yes I said toast like HTML 5 Toast
     -- recommend 40 percent ratio for one liners (20 radius/50 height = 0.40)
     local showToast = function()
-        mui.createToast({
+        mui.newToast({
             name = "toast_demo",
             text = "New Messages!",
             radius = 20,
@@ -85,7 +85,7 @@ function scene:create( event )
         })
     end
 
-    mui.createRRectButton({
+    mui.newRoundedRectButton({
         name = "newToast",
         text = "Show Toast",
         width = mui.getScaleVal(200),
@@ -101,7 +101,7 @@ function scene:create( event )
 
     -- create a drop down list
     local numOfRowsToShow = 3
-    mui.createSelect({
+    mui.newSelect({
         name = "selector_demo1",
         labelText = "Favorite Food",
         text = "Apple",
@@ -136,7 +136,7 @@ function scene:create( event )
 
     -- horizontal slider (vertical in development)
     ---[[--
-    mui.createSlider({
+    mui.newSlider({
         name = "slider_demo",
         width = mui.getScaleVal(200),
         height = mui.getScaleVal(4),
@@ -149,7 +149,7 @@ function scene:create( event )
         callBackMove = mui.sliderCallBackMove,
         callBack = mui.sliderCallBack
     })
-    mui.createSlider({
+    mui.newSlider({
         name = "slider_demo2",
         width = mui.getScaleVal(200),
         height = mui.getScaleVal(4),
@@ -179,7 +179,7 @@ function scene:create( event )
 	    }
 	)
 
-    mui.createTextField({
+    mui.newTextField({
         name = "textfield_demo2",
         labelText = "Subject",
         text = "Hello, world!",
@@ -195,7 +195,7 @@ function scene:create( event )
     })
     --]]--
 
-    mui.createTextField({
+    mui.newTextField({
         name = "textfield_demo3",
         labelText = "Tweet",
         text = "Scroll away",
@@ -211,7 +211,7 @@ function scene:create( event )
         isSecure = true
     })
 
-    mui.createTextField({
+    mui.newTextField({
         name = "textfield_demo4",
         labelText = "My Topic",
         text = "Hello, World!",
@@ -226,7 +226,7 @@ function scene:create( event )
         scrollView = scrollView
     })
 
-    mui.createTextField({
+    mui.newTextField({
         name = "textfield_demo5",
         labelText = "Numbers Only",
         text = "12345",
@@ -242,7 +242,7 @@ function scene:create( event )
         inputType = "number"
     })
 
-    mui.createTextBox({
+    mui.newTextBox({
         name = "textbox_demo1",
         labelText = "Secret Text Box",
         text = "I am hidden in view\nYes, me too!\nFood\nDrink\nDesert",
@@ -275,7 +275,7 @@ function scene:create( event )
 
     -- put navbar on bottom. this is to stay on top of other widgets.
     -- supported widget types are : "RRectButton", "RectButton", "IconButton", "Slider", "TextField"
-    mui.createNavbar({
+    mui.newNavbar({
         name = "navbar_demo",
         --width = mui.getScaleVal(500), -- defaults to display.contentWidth
         height = mui.getScaleVal(70),
@@ -285,7 +285,7 @@ function scene:create( event )
         activeTextColor = { 1, 1, 1, 1 },
         padding = mui.getScaleVal(10),
     })
-    mui.createIconButton({
+    mui.newIconButton({
         name = "menu",
         text = "menu",
         width = mui.getScaleVal(50),
@@ -302,7 +302,7 @@ function scene:create( event )
         widgetType = "IconButton",
         align = "left",  -- left | right supported
     })
-    mui.createIconButton({
+    mui.newIconButton({
         name = "refresh",
         text = "refresh",
         width = mui.getScaleVal(50),
@@ -319,7 +319,7 @@ function scene:create( event )
         widgetType = "IconButton",
         align = "left",  -- left | right supported
     })
-    mui.createTextField({
+    mui.newTextField({
         name = "textfield_nav",
         text = "",
         placeholder = "Search",
@@ -338,7 +338,7 @@ function scene:create( event )
         widgetType = "TextField",
         align = "left",  -- left | right supported
     })
-    mui.createIconButton({
+    mui.newIconButton({
         name = "help",
         text = "help",
         width = mui.getScaleVal(50),

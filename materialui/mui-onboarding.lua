@@ -14,6 +14,10 @@ local screenH = display.contentHeight
 local M = muiData.M -- {} -- for module array/table
 
 function M.createParentOnBoard( options )
+    return M.newParentOnBoard(options)
+end
+
+function M.newParentOnBoard( options )
 	if options == nil then return end
 
 	if muiData.onBoardData == nil then muiData.onBoardData = {} end
@@ -120,6 +124,10 @@ function M.transitionSlideForOnBoard(i, obj, slideConfig)
 end
 
 function M.createElipsesForProgress( options )
+    M.newElipsesForProgress( options )
+end
+
+function M.newElipsesForProgress( options )
 	if options == nil then return end
 	if options.parent == nil or options.group == nil then return end
 	if options.slides ~= nil and options.slides < 2 then return end
@@ -205,6 +213,10 @@ function M.updateSlideIndicator()
 end
 
 function M.removeWidgetOnBoarding()
+    M.removeOnBoarding()
+end
+
+function M.removeOnBoarding()
     if muiData.onBoardData == nil then return end
 
     for i, groups in pairs(muiData.onBoardData) do

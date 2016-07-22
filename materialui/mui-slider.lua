@@ -40,6 +40,10 @@ local mathABS = math.abs
 local M = muiData.M -- {} -- for module array/table
 
 function M.createSlider(options)
+    M.newSlider(options)
+end
+
+function M.newSlider(options)
     if options == nil then return end
 
     local x,y = 160, 240
@@ -265,6 +269,10 @@ function M.sliderCallBack( event )
 end
 
 function M.removeWidgetSlider(widgetName)
+    M.removeSlider(widgetName)
+end
+
+function M.removeSlider(widgetName)
     if widgetName == nil then
         return
     end

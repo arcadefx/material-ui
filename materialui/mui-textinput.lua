@@ -43,6 +43,10 @@ local M = muiData.M -- {} -- for module array/table
 -- To-do: flow right or below based on parent text widget
 --
 function M.createTextField(options)
+    M.newTextField(options)
+end
+
+function M.newTextField(options)
 
     local x,y = 160, 240
     if options.x ~= nil then
@@ -279,6 +283,10 @@ end
 -- To-do: flow right or below based on parent text widget
 --
 function M.createTextBox(options)
+    M.newTextBox(options)
+end
+
+function M.newTextBox(options)
 
     local x,y = 160, 240
     if options.x ~= nil then
@@ -401,6 +409,10 @@ function M.textfieldCallBack(event)
 end
 
 function M.removeWidgetTextField(widgetName)
+    M.removeTextField(widgetName)
+end
+
+function M.removeTextField(widgetName)
     if widgetName == nil then
         return
     end
@@ -429,7 +441,11 @@ function M.removeWidgetTextField(widgetName)
 end
 
 function M.removeWidgetTextBox(widgetName)
-    M.removeWidgetTextField(widgetName)
+    M.removeTextBox(widgetName)
+end
+
+function M.removeTextBox(widgetName)
+    M.removeTextField(widgetName)
 end
 
 return M

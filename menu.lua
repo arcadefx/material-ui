@@ -45,7 +45,7 @@ function scene:create( event )
     -- dialog box example
     -- use mui.getWidgetBaseObject("dialog_demo") to get surface to add more content
     local showDialog = function()
-        mui.createDialog({
+        mui.newDialog({
             name = "dialog_demo",
             width = mui.getScaleVal(450),
             height = mui.getScaleVal(300),
@@ -88,7 +88,7 @@ function scene:create( event )
         })
     end
 
-    mui.createRRectButton({
+    mui.newRoundedRectButton({
         name = "newDialog",
         text = "Open Dialog",
         width = mui.getScaleVal(200),
@@ -104,7 +104,7 @@ function scene:create( event )
         callBack = showDialog
     })
 
-    mui.createRectButton({
+    mui.newRectButton({
         name = "scene2",
         text = "Switch Scene",
         width = mui.getScaleVal(200),
@@ -122,7 +122,7 @@ function scene:create( event )
         } -- scene fun.lua
     })
 
-    mui.createIconButton({
+    mui.newIconButton({
         name = "plus",
         text = "help",
         width = mui.getScaleVal(50),
@@ -142,7 +142,7 @@ function scene:create( event )
 
     -- date picker example
     local showDatePicker = function(event)
-        mui.createDatePicker({
+        mui.newDatePicker({
             name = "datepicker-demo",
             font = native.systemFont,
             fontSize = mui.getScaleVal(26),
@@ -169,7 +169,7 @@ function scene:create( event )
             callBack = mui.datePickerCallBack,
         })
     end
-    mui.createCircleButton({
+    mui.newCircleButton({
         name = "alice-button",
         text = "date_range",
         radius = mui.getScaleVal(46),
@@ -187,7 +187,7 @@ function scene:create( event )
 
     -- time picker example
     local showTimePicker = function(event)
-        mui.createTimePicker({
+        mui.newTimePicker({
             name = "timepicker-demo",
             font = native.systemFont,
             width = mui.getScaleVal(400),
@@ -211,7 +211,7 @@ function scene:create( event )
             callBack = mui.timePickerCallBack,
         })
     end
-    mui.createCircleButton({
+    mui.newCircleButton({
         name = "bueler-button",
         text = "access_time",
         radius = mui.getScaleVal(46),
@@ -225,7 +225,7 @@ function scene:create( event )
     })
 
     -- simulates a checkbox but can be other toggle buttons too!
-    mui.createIconButton({
+    mui.newIconButton({
         name = "check",
         text = "check_box_outline_blank",
         width = mui.getScaleVal(50),
@@ -239,8 +239,7 @@ function scene:create( event )
         callBack = mui.actionForCheckbox
     })
 
-    --[[--
-    mui.createToggleSwitch({
+    mui.newToggleSwitch({
         name = "switch_demo",
         size = mui.getScaleVal(55),
         x = mui.getScaleVal(360),
@@ -253,9 +252,8 @@ function scene:create( event )
         value = 100, -- if switch is in the on position it's 100 else nil
         callBack = mui.actionForSwitch
     })
-    --]]--
 
-    mui.createRadioGroup({
+    mui.newRadioGroup({
         name = "radio_demo",
         width = mui.getScaleVal(30), --+ (getScaleVal(30)*1.2),
         height = mui.getScaleVal(30),
@@ -274,7 +272,7 @@ function scene:create( event )
     })
 
     ---[[--
-    mui.createTableView({
+    mui.newTableView({
         name = "tableview_demo",
         width = mui.getScaleVal(300),
         height = mui.getScaleVal(300),
@@ -307,7 +305,7 @@ function scene:create( event )
     })
     --]]--
 
-    mui.createTextField({
+    mui.newTextField({
         name = "textfield_demo",
         labelText = "Subject",
         text = "Hello, world!",
@@ -322,7 +320,7 @@ function scene:create( event )
     })
 
     -- create and animate the intial value (1% is always required due to scaling method)
-    mui.createProgressBar({
+    mui.newProgressBar({
         name = "progressbar_demo",
         width = mui.getScaleVal(290),
         height = mui.getScaleVal(8),
@@ -353,7 +351,7 @@ function scene:create( event )
 
     -- on bottom and stay on top of other widgets.
     local buttonHeight = mui.getScaleVal(70)
-    mui.createToolbar({
+    mui.newToolbar({
         name = "toolbar_demo",
         --width = mui.getScaleVal(500), -- defaults to display.contentWidth
         height = mui.getScaleVal(70),

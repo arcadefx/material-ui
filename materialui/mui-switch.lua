@@ -40,6 +40,10 @@ local mathABS = math.abs
 local M = muiData.M -- {} -- for module array/table
 
 function M.createToggleSwitch(options)
+    M.newToggleSwitch(options)
+end
+
+function M.newToggleSwitch(options)
     if options == nil then return end
 
     local x,y = 160, 240
@@ -239,6 +243,10 @@ function M.actionForSwitch(event)
 end
 
 function M.removeWidgetToggleSwitch(widgetName)
+    M.removeToggleSwitch(widgetName)
+end
+
+function M.removeToggleSwitch(widgetName)
     if widgetName == nil then
         return
     end

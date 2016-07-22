@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.23] - 2016-07-22
+### Change
+- Put back the toggle switch in the demo.
+- Renamed all methods with prefix 'create' to 'new'. Example newDialog() instead of createDialog(). Backwards compability will remain for a while. Any new methods will use 'new' prefix.
+- Renamed all methods with prefix 'removeWidget' to 'remove'.  Example removeDialog() instead of removeWidgetDialog(). Backwards compability will remain for a while. Any new methods will use 'remove' prefix.
+
 ## [0.1.22] - 2016-07-20
 ### Added
 - Added date and time pickers. This took a while to develop and will be improved.  There will be a another date and time picker following material lite design.  In the end there will be two sets to choose from.  See main scene with circle button icons for date and time.  Use method 'pickerGetCurrentValue(<control name>)' to get current date / time.

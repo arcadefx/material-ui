@@ -40,6 +40,10 @@ local mathABS = math.abs
 local M = muiData.M -- {} -- for module array/table
 
 function M.createDialog(options)
+    M.newDialog(options)
+end
+
+function M.newDialog(options)
 
     if options == nil then return end
 
@@ -188,7 +192,7 @@ function M.createDialog(options)
         if options.buttons["okayButton"].text == nil then
             options.buttons["okayButton"].text = "Okay"
         end
-        M.createRectButton({
+        M.newRectButton({
             name = "okay_dialog_button",
             text = options.buttons["okayButton"].text,
             width = M.getScaleVal(100),
@@ -224,7 +228,7 @@ function M.createDialog(options)
         if bx > 0 then
             bx = (bx - (bx * 0.1)) - M.getScaleVal(100)
         end
-        M.createRectButton({
+        M.newRectButton({
             name = "cancel_dialog_button",
             text = options.buttons["cancelButton"].text,
             width = M.getScaleVal(100),
@@ -271,7 +275,7 @@ function M.closeDialog(e)
     -- fade out and destroy it
     if muiData.dialogName ~= nil then
         transition.fadeOut( muiData.widgetDict[muiData.dialogName]["rectbackdrop"], { time=500 } )
-        transition.to( muiData.widgetDict[muiData.dialogName]["container"], { time=1100, y = display.contentHeight * 2, onComplete=M.removeWidgetDialog, transition=easing.inOutCubic } )
+        transition.to( muiData.widgetDict[muiData.dialogName]["container"], { time=1100, y = display.contentHeight * 2, onComplete=M.removeDialog, transition=easing.inOutCubic } )
     end
 end
 
@@ -281,6 +285,10 @@ function M.dialogClose(e)
 end
 
 function M.removeWidgetDialog()
+    M.removeDialog()
+end
+
+function M.removeDialog()
     if muiData.dialogName == nil then
         return
     end
@@ -289,8 +297,8 @@ function M.removeWidgetDialog()
     if muiData.widgetDict[widgetName] == nil then return end
 
     -- remove buttons
-    M.removeWidgetRectButton("okay_dialog_button")
-    M.removeWidgetRectButton("cancel_dialog_button")
+    M.removeRectButton("okay_dialog_button")
+    M.removeRectButton("cancel_dialog_button")
 
     -- remove the rest
     -- muiData.widgetDict[widgetName]["container"]["myText"]:removeSelf()

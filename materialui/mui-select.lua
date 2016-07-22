@@ -42,12 +42,19 @@ local mathABS = math.abs
 
 local M = muiData.M -- {} -- for module array/table
 
-
 function M.createDropDown(options)
-    M.createSelector(options)
+    M.newDropDown(options)
+end
+
+function M.newDropDown(options)
+    M.newSelect(options)
 end
 
 function M.createSelect(options)
+    M.newSelect(options)
+end
+
+function M.newSelect(options)
 
     local x,y = 160, 240
     if options.x ~= nil then
@@ -188,7 +195,7 @@ function M.revealTableViewForSelector(name, options)
     muiData.widgetDict[options.name]["mygroup"].x = x
     muiData.widgetDict[options.name]["mygroup"].y = y
 
-    M.createTableView({
+    M.newTableView({
         name = options.name.."-List",
         width = options.width - M.getScaleVal(5),
         height = options.listHeight,
@@ -291,10 +298,14 @@ end
 
 function M.finishSelector(parentName)
     if muiData.widgetDict[parentName] == nil then return end
-    M.removeWidgetSelector(parentName, "listonly")
+    M.removeSelector(parentName, "listonly")
 end
 
 function M.removeWidgetSelector(widgetName, listonly)
+    M.removeSelector(widgetName, listonly)
+end
+
+function M.removeSelector(widgetName, listonly)
     if widgetName == nil then
         return
     end
@@ -302,11 +313,11 @@ function M.removeWidgetSelector(widgetName, listonly)
     if muiData.widgetDict[widgetName] == nil then return end
 
     if listonly ~= nil then
-        M.removeWidgetTableView(widgetName .. "-List")
+        M.removeTableView(widgetName .. "-List")
         M.removeSelectorGroup(widgetName)
         return
     else
-        M.removeWidgetTableView(widgetName .. "-List")
+        M.removeTableView(widgetName .. "-List")
     end
 
     muiData.widgetDict[widgetName]["selectorfieldfake"]:removeEventListener("touch", M.selectorListener)

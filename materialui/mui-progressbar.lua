@@ -64,6 +64,10 @@ local M = muiData.M -- {} -- for module array/table
     hideBackdropWhenDone = false
 --]]--
 function M.createProgressBar(options)
+    M.newProgressBar(options)
+end
+
+function M.newProgressBar(options)
     if options == nil then return end
 
     local x,y = 160, 240
@@ -264,6 +268,10 @@ function M.postProgressCallBack( object )
 end
 
 function M.removeWidgetProgressBar(widgetName)
+    M.removeProgressBar(widgetName)
+end
+
+function M.removeProgressBar(widgetName)
     if widgetName == nil then
         return
     end

@@ -60,6 +60,10 @@ local M = muiData.M -- {} -- for module array/table
 
 ]]
 function M.createRRectButton(options)
+    M.newRoundedRectButton(options)
+end
+
+function M.newRoundedRectButton(options)
 
     local x,y = 160, 240
     if options.x ~= nil then
@@ -276,6 +280,10 @@ end
 
 ]]
 function M.createRectButton(options)
+    M.newRectButton(options)
+end
+
+function M.newRectButton(options)
 
     local x,y = 160, 240
     if options.x ~= nil then
@@ -404,6 +412,10 @@ end
 
 ]]
 function M.createIconButton(options)
+    M.newIconButton(options)
+end
+
+function M.newIconButton(options)
 
     local x,y = 160, 240
     if options.x ~= nil then
@@ -564,7 +576,11 @@ function M.touchIconButton (event)
 end
 
 function M.createCheckBox(options)
-    M.createIconButton({
+    M.newCheckBox(options)
+end
+
+function M.newCheckBox(options)
+    M.newIconButton({
         name = options.name,
         text = "check_box_outline_blank",
         width = options.width,
@@ -579,6 +595,10 @@ function M.createCheckBox(options)
 end
 
 function M.createCircleButton(options)
+    M.newCircleButton(options)
+end
+
+function M.newCircleButton(options)
 
     local x,y = 160, 240
     if options.x ~= nil then
@@ -763,6 +783,10 @@ end
 
 ]]
 function M.createRadioButton(options)
+    M.newRadioButton(options)
+end
+
+function M.newRadioButton(options)
 
     local x,y = 160, 240
     if options.x ~= nil then
@@ -970,8 +994,11 @@ function M.touchCheckbox (event)
     end
 end
 
-
 function M.createRadioGroup(options)
+    M.newRadioGroup(options)
+end
+
+function M.newRadioGroup(options)
 
     local x, y = options.x, options.y
 
@@ -989,7 +1016,7 @@ function M.createRadioGroup(options)
         muiData.widgetDict[options.name]["radio"] = {}
         muiData.widgetDict[options.name]["type"] = "RadioGroup"
         for i, v in ipairs(options.list) do            
-            M.createRadioButton({
+            M.newRadioButton({
                 name = options.name .. "_" .. i,
                 basename = options.name,
                 label = v.key,
@@ -1090,6 +1117,10 @@ function M.actionForButton( e )
 end
 
 function M.removeWidgetRRectButton(widgetName)
+    M.removeRRectButton(widgetName)
+end
+
+function M.removeRRectButton(widgetName)
     if widgetName == nil then
         return
     end
@@ -1111,6 +1142,10 @@ function M.removeWidgetRRectButton(widgetName)
 end
 
 function M.removeWidgetRectButton(widgetName)
+    M.removeRectButton(widgetName)
+end
+
+function M.removeRectButton(widgetName)
     if widgetName == nil then
         return
     end
@@ -1130,6 +1165,10 @@ function M.removeWidgetRectButton(widgetName)
 end
 
 function M.removeWidgetCircleButton(widgetName)
+    M.removeCircleButton(widgetName)
+end
+
+function M.removeCircleButton(widgetName)
     if widgetName == nil then
         return
     end
@@ -1149,6 +1188,10 @@ function M.removeWidgetCircleButton(widgetName)
 end
 
 function M.removeWidgetIconButton(widgetName)
+    M.removeIconButton(widgetName)
+end
+
+function M.removeIconButton(widgetName)
     if widgetName == nil then
         return
     end
@@ -1166,6 +1209,10 @@ function M.removeWidgetIconButton(widgetName)
 end
 
 function M.removeWidgetRadioButton(widgetName)
+    M.removeRadioButton(widgetName)
+end
+
+function M.removeRadioButton(widgetName)
     if widgetName == nil then
         return
     end

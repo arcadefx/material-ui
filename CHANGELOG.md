@@ -5,8 +5,9 @@ All notable changes to this project will be documented in this file.
 ## [0.1.23] - 2016-07-22
 ### Change
 - Put back the toggle switch in the demo.
-- Renamed all methods with prefix 'create' to 'new'. Example newDialog() instead of createDialog(). Backwards compability will remain for a while. Any new methods will use 'new' prefix.
-- Renamed all methods with prefix 'removeWidget' to 'remove'.  Example removeDialog() instead of removeWidgetDialog(). Backwards compability will remain for a while. Any new methods will use 'remove' prefix.
+- Renamed all methods with prefix 'create' to 'new'. Example newDialog() instead of createDialog(). Backwards compatiblity will remain for a while. Any new methods will use 'new' prefix.
+- Renamed all methods with prefix 'removeWidget' to 'remove'.  Example removeDialog() instead of removeWidgetDialog(). Backwards compatiblity will remain for a while. Any new methods will use 'remove' prefix.
+- Renamed removeWidgets() to destroy() and includes backwards compatiblity
 
 ## [0.1.22] - 2016-07-20
 ### Added

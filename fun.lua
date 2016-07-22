@@ -456,7 +456,7 @@ function scene:destroy( event )
 	-- e.g. remove display objects, remove touch listeners, save state, etc.
 	local sceneGroup = self.view
 
-    mui.removeWidgets()
+    mui.destroy()
 
     scrollView:removeSelf()
     scrollView = nil

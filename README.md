@@ -43,7 +43,7 @@ local mui = require( "materialui.mui" )
 ```
 * In the scene destroy function add in the remove method to destroy all user-interface elements in the scene
 ```
-    mui.removeWidgets()
+    mui.destroy()
 ```
 
 Building for Device

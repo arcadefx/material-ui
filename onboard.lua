@@ -247,7 +247,7 @@ function scene:destroy( event )
 
 	local sceneGroup = self.view
 
-    mui.removeWidgets()
+    mui.destroy()
 
 	sceneGroup:removeSelf()
 	sceneGroup = nil

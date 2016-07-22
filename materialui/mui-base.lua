@@ -533,6 +533,10 @@ function M.hideNativeWidgets()
 end
 
 function M.removeWidgets()
+  M.destroy()
+end
+
+function M.destroy()
   print("Removing widgets")
   for widget in pairs(muiData.widgetDict) do
       local widgetType = muiData.widgetDict[widget]["type"]

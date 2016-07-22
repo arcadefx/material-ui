@@ -419,7 +419,7 @@ function scene:destroy( event )
     -- Called prior to the removal of scene's view
     -- Insert code here to clean up the scene
     -- Example: remove display objects, save state, etc.
-    mui.removeWidgets()
+    mui.destroy()
     if background ~= nil then
         background:removeSelf()
         background = nil

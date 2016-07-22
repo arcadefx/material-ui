@@ -70,6 +70,7 @@ Please read Lua code to find all parameters and see example in the repo call men
 | Method        | Short Description | Example  |
 | ------------- | ------------- | :-----:|
 | `newCircleButton` | Create a circle button with a single character or even a word.| menu.lua |
+| `newCheckBox` | Create a check box. | menu.lua |
 | `newDatePicker` | Create a date picker. Use pickerGetCurrentValue() method to get current value in a table format. | menu.lua / mui-datetime.lua |
 | `newDialog` | Create a dialog (modal) with content. Supports up to two buttons (Okay, Cancel) with callbacks.       | menu.lua |
 | `newIconButton`      | Create an icon button using the material design icon font. Use this to create check boxes and more. | menu.lua |
@@ -102,6 +103,8 @@ Helper Methods
 
 Remove widget methods - these will remove the widget by name and release memory:
 - `removeCircleButton`
+- `removeCheckBox`
+- `removeDatePicker`
 - `removeDialog`
 - `removeIconButton`
 - `removeNavbar`
@@ -116,6 +119,7 @@ Remove widget methods - these will remove the widget by name and release memory:
 - `removeTableView`
 - `removeTextField`
 - `removeTextBox`
+- `removeTimePicker`
 - `removeToast`
 - `removeToggleSwitch`
 - `removeToolbar`

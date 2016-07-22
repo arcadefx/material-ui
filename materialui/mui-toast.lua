@@ -43,6 +43,10 @@ local mathABS = math.abs
 local M = muiData.M -- {} -- for module array/table
 
 function M.createToast( options )
+    M.newToast( options )
+end
+
+function M.newToast( options )
     if options == nil then return end
 
     if muiData.widgetDict[options.name] ~= nil then return end
@@ -155,7 +159,7 @@ function M.createToast( options )
                         options.easingOut = 500
                     end
                     muiData.widgetDict[options.name]["container"].name = options.name
-                    transition.to(muiData.widgetDict[options.name]["container"],{time=options.easingOut, y=-(options.top), transition=easing.inOutCubic, onComplete=M.removeToast})
+                    transition.to(muiData.widgetDict[options.name]["container"],{time=options.easingOut, y=-(options.top), transition=easing.inOutCubic, onComplete=M.removeMyToast})
                     event.target = muiData.widgetDict[options.name]["rrect"]
                     event.callBackData = options.callBackData
 
@@ -178,14 +182,18 @@ function M.createToast( options )
     transition.to(muiData.widgetDict[options.name]["container"],{time=options.easingIn, y=options.top, transition=easing.inOutCubic})
 end
 
-function M.removeToast(event)
+function M.removeMyToast(event)
     local muiName = event.name
     if muiName ~= nil then
-        M.removeWidgetToast(muiName)
+        M.removeToast(muiName)
     end
 end
 
 function M.removeWidgetToast(widgetName)
+    M.removeToast(widgetName)
+end
+
+function M.removeToast(widgetName)
     if widgetName == nil then
         return
     end

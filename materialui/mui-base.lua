@@ -86,12 +86,12 @@ function M.eventSuperListner(event)
                 if muiData.widgetDict[muiData.currentTargetName]["mygroup"] ~= nil then
                     muiData.currentTargetName = nil
                     muiData.lastTargetName = ""
-                    M.removeWidgetSelector(widget, "listonly")
+                    M.removeSelector(widget, "listonly")
                 end
                 break
             elseif widgetType == "Selector" and muiData.widgetDict[widget] ~= nil then
                 if muiData.widgetDict[widget]["mygroup"] ~= nil and muiData.widgetDict[widget]["mygroup"].isVisible == true then
-                    M.removeWidgetSelector(widget, "listonly")
+                    M.removeSelector(widget, "listonly")
                 end
             end
         end
@@ -538,48 +538,48 @@ function M.removeWidgets()
       local widgetType = muiData.widgetDict[widget]["type"]
       if widgetType ~= nil and muiData.widgetDict[widget] ~= nil then
         if widgetType == "CircleButton" then
-            M.removeWidgetCircleButton(widget)
+            M.removeCircleButton(widget)
         elseif widgetType == "DatePicker" then
-            M.removeWidgetDatePicker(widget)
+            M.removeDatePicker(widget)
         elseif widgetType == "RRectButton" then
-            M.removeWidgetRRectButton(widget)
+            M.removeRRectButton(widget)
         elseif widgetType == "RectButton" then
-            M.removeWidgetRectButton(widget)
+            M.removeRectButton(widget)
         elseif widgetType == "IconButton" then
-            M.removeWidgetIconButton(widget)
+            M.removeIconButton(widget)
         elseif widgetType == "RadioButton" then
-            M.removeWidgetRadioButton(widget)
+            M.removeRadioButton(widget)
         elseif widgetType == "Toolbar" then
-            M.removeWidgetToolbar(widget)
+            M.removeToolbar(widget)
         elseif widgetType == "TableView" then
-            M.removeWidgetTableView(widget)
+            M.removeTableView(widget)
         elseif widgetType == "TextField" then
-            M.removeWidgetTextField(widget)
+            M.removeTextField(widget)
         elseif widgetType == "TextBox" then
-            M.removeWidgetTextBox(widget)
+            M.removeTextBox(widget)
         elseif widgetType == "TimePicker" then
-            M.removeWidgetTimePicker(widget)
+            M.removeTimePicker(widget)
         elseif widgetType == "ProgressBar" then
-            M.removeWidgetProgressBar(widget)
+            M.removeProgressBar(widget)
         elseif widgetType == "ToggleSwitch" then
-            M.removeWidgetToggleSwitch(widget)
+            M.removeToggleSwitch(widget)
         elseif widgetType == "Slider" then
-            M.removeWidgetSlider(widget)
+            M.removeSlider(widget)
         elseif widgetType == "Toast" then
-            M.removeWidgetToast(widget)
+            M.removeToast(widget)
         elseif widgetType == "Selector" then
-            M.removeWidgetSelector(widget)
+            M.removeSelector(widget)
         elseif widgetType == "Navbar" then
             M.removeNavbar(widget)
         elseif widgetType == "BasicText" then
-            M.removeWidgetBasicText(widget)
+            M.removeBasicText(widget)
         end
       end
   end
 
   -- remove onBoarding if used.
   if muiData.onBoardData ~= nil then
-    M.removeWidgetOnBoarding()
+    M.removeOnBoarding()
   end
 
   -- remove circle if present

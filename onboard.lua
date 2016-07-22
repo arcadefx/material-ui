@@ -43,7 +43,7 @@ function scene:create( event )
     -- GROUP 1
     --
 
-    local group1 = mui.createParentOnBoard({
+    local group1 = mui.newParentOnBoard({
         name = "group1",
         object = display.newGroup()
     })
@@ -77,7 +77,7 @@ function scene:create( event )
     }
     textWidth = mui.getTextWidth( options )
     options.width = textWidth
-    mui.createBasicText( options )
+    mui.newBasicText( options )
     local introText = mui.getWidgetBaseObject("intro-text")
     introText.x = (background.contentWidth * 0.5)
     group1:insert( introText )
@@ -86,7 +86,7 @@ function scene:create( event )
     -- GROUP 2
     --
 
-    local group2 = mui.createParentOnBoard({
+    local group2 = mui.newParentOnBoard({
         name = "group2",
         object = display.newGroup()
     })
@@ -120,7 +120,7 @@ function scene:create( event )
     }
     textWidth = mui.getTextWidth( options )
     options.width = textWidth
-    mui.createBasicText( options )
+    mui.newBasicText( options )
     local introText2 = mui.getWidgetBaseObject("intro-text2")
     introText2.x = (background2.contentWidth * 0.5)
     group2:insert( introText2 )
@@ -149,7 +149,7 @@ function scene:create( event )
     -- BOTTOM GROUP of Onboarding
     --
 
-    local groupBottom = mui.createParentOnBoard({
+    local groupBottom = mui.newParentOnBoard({
         name = "groupBottom",
         object = display.newGroup()
     })
@@ -167,7 +167,7 @@ function scene:create( event )
     backgroundBottom:setFillColor( unpack( colorFill ) )
     groupBottom:insert( backgroundBottom )
 
-    mui.createIconButton({
+    mui.newIconButton({
         name = "continue-button",
         text = "arrow_forward",
         width = mui.getScaleVal(50),
@@ -191,7 +191,7 @@ function scene:create( event )
     --
     -- Elipses / progress indicator
     --
-    mui.createElipsesForProgress({
+    mui.newElipsesForProgress({
         parent = "groupBottom",
         group = groupBottom,
         slides = 2, -- number of slides

@@ -45,6 +45,10 @@ local M = muiData.M -- {} -- for module array/table
 
 -- define methods here
 function M.createDatePicker(options)
+    M.newDatePicker(options)
+end
+
+function M.newDatePicker(options)
 	if options == nil then return end
     if muiData.widgetDict[options.name] ~= nil then return end
 
@@ -205,7 +209,7 @@ function M.createDatePicker(options)
         callBack = options.callBack,
     }
 
-    M.createPickerWheel(options.x, options.y, pickerOptions)
+    M.newPickerWheel(options.x, options.y, pickerOptions)
 end
 
 function M.datePickerCallBack( event )
@@ -221,7 +225,7 @@ function M.datePickerCallBack( event )
         local text = "Date Column 1 Value: " .. (value.month or "") .. "\nColumn 2 Value: " .. (value.day or "") .. "\nColumn 3 Value: " .. (value.year or "")
         print("text: "..text)
     end
-    M.removeWidgetDateTimePicker(event)
+    M.removeDateTimePicker(event)
 
     return true
 end
@@ -271,6 +275,10 @@ end
 
 -- define methods here
 function M.createTimePicker(options)
+    M.newTimePicker(options)
+end
+
+function M.newTimePicker(options)
     if options == nil then return end
     if muiData.widgetDict[options.name] ~= nil then return end
 
@@ -429,7 +437,7 @@ function M.createTimePicker(options)
         submitButtonTextColor = options.submitButtonTextColor,
         callBack = options.callBack,
     }
-    M.createPickerWheel(options.x, options.y, pickerOptions)
+    M.newPickerWheel(options.x, options.y, pickerOptions)
 end
 
 function M.pickerSetDefaultOptions(options)
@@ -444,7 +452,7 @@ function M.pickerSetDefaultOptions(options)
     return options
 end
 
-function M.createPickerWheel( x, y, options )
+function M.newPickerWheel( x, y, options )
     if options == nil then return end
     if options.name == nil then return end
 
@@ -654,7 +662,7 @@ function M.createPickerWheel( x, y, options )
     muiData.dialogInUse = true
 
     -- attach the cancel button
-    M.createRectButton({
+    M.newRectButton({
         name = options.name .. "-datetime-button-cancel",
         dialogName = options.name,
         text = (options.cancelButtonText or "Cancel"),
@@ -666,7 +674,7 @@ function M.createPickerWheel( x, y, options )
         fillColor = (options.cancelButtonFillColor or { 0, 0, 1, 1 }),
         textColor = (options.cancelButtonTextColor or { 1, 1, 1 }),
         touchpoint = true,
-        callBack = M.removeWidgetDateTimePicker,
+        callBack = M.removeDateTimePicker,
         callBackData = {
             targetName = options.name,
             buttonName = options.name .. "-datetime-button-cancel"
@@ -678,7 +686,7 @@ function M.createPickerWheel( x, y, options )
     cancelWidget.y = cancelWidget.y + (cancelWidget.contentHeight * 0.95)
 
     -- attach the set button
-    M.createRectButton({
+    M.newRectButton({
         name = options.name .. "-datetime-button-set",
         dialogName = options.name,
         text = (options.submitButtonText or "Set"),
@@ -1013,12 +1021,16 @@ function M.timePickerCallBack( event )
         print("text: "..text)
 
     end
-    M.removeWidgetDateTimePicker(event)
+    M.removeDateTimePicker(event)
 
     return true
 end
 
 function M.removeWidgetDateTimePicker( event )
+    M.removeDateTimePicker( event )
+end
+
+function M.removeDateTimePicker( event )
     local callBackData = M.getEventParameter(event, "muiTargetCallBackData")
     if callBackData == nil then return end
 
@@ -1029,8 +1041,8 @@ function M.removeWidgetDateTimePicker( event )
 
     if muiData.widgetDict[widgetName] == nil then return end
 
-    M.removeWidgetRectButton(widgetName .. "-datetime-button-cancel")
-    M.removeWidgetRectButton(widgetName .. "-datetime-button-set")
+    M.removeRectButton(widgetName .. "-datetime-button-cancel")
+    M.removeRectButton(widgetName .. "-datetime-button-set")
 
     muiData.widgetDict[widgetName]["line-top"]:removeSelf()
     muiData.widgetDict[widgetName]["line-top"] = nil

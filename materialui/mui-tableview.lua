@@ -43,6 +43,10 @@ local mathABS = math.abs
 local M = muiData.M -- {} -- for module array/table
 
 function M.createTableView( options )
+    M.newTableView( options )
+end
+
+function M.newTableView( options )
     local screenRatio = M.getSizeRatio()
     -- The "onRowRender" function may go here (see example under "Inserting Rows", above)
 
@@ -239,7 +243,7 @@ function M.onRowRenderDemo( event )
     local rowWidth = row.contentWidth
 
     --[[-- demo attaching widget to a row
-    M.createIconButton({
+    M.newIconButton({
         name = "plus"..row.index,
         text = "add_circle",
         width = M.getScaleVal(40),
@@ -393,6 +397,10 @@ function M.onRowTouchDemo(event)
 end
 
 function M.removeWidgetTableView(widgetName)
+    M.removeTableView(widgetName)
+end
+
+function M.removeTableView(widgetName)
     if widgetName == nil then
         return
     end

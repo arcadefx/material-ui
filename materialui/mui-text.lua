@@ -41,6 +41,10 @@ local M = muiData.M -- {} -- for module array/table
 
 -- define methods here
 function M.createBasicText(options)
+    M.newBasicText(options)
+end
+
+function M.newBasicText(options)
 	if options == nil then return end
 
     muiData.widgetDict[options.name] = {}
@@ -52,6 +56,10 @@ function M.createBasicText(options)
 end
 
 function M.removeWidgetBasicText(widgetName)
+    M.removeBasicText(widgetName)
+end
+
+function M.removeBasicText(widgetName)
     if widgetName == nil then
         return
     end

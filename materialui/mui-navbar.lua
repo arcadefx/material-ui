@@ -47,6 +47,10 @@ function M.getNavbarSupportedTypes()
 end
 
 function M.createNavbar( options )
+    M.newNavBar(options)
+end
+
+function M.newNavbar( options )
     if options == nil then return end
 
     if muiData.widgetDict[options.name] ~= nil then return end
@@ -189,17 +193,17 @@ function M.removeNavbar(widgetName)
     for name, widgetType in pairs(muiData.widgetDict[widgetName]["list"]) do
         if muiData.widgetDict[widgetName]["list"][name] ~= nil then
             if widgetType == "RRectButton" then
-                M.removeWidgetRRectButton(name)
+                M.removeRRectButton(name)
             elseif widgetType == "RectButton" then
-                M.removeWidgetRectButton(name)
+                M.removeRectButton(name)
             elseif widgetType == "CircleButton" then
-                M.removeWidgetCircleButton(name)
+                M.removeCircleButton(name)
             elseif widgetType == "IconButton" then
-                M.removeWidgetIconButton(name)
+                M.removeIconButton(name)
             elseif widgetType == "RectButton" then
-                M.removeWidgetSlider(name)
+                M.removeSlider(name)
             elseif widgetType == "RectButton" then
-                M.removeWidgetTextField(name)
+                M.removeTextField(name)
             elseif widgetType == "Generic" then
               if muiData.widgetDict[widgetName]["destroy"] ~= nil and muiData.widgetDict[widgetName]["destroy"][name] ~= nil then
                 assert( muiData.widgetDict[widgetName]["destroy"][name] )(event)

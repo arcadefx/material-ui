@@ -40,6 +40,10 @@ local mathABS = math.abs
 local M = muiData.M -- {} -- for module array/table
 
 function M.createToolbarButton( options )
+    M.newToolbarButton( options )
+end
+
+function M.newToolbarButton( options )
     local x,y = 160, 240
     if options.x ~= nil then
         x = options.x
@@ -304,6 +308,10 @@ function M.toolBarButton (event)
 end
 
 function M.createToolbar( options )
+  M.newToolbar( options )
+end
+
+function M.newToolbar( options )
     local x, y = options.x, options.y
     local buttonWidth = 1
     local buttonOffset = 0
@@ -323,7 +331,7 @@ function M.createToolbar( options )
         muiData.widgetDict[options.name]["toolbar"] = {}
         muiData.widgetDict[options.name]["type"] = "Toolbar"
         for i, v in ipairs(options.list) do            
-            M.createToolbarButton({
+            M.newToolbarButton({
                 index = i,
                 name = options.name .. "_" .. i,
                 basename = options.name,
@@ -421,6 +429,10 @@ function M.actionForToolbarDemo( event )
 end
 
 function M.removeWidgetToolbar(widgetName)
+    M.removeToolbar(widgetName)
+end
+
+function M.removeToolbar(widgetName)
     if widgetName == nil then
         return
     end
@@ -428,7 +440,7 @@ function M.removeWidgetToolbar(widgetName)
     if muiData.widgetDict[widgetName] == nil then return end
 
     for name in pairs(muiData.widgetDict[widgetName]["toolbar"]) do
-        M.removeWidgetToolbarButton(muiData.widgetDict, widgetName, name)
+        M.removeToolbarButton(muiData.widgetDict, widgetName, name)
         if name ~= "slider" and name ~= "rectBak" then
             muiData.widgetDict[widgetName]["toolbar"][name] = nil
         end
@@ -444,6 +456,10 @@ function M.removeWidgetToolbar(widgetName)
 end
 
 function M.removeWidgetToolbarButton(widgetDict, toolbarName, name)
+    M.removeToolbarButton(widgetDict, toolbarName, name)
+end
+
+function M.removeToolbarButton(widgetDict, toolbarName, name)
     if toolbarName == nil then
         return
     end

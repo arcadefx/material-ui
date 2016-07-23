@@ -80,6 +80,7 @@ Please read Lua code to find all parameters and see example in the repo call men
 | `newRectButton` | Create a rectangle button      |    menu.lua/fun.lua |
 | `newRoundedRectButton` | Create a rounded rectangle button     |    menu.lua/fun.lua |
 | `newSelect` | Create a select drop down list (dropdown list). Colors, dimensions and fonts can be specified.      |    fun.lua |
+| `newSlidePanel` | Create a slide out menu (see hamburger icon) | menu.lua/fun.lua |
 | `newSlider` | Create a slider for doing percentages 0..100. Calculate amount in call backs: callBackMove (called during movement) and callBack = at the end phase.  Values are in percent (0.20, 0.90 and 1 for 100%). See method sliderCallBackMove() to get current value of slider.       |    fun.lua |
 | `newTableView` | Create a scrollable table view      |    menu.lua/fun.lua |
 | `newTextBox` | Create a text box with label above (for now)      |    fun.lua |
@@ -114,6 +115,7 @@ Remove widget methods - these will remove the widget by name and release memory:
 - `removeRectButton`
 - `removeRRectButton`
 - `removeSelect`
+- `removeSlidePanel`
 - `removeSlider`
 - `removeSwitch`
 - `removeTableView`

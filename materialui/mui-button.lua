@@ -716,7 +716,9 @@ function M.touchCircleButton (event)
     if event.target ~= nil then
         options = event.target.muiOptions
     end
-    if muiData.dialogInUse == true and options.dialogName == nil then return end
+    if muiData.dialogInUse == true and options.dialogName == nil then
+         return
+    end
 
     M.addBaseEventParameters(event, options)
 

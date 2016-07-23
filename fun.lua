@@ -273,6 +273,41 @@ function scene:create( event )
     infoText = display.newText( textOptions )
     infoText:setFillColor( 0.4, 0.4, 0.4 )
 
+    -- slide panel example, uses navbar's "menu" icon below
+    local showSlidePanel2 = function(event)
+        mui.newSlidePanel({
+            name = "slidepanel-demo2",
+            title = "MUI Demo", -- leave blank for no panel title text
+            titleAlign = "center",
+            font = native.systemFont,
+            width = mui.getScaleVal(400),
+            titleFontSize = mui.getScaleVal(30),
+            titleFontColor = { 1, 1, 1, 1 },
+            titleFont = native.systemFont,
+            titleBackgroundColor = { 0.63, 0.81, 0.181 },
+            fontSize = mui.getScaleVal(20),
+            fontColor = { 0.7, 0.7, 0.7, 1 }, -- non-select items
+            fontColorSelected = { 0, 0, 0, 1 }, -- selected items
+            fillColor = { 1, 1, 1, 1 }, -- background color
+            buttonToAnimate = "menu",
+            callBack = nil,
+            labelColor = { 0, 0, 0, 1 },
+            labelColorOff = { 0, 0, 0, 1 },
+            buttonHeight = mui.getScaleVal(60),
+            buttonHighlightColor = { 0.4, 0.4, 0.4, 0.01 },
+            buttonHighlightColorAlpha = 0.5,
+             touchpoint = true,
+            list = {
+                { key = "Home", value = "1", icon="home", labelText="Home", isActive = true },
+                { key = "Newsroom", value = "2", icon="new_releases", labelText="News", isActive = false },
+                { key = "Location", value = "3", icon="location_searching", labelText="Location Information", isActive = false },
+                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
+            },
+        })
+        -- add some buttons to the menu!
+
+    end
+
     -- put navbar on bottom. this is to stay on top of other widgets.
     -- supported widget types are : "RRectButton", "RectButton", "IconButton", "Slider", "TextField"
     mui.newNavbar({
@@ -295,7 +330,7 @@ function scene:create( event )
         font = "MaterialIcons-Regular.ttf",
         textColor = { 1, 1, 1 },
         textAlign = "center",
-        callBack = mui.actionForButton
+        callBack = showSlidePanel2
     })
     mui.attachToNavBar( "navbar_demo", {
         widgetName = "menu",

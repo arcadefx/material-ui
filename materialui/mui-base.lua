@@ -113,7 +113,7 @@ function M.updateEventHandler( event )
         if type(muiData.interceptEventHandler) == "function" then
           if event.target then
             event.target.muiOptions = muiData.interceptOptions
-            print("we have a special target! ") --..event.target.muiOptions.name)
+            -- print("we have a special target! ") --..event.target.muiOptions.name)
           end
           muiData.interceptEventHandler(event)
         end
@@ -186,9 +186,11 @@ function M.getWidgetBaseObject(name)
             if widgetType == "BasicText" then
                widgetData = muiData.widgetDict[widget]["text"]
             elseif widgetType == "CircleButton" then
-               widgetData = muiData.widgetDict[widget]["circlemain"]
+               widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "DatePicker" then
                widgetData = muiData.widgetDict[widget]["mygroup"]
+            elseif widgetType == "EmbossedText" then
+               widgetData = muiData.widgetDict[widget]["text"]
             elseif widgetType == "RRectButton" then
                widgetData = muiData.widgetDict[widget]["container"]
             elseif widgetType == "RectButton" then
@@ -559,10 +561,14 @@ function M.destroy()
   for widget in pairs(muiData.widgetDict) do
       local widgetType = muiData.widgetDict[widget]["type"]
       if widgetType ~= nil and muiData.widgetDict[widget] ~= nil then
-        if widgetType == "CircleButton" then
+        if widgetType == "BasicText" then
+            M.removeBasicText(widget)
+        elseif widgetType == "CircleButton" then
             M.removeCircleButton(widget)
         elseif widgetType == "DatePicker" then
             M.removeDatePicker(widget)
+        elseif widgetType == "EmbossedText" then
+            M.removeEmbossedText(widget)
         elseif widgetType == "RRectButton" then
             M.removeRRectButton(widget)
         elseif widgetType == "RectButton" then

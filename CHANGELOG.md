@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.25] - 2016-07-23
+### Added
+- new methods newSlidePanel() and removeSlidePanel() - Create a slide out menu via hamburger icon. :)  See hamburger icons.  Will be adding more features to the Slide Panel/Menu.
+
 ## [0.1.24] - 2016-07-22
 ### Added
 - new methods newCheckBox() and removeCheckBox()

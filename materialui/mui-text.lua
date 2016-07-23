@@ -71,5 +71,30 @@ function M.removeBasicText(widgetName)
     muiData.widgetDict[widgetName] = nil
 end
 
+function M.newEmbossedText(options)
+    if options == nil then return end
+
+    muiData.widgetDict[options.name] = {}
+    muiData.widgetDict[options.name]["type"] = "EmbossedText"
+    muiData.widgetDict[options.name]["options"] = options
+
+    muiData.widgetDict[options.name]["text"] = display.newText( options )
+    muiData.widgetDict[options.name]["text"]:setFillColor( unpack(options.fillColor) )
+    if options.embossedColor ~= nil then
+        muiData.widgetDict[options.name]["text"]:setEmbossColor( options.embossedColor )
+    end
+end
+
+function M.removeEmbossedText(widgetName)
+    if widgetName == nil then
+        return
+    end
+
+    if muiData.widgetDict[widgetName] == nil then return end
+
+    muiData.widgetDict[widgetName]["text"]:removeSelf()
+    muiData.widgetDict[widgetName]["text"] = nil
+    muiData.widgetDict[widgetName] = nil
+end
 
 return M

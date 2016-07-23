@@ -224,29 +224,40 @@ function scene:create( event )
         callBack = showTimePicker -- do not like wheel picker on native device.
     })
 
-    -- time picker example
+    -- slide panel example
     local showSlidePanel = function(event)
         mui.newSlidePanel({
             name = "slidepanel-demo",
-            title = "Slide Panel", -- leave blank for no panel title text
+            title = "MUI Demo", -- leave blank for no panel title text
             titleAlign = "center",
             font = native.systemFont,
             width = mui.getScaleVal(400),
-            height = mui.getScaleVal(300),
             titleFontSize = mui.getScaleVal(30),
             titleFontColor = { 1, 1, 1, 1 },
-            titleFont = native.systemFontBold,
+            titleFont = native.systemFont,
+            titleBackgroundColor = { 0.25, 0.75, 1, 1 },
             fontSize = mui.getScaleVal(20),
             fontColor = { 0.7, 0.7, 0.7, 1 }, -- non-select items
             fontColorSelected = { 0, 0, 0, 1 }, -- selected items
-            fillColor = { 0, 0.46, 1 }, -- background color
-            strokeColor = { 0.25, 0.75, 1, 1 }, -- the border color around widget
-            gradientBorderShadowColor1 = { 1, 1, 1, 0.2 },
-            gradientBorderShadowColor2 = { 1, 1, 1, 1 },
+            fillColor = { 1, 1, 1, 1 }, -- background color
+            buttonToAnimate = "slidepanel-button",
             callBack = nil,
+            labelColor = { 0, 0, 0, 1 },
+            labelColorOff = { 0, 0, 0, 1 },
+            buttonHeight = mui.getScaleVal(60),
+            buttonHighlightColor = { 0.4, 0.4, 0.4, 0.01 },
+            buttonHighlightColorAlpha = 0.5,
+            touchpoint = true,
+            list = {
+                { key = "Home", value = "1", icon="home", labelText="Home", isActive = true },
+                { key = "Newsroom", value = "2", icon="new_releases", labelText="News", isActive = false },
+                { key = "Location", value = "3", icon="location_searching", labelText="Location Information", isActive = false },
+                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
+            },
         })
+        -- add some buttons to the menu!
+
     end
-    if false then
     mui.newCircleButton({
         name = "slidepanel-button",
         text = "menu",
@@ -259,7 +270,6 @@ function scene:create( event )
         textAlign = "center",
         callBack = showSlidePanel -- do not like wheel picker on native device.
     })
-    end
 
     -- checkbox example
     mui.newCheckBox({

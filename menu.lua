@@ -224,7 +224,44 @@ function scene:create( event )
         callBack = showTimePicker -- do not like wheel picker on native device.
     })
 
-    -- simulates a checkbox but can be other toggle buttons too!
+    -- time picker example
+    local showSlidePanel = function(event)
+        mui.newSlidePanel({
+            name = "slidepanel-demo",
+            title = "Slide Panel", -- leave blank for no panel title text
+            titleAlign = "center",
+            font = native.systemFont,
+            width = mui.getScaleVal(400),
+            height = mui.getScaleVal(300),
+            titleFontSize = mui.getScaleVal(30),
+            titleFontColor = { 1, 1, 1, 1 },
+            titleFont = native.systemFontBold,
+            fontSize = mui.getScaleVal(20),
+            fontColor = { 0.7, 0.7, 0.7, 1 }, -- non-select items
+            fontColorSelected = { 0, 0, 0, 1 }, -- selected items
+            fillColor = { 0, 0.46, 1 }, -- background color
+            strokeColor = { 0.25, 0.75, 1, 1 }, -- the border color around widget
+            gradientBorderShadowColor1 = { 1, 1, 1, 0.2 },
+            gradientBorderShadowColor2 = { 1, 1, 1, 1 },
+            callBack = nil,
+        })
+    end
+    if false then
+    mui.newCircleButton({
+        name = "slidepanel-button",
+        text = "menu",
+        radius = mui.getScaleVal(46),
+        x = mui.getScaleVal(500),
+        y = mui.getScaleVal(320),
+        font = "MaterialIcons-Regular.ttf",
+        textColor = { 1, 1, 1, 1 },
+        fillColor = { 0, 0.46, 1 },
+        textAlign = "center",
+        callBack = showSlidePanel -- do not like wheel picker on native device.
+    })
+    end
+
+    -- checkbox example
     mui.newCheckBox({
         name = "check",
         text = "check_box_outline_blank",
@@ -239,6 +276,7 @@ function scene:create( event )
         callBack = mui.actionForCheckbox
     })
 
+    -- toggle switch example
     mui.newToggleSwitch({
         name = "switch_demo",
         size = mui.getScaleVal(55),
@@ -253,6 +291,7 @@ function scene:create( event )
         callBack = mui.actionForSwitch
     })
 
+    -- radio button group example
     mui.newRadioGroup({
         name = "radio_demo",
         width = mui.getScaleVal(30), --+ (getScaleVal(30)*1.2),

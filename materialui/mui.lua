@@ -51,6 +51,7 @@ local modules = {
   "materialui.mui-progressbar",
   "materialui.mui-select",
   "materialui.mui-slider",
+  "materialui.mui-slidepanel",
   "materialui.mui-switch",
   "materialui.mui-tableview",
   "materialui.mui-textinput",

@@ -192,7 +192,7 @@ function M.newSlidePanel(options)
             buttonWidth = button["buttonWidth"]
             if i == 1 then buttonOffset = button["buttonOffset"] end
 
-            y = y + button["buttonHeight"] + button["buttonOffset"]
+            y = y + button["buttonHeight"] --+ button["buttonOffset"]
 
             if v.isChecked == true or v.isActive == true then
                 activeX = button["mygroup"].x

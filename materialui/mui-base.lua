@@ -59,6 +59,7 @@ function M.init_base(data)
   muiData.currentTargetName = ""
   muiData.lastTargetName = ""
   muiData.interceptEventHandler = nil
+  muiData.interceptOptions = nil
   muiData.interceptMoved = false
   muiData.dialogInUse = false
   muiData.dialogName = nil
@@ -99,8 +100,23 @@ function M.eventSuperListner(event)
 end
 
 function M.updateEventHandler( event )
+    if muiData.slidePanelInUse ~= nil and muiData.slidePanelInUse == true then
+      if muiData.widgetDict[muiData.slidePanelName] ~= nil then
+        if muiData.widgetDict[muiData.slidePanelName]["interceptEventHandler"] ~= nil then
+          local e = event
+          e.target.muiOptions = muiData.widgetDict[muiData.slidePanelName].options
+          assert( muiData.widgetDict[muiData.slidePanelName]["interceptEventHandler"] )(e)
+        end
+      end
+    end
     if muiData.interceptEventHandler ~= nil then
-        muiData.interceptEventHandler:touch(event)
+        if type(muiData.interceptEventHandler) == "function" then
+          if event.target then
+            event.target.muiOptions = muiData.interceptOptions
+            print("we have a special target! ") --..event.target.muiOptions.name)
+          end
+          muiData.interceptEventHandler(event)
+        end
     end
     if event.phase == "moved" then
         muiData.interceptMoved = true
@@ -198,6 +214,8 @@ function M.getWidgetBaseObject(name)
                widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "Dialog" then
                widgetData = muiData.widgetDict[widget]["container"]
+            elseif widgetType == "SlidePanel" then
+               widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "Slider" then
                widgetData = muiData.widgetDict[widget]["container"]
             elseif widgetType == "Toast" then
@@ -567,6 +585,8 @@ function M.destroy()
             M.removeProgressBar(widget)
         elseif widgetType == "ToggleSwitch" then
             M.removeToggleSwitch(widget)
+        elseif widgetType == "SlidePanel" then
+            M.removeSlidePanel(widget)
         elseif widgetType == "Slider" then
             M.removeSlider(widget)
         elseif widgetType == "Toast" then

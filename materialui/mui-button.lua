@@ -202,7 +202,11 @@ function M.touchRRectButton (event)
     if ( event.phase == "began" ) then
         --event.target:takeFocus(event)
         -- if scrollView then use the below
-        muiData.interceptEventHandler = event.target
+        muiData.interceptEventHandler = M.touchRRectButton
+        if muiData.interceptOptions == nil then
+            muiData.interceptOptions = options
+        end
+        -- muiData.interceptEventHandler = event.target
         M.updateUI(event)
         if muiData.touching == false then
             muiData.touching = true
@@ -254,6 +258,7 @@ function M.touchRRectButton (event)
             end
         end
         muiData.interceptEventHandler = nil
+        muiData.interceptOptions = nil
         muiData.interceptMoved = false
         muiData.touching = false
     end
@@ -535,7 +540,10 @@ function M.touchIconButton (event)
     M.addBaseEventParameters(event, options)
 
     if ( event.phase == "began" ) then
-        muiData.interceptEventHandler = event.target
+        muiData.interceptEventHandler = M.touchIconButton
+        if muiData.interceptOptions == nil then
+            muiData.interceptOptions = options
+        end
         M.updateUI(event)
         if muiData.touching == false then
             muiData.touching = true
@@ -569,6 +577,7 @@ function M.touchIconButton (event)
                 end
             end
             muiData.interceptEventHandler = nil
+            muiData.interceptOptions = nil
             muiData.interceptMoved = false
             muiData.touching = false
         end
@@ -712,7 +721,10 @@ function M.touchCircleButton (event)
     M.addBaseEventParameters(event, options)
 
     if ( event.phase == "began" ) then
-        muiData.interceptEventHandler = event.target
+        muiData.interceptEventHandler = M.touchCircleButton
+        if muiData.interceptOptions == nil then
+            muiData.interceptOptions = options
+        end
         M.updateUI(event)
         if muiData.touching == false then
             muiData.touching = true
@@ -745,6 +757,7 @@ function M.touchCircleButton (event)
                 end
             end
             muiData.interceptEventHandler = nil
+            muiData.interceptOptions = nil
             muiData.interceptMoved = false
             muiData.touching = false
         end
@@ -942,7 +955,10 @@ function M.touchCheckbox (event)
     M.addBaseEventParameters(event, options)
 
     if ( event.phase == "began" ) then
-        muiData.interceptEventHandler = event.target
+        muiData.interceptEventHandler = M.touchCheckbox
+        if muiData.interceptOptions == nil then
+            muiData.interceptOptions = options
+        end
         M.updateUI(event)
         if muiData.touching == false then
             muiData.touching = true
@@ -977,6 +993,7 @@ function M.touchCheckbox (event)
                 end
             end
             muiData.interceptEventHandler = nil
+            muiData.interceptOptions = nil
             muiData.interceptMoved = false
             muiData.touching = false
         end

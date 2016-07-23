@@ -164,7 +164,10 @@ function M.sliderTouch (event)
         -- set touch focus
         display.getCurrentStage():setFocus( event.target )
         event.target.isFocus = true
-        muiData.interceptEventHandler = event.target
+        muiData.interceptEventHandler = M.sliderTouch
+        if muiData.interceptOptions == nil then
+            muiData.interceptOptions = options
+        end
         M.updateUI(event)
         if muiData.touching == false then
             muiData.widgetDict[options.name]["slidercircle"]:setFillColor( unpack(options.color) )
@@ -204,6 +207,7 @@ function M.sliderTouch (event)
             end
         end
         muiData.interceptEventHandler = nil
+        muiData.interceptOptions = nil
         muiData.interceptMoved = false
         muiData.touching = false
         -- reset focus

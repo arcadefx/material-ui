@@ -151,7 +151,10 @@ function M.toggleSwitchTouch (event)
     M.addBaseEventParameters(event, options)
 
     if ( event.phase == "began" ) then
-        muiData.interceptEventHandler = event.target
+        muiData.interceptEventHandler = M.toggleSwitchTouch
+        if muiData.interceptOptions == nil then
+            muiData.interceptOptions = options
+        end
         M.updateUI(event)
         if muiData.touching == false and false then
             muiData.touching = true
@@ -184,6 +187,7 @@ function M.toggleSwitchTouch (event)
                 assert( options.callBack )(event)
             end
             muiData.interceptEventHandler = nil
+            muiData.interceptOptions = nil
             muiData.interceptMoved = false
             muiData.touching = false
         end

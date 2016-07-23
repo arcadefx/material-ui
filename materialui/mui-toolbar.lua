@@ -265,7 +265,10 @@ function M.toolBarButton (event)
 
     if muiData.dialogInUse == true and options.dialogName == nil then return end
     if ( event.phase == "began" ) then
-        muiData.interceptEventHandler = event.target
+        muiData.interceptEventHandler = M.toolBarButton
+        if muiData.interceptOptions == nil then
+            muiData.interceptOptions = options
+        end
         M.updateUI(event)
         if muiData.touching == false then
             muiData.touching = true
@@ -301,6 +304,7 @@ function M.toolBarButton (event)
                 M.actionForToolbar(options, event)
             end
             muiData.interceptEventHandler = nil
+            muiData.interceptOptions = nil
             muiData.interceptMoved = false
             muiData.touching = false
         end

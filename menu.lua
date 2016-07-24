@@ -245,7 +245,7 @@ function scene:create( event )
             labelColor = { 0, 0, 0, 1 },
             labelColorOff = { 0, 0, 0, 1 },
             buttonHeight = mui.getScaleVal(60),
-            buttonHighlightColor = { 0.4, 0.4, 0.4, 0.01 },
+            buttonHighlightColor = { 0.9, 0.9, 0.9, 0.01 },
             buttonHighlightColorAlpha = 0.5,
             touchpoint = true,
             list = {

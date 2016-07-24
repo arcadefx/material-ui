@@ -181,7 +181,7 @@ function M.newSlidePanel(options)
                 textColorOff = options.labelColorOff,
                 textAlign = "center",
                 labelColor = options.labelColor,
-                backgroundColor = options.buttonFillColor,
+                backgroundColor = options.fillColor,
                 buttonHighlightColor = options.buttonHighlightColor,
                 buttonHighlightColorAlpha = (options.buttonHighlightColorAlpha or 0.5),
                 numberOfButtons = count,
@@ -192,7 +192,7 @@ function M.newSlidePanel(options)
             buttonWidth = button["buttonWidth"]
             if i == 1 then buttonOffset = button["buttonOffset"] end
 
-            y = y + button["buttonHeight"] --+ button["buttonOffset"]
+            y = y + button["buttonHeight"] + button["buttonOffset"]
 
             if v.isChecked == true or v.isActive == true then
                 activeX = button["mygroup"].x
@@ -299,7 +299,7 @@ function M.newSlidePanelButton( options )
     local buttonWidth = textWidth
     local buttonHeight = textHeight
     local rectangle = display.newRect( buttonWidth * 0.5, 0, buttonWidth, buttonHeight )
-    rectangle:setFillColor( unpack(options.buttonHighlightColor) )
+    rectangle:setFillColor( unpack(options.backgroundColor) )
     button["rectangle"] = rectangle
     button["rectangle"].value = options.value
     button["buttonWidth"] = rectangle.contentWidth
@@ -416,7 +416,7 @@ function M.slidePanelEventButton (event)
         else
             event.phase = "onTarget"
             if muiData.interceptMoved == false then
-                transition.to(muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"],{time=400, alpha=0.01})
+                transition.to(muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"],{time=400, alpha=0.01, onComplete=M.sliderButtonResetColor})
 
                 transition.to(muiData.widgetDict[options.basename]["slidebar"]["slider"],{time=350, xScale=1.03, yScale=1.03, transition=easing.inOutCubic})
 
@@ -438,6 +438,10 @@ function M.slidePanelEventButton (event)
         muiData.interceptMoved = false
         muiData.touching = false
     end
+end
+
+function M.sliderButtonResetColor( e )
+    e:setFillColor( unpack(e.muiOptions.backgroundColor) )
 end
 
 function M.actionForSlidePanel( options, e )

@@ -237,15 +237,16 @@ function scene:create( event )
             titleFont = native.systemFont,
             titleBackgroundColor = { 0.25, 0.75, 1, 1 },
             fontSize = mui.getScaleVal(20),
-            fontColor = { 0.7, 0.7, 0.7, 1 }, -- non-select items
-            fontColorSelected = { 0, 0, 0, 1 }, -- selected items
             fillColor = { 1, 1, 1, 1 }, -- background color
             buttonToAnimate = "slidepanel-button",
             callBack = mui.actionForSlidePanel,
-            labelColor = { 0, 0, 0, 1 },
-            labelColorOff = { 0, 0, 0, 1 },
+            callBackData = {
+                item = "cake"
+            },
+            labelColor = { 0.3, 0.3, 0.3, 1 }, -- active
+            labelColorOff = { 0.5, 0.5, 0.5, 1 }, -- non-active
             buttonHeight = mui.getScaleVal(60),
-            buttonHighlightColor = { 0.9, 0.9, 0.9, 0.01 },
+            buttonHighlightColor = { 0.5, 0.5, 0.5 },
             buttonHighlightColorAlpha = 0.5,
             touchpoint = true,
             list = {

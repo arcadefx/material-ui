@@ -177,10 +177,9 @@ function M.newSlidePanel(options)
                 labelText = v.labelText,
                 labelFont = options.labelFont,
                 labelFontSize = options.labelFontSize,
-                textColor = options.labelColor,
-                textColorOff = options.labelColorOff,
                 textAlign = "center",
                 labelColor = options.labelColor,
+                labelColorOff = options.labelColorOff,
                 backgroundColor = options.fillColor,
                 buttonHighlightColor = options.buttonHighlightColor,
                 buttonHighlightColorAlpha = (options.buttonHighlightColorAlpha or 0.5),
@@ -249,11 +248,6 @@ function M.newSlidePanelButton( options )
     local font = native.systemFont
     if options.font ~= nil then
         font = options.font
-    end
-
-    local textColor = { 0, 0.82, 1 }
-    if options.textColor ~= nil then
-        textColor = options.textColor
     end
 
     local useBothIconAndText = false
@@ -329,10 +323,11 @@ function M.newSlidePanelButton( options )
 
     button["myButton"] = display.newRect( (options.width * 0.5) - textHeight * 0.5, textY, options.width, textHeight )
     button["myButton"]:setFillColor( unpack( options.buttonHighlightColor ) )
+    button["myButton"].alpha = 0.01
     button["mygroup"]:insert( button["myButton"] )
 
     button["myText"] = display.newText( options2 )
-    button["myText"]:setFillColor( unpack(textColor) )
+    button["myText"]:setFillColor( unpack(options.labelColorOff) )
     button["myText"].isVisible = true
     if isChecked then
         button["myText"]:setFillColor( unpack(options.labelColor) )
@@ -405,7 +400,7 @@ function M.slidePanelEventButton (event)
         M.updateUI(event)
         if muiData.touching == false then
             muiData.touching = true
-            muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"]:setFillColor( unpack( {options.buttonHighlightColor} ) )
+            muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"]:setFillColor( unpack( options.buttonHighlightColor ) )
             muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"].alpha = options.buttonHighlightColorAlpha
         end
     elseif ( event.phase == "cancelled" or event.phase == "moved" ) then
@@ -456,9 +451,13 @@ end
 function M.actionForSlidePanel( options, e )
     local muiTarget = M.getEventParameter(e, "muiTarget")
     local muiTargetValue = M.getEventParameter(e, "muiTargetValue")
+    local muiTargetCallBackData = M.getEventParameter(e, "muiTargetCallBackData")
 
     if muiTargetValue ~= nil then
         print("slide panel value: "..muiTargetValue)
+    end
+    if muiTargetCallBackData ~= nil then
+        print("Item from callBackData: "..muiTargetCallBackData.item)
     end
 end
 

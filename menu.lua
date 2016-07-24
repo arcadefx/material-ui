@@ -253,6 +253,17 @@ function scene:create( event )
                 { key = "Newsroom", value = "2", icon="new_releases", labelText="News", isActive = false },
                 { key = "Location", value = "3", icon="location_searching", labelText="Location Information", isActive = false },
                 { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
+                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
+                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
+                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
+                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
+                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
+                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
+                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
+                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
+                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
+                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
+                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
             },
         })
         -- add some buttons to the menu!

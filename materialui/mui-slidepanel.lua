@@ -408,6 +408,8 @@ function M.slidePanelEventButton (event)
             muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"]:setFillColor( unpack( {options.buttonHighlightColor} ) )
             muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"].alpha = options.buttonHighlightColorAlpha
         end
+    elseif ( event.phase == "cancelled" or event.phase == "moved" ) then
+        M.sliderButtonResetColor( muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"] )
     elseif ( event.phase == "ended" ) then
         if M.isTouchPointOutOfRange( event ) then
             event.phase = "offTarget"
@@ -431,6 +433,8 @@ function M.slidePanelEventButton (event)
                 M.setEventParameter(event, "muiTarget2", muiData.widgetDict[options.basename]["slidebar"][options.name]["myText2"])
                 M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
                 M.actionForSlidePanel(options, event)
+            else
+                M.sliderButtonResetColor( muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"] )
             end
         end
         muiData.interceptEventHandler = nil
@@ -442,6 +446,7 @@ end
 
 function M.sliderButtonResetColor( e )
     e:setFillColor( unpack(e.muiOptions.backgroundColor) )
+    e.alpha = 0.01
 end
 
 function M.actionForSlidePanel( options, e )

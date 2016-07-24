@@ -241,7 +241,7 @@ function scene:create( event )
             fontColorSelected = { 0, 0, 0, 1 }, -- selected items
             fillColor = { 1, 1, 1, 1 }, -- background color
             buttonToAnimate = "slidepanel-button",
-            callBack = nil,
+            callBack = mui.actionForSlidePanel,
             labelColor = { 0, 0, 0, 1 },
             labelColorOff = { 0, 0, 0, 1 },
             buttonHeight = mui.getScaleVal(60),

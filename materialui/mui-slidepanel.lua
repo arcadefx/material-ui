@@ -432,7 +432,11 @@ function M.slidePanelEventButton (event)
                 M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.basename]["slidebar"][options.name]["myText"])
                 M.setEventParameter(event, "muiTarget2", muiData.widgetDict[options.basename]["slidebar"][options.name]["myText2"])
                 M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
-                M.actionForSlidePanel(options, event)
+                if options.callBack ~= nil then
+                    assert( options.callBack ) (options, event)
+                else
+                    M.actionForSlidePanel(options, event)
+                end
             else
                 M.sliderButtonResetColor( muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"] )
             end

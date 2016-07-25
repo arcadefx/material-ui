@@ -137,29 +137,7 @@ Helper Methods
 - `hideWidget` - hide a widget by name. It will hide/show a widget by setting the isVisible attribute.
 
 Remove widget methods - these will remove the widget by name and release memory:
-- `removeCircleButton`
-- `removeCheckBox`
-- `removeDatePicker`
-- `removeDialog`
-- `removeIconButton`
-- `removeNavbar`
-- `removeOnBoarding`
-- `removeProgressBar`
-- `removeRadioButton`
-- `removeRectButton`
-- `removeRRectButton`
-- `removeSelect`
-- `removeSlidePanel`
-- `removeSlider`
-- `removeSwitch`
-- `removeTableView`
-- `removeTextField`
-- `removeTextBox`
-- `removeTimePicker`
-- `removeToast`
-- `removeToggleSwitch`
-- `removeToolbar`
-- `removeToolbarButton`
+- `remove[widget name]("widget name to remove")` from above, example: `removeCircleButton("demo-circle-button")`
 
 Built-In Callbacks
 -------------

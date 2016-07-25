@@ -570,7 +570,7 @@ function M.destroy()
         elseif widgetType == "EmbossedText" then
             M.removeEmbossedText(widget)
         elseif widgetType == "RRectButton" then
-            M.removeRRectButton(widget)
+            M.removeRoundedRectButton(widget)
         elseif widgetType == "RectButton" then
             M.removeRectButton(widget)
         elseif widgetType == "IconButton" then

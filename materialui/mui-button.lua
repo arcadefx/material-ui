@@ -1125,10 +1125,10 @@ function M.actionForButton( e )
 end
 
 function M.removeWidgetRRectButton(widgetName)
-    M.removeRRectButton(widgetName)
+    M.removeRoundedRectButton(widgetName)
 end
 
-function M.removeRRectButton(widgetName)
+function M.removeRoundedRectButton(widgetName)
     if widgetName == nil then
         return
     end

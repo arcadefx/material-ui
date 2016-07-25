@@ -99,12 +99,14 @@ Please read Lua code to find all parameters and see example in the repo call men
 | `newToolbar` | Create a horizontal toolbar with icon, text or icon + text (icon on top, text on bottom) buttons      |    menu.lua |
 
 *Text*
+
 | Method        | Short Description | Example  |
 | ------------- | ------------- | :-----:|
 | `newEmossedText | Create embossed text. A wrapper to make it easier to attach 'newText' to navbar, menu, etc (see Corona newEmossedText for options) | n/a |
 | `newText | Create text. A wrapper to make it easier to attach 'newText' to navbar, menu, etc (see Corona newText for options) | menu.lua/fun.lua |
 
 *Input*
+
 | Method        | Short Description | Example  |
 | ------------- | ------------- | :-----:|
 | `newCheckBox` | Create a check box. | menu.lua |
@@ -116,6 +118,7 @@ Please read Lua code to find all parameters and see example in the repo call men
 | `newToggleSwitch` | Create a toggle switch.      |    menu.lua |
 
 *Misc*
+
 | Method        | Short Description | Example  |
 | ------------- | ------------- | :-----:|
 | `newProgressBar` | Create an animated progress bar using "determinate" from Material Design.      |    menu.lua |

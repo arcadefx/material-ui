@@ -193,7 +193,7 @@ function M.removeNavbar(widgetName)
     for name, widgetType in pairs(muiData.widgetDict[widgetName]["list"]) do
         if muiData.widgetDict[widgetName]["list"][name] ~= nil then
             if widgetType == "RRectButton" then
-                M.removeRRectButton(name)
+                M.removeRoundedRectButton(name)
             elseif widgetType == "RectButton" then
                 M.removeRectButton(name)
             elseif widgetType == "CircleButton" then

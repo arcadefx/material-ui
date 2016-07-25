@@ -157,6 +157,7 @@ function M.newSlidePanel(options)
         muiData.widgetDict[options.name]["slidebar"] = {}
         y = muiData.widgetDict[options.name]["rect"].contentHeight + muiData.widgetDict[options.name]["rect"].contentHeight * 0.5
         for i, v in ipairs(options.list) do
+            if v.key ~= "LineSeparator" then
             M.newSlidePanelButton({
                 index = i,
                 name = options.name .. "_" .. i,
@@ -187,6 +188,19 @@ function M.newSlidePanel(options)
                 callBack = options.callBack,
                 callBackData = options.callBackData
             })
+            else
+                M.newSlidePanelLineSeparator({
+                index = i,
+                name = options.name .. "_" .. i,
+                basename = options.name,
+                width = options.width,
+                height = options.height,
+                buttonHeight = options.buttonHeight,
+                x = options.buttonHeight * 0.5,
+                y = y,
+                labelColorOff = options.labelColorOff,
+            })
+            end
             local button = muiData.widgetDict[options.name]["slidebar"][options.name.."_"..i]
             buttonWidth = button["buttonWidth"]
             if i == 1 then buttonOffset = button["buttonOffset"] end
@@ -204,6 +218,46 @@ function M.newSlidePanel(options)
     transition.fadeIn(muiData.widgetDict[options.name]["rectclick"],{time=300})
     transition.fadeIn(muiData.widgetDict[options.name]["rectbackdrop"],{time=300})
     transition.to( muiData.widgetDict[options.name]["scrollview"], { time=300, x=(options.width * 0.5), transition=easing.linear } )
+end
+
+function M.newSlidePanelLineSeparator( options )
+    local x,y = 160, 240
+    if options.x ~= nil then
+        x = options.x
+    end
+    if options.y ~= nil then
+        y = options.y
+    end
+
+    local barWidth = display.contentWidth
+    if options.width ~= nil then
+        barWidth = options.width
+    end
+    barWidth = muiData.widgetDict[options.basename]["scrollview"].contentWidth
+
+    local lineSeparatorHeight = options.lineSeparatorHeight or M.getScaleVal(1)
+
+    muiData.widgetDict[options.basename]["slidebar"][options.name] = {}
+    muiData.widgetDict[options.basename]["slidebar"]["type"] = "slidebarLineSeparator"
+
+    local button =  muiData.widgetDict[options.basename]["slidebar"][options.name]
+    button["mygroup"] = display.newGroup()
+    button["mygroup"].x = x
+    button["mygroup"].y = y
+
+    if options.labelColorOff == nil then
+        options.labelColorOff = { 0, 0, 0 }
+    end
+
+    local lineSeparator = display.newRect( 0, 0, barWidth * 2, M.getScaleVal(lineSeparatorHeight) )
+    lineSeparator:setFillColor( unpack(options.labelColorOff) )
+    button["lineSeparator"] = lineSeparator
+    button["buttonWidth"] = lineSeparator.contentWidth
+    button["buttonHeight"] = options.buttonHeight
+    button["buttonOffset"] = lineSeparator.contentHeight * 0.5
+    button["mygroup"]:insert( lineSeparator, true ) -- insert and center bkgd
+
+    muiData.widgetDict[options.basename]["scrollview"]:insert( button["mygroup"] )
 end
 
 function M.newSlidePanelButton( options )
@@ -566,6 +620,24 @@ function M.removeSlidePanel(widgetName)
     muiData.slidePanelInUse = false
 end
 
+function M.removeSlidePanelLineSeparator(widgetDict, slidePanelName, name)
+    if slidePanelName == nil then
+        return
+    end
+    if name == nil then
+        return
+    end
+    if widgetDict[slidePanelName]["slidebar"][name] == nil then
+        return
+    end
+    if type(widgetDict[slidePanelName]["slidebar"][name]) == "table" then
+        if widgetDict[slidePanelName]["slidebar"][name]["lineSeparator"] ~= nil then
+            widgetDict[slidePanelName]["slidebar"][name]["lineSeparator"]:removeSelf()
+            widgetDict[slidePanelName]["slidebar"][name]["lineSeparator"] = nil
+        end
+    end
+end
+
 function M.removeSlidePanelButton(widgetDict, slidePanelName, name)
     if slidePanelName == nil then
         return
@@ -577,7 +649,7 @@ function M.removeSlidePanelButton(widgetDict, slidePanelName, name)
         return
     end
     if type(widgetDict[slidePanelName]["slidebar"][name]) == "table" then
-        if widgetDict[slidePanelName]["slidebar"][name]["rectangle"] ~= nil then
+        if widgetDict[slidePanelName]["slidebar"][name]["type"] == "slidebarButton" then
             widgetDict[slidePanelName]["slidebar"][name]["myButton"]:removeEventListener( "touch", M.slidePanelEventButton )
             widgetDict[slidePanelName]["slidebar"][name]["myButton"]:removeSelf()
             widgetDict[slidePanelName]["slidebar"][name]["myButton"] = nil
@@ -589,6 +661,13 @@ function M.removeSlidePanelButton(widgetDict, slidePanelName, name)
                 widgetDict[slidePanelName]["slidebar"][name]["myText2"]:removeSelf()
                 widgetDict[slidePanelName]["slidebar"][name]["myText2"] = nil
             end
+        else
+            if widgetDict[slidePanelName]["slidebar"][name]["lineSeparator"] ~= nil then
+                widgetDict[slidePanelName]["slidebar"][name]["lineSeparator"]:removeSelf()
+                widgetDict[slidePanelName]["slidebar"][name]["lineSeparator"] = nil
+            end
+        end
+        if widgetDict[slidePanelName]["slidebar"][name]["mygroup"] ~= nil then
             widgetDict[slidePanelName]["slidebar"][name]["mygroup"]:removeSelf()
             widgetDict[slidePanelName]["slidebar"][name]["mygroup"] = nil
             widgetDict[slidePanelName]["slidebar"][name] = nil

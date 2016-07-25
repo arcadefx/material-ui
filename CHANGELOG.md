@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.28] - 2016-07-25
+### Added
+- LineSeparator option to newSlidePanel list of menu entries.
+
 ## [0.1.27] - 2016-07-25
 ### Added
 - newEmbossedText and newText wrappers to ease adding to navbar, toolbar, menu, etc.

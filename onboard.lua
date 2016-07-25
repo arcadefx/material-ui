@@ -77,7 +77,7 @@ function scene:create( event )
     }
     textWidth = mui.getTextWidth( options )
     options.width = textWidth
-    mui.newBasicText( options )
+    mui.newText( options )
     local introText = mui.getWidgetBaseObject("intro-text")
     introText.x = (background.contentWidth * 0.5)
     group1:insert( introText )
@@ -120,7 +120,7 @@ function scene:create( event )
     }
     textWidth = mui.getTextWidth( options )
     options.width = textWidth
-    mui.newBasicText( options )
+    mui.newText( options )
     local introText2 = mui.getWidgetBaseObject("intro-text2")
     introText2.x = (background2.contentWidth * 0.5)
     group2:insert( introText2 )

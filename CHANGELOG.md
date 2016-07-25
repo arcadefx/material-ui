@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.25] - 2016-07-24
+## [0.1.27] - 2016-07-25
+### Added
+- newEmbossedText and newText wrappers to ease adding to navbar, toolbar, menu, etc.
+
+### Change
+- Documentation updates.
+- Bug fixes.
+
+## [0.1.26] - 2016-07-24
 ### Change
 - Fixed label colors for active/in-active states of Slide Out menu entries.
 - Bug fixes.

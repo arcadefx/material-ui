@@ -90,6 +90,18 @@ Please read Lua code to find all parameters and see example in the repo call men
 | `newDialog` | Create a dialog (modal) with content. Supports up to two buttons (Okay, Cancel) with callbacks.       | menu.lua |
 | `newToast` | Create simple "toast" notifications on screen. Colors, dimensions and fonts can be specified.      |    fun.lua |
 
+*Input*
+
+| Method        | Short Description | Example  |
+| ------------- | ------------- | :-----:|
+| `newCheckBox` | Create a check box. | menu.lua |
+| `newTextBox` | Create a text box with label above (for now)      |    fun.lua |
+| `newTextField` | Create a text field with label above (for now)      |    menu.lua/fun.lua |
+| `newRadioGroup` | Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.      |    menu.lua |
+| `newSelect` | Create a select drop down list (dropdown list). Colors, dimensions and fonts can be specified.      |    fun.lua |
+| `newSlider` | Create a slider for doing percentages 0..100. Calculate amount in call backs: callBackMove (called during movement) and callBack = at the end phase.  Values are in percent (0.20, 0.90 and 1 for 100%). See method sliderCallBackMove() to get current value of slider.       |    fun.lua |
+| `newToggleSwitch` | Create a toggle switch.      |    menu.lua |
+
 *Menu / Navigation*
 
 | Method        | Short Description | Example  |
@@ -102,20 +114,8 @@ Please read Lua code to find all parameters and see example in the repo call men
 
 | Method        | Short Description | Example  |
 | ------------- | ------------- | :-----:|
-| `newEmossedText | Create embossed text. A wrapper to make it easier to attach 'newText' to navbar, menu, etc (see Corona newEmossedText for options) | n/a |
+| `newEmossedText | Create embossed text. A wrapper to make it easier to attach 'newEmbossedText' to navbar, menu, etc (see Corona newEmossedText for options) | n/a |
 | `newText | Create text. A wrapper to make it easier to attach 'newText' to navbar, menu, etc (see Corona newText for options) | menu.lua/fun.lua |
-
-*Input*
-
-| Method        | Short Description | Example  |
-| ------------- | ------------- | :-----:|
-| `newCheckBox` | Create a check box. | menu.lua |
-| `newTextBox` | Create a text box with label above (for now)      |    fun.lua |
-| `newTextField` | Create a text field with label above (for now)      |    menu.lua/fun.lua |
-| `newRadioGroup` | Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.      |    menu.lua |
-| `newSelect` | Create a select drop down list (dropdown list). Colors, dimensions and fonts can be specified.      |    fun.lua |
-| `newSlider` | Create a slider for doing percentages 0..100. Calculate amount in call backs: callBackMove (called during movement) and callBack = at the end phase.  Values are in percent (0.20, 0.90 and 1 for 100%). See method sliderCallBackMove() to get current value of slider.       |    fun.lua |
-| `newToggleSwitch` | Create a toggle switch.      |    menu.lua |
 
 *Misc*
 

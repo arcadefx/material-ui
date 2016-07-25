@@ -146,7 +146,7 @@ function M.newSlidePanel(options)
         fontSize = (options.titleFontSize or M.getScaleVal(30)),
         fillColor = (options.titleFontColor or { 1, 1, 1, 1 }),
     }
-    M.newBasicText(textOptions)
+    M.newText(textOptions)
     muiData.widgetDict[options.name]["scrollview"]:insert( M.getWidgetBaseObject(options.name .. "header-text") )
 
 
@@ -322,7 +322,7 @@ function M.newSlidePanelButton( options )
     }
 
     button["myButton"] = display.newRect( (options.width * 0.5) - textHeight * 0.5, textY, options.width, textHeight )
-    button["myButton"]:setFillColor( unpack( options.buttonHighlightColor ) )
+    button["myButton"]:setFillColor( unpack( options.backgroundColor ) )
     button["myButton"].alpha = 0.01
     button["mygroup"]:insert( button["myButton"] )
 
@@ -539,7 +539,7 @@ function M.removeSlidePanel(widgetName)
     end
 
     if muiData.widgetDict[widgetName .. "header-text"] ~= nil then
-        M.removeBasicText( widgetName .. "header-text" )
+        M.removeText( widgetName .. "header-text" )
     end
 
     -- remove the list of buttons

@@ -64,7 +64,7 @@ function M.init_base(data)
   muiData.dialogInUse = false
   muiData.dialogName = nil
   muiData.navbarHeight = 0
-  muiData.navbarSupportedTypes = { "BasicText", "CircleButton", "RRectButton", "RectButton", "IconButton", "Slider", "TextField", "Generic" }
+  muiData.navbarSupportedTypes = { "Text", "EmbossedText", "CircleButton", "RRectButton", "RectButton", "IconButton", "Slider", "TextField", "Generic" }
   muiData.onBoardData = nil
   muiData.slideData = nil
   muiData.currentSlide = 0
@@ -183,7 +183,7 @@ function M.getWidgetBaseObject(name)
         for widget in pairs(muiData.widgetDict) do
           local widgetType = muiData.widgetDict[widget]["type"]
           if widgetType ~= nil and widget == name then
-            if widgetType == "BasicText" then
+            if widgetType == "Text" then
                widgetData = muiData.widgetDict[widget]["text"]
             elseif widgetType == "CircleButton" then
                widgetData = muiData.widgetDict[widget]["mygroup"]
@@ -561,8 +561,8 @@ function M.destroy()
   for widget in pairs(muiData.widgetDict) do
       local widgetType = muiData.widgetDict[widget]["type"]
       if widgetType ~= nil and muiData.widgetDict[widget] ~= nil then
-        if widgetType == "BasicText" then
-            M.removeBasicText(widget)
+        if widgetType == "Text" then
+            M.removeText(widget)
         elseif widgetType == "CircleButton" then
             M.removeCircleButton(widget)
         elseif widgetType == "DatePicker" then
@@ -601,8 +601,8 @@ function M.destroy()
             M.removeSelector(widget)
         elseif widgetType == "Navbar" then
             M.removeNavbar(widget)
-        elseif widgetType == "BasicText" then
-            M.removeBasicText(widget)
+        elseif widgetType == "Text" then
+            M.removeText(widget)
         end
       end
   end

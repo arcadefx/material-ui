@@ -67,28 +67,43 @@ Available Methods
 -------------
 Please read Lua code to find all parameters and see example in the repo call menu.lua.  All methods below implement a callback and lots of configuration options.
 
+*Buttons*
 | Method        | Short Description | Example  |
 | ------------- | ------------- | :-----:|
 | `newCircleButton` | Create a circle button with a single character or even a word.| menu.lua |
-| `newCheckBox` | Create a check box. | menu.lua |
-| `newDatePicker` | Create a date picker. Use pickerGetCurrentValue() method to get current value in a table format. | menu.lua / mui-datetime.lua |
-| `newDialog` | Create a dialog (modal) with content. Supports up to two buttons (Okay, Cancel) with callbacks.       | menu.lua |
 | `newIconButton`      | Create an icon button using the material design icon font. Use this to create check boxes and more. | menu.lua |
-| `newNavbar`      | Create a navigation bar. Allows left and right alignment of attached widgets. Supports widget types: BasicText, CircleButton, IconButton, RRectButton, RectButton, Slider, TextField. Additional widget types will be added. | fun.lua |
-| `newProgressBar` | Create an animated progress bar using "determinate" from Material Design.      |    menu.lua |
-| `newRadioGroup` | Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.      |    menu.lua |
 | `newRectButton` | Create a rectangle button      |    menu.lua/fun.lua |
 | `newRoundedRectButton` | Create a rounded rectangle button     |    menu.lua/fun.lua |
-| `newSelect` | Create a select drop down list (dropdown list). Colors, dimensions and fonts can be specified.      |    fun.lua |
+
+*Date/Time*
+| `newDatePicker` | Create a date picker. Use pickerGetCurrentValue() method to get current value in a table format. | menu.lua / mui-datetime.lua |
+| `newTimePicker` | Create a time picker. Use pickerGetCurrentValue() method to get current value in a table format. | menu.lua / mui-datetime.lua |
+
+*Dialogs / Notifications*
+| `newDialog` | Create a dialog (modal) with content. Supports up to two buttons (Okay, Cancel) with callbacks.       | menu.lua |
+| `newToast` | Create simple "toast" notifications on screen. Colors, dimensions and fonts can be specified.      |    fun.lua |
+
+*Menu / Navigation*
+| `newNavbar`      | Create a navigation bar. Allows left and right alignment of attached widgets. Supports widget types: Text, EmbossedText, CircleButton, IconButton, RRectButton, RectButton, Slider, TextField. Additional widget types will be added. | fun.lua |
 | `newSlidePanel` | Create a slide out menu (see hamburger icon) | menu.lua/fun.lua |
-| `newSlider` | Create a slider for doing percentages 0..100. Calculate amount in call backs: callBackMove (called during movement) and callBack = at the end phase.  Values are in percent (0.20, 0.90 and 1 for 100%). See method sliderCallBackMove() to get current value of slider.       |    fun.lua |
-| `newTableView` | Create a scrollable table view      |    menu.lua/fun.lua |
+| `newToolbar` | Create a horizontal toolbar with icon, text or icon + text (icon on top, text on bottom) buttons      |    menu.lua |
+
+*Text*
+| `newEmossedText | Create embossed text. A wrapper to make it easier to attach 'newText' to navbar, menu, etc (see Corona newEmossedText for options) | n/a |
+| `newText | Create text. A wrapper to make it easier to attach 'newText' to navbar, menu, etc (see Corona newText for options) | menu.lua/fun.lua |
+
+*Input*
+| `newCheckBox` | Create a check box. | menu.lua |
 | `newTextBox` | Create a text box with label above (for now)      |    fun.lua |
 | `newTextField` | Create a text field with label above (for now)      |    menu.lua/fun.lua |
-| `newTimePicker` | Create a time picker. Use pickerGetCurrentValue() method to get current value in a table format. | menu.lua / mui-datetime.lua |
-| `newToast` | Create simple "toast" notifications on screen. Colors, dimensions and fonts can be specified.      |    fun.lua |
+| `newRadioGroup` | Create a radio group with associated buttons.  It will automatically layout in vertical or horizontal formats with a series of radio buttons.      |    menu.lua |
+| `newSelect` | Create a select drop down list (dropdown list). Colors, dimensions and fonts can be specified.      |    fun.lua |
+| `newSlider` | Create a slider for doing percentages 0..100. Calculate amount in call backs: callBackMove (called during movement) and callBack = at the end phase.  Values are in percent (0.20, 0.90 and 1 for 100%). See method sliderCallBackMove() to get current value of slider.       |    fun.lua |
 | `newToggleSwitch` | Create a toggle switch.      |    menu.lua |
-| `newToolbar` | Create a horizontal toolbar with icon, text or icon + text (icon on top, text on bottom) buttons      |    menu.lua |
+
+*Misc*
+| `newProgressBar` | Create an animated progress bar using "determinate" from Material Design.      |    menu.lua |
+| `newTableView` | Create a scrollable table view      |    menu.lua/fun.lua |
 | `newParentOnBoard` | Create an "onboarding" scene. The onboarding/walkthrough screens for first-time users. Introduce the app and demonstrate what it does. Used in conjunction with `addChildOnBoard`. Tap "?" in the demo's first scene. Supports progress indicators (rectangle and circles) Please "read" the comments near the top of the example. |    onboard.lua |
 
 Helper Methods

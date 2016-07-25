@@ -40,26 +40,26 @@ local mathABS = math.abs
 local M = muiData.M -- {} -- for module array/table
 
 -- define methods here
-function M.createBasicText(options)
-    M.newBasicText(options)
+function M.createText(options)
+    M.newText(options)
 end
 
-function M.newBasicText(options)
+function M.newText(options)
 	if options == nil then return end
 
     muiData.widgetDict[options.name] = {}
-    muiData.widgetDict[options.name]["type"] = "BasicText"
+    muiData.widgetDict[options.name]["type"] = "Text"
     muiData.widgetDict[options.name]["options"] = options
 
     muiData.widgetDict[options.name]["text"] = display.newText( options )
     muiData.widgetDict[options.name]["text"]:setFillColor( unpack(options.fillColor) )
 end
 
-function M.removeWidgetBasicText(widgetName)
-    M.removeBasicText(widgetName)
+function M.removeWidgetText(widgetName)
+    M.removeText(widgetName)
 end
 
-function M.removeBasicText(widgetName)
+function M.removeText(widgetName)
     if widgetName == nil then
         return
     end
@@ -78,7 +78,7 @@ function M.newEmbossedText(options)
     muiData.widgetDict[options.name]["type"] = "EmbossedText"
     muiData.widgetDict[options.name]["options"] = options
 
-    muiData.widgetDict[options.name]["text"] = display.newText( options )
+    muiData.widgetDict[options.name]["text"] = display.newEmbossedText( options )
     muiData.widgetDict[options.name]["text"]:setFillColor( unpack(options.fillColor) )
     if options.embossedColor ~= nil then
         muiData.widgetDict[options.name]["text"]:setEmbossColor( options.embossedColor )

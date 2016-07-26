@@ -97,14 +97,14 @@ function M.newDialog(options)
 
     -- place on main display
     muiData.widgetDict[options.name] = {}
-    muiData.widgetDict[options.name]["rectbackdrop"] = display.newRect( display.contentWidth * 0.5, display.contentHeight * 0.5, display.contentWidth, display.contentHeight)
+    muiData.widgetDict[options.name]["rectbackdrop"] = display.newRect( muiData.contentWidth * 0.5, muiData.contentHeight * 0.5, muiData.contentWidth, muiData.contentHeight)
     muiData.widgetDict[options.name]["rectbackdrop"].strokeWidth = 0
     muiData.widgetDict[options.name]["rectbackdrop"]:setFillColor( unpack( {0.4, 0.4, 0.4, 0.3} ) )
     muiData.widgetDict[options.name]["rectbackdrop"].isVisible = true
 
     -- now for the rest of the dialog
-    local centerX = (display.contentWidth * 0.5)
-    local centerY = (display.contentHeight * 0.5)
+    local centerX = (muiData.contentWidth * 0.5)
+    local centerY = (muiData.contentHeight * 0.5)
 
     muiData.widgetDict[options.name]["options"] = options
     muiData.dialogName = options.name
@@ -113,7 +113,7 @@ function M.newDialog(options)
     muiData.widgetDict[options.name]["container"] = display.newContainer( options.width+20, options.height+20 )
     muiData.widgetDict[options.name]["container"]:translate( centerX, centerY ) -- center the container
     muiData.widgetDict[options.name]["touching"] = false
-    muiData.widgetDict[options.name]["container"].y = display.contentHeight * 2
+    muiData.widgetDict[options.name]["container"].y = muiData.contentHeight * 2
 
     muiData.dialogInUse = true
 
@@ -275,7 +275,7 @@ function M.closeDialog(e)
     -- fade out and destroy it
     if muiData.dialogName ~= nil then
         transition.fadeOut( muiData.widgetDict[muiData.dialogName]["rectbackdrop"], { time=500 } )
-        transition.to( muiData.widgetDict[muiData.dialogName]["container"], { time=1100, y = display.contentHeight * 2, onComplete=M.removeDialog, transition=easing.inOutCubic } )
+        transition.to( muiData.widgetDict[muiData.dialogName]["container"], { time=1100, y = muiData.contentHeight * 2, onComplete=M.removeDialog, transition=easing.inOutCubic } )
     end
 end
 

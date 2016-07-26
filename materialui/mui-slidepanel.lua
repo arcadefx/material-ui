@@ -60,7 +60,7 @@ function M.newSlidePanel(options)
         options.isChecked = false
     end
 
-    options.width = options.width or ( display.contentWidth * 0.5 )
+    options.width = options.width or ( muiData.contentWidth * 0.5 )
 
     muiData.dialogName = options.name
     muiData.dialogInUse = true
@@ -79,26 +79,26 @@ function M.newSlidePanel(options)
     end
 
     -- place on main display
-    muiData.widgetDict[options.name]["rectbackdrop"] = display.newRect( display.contentWidth * 0.5, display.contentHeight * 0.5, display.contentWidth, display.contentHeight)
+    muiData.widgetDict[options.name]["rectbackdrop"] = display.newRect( muiData.contentWidth * 0.5, muiData.contentHeight * 0.5, muiData.contentWidth, muiData.contentHeight)
     muiData.widgetDict[options.name]["rectbackdrop"].strokeWidth = 0
     muiData.widgetDict[options.name]["rectbackdrop"]:setFillColor( unpack( {0.4, 0.4, 0.4, 0.3} ) )
     muiData.widgetDict[options.name]["rectbackdrop"].isVisible = true
 
     muiData.widgetDict[options.name]["mygroup"] = display.newGroup()
     muiData.widgetDict[options.name]["mygroup"].x = 0
-    muiData.widgetDict[options.name]["mygroup"].y = display.contentHeight * 0.5
+    muiData.widgetDict[options.name]["mygroup"].y = muiData.contentHeight * 0.5
     muiData.widgetDict[options.name]["mygroup"].muiOptions = options
 
     -- put menu on a scrollview
-    local scrollWidth = display.contentWidth * 0.5
+    local scrollWidth = muiData.contentWidth * 0.5
     scrollView = widget.newScrollView(
         {
             top = 0,
             left = -(options.width),
             width = options.width,
-            height = display.contentHeight,
+            height = muiData.contentHeight,
             scrollWidth = scrollWidth,
-            scrollHeight = display.contentHeight,
+            scrollHeight = muiData.contentHeight,
             hideBackground = false,
             isBounceEnabled = false,
             backgroundColor = options.fillColor,
@@ -109,15 +109,15 @@ function M.newSlidePanel(options)
     scrollView.muiOptions = options
     muiData.widgetDict[options.name]["scrollview"] = scrollView
 
-    local rectclickWidth = display.contentWidth - options.width
-    muiData.widgetDict[options.name]["rectclick"] = display.newRect( 0, 0, rectclickWidth, display.contentHeight)
+    local rectclickWidth = muiData.contentWidth - options.width
+    muiData.widgetDict[options.name]["rectclick"] = display.newRect( 0, 0, rectclickWidth, muiData.contentHeight)
     muiData.widgetDict[options.name]["rectclick"].strokeWidth = 0
     muiData.widgetDict[options.name]["rectclick"]:setFillColor( unpack( { 1, 1, 1, 0.01 } ) )
     muiData.widgetDict[options.name]["rectclick"].isVisible = true
     muiData.widgetDict[options.name]["rectclick"]:addEventListener( "touch", M.touchSlidePanelBarrier )
     muiData.widgetDict[options.name]["rectclick"].muiOptions = options
     muiData.widgetDict[options.name]["rectclick"].x = options.width + (rectclickWidth * 0.5)
-    muiData.widgetDict[options.name]["rectclick"].y = display.contentHeight * 0.5
+    muiData.widgetDict[options.name]["rectclick"].y = muiData.contentHeight * 0.5
 
 
     -- put in title text and background if specified
@@ -229,7 +229,7 @@ function M.newSlidePanelLineSeparator( options )
         y = options.y
     end
 
-    local barWidth = display.contentWidth
+    local barWidth = muiData.contentWidth
     if options.width ~= nil then
         barWidth = options.width
     end
@@ -269,7 +269,7 @@ function M.newSlidePanelButton( options )
         y = options.y
     end
 
-    local barWidth = display.contentWidth
+    local barWidth = muiData.contentWidth
     if options.width ~= nil then
         barWidth = options.width
     end
@@ -347,7 +347,7 @@ function M.newSlidePanelButton( options )
     local buttonWidth = textWidth
     local buttonHeight = textHeight
     local rectangle = display.newRect( buttonWidth * 0.5, 0, buttonWidth, buttonHeight )
-    rectangle:setFillColor( unpack(options.backgroundColor) )
+    rectangle:setFillColor( unpack({1,1,1,0}) ) -- options.backgroundColor
     button["rectangle"] = rectangle
     button["rectangle"].value = options.value
     button["buttonWidth"] = rectangle.contentWidth
@@ -377,7 +377,6 @@ function M.newSlidePanelButton( options )
 
     button["myButton"] = display.newRect( (options.width * 0.5) - textHeight * 0.5, textY, options.width, textHeight )
     button["myButton"]:setFillColor( unpack( options.backgroundColor ) )
-    button["myButton"].alpha = 0.01
     button["mygroup"]:insert( button["myButton"] )
 
     button["myText"] = display.newText( options2 )

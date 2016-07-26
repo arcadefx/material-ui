@@ -174,8 +174,8 @@ function M.newSelect(options)
     muiData.widgetDict[options.name]["selectorfieldarrow"].dialogName = options.dialogName
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["selectorfieldarrow"] )
 
-    if options.listHeight > display.contentHeight then
-        options.listHeight = display.contentHeight * 0.75
+    if options.listHeight > muiData.contentHeight then
+        options.listHeight = muiData.contentHeight * 0.75
     end
 
     muiData.widgetDict[options.name]["options"] = options
@@ -229,11 +229,11 @@ function M.revealTableViewForSelector(name, options)
 
         local dy = mathABS(muiData.widgetDict[options.name.."-List"]["tableview"].contentHeight - muiData.widgetDict[options.name]["mygroup"].y)
         local h = muiData.widgetDict[options.name.."-List"]["tableview"].contentHeight + muiData.widgetDict[options.name]["mygroup"].y
-        local maxHeight =  display.contentHeight - muiData.navbarHeight
+        local maxHeight =  muiData.contentHeight - muiData.navbarHeight
         if h > maxHeight then
             local hd = mathABS(maxHeight - h)
             if options.scrollView ~= nil then
-                maxHeight =  display.contentHeight - muiData.navbarHeight
+                maxHeight =  muiData.contentHeight - muiData.navbarHeight
                 hd = mathABS(maxHeight - h)
             end
             dy = muiData.widgetDict[options.name]["mygroup"].y - (hd + options.height)

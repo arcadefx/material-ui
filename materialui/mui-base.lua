@@ -43,10 +43,11 @@ local mathABS = math.abs
 
 local M = {} -- for module array/table
 
-function M.init_base(data)
+function M.init_base(options)
+  options = options or {}
   muiData.M = M -- all modules need access to parent methods
   muiData.environment = system.getInfo("environment")
-  muiData.value = data
+  muiData.value = options
   muiData.circleSceneSwitch = nil
   muiData.circleSceneSwitchComplete = false
   muiData.touching = false
@@ -68,10 +69,29 @@ function M.init_base(data)
   muiData.onBoardData = nil
   muiData.slideData = nil
   muiData.currentSlide = 0
+  options.useActualDimensions = options.useActualDimensions or true
+  M.setDisplayToActualDimensions( {useActualDimensions = options.useActualDimensions} )
 
   muiData.scene = composer.getScene(composer.getSceneName("current"))
   muiData.scene.name = composer.getSceneName("current")
   Runtime:addEventListener( "touch", M.eventSuperListner )
+end
+
+function M.setDisplayToActualDimensions(options)
+  if options.useActualDimensions == true then
+    if string.find(system.orientation, "portrait") ~= nil then
+      muiData.contentWidth = display.actualContentWidth
+      muiData.contentHeight = display.actualContentHeight
+    elseif string.find(system.orientation, "landscape") ~= nil then
+      muiData.contentWidth = display.actualContentHeight
+      muiData.contentHeight = display.actualContentWidth
+    end
+    muiData.useActualDimensions = options.useActualDimensions
+  else
+    muiData.contentWidth = display.contentWidth
+    muiData.contentHeight = display.contentHeight
+    muiData.useActualDimensions = false
+  end
 end
 
 function M.eventSuperListner(event)
@@ -136,8 +156,6 @@ function M.updateUI(event, skipName)
                 timer.performWithDelay(100, function() native.setKeyboardFocus(nil) end, 1)
                 muiData.widgetDict[widget]["textfieldfake"].isVisible = true
                 muiData.widgetDict[widget]["textfield"].isVisible = false
-            elseif (widgetType == "TextField" or widgetType == "TextBox") and muiData.widgetDict[widget]["textfield"].isVisible == true then
-               --  timer.performWithDelay(100, function() native.setKeyboardFocus(nil) end, 1)
             end
         end
     end
@@ -250,8 +268,8 @@ function M.getSizeRatio()
     divisor = 960
   end
 
-  muiData.masterRatio = display.contentWidth / divisor
-  muiData.masterRemainder = mathMod(display.contentWidth, divisor)
+  muiData.masterRatio = muiData.contentWidth / divisor
+  muiData.masterRemainder = mathMod(muiData.contentWidth, divisor)
   return muiData.masterRatio
 end
 
@@ -265,9 +283,9 @@ function M.split(str, sep)
 end
 
 function M.getTextWidth(options)
-  local width = display.contentWidth
+  local width = muiData.contentWidth
 
-  if options == nil then return display.contentWidth end
+  if options == nil then return muiData.contentWidth end
 
   local lines = M.split(options.text, "\n")
   local longest = 0
@@ -350,7 +368,7 @@ function M.actionSwitchScene( e )
     if muiTargetCallBackData ~= nil and muiTargetCallBackData.sceneTransitionColor ~= nil then
         circleColor = muiTargetCallBackData.sceneTransitionColor
     end
-    muiData.circleSceneSwitch = display.newCircle( 0, 0, display.contentWidth + (display.contentWidth * 0.25))
+    muiData.circleSceneSwitch = display.newCircle( 0, 0, muiData.contentWidth + (muiData.contentWidth * 0.25))
     muiData.circleSceneSwitch:setFillColor( unpack(circleColor) )
     muiData.circleSceneSwitch.alpha = 1
     muiData.circleSceneSwitch.callBackData = muiTargetCallBackData

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.29] - 2016-07-26
+### Added
+- setDisplayToActualDimensions() method. Set the display dimensions to use display.actualContentWidth and height or display.contentWidth and height. If true it uses actual content width and height.
+
+### Change
+- Documentation updates.
+- Bug fixes.
+
 ## [0.1.28] - 2016-07-25
 ### Added
 - LineSeparator option to newSlidePanel list of menu entries.

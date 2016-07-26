@@ -8,8 +8,8 @@ local muiData = require( "materialui.mui-data" )
 local mathFloor = math.floor
 local mathMod = math.fmod
 local mathABS = math.abs
-local screenW = display.contentWidth
-local screenH = display.contentHeight
+local screenW = muiData.contentWidth
+local screenH = muiData.contentHeight
 
 local M = muiData.M -- {} -- for module array/table
 

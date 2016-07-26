@@ -67,6 +67,12 @@ Available Methods
 -------------
 Please read Lua code to find all parameters and see example in the repo call menu.lua.  All methods below implement a callback and lots of configuration options.
 
+*Intialize and Destroy*
+| Method        | Short Description | Example  |
+| ------------- | ------------- | :-----:|
+| `init` | Initialize the library and settings. init() has two parameters: {} of modules to include, {} of options). Example: muiData.init( nil, {useActualDimensions = true} ) and specifying 'nil' for modules loads all modules | menu.lua/fun.lua |
+| `destroy` | Destroy all widgets and resources and free memory | menu.lua/fun.lua |
+
 *Buttons*
 
 | Method        | Short Description | Example  |
@@ -135,6 +141,7 @@ Helper Methods
 - `getWidgetBaseObject` - returns the base object of a named widget created with one of the above methods. It can be inserted into another container, group, scrollview and moved around, etc.  Example: rectangle_surface:insert( mui.getWidgetBaseObject("okay_button") )
 - `getEventParameter` - returns the event MUI widget parameters for the current widget.  Get the event target, widget name, widget value ( ex: getEventParameter(event, "muiTargetValue") ).  The value is set when creating a widget.  See menu.lua for setting the values and mui.lua callBacks for getting values (example would be actionForSwitch() method).
 - `hideWidget` - hide a widget by name. It will hide/show a widget by setting the isVisible attribute.
+- `setDisplayToActualDimensions` - Set the display dimensions to use display.actualContentWidth and height or display.contentWidth and height.  Apply this when calling muiData.init(...), example: muiData.init( nil, {useActualDimensions = true} ).
 
 Remove widget methods - these will remove the widget by name and release memory:
 - `remove[widget name]("widget name to remove")` from above, example: `removeCircleButton("demo-circle-button")`

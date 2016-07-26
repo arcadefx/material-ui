@@ -32,6 +32,9 @@ function scene:create( event )
 
     display.setDefault("background", 1, 1, 1)
 
+    -- print("display.contentWidth: "..display.contentWidth)
+    -- print("display.actualContentWidth: "..display.actualContentWidth)
+
     background = display.newRect( 0, 0, display.contentWidth, display.contentHeight)
     background.anchorX = 0
     background.anchorY = 0
@@ -249,7 +252,6 @@ function scene:create( event )
             buttonHighlightColor = { 0.5, 0.5, 0.5 },
             buttonHighlightColorAlpha = 0.5,
             lineSeparatorHeight = mui.getScaleVal(1),
-            touchpoint = true,
             list = {
                 { key = "Home", value = "1", icon="home", labelText="Home", isActive = true },
                 { key = "Newsroom", value = "2", icon="new_releases", labelText="News", isActive = false },

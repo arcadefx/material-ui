@@ -63,7 +63,7 @@ function M.newToast( options )
         options.radius = M.getScaleVal(15)
     end
 
-    local left,top = (display.contentWidth-options.width) * 0.5, display.contentHeight * 0.5
+    local left,top = (muiData.contentWidth-options.width) * 0.5, muiData.contentHeight * 0.5
     if options.left ~= nil then
         left = options.left
     end

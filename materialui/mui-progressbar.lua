@@ -79,7 +79,7 @@ function M.newProgressBar(options)
     end
 
     if options.width == nil then
-        options.width = display.contentWidth * 0.70
+        options.width = muiData.contentWidth * 0.70
     end
 
     if options.height == nil then

@@ -52,7 +52,7 @@ function M.newToolbarButton( options )
         y = options.y
     end
 
-    local barWidth = display.contentWidth
+    local barWidth = muiData.contentWidth
     if options.width ~= nil then
         barWidth = options.width
     end
@@ -379,7 +379,7 @@ function M.newToolbar( options )
 
         -- slider highlight
         local sliderHeight = options.buttonHeight * 0.05
-        muiData.widgetDict[options.name]["toolbar"]["slider"] = display.newRect( buttonOffset, display.contentHeight - (sliderHeight * 0.5), buttonWidth, sliderHeight )
+        muiData.widgetDict[options.name]["toolbar"]["slider"] = display.newRect( buttonOffset, muiData.contentHeight - (sliderHeight * 0.5), buttonWidth, sliderHeight )
         muiData.widgetDict[options.name]["toolbar"]["slider"]:setFillColor( unpack( options.sliderColor ) )
         transition.to(muiData.widgetDict[options.name]["toolbar"]["slider"],{time=0, x=activeX, transition=easing.inOutCubic})
     end

@@ -78,7 +78,7 @@ function M.loadModule(mui, parents)
   setmetatable(M, { __index = cache })
 end
 
-function M.init(mui_modules)
+function M.init(mui_modules, options)
     local baseModules = {
       "materialui.mui-base"
     }
@@ -86,7 +86,7 @@ function M.init(mui_modules)
         table.insert(parents, require(baseModules[i]))
     end
     M.loadModule(M, parents)
-    M.init_base()
+    M.init_base(options)
     if mui_modules ~= nil then modules = mui_modules end
     for i=1, #modules do
         table.insert(parents, require(modules[i]))

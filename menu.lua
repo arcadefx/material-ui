@@ -32,9 +32,6 @@ function scene:create( event )
 
     display.setDefault("background", 1, 1, 1)
 
-    -- print("display.contentWidth: "..display.contentWidth)
-    -- print("display.actualContentWidth: "..display.actualContentWidth)
-
     background = display.newRect( 0, 0, display.contentWidth, display.contentHeight)
     background.anchorX = 0
     background.anchorY = 0

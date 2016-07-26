@@ -121,8 +121,8 @@ Please read Lua code to find all parameters and see example in the repo call men
 
 | Method        | Short Description | Example  |
 | ------------- | ------------- | :-----:|
-| `newEmossedText | Create embossed text. A wrapper to make it easier to attach 'newEmbossedText' to navbar, menu, etc (see Corona newEmossedText for options) | n/a |
-| `newText | Create text. A wrapper to make it easier to attach 'newText' to navbar, menu, etc (see Corona newText for options) | menu.lua/fun.lua |
+| `newEmossedText` | Create embossed text. A wrapper to make it easier to attach 'newEmbossedText' to navbar, menu, etc (see Corona newEmossedText for options) | n/a |
+| `newText` | Create text. A wrapper to make it easier to attach 'newText' to navbar, menu, etc (see Corona newText for options) | menu.lua/fun.lua |
 
 *Misc*
 

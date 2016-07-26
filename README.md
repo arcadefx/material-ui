@@ -67,7 +67,8 @@ Available Methods
 -------------
 Please read Lua code to find all parameters and see example in the repo call menu.lua.  All methods below implement a callback and lots of configuration options.
 
-*Intialize and Destroy*
+*Initialize and Destroy*
+
 | Method        | Short Description | Example  |
 | ------------- | ------------- | :-----:|
 | `init` | Initialize the library and settings. init() has two parameters: {} of modules to include, {} of options). Example: muiData.init( nil, {useActualDimensions = true} ) and specifying 'nil' for modules loads all modules | menu.lua/fun.lua |

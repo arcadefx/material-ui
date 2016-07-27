@@ -69,6 +69,8 @@ function M.init_base(options)
   muiData.onBoardData = nil
   muiData.slideData = nil
   muiData.currentSlide = 0
+  muiData.minPixelScaleWidthForPortrait = options.minPixelScaleWidthForPortrait or 640
+  muiData.minPixelScaleWidthForLandscape = options.minPixelScaleWidthForLandscape or 960
   options.useActualDimensions = options.useActualDimensions or true
   M.setDisplayToActualDimensions( {useActualDimensions = options.useActualDimensions} )
 
@@ -263,9 +265,9 @@ function M.getSizeRatio()
   end
   local divisor = 1
   if string.find(system.orientation, "portrait") ~= nil then
-    divisor = 640
+    divisor = muiData.minPixelScaleWidthForPortrait
   elseif string.find(system.orientation, "landscape") ~= nil then
-    divisor = 960
+    divisor = muiData.minPixelScaleWidthForLandscape
   end
 
   muiData.masterRatio = muiData.contentWidth / divisor

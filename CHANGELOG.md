@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.30] - 2016-07-27
+### Added
+- Options to init() call 'minPixelScaleWidthForPortrait' and 'minPixelWidthForLandscape' with init(nil, {minPixelScaleWidthForLandscape=[value],minPixelScaleWidthForLandscape=[value]} to override the base scale of MUI elements (defaults to 640 portrait and 960 landscape).
+
 ## [0.1.29] - 2016-07-26
 ### Added
 - setDisplayToActualDimensions() method. Set the display dimensions to use display.actualContentWidth and height or display.contentWidth and height. If true it uses actual content width and height.

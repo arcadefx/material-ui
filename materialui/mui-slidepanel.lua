@@ -220,6 +220,23 @@ function M.newSlidePanel(options)
     transition.to( muiData.widgetDict[options.name]["scrollview"], { time=300, x=(options.width * 0.5), transition=easing.linear } )
 end
 
+function M.getSlidePanelProperty(widgetName, propertyName)
+    local data = nil
+
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+    elseif propertyName == "title" then
+        data = muiData.widgetDict[widgetName .. "header-text"] -- the header/title text of menu
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetName]["rectbackdrop"] -- backdrop of whole widget
+    elseif propertyName == "layer_2" then
+        data = muiData.widgetDict[widgetName]["rectclick"] -- the right side area that 
+    end
+    return data
+end
+
 function M.newSlidePanelLineSeparator( options )
     local x,y = 160, 240
     if options.x ~= nil then
@@ -433,6 +450,30 @@ function M.newSlidePanelButton( options )
 
     muiData.widgetDict[options.basename]["scrollview"]:insert( button["mygroup"] )
     muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"]:addEventListener( "touch", M.slidePanelEventButton )
+end
+
+function M.getSlidePanelButtonProperty(widgetParentName, propertyName, index)
+    local data = nil
+
+    if widgetParentName == nil or propertyName == nil then return data end
+
+    if index < 1 then index = 1 end
+    local widgetName = widgetParentName .. "_" .. index
+
+    if muiData.widgetDict[widgetParentName]["slidebar"][widgetName] == nil then return data end
+
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetParentName]["slidebar"][widgetName]["mygroup"] -- x,y movement
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetParentName]["slidebar"][widgetName]["rectangle"] -- transparent button background
+    elseif propertyName == "layer_2" then
+        data = muiData.widgetDict[widgetParentName]["slidebar"][widgetName]["myButton"] -- button background
+    elseif propertyName == "text" then
+        data = muiData.widgetDict[widgetParentName]["slidebar"][widgetName]["myText"] -- icon/text
+    elseif propertyName == "label" then
+        data = muiData.widgetDict[widgetParentName]["slidebar"][widgetName]["myText2"] -- text for icon
+    end
+    return data
 end
 
 function M.slidePanelEventButton (event)

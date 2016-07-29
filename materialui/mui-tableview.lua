@@ -165,6 +165,17 @@ function M.newTableView( options )
 
 end
 
+function M.getTableViewProperty(widgetName, propertyName)
+    local data = nil
+
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["tableview"] -- x,y movement
+    end
+    return data
+end
+
 function M.onRowRender( event )
 
     -- Get reference to the row group

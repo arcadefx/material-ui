@@ -1006,17 +1006,20 @@ function M.newRadioButton(options)
 
 end
 
-function M.getRadioButtonProperty(widgetName, propertyName)
+function M.getRadioButtonProperty(parentWidgetName, propertyName, index)
     local data = nil
 
-    if widgetName == nil or propertyName == nil then return data end
+    if parentWidgetName == nil or widgetName == nil or propertyName == nil then return data end
+
+    local widgetName = parentWidgetName .. "_" .. index
+    if muiData.widgetDict[widgetParentName]["toolbar"][widgetName] == nil then return data end
 
     if propertyName == "object" then
-        data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
-    elseif propertyName == "text" then
-        data = muiData.widgetDict[widgetName]["myText"] -- button
+        data = muiData.widgetDict[parentWidgetName]["radio"][widgetName]["mygroup"] -- x,y movement
+    elseif propertyName == "icon" then
+        data = muiData.widgetDict[parentWidgetName]["radio"][widgetName]["myText"] -- button
     elseif propertyName == "label" then
-        data = muiData.widgetDict[widgetName]["myLabel"] -- the base
+        data = muiData.widgetDict[parentWidgetName]["radio"][widgetName]["myLabel"] -- the base
     end
     return data
 end

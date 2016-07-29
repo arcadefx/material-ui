@@ -188,6 +188,29 @@ function M.newTextField(options)
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["textfield"] )
 end
 
+function M.getTextFieldProperty(widgetName, propertyName)
+    local data = nil
+
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["container"] -- x,y movement
+    elseif propertyName == "label" then
+        data = muiData.widgetDict[widgetName]["textlabel"] -- label
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetName]["rect"] -- clickable area
+    elseif propertyName == "layer_2" then
+        data = muiData.widgetDict[widgetName]["textfield"] -- native text field
+    elseif propertyName == "layer_3" then
+        data = muiData.widgetDict[widgetName]["textfieldfake"] -- fake text field
+    elseif propertyName == "layer_4" then
+        data = muiData.widgetDict[widgetName]["line"] -- line beneath control
+    elseif propertyName == "layer_5" then
+        data = muiData.widgetDict[widgetName]["lineanim"] -- line animated with fade
+    end
+    return data
+end
+
 function M.highlightTextField(widgetName, active)
     local name = widgetName
     if name == nil then

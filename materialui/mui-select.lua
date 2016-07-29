@@ -181,6 +181,25 @@ function M.newSelect(options)
     muiData.widgetDict[options.name]["options"] = options
 end
 
+function M.getSelectorProperty(widgetName, propertyName)
+    local data = nil
+
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["container"] -- x,y movement
+    elseif propertyName == "label" then
+        data = muiData.widgetDict[widgetName]["textlabel"] -- label
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetName]["rect"] -- clickable area
+    elseif propertyName == "layer_2" then
+        data = muiData.widgetDict[widgetName]["selectorfieldarrow"] -- icon arrow
+    elseif propertyName == "layer_3" then
+        data = muiData.widgetDict[widgetName]["line"] -- line beneath control
+    end
+    return data
+end
+
 function M.revealTableViewForSelector(name, options)
     -- table view to hold pick list keyboard_arrow_down
     muiData.widgetDict[options.name]["mygroup"] = display.newGroup() -- options.width+4, options.height + options.listHeight)

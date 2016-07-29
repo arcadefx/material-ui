@@ -114,6 +114,19 @@ function M.newNavbar( options )
 
 end
 
+function M.getNavBarProperty(widgetName, propertyName)
+    local data = nil
+
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["container"] -- x,y movement
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetName]["rect"] -- navbar background
+    end
+    return data
+end
+
 function M.attachToNavBar(navbar_name, options )
     if navbar_name == nil or options == nil or options.widgetName == nil then return end
     local newX = 0

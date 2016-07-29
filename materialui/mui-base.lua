@@ -253,20 +253,64 @@ end
 
 function M.getWidgetProperty( widgetName, propertyName )
   local widgetData = nil
-  if widgetName == nil or propertyName == nil then return widgetData end
 
-  if muiData.widgetDict[widgetName]["type"] == "EmbossedText" or muiData.widgetDict[widgetName]["type"] == "Text" then
-    widgetData = M.getTextProperty( widgetName, propertyName )
-  elseif muiData.widgetDict[widgetName]["type"] == "RRectButton" then
-    widgetData = M.getRoundedRectButtonProperty( widgetName, propertyName )
-  elseif muiData.widgetDict[widgetName]["type"] == "RectButton" then
-    widgetData = M.getRectButtonProperty( widgetName, propertyName )
+  if widgetName == nil or propertyName == nil then return widgetData end
+  if muiData.widgetDict[widgetName] == nil then return widgetData end
+
+  if muiData.widgetDict[widgetName]["type"] == "CircleButton" then
+    widgetData = M.getCircleButtonProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "Dialog" then
+    widgetData = M.getDialogProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "IconButton" then
     widgetData = M.getIconButtonProperty( widgetName, propertyName )
-  elseif muiData.widgetDict[widgetName]["type"] == "CircleButton" then
-    widgetData = M.getCircleButtonProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "NavBar" then
+    widgetData = M.getNavBarProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "ProgressBar" then
+    widgetData = M.getProgressBarProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "RectButton" then
+    widgetData = M.getRectButtonProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "RRectButton" then
+    widgetData = M.getRoundedRectButtonProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "Selector" then
+    widgetData = M.getSelectorProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "Slider" then
+    widgetData = M.getSliderProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "SlidePanel" then
+    widgetData = M.getSlidePanelProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "EmbossedText" or muiData.widgetDict[widgetName]["type"] == "Text" then
+    widgetData = M.getTextProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "TableView" then
+    widgetData = M.getTableViewProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "TextField" or muiData.widgetDict[widgetName]["type"] == "TextBox" then
+    widgetData = M.getTextFieldProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "Toast" then
+    widgetData = M.getToastProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "ToggleSwitch" then
+    widgetData = M.getToggleSwitchProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "Toolbar" then
+    widgetData = M.getToolBarProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "ToolbarButton" then
+    widgetData = M.getToolBarProperty( widgetName, propertyName )
+  end
+  return widgetData
+end
+
+function M.getChildWidgetProperty(parentWidgetName, propertyName, index)
+  local widgetData = nil
+  if parentWidgetName == nil or propertyName == nil then return widgetData end
+
+  if muiData.widgetDict[parentWidgetName] == nil then return widgetData end
+
+  if muiData.widgetDict[parentWidgetName]["type"] == "Toolbar" then
+    if muiData.widgetDict[parentWidgetName]["toolbar"]["type"] == "ToolbarButton" then
+      widgetData = M.getToolBarButtonProperty( parentWidgetName, propertyName, index )
+    end
   elseif muiData.widgetDict[widgetName]["type"] == "RadioButton" then
-    widgetData = M.getRadioButtonProperty( widgetName, propertyName )
+      widgetData = M.getRadioButtonProperty( parentWidgetName, propertyName, index )
+  elseif muiData.widgetDict[parentWidgetName]["type"] == "SlidePanel" then
+    if muiData.widgetDict[parentWidgetName]["slidebar"]["type"] == "slidebarButton" then
+      widgetData = M.getSlidePanelButtonProperty( parentWidgetName, propertyName, index )
+    end
   end
   return widgetData
 end

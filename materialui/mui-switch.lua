@@ -111,7 +111,7 @@ function M.newToggleSwitch(options)
     muiData.widgetDict[options.name]["mygroup"]["rectmaster"].strokeWidth = 0
     muiData.widgetDict[options.name]["mygroup"]["rectmaster"]:setStrokeColor( unpack({1, 0, 0, 1}) )
 
-    muiData.widgetDict[options.name]["mygroup"]["rect"] = display.newRect( x, y, options.width * 0.5, (options.height * 0.50))
+    muiData.widgetDict[options.name]["mygroup"]["rect"] = display.newRect( x, y, options.width * 0.5, options.height * 0.5)
     muiData.widgetDict[options.name]["mygroup"]["rect"].strokeWidth = 0
     muiData.widgetDict[options.name]["mygroup"]["rect"]:setFillColor( unpack(options.backgroundColorOff) )
 
@@ -138,6 +138,27 @@ function M.newToggleSwitch(options)
 
     rect.muiOptions = options
     muiData.widgetDict[options.name]["mygroup"]["rectmaster"]:addEventListener( "touch", M.toggleSwitchTouch )
+end
+
+function M.getToggleSwitchProperty(widgetName, propertyName)
+    local data = nil
+
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetName]["rectmaster"] -- clickable area
+    elseif propertyName == "layer_2" then
+        data = muiData.widgetDict[widgetName]["rect"] -- middle area center
+    elseif propertyName == "layer_3" then
+        data = muiData.widgetDict[widgetName]["circle1"] -- circle area left
+    elseif propertyName == "layer_4" then
+        data = muiData.widgetDict[widgetName]["circle2"] -- circle area right
+    elseif propertyName == "layer_5" then
+        data = muiData.widgetDict[widgetName]["circle"] -- circle for moving within switch
+    end
+    return data
 end
 
 function M.toggleSwitchTouch (event)

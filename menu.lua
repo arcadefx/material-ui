@@ -105,7 +105,7 @@ function scene:create( event )
     })
 
     mui.newRectButton({
-        name = "scene2",
+        name = "switchSceneButton",
         text = "Switch Scene",
         width = mui.getScaleVal(200),
         height = mui.getScaleVal(60),
@@ -121,6 +121,17 @@ function scene:create( event )
             sceneTransitionColor = { 0, 0.73, 1 }
         } -- scene fun.lua
     })
+
+    -- get widget and change the color of the text
+    local widgetData = mui.getWidget( "switchSceneButton", "text" )
+    if widgetData ~= nil then
+        widgetData:setFillColor( 1, 1 ,1 ,1 )
+    end
+    -- get widget and change the color of the layer that sits beneath text
+    widgetData = mui.getWidget( "switchSceneButton", "layer_1" )
+    if widgetData ~= nil then
+        widgetData:setFillColor( 0.25, 0.75, 1, 1 )
+    end
 
     mui.newIconButton({
         name = "plus",

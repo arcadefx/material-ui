@@ -55,6 +55,11 @@ function M.newText(options)
     muiData.widgetDict[options.name]["text"]:setFillColor( unpack(options.fillColor) )
 end
 
+function M.getTextProperty(widgetName, property_name)
+    if options == nil then return nil end
+    return muiData.widgetDict[options.name]["text"]
+end
+
 function M.removeWidgetText(widgetName)
     M.removeText(widgetName)
 end
@@ -83,6 +88,10 @@ function M.newEmbossedText(options)
     if options.embossedColor ~= nil then
         muiData.widgetDict[options.name]["text"]:setEmbossColor( options.embossedColor )
     end
+end
+
+function M.getEmbossedTextProperties(options)
+  return M.getTextProperties(options)
 end
 
 function M.removeEmbossedText(widgetName)

@@ -228,6 +228,8 @@ function M.getWidgetBaseObject(name)
                widgetData = muiData.widgetDict[widget]["container"]
             elseif widgetType == "TextBox" then
                widgetData = muiData.widgetDict[widget]["container"]
+            elseif widgetType == "TileGrid" then
+               widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "TimePicker" then
                widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "ProgressBar" then
@@ -247,6 +249,26 @@ function M.getWidgetBaseObject(name)
         end
     end
     return widgetData
+end
+
+function M.getWidget( widgetName, propertyName )
+  local widgetData = nil
+  if widgetName == nil or propertyName == nil then return widgetData end
+
+  if muiData.widgetDict[widgetName]["type"] == "EmbossedText" or muiData.widgetDict[widgetName]["type"] == "Text" then
+    widgetData = M.getTextProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "RRectButton" then
+    widgetData = M.getRoundedRectButtonProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "RectButton" then
+    widgetData = M.getRectButtonProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "IconButton" then
+    widgetData = M.getIconButtonProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "CircleButton" then
+    widgetData = M.getCircleButtonProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "RadioButton" then
+    widgetData = M.getRadioButtonProperty( widgetName, propertyName )
+  end
+  return widgetData
 end
 
 function M.getWidgetValue(widgetName)
@@ -547,6 +569,8 @@ function M.hideWidget(widgetName, options)
             -- not yet supported
         elseif widgetType == "TableView" then
             muiData.widgetDict[widget]["tableview"].isVisible = showWidget
+        elseif widgetType == "TileGrid" then
+            muiData.widgetDict[widget]["mygroup"].isVisible = showWidget
         elseif widgetType == "TextField" or widgetType == "TextBox" then
             muiData.widgetDict[widget]["container"].isVisible = showWidget
         elseif widgetType == "ProgressBar" or widgetType == "ToggleSwitch" then
@@ -605,6 +629,8 @@ function M.destroy()
             M.removeTextField(widget)
         elseif widgetType == "TextBox" then
             M.removeTextBox(widget)
+        elseif widgetType == "TileGrid" then
+            M.removeTileGrid(widget)
         elseif widgetType == "TimePicker" then
             M.removeTimePicker(widget)
         elseif widgetType == "ProgressBar" then

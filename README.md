@@ -138,6 +138,7 @@ Helper Methods
 - `attachToRow` - attaches widget to table view row.
 - `closeDialog` - closes an open dialog and releases memory
 - `getScaleVal` - returns integer scaled value to fit resolution. Useful for dimensions and coordinates.
+- `getWidget` - returns the widget property by name. The property can be the text or layer of the widget (like a button).
 - `getWidgetByName` - returns the array of a named widget.
 - `getWidgetBaseObject` - returns the base object of a named widget created with one of the above methods. It can be inserted into another container, group, scrollview and moved around, etc.  Example: rectangle_surface:insert( mui.getWidgetBaseObject("okay_button") )
 - `getEventParameter` - returns the event MUI widget parameters for the current widget.  Get the event target, widget name, widget value ( ex: getEventParameter(event, "muiTargetValue") ).  The value is set when creating a widget.  See menu.lua for setting the values and mui.lua callBacks for getting values (example would be actionForSwitch() method).

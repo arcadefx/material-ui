@@ -251,7 +251,7 @@ function M.getWidgetBaseObject(name)
     return widgetData
 end
 
-function M.getWidget( widgetName, propertyName )
+function M.getWidgetProperty( widgetName, propertyName )
   local widgetData = nil
   if widgetName == nil or propertyName == nil then return widgetData end
 

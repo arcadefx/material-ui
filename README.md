@@ -65,7 +65,7 @@ Sample Screenshot
 
 Available Methods
 -------------
-Please read Lua code to find all parameters and see example in the repo call menu.lua.  All methods below implement a callback and lots of configuration options.  Please see project ['wiki'][https://github.com/arcadefx/material-ui/wiki] for more information on method, example and properties.
+Please read Lua code to find all parameters and see example in the repo call menu.lua.  All methods below implement a callback and lots of configuration options.  Please see project [Wiki](https://www.google.com)[https://github.com/arcadefx/material-ui/wiki] for more information on method, example and properties.
 
 *Initialize and Destroy*
 

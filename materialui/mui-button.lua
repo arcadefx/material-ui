@@ -194,7 +194,9 @@ function M.getRoundedRectButtonProperty(widgetName, propertyName)
 
     if widgetName == nil or propertyName == nil then return data end
 
-    if propertyName == "text" then
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["container"] -- x,y movement
+    elseif propertyName == "text" then
         data = muiData.widgetDict[widgetName]["myText"] -- button text
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["rrect2"] -- button shadow
@@ -415,7 +417,9 @@ function M.getRectButtonProperty(widgetName, propertyName)
 
     if widgetName == nil or propertyName == nil then return data end
 
-    if propertyName == "text" then
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["container"] -- x,y movement
+    elseif propertyName == "text" then
         data = muiData.widgetDict[widgetName]["myText"] -- button text
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["rrect"] -- button face
@@ -561,7 +565,9 @@ function M.getIconButtonProperty(widgetName, propertyName)
 
     if widgetName == nil or propertyName == nil then return data end
 
-    if propertyName == "icon" then
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+    elseif propertyName == "icon" then
         data = muiData.widgetDict[widgetName]["myText"] -- button
     end
     return data
@@ -754,7 +760,9 @@ function M.getCircleButtonProperty(widgetName, propertyName)
 
     if widgetName == nil or propertyName == nil then return data end
 
-    if propertyName == "text" then
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+    elseif propertyName == "text" then
         data = muiData.widgetDict[widgetName]["myText"] -- button
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["circlemain"] -- the base
@@ -1003,7 +1011,9 @@ function M.getRadioButtonProperty(widgetName, propertyName)
 
     if widgetName == nil or propertyName == nil then return data end
 
-    if propertyName == "text" then
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+    elseif propertyName == "text" then
         data = muiData.widgetDict[widgetName]["myText"] -- button
     elseif propertyName == "label" then
         data = muiData.widgetDict[widgetName]["myLabel"] -- the base

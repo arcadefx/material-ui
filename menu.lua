@@ -123,12 +123,12 @@ function scene:create( event )
     })
 
     -- get widget and change the color of the text
-    local widgetData = mui.getWidget( "switchSceneButton", "text" )
+    local widgetData = mui.getWidgetProperty( "switchSceneButton", "text" )
     if widgetData ~= nil then
         widgetData:setFillColor( 1, 1 ,1 ,1 )
     end
     -- get widget and change the color of the layer that sits beneath text
-    widgetData = mui.getWidget( "switchSceneButton", "layer_1" )
+    widgetData = mui.getWidgetProperty( "switchSceneButton", "layer_1" )
     if widgetData ~= nil then
         widgetData:setFillColor( 0.25, 0.75, 1, 1 )
     end

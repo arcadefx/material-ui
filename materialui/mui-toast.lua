@@ -182,6 +182,19 @@ function M.newToast( options )
     transition.to(muiData.widgetDict[options.name]["container"],{time=options.easingIn, y=options.top, transition=easing.inOutCubic})
 end
 
+function M.getToastProperty(widgetName, propertyName)
+    local data = nil
+
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "text" then
+        data = muiData.widgetDict[widgetName]["myText"] -- button text
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetName]["rrect"] -- button face
+    end
+    return data
+end
+
 function M.removeMyToast(event)
     local muiName = event.name
     if muiName ~= nil then

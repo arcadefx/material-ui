@@ -189,6 +189,21 @@ function M.newRoundedRectButton(options)
     muiData.widgetDict[options.name]["rrect"]:addEventListener( "touch", M.touchRRectButton )
 end
 
+function M.getRoundedRectButtonProperty(widgetName, propertyName)
+    local data = nil
+
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "text" then
+        data = muiData.widgetDict[widgetName]["myText"] -- button text
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetName]["rrect2"] -- button shadow
+    elseif propertyName == "layer_2" then
+        data = muiData.widgetDict[widgetName]["rrect"] -- button face
+    end
+    return data
+end
+
 function M.touchRRectButton (event)
     local options = nil
     if event.target ~= nil then
@@ -395,6 +410,18 @@ function M.newRectButton(options)
     muiData.widgetDict[options.name]["rrect"]:addEventListener( "touch", M.touchRRectButton )
 end
 
+function M.getRectButtonProperty(widgetName, propertyName)
+    local data = nil
+
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "text" then
+        data = muiData.widgetDict[widgetName]["myText"] -- button text
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetName]["rrect"] -- button face
+    end
+    return data
+end
 
 --[[
  options..
@@ -527,6 +554,17 @@ function M.newIconButton(options)
 
     checkbox.muiOptions = options
     muiData.widgetDict[options.name]["myText"]:addEventListener( "touch", M.touchIconButton )
+end
+
+function M.getIconButtonProperty(widgetName, propertyName)
+    local data = nil
+
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "icon" then
+        data = muiData.widgetDict[widgetName]["myText"] -- button
+    end
+    return data
 end
 
 function M.touchIconButton (event)
@@ -709,6 +747,19 @@ function M.newCircleButton(options)
 
     circle.muiOptions = options
     muiData.widgetDict[options.name]["circlemain"]:addEventListener( "touch", M.touchCircleButton )
+end
+
+function M.getCircleButtonProperty(widgetName, propertyName)
+    local data = nil
+
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "text" then
+        data = muiData.widgetDict[widgetName]["myText"] -- button
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetName]["circlemain"] -- the base
+    end
+    return data
 end
 
 function M.touchCircleButton (event)
@@ -945,6 +996,19 @@ function M.newRadioButton(options)
     checkbox.muiOptions = options
     muiData.widgetDict[options.basename]["radio"][options.name]["myText"]:addEventListener( "touch", M.touchCheckbox )
 
+end
+
+function M.getRadioButtonProperty(widgetName, propertyName)
+    local data = nil
+
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "text" then
+        data = muiData.widgetDict[widgetName]["myText"] -- button
+    elseif propertyName == "label" then
+        data = muiData.widgetDict[widgetName]["myLabel"] -- the base
+    end
+    return data
 end
 
 function M.touchCheckbox (event)

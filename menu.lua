@@ -330,7 +330,7 @@ function scene:create( event )
     -- radio button group example
     mui.newRadioGroup({
         name = "radio_demo",
-        width = mui.getScaleVal(30), --+ (getScaleVal(30)*1.2),
+        width = mui.getScaleVal(30),
         height = mui.getScaleVal(30),
         x = mui.getScaleVal(120),
         y = mui.getScaleVal(40),
@@ -450,6 +450,8 @@ function scene:create( event )
         }
     })
 
+    --local bTest = mui.getChildWidgetProperty("toolbar_demo", "text", 1)
+    --bTest:setFillColor(1, 0, 0, 1)
 end
 
 -- "scene:show()"

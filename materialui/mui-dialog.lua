@@ -252,6 +252,34 @@ function M.newDialog(options)
     transition.to( muiData.widgetDict[options.name]["container"], { time=800, y = centerY, transition=options.easing } )
 end
 
+--[[--
+
+ For the buttons on the Dialog use the following to get their properties
+ M.getRectButtonProperty("okay_dialog_button", <property name>)
+ M.getRectButtonProperty("cancel_dialog_button", <property name>)
+
+--]]--
+function M.getDialogProperty(widgetName, propertyName)
+    local data = nil
+
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["container"] -- move x,y
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetName]["rectbackdrop"] -- darken area
+    elseif propertyName == "layer_2" then
+        data = muiData.widgetDict[widgetName]["container"]["rect2"] -- shadow border area
+    elseif propertyName == "layer_3" then
+        data = muiData.widgetDict[widgetName]["container"]["rrect"] -- the base background
+    elseif propertyName == "layer_4" then
+        data = muiData.widgetDict[widgetName]["container2"] -- text object, move x,y
+    elseif propertyName == "text" then
+        data = muiData.widgetDict[widgetName]["myText"] -- text in dialog
+    end
+    return data
+end
+
 function M.dialogOkayCallback(e)
     if muiData.dialogName == nil then return end
     if muiData.widgetDict[muiData.dialogName]["callBackOkay"] ~= nil then

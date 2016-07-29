@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.32] - 2016-07-29
+### Added
+- All widgets minus date/time and onboarding have getWidgetProperty() now available.
+
 ## [0.1.31] - 2016-07-29
 ### Added
 - getWidgetProperty() method to get a widget's property. This allows the widget text, icon and layer properties change on the fly.  For example, change the 'alpha' of a rectangle button do: mui.getWidget( 'name of widget', 'layer_1' ).alpha = 0.2 or local obj = mui.getWidget( 'name of widget', 'layer_1' ) and then obj.alpha = 0.2 .  This only works for "buttons" for now and other widgets will be available soon.

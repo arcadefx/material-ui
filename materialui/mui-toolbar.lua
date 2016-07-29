@@ -249,6 +249,28 @@ function M.newToolbarButton( options )
     muiData.widgetDict[options.basename]["toolbar"][options.name]["rectangle"]:addEventListener( "touch", M.toolBarButton )
 end
 
+function M.getToolBarButtonProperty(widgetParentName, propertyName, index)
+    local data = nil
+
+    if widgetParentName == nil or propertyName == nil then return data end
+
+    if index < 1 then index = 1 end
+    local widgetName = widgetParentName .. "_" .. index
+
+    if muiData.widgetDict[widgetParentName]["toolbar"][widgetName] == nil then return data end
+
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetParentName]["toolbar"][widgetName]["mygroup"] -- x,y movement
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetParentName]["toolbar"][widgetName]["rectangle"] -- button background
+    elseif propertyName == "text" then
+        data = muiData.widgetDict[widgetParentName]["toolbar"][widgetName]["myText"] -- icon/text
+    elseif propertyName == "label" then
+        data = muiData.widgetDict[widgetParentName]["toolbar"][widgetName]["myText2"] -- text for icon
+    end
+    return data
+end
+
 function M.toolBarButton (event)
     local options = nil
     local button = nil
@@ -383,6 +405,21 @@ function M.newToolbar( options )
         muiData.widgetDict[options.name]["toolbar"]["slider"]:setFillColor( unpack( options.sliderColor ) )
         transition.to(muiData.widgetDict[options.name]["toolbar"]["slider"],{time=0, x=activeX, transition=easing.inOutCubic})
     end
+end
+
+function M.getToolBarProperty(widgetName, propertyName)
+    local data = nil
+
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetName]["toolbar"]["rectBak"] -- toolbar background
+    elseif propertyName == "layer_2" then
+        data = muiData.widgetDict[widgetName]["toolbar"]["slider"] -- bar slider 
+    end
+    return data
 end
 
 function M.actionForToolbar( options, e )

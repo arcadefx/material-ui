@@ -177,6 +177,23 @@ function M.newProgressBar(options)
     M.increaseProgressBar( options.name, startPercent )
 end
 
+function M.getProgressBarProperty(widgetName, propertyName)
+    local data = nil
+
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+    elseif propertyName == "label" then
+        data = muiData.widgetDict[widgetName]["label"] -- the progress text
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetName]["progressbackdrop"] -- backdrop of whole bar
+    elseif propertyName == "layer_2" then
+        data = muiData.widgetDict[widgetName]["progressbar"] -- the bar that gets sized horizontally
+    end
+    return data
+end
+
 --
 -- expects: widget name and percent to increase the progress bar by.
 --

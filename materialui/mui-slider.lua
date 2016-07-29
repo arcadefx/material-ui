@@ -150,6 +150,23 @@ function M.newSlider(options)
     sliderrect:addEventListener( "touch", M.sliderTouch )
 end
 
+function M.getSliderProperty(widgetName, propertyName)
+    local data = nil
+
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["container"] -- x,y movement
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetName]["sliderrect"] -- clickable area
+    elseif propertyName == "layer_2" then
+        data = muiData.widgetDict[widgetName]["sliderbar"] -- progress indicator
+    elseif propertyName == "layer_3" then
+        data = muiData.widgetDict[widgetName]["slidercircle"] -- draggable circle 
+    end
+    return data
+end
+
 function M.sliderTouch (event)
     local options = nil
     if event.target ~= nil then

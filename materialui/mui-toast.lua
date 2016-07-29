@@ -187,7 +187,9 @@ function M.getToastProperty(widgetName, propertyName)
 
     if widgetName == nil or propertyName == nil then return data end
 
-    if propertyName == "text" then
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["container"] -- x,y movement
+    elseif propertyName == "text" then
         data = muiData.widgetDict[widgetName]["myText"] -- button text
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["rrect"] -- button face

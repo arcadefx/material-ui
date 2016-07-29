@@ -189,10 +189,6 @@ function scene:create( event )
         font = "MaterialIcons-Regular.ttf",
         textColor = { 1, 1, 1, 1 },
         fillColor = { 0.25, 0.75, 1, 1 },
-        fontColor = { 0.7, 0.7, 0.7, 1 }, -- non-select items
-        fontColorSelected = { 0, 0, 0, 1 }, -- selected items
-        columnColor = { 1, 1, 1, 1 }, -- background color for columns
-        strokeColor = { 0.25, 0.75, 1, 1 }, -- the border color around widget
         callBack = showDatePicker -- do not like wheel picker on native device.
     })
 

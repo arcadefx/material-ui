@@ -116,7 +116,7 @@ Please read Lua code to find all parameters and see example in the repo call men
 | `newNavbar`      | Create a navigation bar. Allows left and right alignment of attached widgets. Supports widget types: Text, EmbossedText, CircleButton, IconButton, RRectButton, RectButton, Slider, TextField. Additional widget types will be added. | fun.lua |
 | `newSlidePanel` | Create a slide out menu (see hamburger icon) | menu.lua/fun.lua |
 | `newToolbar` | Create a horizontal toolbar with icon, text or icon + text (icon on top, text on bottom) buttons      |    menu.lua |
-| `newTileGrid` | Create a tile menu board and tiles can up to 2x in size, be careful. See demo tile.lua and it's the last icon on bottom.| tile.lua |
+| `newTileGrid` | Create a tile menu board and tiles can be up to 2x in size, be careful. See demo tile.lua and it's the last icon on bottom.| tile.lua |
 
 *Text*
 

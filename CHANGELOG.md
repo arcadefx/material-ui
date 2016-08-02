@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.33] - 2016-08-02
+### Added
+- tile widget method newTileGrid(). See tile.lua for an example and to view demo, click on last circle button in main scene. Next version will support dynamic changing tiles.
+
+### Change
+- Bug fixes and optimizations
+
 ## [0.1.32] - 2016-07-29
 ### Added
 - All widgets minus date/time and onboarding have getWidgetProperty() now available.

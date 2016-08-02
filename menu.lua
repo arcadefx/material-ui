@@ -44,8 +44,11 @@ function scene:create( event )
 
     -- dialog box example
     -- use mui.getWidgetBaseObject("dialog_demo") to get surface to add more content
-    local showDialog = function()
-        mui.newDialog({
+    local showDialog = function(e)
+        local muiTargetValue = mui.getEventParameter(e, "muiTargetValue")
+        local muiTargetCallBackData = mui.getEventParameter(e, "muiTargetCallBackData")
+        print("data passed: "..muiTargetCallBackData.food)
+            mui.newDialog({
             name = "dialog_demo",
             width = mui.getScaleVal(450),
             height = mui.getScaleVal(300),
@@ -101,7 +104,8 @@ function scene:create( event )
         gradientDirection = "up",
         textColor = { 1, 1, 1 },
         radius = 10,
-        callBack = showDialog
+        callBack = showDialog,
+        callBackData = {food="cookie"} -- demo passing data to an event
     })
 
     mui.newRectButton({
@@ -291,6 +295,23 @@ function scene:create( event )
         fillColor = { 0, 0.46, 1 },
         textAlign = "center",
         callBack = showSlidePanel -- do not like wheel picker on native device.
+    })
+
+    -- tile widget example
+    mui.newCircleButton({
+        name = "tile-button",
+        text = "view_list",
+        radius = mui.getScaleVal(46),
+        x = mui.getScaleVal(500),
+        y = mui.getScaleVal(420),
+        font = "MaterialIcons-Regular.ttf",
+        textColor = { 1, 1, 1, 1 },
+        fillColor = { 0.25, 0.75, 1, 1 },
+        callBack = mui.actionSwitchScene, -- do not like wheel picker on native device.
+        callBackData = {
+            sceneDestination = "tile",
+            sceneTransitionColor = { 0, 0.73, 1 }
+        } -- scene tile.lua
     })
 
     -- checkbox example

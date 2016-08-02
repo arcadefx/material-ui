@@ -56,7 +56,7 @@ local modules = {
   "materialui.mui-tableview",
   "materialui.mui-textinput",
   "materialui.mui-text",
-  --"materialui.mui-tile",
+  "materialui.mui-tile",
   "materialui.mui-toast",
   "materialui.mui-toolbar"
 }

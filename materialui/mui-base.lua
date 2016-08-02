@@ -167,9 +167,8 @@ function M.addBaseEventParameters(event, options)
     if event == nil or options == nil or event.muiDict ~= nil then return end
     M.setEventParameter(event, "name", options.name)
     M.setEventParameter(event, "basename", options.basename)
-    M.setEventParameter(event, "targetName", options.name)
-    M.setEventParameter(event, "targetPrimary", event.target)
-    M.setEventParameter(event, "callBackData", options.callBackData)
+    M.setEventParameter(event, "muiTargetName", options.name)
+    M.setEventParameter(event, "muiCallBackData", options.callBackData)
     muiData.currentTargetName = options.name
     muiData.lastTargetName = ""
 end
@@ -390,6 +389,21 @@ function M.getColor(colorArray, index)
   end
 
   return color
+end
+
+function M.fitImage( displayObject, fitWidth, fitHeight, enlarge )
+    --
+    -- first determine which edge is out of bounds
+    --
+    local scaleFactor = fitHeight / displayObject.height
+    local newWidth = displayObject.width * scaleFactor
+    if newWidth > fitWidth then
+        scaleFactor = fitWidth / displayObject.width
+    end
+    if not enlarge and scaleFactor > 1 then
+        return
+    end
+    displayObject:scale( scaleFactor, scaleFactor )
 end
 
 function M.subtleRadius(e)

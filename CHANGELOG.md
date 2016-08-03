@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.34] - 2016-08-03
+### Added
+- tile widget method newTileGrid() supports "touch points". It's enabled in the demo. See tile.lua for an example and to view demo, click on last circle button in main scene. Next version will support dynamic changing tiles.
+
 ## [0.1.33] - 2016-08-02
 ### Added
 - tile widget method newTileGrid(). See tile.lua for an example and to view demo, click on last circle button in main scene. Next version will support dynamic changing tiles.

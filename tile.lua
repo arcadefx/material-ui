@@ -57,6 +57,7 @@ function scene:create( event )
         labelColor = { 1, 1, 1 },
         fillColor = { 0.8, 0.8, 0.8, 0.8 }, -- background color overall
         tileFillColor = { 1, 0.5, 0, 1 }, -- #F47B00 background color of tiles
+        touchpoint = true,
         callBack = mui.tileCallBack,
         clickAnimation = {
         	style = "highlight", -- highlight, spin, rubberband

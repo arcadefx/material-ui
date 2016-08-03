@@ -141,7 +141,6 @@ function M.newTileGrid(options)
         local tileWidth = options.tileWidth
         if v.size ~= nil and v.size == "2x" then
             tileWidth = tileWidth * 2
-            print("tileWidth 2x "..tileWidth)
         end
     	M.newTile({
     		name = options.name .. "-tile-" .. i,
@@ -163,6 +162,7 @@ function M.newTileGrid(options)
     		highlightColor = v.tileHighlightColor or highlightColor,
     		highlightColorAlpha = v.tileHighlightColorAlpha or highlightColorAlpha,
     		animTime = animTime,
+            touchpoint = options.touchpoint,
     		callBack = options.callBack,
     		callBackData = options.callBackData,
     	})
@@ -178,6 +178,22 @@ function M.newTileGrid(options)
 	    	y = y + options.tileHeight
 	    end
     end
+
+    -- add the animated circle
+    local maxWidth = options.tileWidth * 0.75 -- * 2.5
+    local circleColor = { 0.8, 0.8, 0.8 }
+    if options.circleColor ~= nil then
+        circleColor = options.circleColor
+    end
+
+    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( options.height, options.height, maxWidth + M.getScaleVal(5) )
+    muiData.widgetDict[options.name]["myCircle"]:setFillColor( unpack(circleColor) )
+    muiData.widgetDict[options.name]["myCircle"].isVisible = false
+    muiData.widgetDict[options.name]["myCircle"].x = 0
+    muiData.widgetDict[options.name]["myCircle"].y = 0
+    muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
+    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
+
 end
 
 function M.newTile(options)
@@ -308,6 +324,14 @@ function M.tileTouchEventHandler( event )
         M.updateUI(event)
         if muiData.touching == false then
             muiData.touching = true
+            if options.touchpoint ~= nil and options.touchpoint == true then
+                print("touchpoint?")
+                muiData.widgetDict[options.basename]["myCircle"].x = event.x --muiData.widgetDict[options.basename]["toolbar"][options.name]["mygroup"].x
+                muiData.widgetDict[options.basename]["myCircle"].y = event.y --muiData.widgetDict[options.basename]["toolbar"][options.name]["mygroup"].y
+                muiData.widgetDict[options.basename]["myCircle"].isVisible = true
+                local scaleFactor = 0.1
+                muiData.widgetDict[options.basename].myCircleTrans = transition.from( muiData.widgetDict[options.basename]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+            end
         end
     elseif ( event.phase == "cancelled" or event.phase == "moved" ) then
         M.tileResetColor( muiData.widgetDict[options.basename]["tile"][options.name]["rect"] )
@@ -410,6 +434,11 @@ function M.removeTileGrid(widgetName)
         if name ~= "slider" and name ~= "rectBak" then
             muiData.widgetDict[widgetName]["tile"][name] = nil
         end
+    end
+
+    if muiData.widgetDict[widgetName]["myCircle"] ~= nil then
+        muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
+        muiData.widgetDict[widgetName]["myCircle"] = nil
     end
 
     muiData.widgetDict[widgetName]["rectbackdrop"]:removeSelf()

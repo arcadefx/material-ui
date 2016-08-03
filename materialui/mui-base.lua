@@ -282,6 +282,8 @@ function M.getWidgetProperty( widgetName, propertyName )
     widgetData = M.getTableViewProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "TextField" or muiData.widgetDict[widgetName]["type"] == "TextBox" then
     widgetData = M.getTextFieldProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "TileGrid" then
+    widgetData = M.getTileProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "Toast" then
     widgetData = M.getToastProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "ToggleSwitch" then
@@ -309,6 +311,10 @@ function M.getChildWidgetProperty(parentWidgetName, propertyName, index)
   elseif muiData.widgetDict[parentWidgetName]["type"] == "SlidePanel" then
     if muiData.widgetDict[parentWidgetName]["slidebar"]["type"] == "slidebarButton" then
       widgetData = M.getSlidePanelButtonProperty( parentWidgetName, propertyName, index )
+    end
+  elseif muiData.widgetDict[parentWidgetName]["type"] == "TileGrid" then
+    if muiData.widgetDict[parentWidgetName]["tile"]["type"] == "TileGridButton" then
+      widgetData = M.getTileButtonProperty( parentWidgetName, propertyName, index )
     end
   end
   return widgetData

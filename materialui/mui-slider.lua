@@ -174,6 +174,7 @@ function M.sliderTouch (event)
     end
 
     if muiData.dialogInUse == true and options.dialogName ~= nil then return end
+    if options == nil then return end
 
     M.addBaseEventParameters(event, options)
 

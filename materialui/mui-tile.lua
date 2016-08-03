@@ -201,6 +201,7 @@ function M.newTile(options)
 
 	if muiData.widgetDict[options.basename]["tile"] == nil then
 		muiData.widgetDict[options.basename]["tile"] = {}
+    muiData.widgetDict[options.basename]["tile"]["type"] = "TileGridButton"
 	end
 	muiData.widgetDict[options.basename]["tile"][options.name] = {}
 	local tile = muiData.widgetDict[options.basename]["tile"][options.name]
@@ -306,6 +307,45 @@ function M.newTile(options)
     end
 end
 
+function M.getTileProperty( widgetName, propertyName )
+    local data = nil
+    if widgetName == nil or propertyName == nil then return data end
+
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetName]["scrollview"] -- the scrollview layer
+    elseif propertyName == "layer_2" then
+        data = muiData.widgetDict[widgetName]["rectbackdrop"] -- the background layer
+    end
+
+    return data
+end
+
+function M.getTileButtonProperty( widgetParentName, propertyName, index )
+    local data = nil
+    if widgetParentName == nil or propertyName == nil then return data end
+
+    if index < 1 then index = 1 end
+    local widgetName = widgetParentName .. "-tile-" .. index
+
+    if muiData.widgetDict[widgetParentName]["tile"][widgetName] == nil then return data end
+
+    if propertyName == "object" then
+        data = muiData.widgetDict[widgetParentName]["tile"][widgetName]["mygroup"] -- x,y movement
+    elseif propertyName == "icon" then
+        data = muiData.widgetDict[widgetParentName]["tile"][widgetName]["icon"] -- button
+    elseif propertyName == "text" then
+        data = muiData.widgetDict[widgetParentName]["tile"][widgetName]["text"] -- the base
+    elseif propertyName == "layer_1" then
+        data = muiData.widgetDict[widgetParentName]["tile"][widgetName]["rect"] -- the base
+    elseif propertyName == "layer_2" then
+        data = muiData.widgetDict[widgetParentName]["tile"][widgetName]["myImage"] -- the base
+    end
+
+    return data
+end
+
 function M.tileTouchEventHandler( event )
     local options = nil
     local button = nil
@@ -325,7 +365,6 @@ function M.tileTouchEventHandler( event )
         if muiData.touching == false then
             muiData.touching = true
             if options.touchpoint ~= nil and options.touchpoint == true then
-                print("touchpoint?")
                 muiData.widgetDict[options.basename]["myCircle"].x = event.x --muiData.widgetDict[options.basename]["toolbar"][options.name]["mygroup"].x
                 muiData.widgetDict[options.basename]["myCircle"].y = event.y --muiData.widgetDict[options.basename]["toolbar"][options.name]["mygroup"].y
                 muiData.widgetDict[options.basename]["myCircle"].isVisible = true
@@ -392,6 +431,10 @@ function M.tileCallBack( options, e )
     end
     if muiTargetValue ~= nil then
         print("tile value: "..muiTargetValue)
+        local w = M.getTileButtonProperty("grid_demo", "layer_1", 1)
+        if w ~= nil then
+            -- w.x = w.x + 50  -- demo getting the tile layer_1 only and moving it.
+        end
     end
     if muiTargetCallBackData ~= nil then
         print("Item from callBackData: "..muiTargetCallBackData.item)

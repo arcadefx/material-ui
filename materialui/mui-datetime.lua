@@ -864,8 +864,12 @@ function M.pickerAdjustColumn( event )
         params = event.source.params
         muiName = params.name
         pickerName = params.pickerName
-        touching = muiData.widgetDict[muiName][pickerName.."Touching"]
-        moving = muiData.widgetDict[muiName][pickerName.."Moving"]
+        if muiData.widgetDict[muiName] ~= nil and muiData.widgetDict[muiName][pickerName.."Touching"] ~= nil then
+            touching = muiData.widgetDict[muiName][pickerName.."Touching"]
+        end
+        if muiData.widgetDict[muiName] ~= nil and muiData.widgetDict[muiName][pickerName.."Moving"] ~= nil then
+            moving = muiData.widgetDict[muiName][pickerName.."Moving"]
+        end
     end
     if moving == true and touching == false and (system.getTimer() - muiData.widgetDict[muiName][pickerName.."MoveTime"]) >= 600 then
         muiData.widgetDict[muiName][pickerName.."Moving"] = false

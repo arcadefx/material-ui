@@ -365,8 +365,10 @@ function M.tileTouchEventHandler( event )
         if muiData.touching == false then
             muiData.touching = true
             if options.touchpoint ~= nil and options.touchpoint == true then
-                muiData.widgetDict[options.basename]["myCircle"].x = event.x --muiData.widgetDict[options.basename]["toolbar"][options.name]["mygroup"].x
-                muiData.widgetDict[options.basename]["myCircle"].y = event.y --muiData.widgetDict[options.basename]["toolbar"][options.name]["mygroup"].y
+                local x = muiData.widgetDict[options.basename]["tile"][options.name]["mygroup"].x
+                local y = muiData.widgetDict[options.basename]["tile"][options.name]["mygroup"].y                
+                muiData.widgetDict[options.basename]["myCircle"].x = x + muiData.widgetDict[options.basename]["tile"][options.name]["rect"].contentWidth * 0.5
+                muiData.widgetDict[options.basename]["myCircle"].y = y + muiData.widgetDict[options.basename]["tile"][options.name]["rect"].contentHeight * 0.5
                 muiData.widgetDict[options.basename]["myCircle"].isVisible = true
                 local scaleFactor = 0.1
                 muiData.widgetDict[options.basename].myCircleTrans = transition.from( muiData.widgetDict[options.basename]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )

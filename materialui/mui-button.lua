@@ -39,6 +39,29 @@ local mathABS = math.abs
 
 local M = muiData.M -- {} -- for module array/table
 
+function M.activateImageTouch(options)
+    if muiData.widgetDict[options.name] == nil then return end
+    if muiData.widgetDict[options.name]["myImageTouch"] ~= nil and muiData.widgetDict[options.name]["myImageTouchIndex"] ~= nil then
+        muiData.widgetDict[options.name]["myImageTouch"].alpha = 1
+        muiData.widgetDict[options.name]["myImageTouch"].isVisible = true
+        muiData.widgetDict[options.name]["myImage"].isVisible = false
+    end
+end
+
+function M.deactivateImageTouch(options)
+    if muiData.widgetDict[options.name] == nil then return end
+    if muiData.widgetDict[options.name]["myImageTouch"] ~= nil and muiData.widgetDict[options.name]["myImageTouchIndex"] ~= nil then
+        muiData.widgetDict[options.name]["myImage"].isVisible = true
+        if muiData.widgetDict[options.name]["myImageTouchFadeAnim"] == true then
+            local speed = muiData.widgetDict[options.name]["myImageTouchFadeAnimSpeed"]
+            transition.fadeOut(muiData.widgetDict[options.name]["myImageTouch"],{time=speed})
+            transition.fadeIn(muiData.widgetDict[options.name]["myImage"],{time=50})
+        else
+            muiData.widgetDict[options.name]["myImageTouch"].isVisible = false
+        end
+    end
+end
+
 --[[
  options..
     name: name of button
@@ -154,6 +177,9 @@ function M.newRoundedRectButton(options)
         textColor = options.textColor
     end
 
+    -- create image buttons if exist
+    M.createButtonsFromList(options, rrect, "container")
+
     muiData.widgetDict[options.name]["clickAnimation"] = options.clickAnimation
 
     muiData.widgetDict[options.name]["font"] = font
@@ -185,6 +211,12 @@ function M.newRoundedRectButton(options)
     muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
 
+    if muiData.widgetDict[options.name]["myImage"] ~= nil then
+        muiData.widgetDict[options.name]["rrect"].alpha = 0.01
+        muiData.widgetDict[options.name]["rrect2"].isVisible = false
+        muiData.widgetDict[options.name]["myText"].isVisible = false
+    end
+
     rrect.muiOptions = options
     muiData.widgetDict[options.name]["rrect"]:addEventListener( "touch", M.touchRRectButton )
 end
@@ -202,6 +234,10 @@ function M.getRoundedRectButtonProperty(widgetName, propertyName)
         data = muiData.widgetDict[widgetName]["rrect2"] -- button shadow
     elseif propertyName == "layer_2" then
         data = muiData.widgetDict[widgetName]["rrect"] -- button face
+    elseif propertyName == "image" then
+        data = muiData.widgetDict[widgetName]["myImage"]
+    elseif propertyName == "image_touch" then
+        data = muiData.widgetDict[widgetName]["myImageTouch"]
     end
     return data
 end
@@ -227,6 +263,7 @@ function M.touchRRectButton (event)
         M.updateUI(event)
         if muiData.touching == false then
             muiData.touching = true
+            M.activateImageTouch( options )
             if options.clickAnimation ~= nil then
                 if options.clickAnimation["backgroundColor"] ~= nil then
                     options.clickAnimation["fillColor"] = options.clickAnimation["backgroundColor"]
@@ -278,6 +315,7 @@ function M.touchRRectButton (event)
         muiData.interceptOptions = nil
         muiData.interceptMoved = false
         muiData.touching = false
+        M.deactivateImageTouch( options )
     end
 end
 
@@ -423,6 +461,10 @@ function M.getRectButtonProperty(widgetName, propertyName)
         data = muiData.widgetDict[widgetName]["myText"] -- button text
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["rrect"] -- button face
+    elseif propertyName == "image" then
+        data = muiData.widgetDict[widgetName]["myImage"]
+    elseif propertyName == "image_touch" then
+        data = muiData.widgetDict[widgetName]["myImageTouch"]
     end
     return data
 end
@@ -569,6 +611,10 @@ function M.getIconButtonProperty(widgetName, propertyName)
         data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
     elseif propertyName == "icon" then
         data = muiData.widgetDict[widgetName]["myText"] -- button
+    elseif propertyName == "image" then
+        data = muiData.widgetDict[widgetName]["myImage"]
+    elseif propertyName == "image_touch" then
+        data = muiData.widgetDict[widgetName]["myImageTouch"]
     end
     return data
 end
@@ -591,6 +637,7 @@ function M.touchIconButton (event)
         M.updateUI(event)
         if muiData.touching == false then
             muiData.touching = true
+            M.activateImageTouch( options )
             if options.touchpoint ~= nil and options.touchpoint == true then
                 muiData.widgetDict[options.name]["myCircle"].x = event.x - muiData.widgetDict[options.name]["mygroup"].x
                 muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["mygroup"].y
@@ -624,6 +671,7 @@ function M.touchIconButton (event)
             muiData.interceptOptions = nil
             muiData.interceptMoved = false
             muiData.touching = false
+            M.deactivateImageTouch( options )
         end
     end
 end
@@ -766,6 +814,10 @@ function M.getCircleButtonProperty(widgetName, propertyName)
         data = muiData.widgetDict[widgetName]["myText"] -- button
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["circlemain"] -- the base
+    elseif propertyName == "image" then
+        data = muiData.widgetDict[widgetName]["myImage"]
+    elseif propertyName == "image_touch" then
+        data = muiData.widgetDict[widgetName]["myImageTouch"]
     end
     return data
 end
@@ -789,6 +841,7 @@ function M.touchCircleButton (event)
         M.updateUI(event)
         if muiData.touching == false then
             muiData.touching = true
+            M.activateImageTouch( options )
             if options.touchpoint ~= nil and options.touchpoint == true then
                 muiData.widgetDict[options.name]["myCircle"].x = event.x - muiData.widgetDict[options.name]["mygroup"].x
                 muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["mygroup"].y
@@ -821,6 +874,7 @@ function M.touchCircleButton (event)
             muiData.interceptOptions = nil
             muiData.interceptMoved = false
             muiData.touching = false
+            M.deactivateImageTouch( options )
         end
     end
 end
@@ -1218,6 +1272,21 @@ function M.removeRoundedRectButton(widgetName)
     muiData.widgetDict[widgetName]["myCircle"] = nil
     muiData.widgetDict[widgetName]["myText"]:removeSelf()
     muiData.widgetDict[widgetName]["myText"] = nil
+
+    if muiData.widgetDict[widgetName]["myImage"] ~= nil then
+        muiData.widgetDict[widgetName]["myImage"]:removeSelf()
+        muiData.widgetDict[widgetName]["myImage"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["myImageTouch"] ~= nil then
+        muiData.widgetDict[widgetName]["myImageTouch"]:removeSelf()
+        muiData.widgetDict[widgetName]["myImageTouch"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["myImageSheet"] ~= nil then
+        muiData.widgetDict[widgetName]["myImageSheet"] = nil
+    end
+
     muiData.widgetDict[widgetName]["rrect"]:removeSelf()
     muiData.widgetDict[widgetName]["rrect"] = nil
     muiData.widgetDict[widgetName]["rrect2"]:removeSelf()
@@ -1243,6 +1312,19 @@ function M.removeRectButton(widgetName)
     muiData.widgetDict[widgetName]["myCircle"] = nil
     muiData.widgetDict[widgetName]["myText"]:removeSelf()
     muiData.widgetDict[widgetName]["myText"] = nil
+    if muiData.widgetDict[widgetName]["myImage"] ~= nil then
+        muiData.widgetDict[widgetName]["myImage"]:removeSelf()
+        muiData.widgetDict[widgetName]["myImage"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["myImageTouch"] ~= nil then
+        muiData.widgetDict[widgetName]["myImageTouch"]:removeSelf()
+        muiData.widgetDict[widgetName]["myImageTouch"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["myImageSheet"] ~= nil then
+        muiData.widgetDict[widgetName]["myImageSheet"] = nil
+    end
     muiData.widgetDict[widgetName]["rrect"]:removeSelf()
     muiData.widgetDict[widgetName]["rrect"] = nil
     muiData.widgetDict[widgetName]["container"]:removeSelf()
@@ -1266,6 +1348,19 @@ function M.removeCircleButton(widgetName)
     muiData.widgetDict[widgetName]["myCircle"] = nil
     muiData.widgetDict[widgetName]["myText"]:removeSelf()
     muiData.widgetDict[widgetName]["myText"] = nil
+    if muiData.widgetDict[widgetName]["myImage"] ~= nil then
+        muiData.widgetDict[widgetName]["myImage"]:removeSelf()
+        muiData.widgetDict[widgetName]["myImage"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["myImageTouch"] ~= nil then
+        muiData.widgetDict[widgetName]["myImageTouch"]:removeSelf()
+        muiData.widgetDict[widgetName]["myImageTouch"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["myImageSheet"] ~= nil then
+        muiData.widgetDict[widgetName]["myImageSheet"] = nil
+    end
     muiData.widgetDict[widgetName]["circlemain"]:removeSelf()
     muiData.widgetDict[widgetName]["circlemain"] = nil
     muiData.widgetDict[widgetName]["mygroup"]:removeSelf()
@@ -1293,6 +1388,19 @@ function M.removeIconButton(widgetName)
     muiData.widgetDict[widgetName]["myCircle"] = nil
     muiData.widgetDict[widgetName]["myText"]:removeSelf()
     muiData.widgetDict[widgetName]["myText"] = nil
+    if muiData.widgetDict[widgetName]["myImage"] ~= nil then
+        muiData.widgetDict[widgetName]["myImage"]:removeSelf()
+        muiData.widgetDict[widgetName]["myImage"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["myImageTouch"] ~= nil then
+        muiData.widgetDict[widgetName]["myImageTouch"]:removeSelf()
+        muiData.widgetDict[widgetName]["myImageTouch"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["myImageSheet"] ~= nil then
+        muiData.widgetDict[widgetName]["myImageSheet"] = nil
+    end
     muiData.widgetDict[widgetName]["mygroup"]:removeSelf()
     muiData.widgetDict[widgetName]["mygroup"] = nil
     muiData.widgetDict[widgetName] = nil

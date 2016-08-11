@@ -76,6 +76,8 @@ Please read Lua code to find all parameters and see example in the repo call men
 
 *Buttons*
 
+Buttons can contain image sheets for handling single or multiple images for a button (two states available on/off).  Buttons can also be a single graphic button.  See [Wiki for Buttons](https://github.com/arcadefx/material-ui/wiki/Buttons).  In menu.lua there is an example and it's used to "Open Dialog" in the demo.
+
 | Method        | Short Description | Example  |
 | ------------- | ------------- | :-----:|
 | `newCircleButton` | Create a circle button with a single character or even a word.| menu.lua |

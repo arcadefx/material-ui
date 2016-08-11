@@ -91,11 +91,33 @@ function scene:create( event )
         })
     end
 
+    --[[--
+    -- below is a rounded button with a shadow from put Corona no static image
     mui.newRoundedRectButton({
         name = "newDialog",
         text = "Open Dialog",
         width = mui.getScaleVal(200),
         height = mui.getScaleVal(60),
+        x = mui.getScaleVal(160),
+        y = mui.getScaleVal(200),
+        font = native.systemFont,
+        gradientShadowColor1 = { 0.9, 0.9, 0.9, 255 },
+        gradientShadowColor2 = { 0.9, 0.9, 0.9, 0 },
+        gradientDirection = "up",
+        textColor = { 1, 1, 1 },
+        radius = 10,
+        callBack = showDialog,
+        callBackData = {food="cookie"}, -- demo passing data to an event
+    })
+    --]]--
+
+    -- below is a rounded button with static image with two states (off/on)
+    -- tap or click and "hold" to see shadow and release to see it fade to original image
+    mui.newRoundedRectButton({
+        name = "newDialog",
+        text = "Open Dialog",
+        width = mui.getScaleVal(300),
+        height = mui.getScaleVal(80),
         x = mui.getScaleVal(160),
         y = mui.getScaleVal(220),
         font = native.systemFont,
@@ -105,7 +127,29 @@ function scene:create( event )
         textColor = { 1, 1, 1 },
         radius = 10,
         callBack = showDialog,
-        callBackData = {food="cookie"} -- demo passing data to an event
+        callBackData = {food="cookie"}, -- demo passing data to an event
+        image = {
+            src = "button-sheet-demo@2x.png", -- source image file
+            -- Below is optional if you have buttons on a sheet
+            -- The 'sheetOptions' is directly from Corona sheets
+            sheetIndex = 1, -- which frame to show for image from sheet
+            touchIndex = 2, -- which frame to show for touch event
+            touchFadeAnimation = true, -- helpful with shadows
+            touchFadeAnimationSpeedOut = 500,
+            sheetOptions = {
+                -- The params below are required by Corona
+
+                width = 252,
+                height = 98,
+                numFrames = 2,
+
+                -- The params below are optional (used for dynamic image sheet selection)
+
+                sheetContentWidth = 504,  -- width of original 1x size of entire sheet
+                sheetContentHeight = 98  -- height of original 1x size of entire sheet
+
+            }
+        }
     })
 
     mui.newRectButton({

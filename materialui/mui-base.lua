@@ -346,6 +346,45 @@ function M.getSizeRatio()
   return muiData.masterRatio
 end
 
+function M.createButtonsFromList(options, rect, container)
+  if options == nil or rect == nil or container == nil then return end
+
+  if options.image ~= nil then
+    local image = options.image
+    if image.src ~= nil and string.len( image.src ) > 0 then
+        local myImage = nil
+        local imageSheet = nil
+        if image.sheetIndex ~= nil then
+          imageSheet = graphics.newImageSheet( image.src, image.sheetOptions )
+          muiData.widgetDict[options.name]["myImageSheet"] = imageSheet
+          muiData.widgetDict[options.name]["myImageSheetIndex"] = image.sheetIndex
+          muiData.widgetDict[options.name]["myImageTouchIndex"] = image.touchIndex
+          muiData.widgetDict[options.name]["myImageTouchFadeAnim"] = image.touchFadeAnimation or false
+          muiData.widgetDict[options.name]["myImageTouchFadeAnimSpeed"] = image.touchFadeAnimationSpeedOut or 300
+          muiData.widgetDict[options.name]["myImageSheetOptions"] = image.sheetOptions
+          myImage = display.newImage( imageSheet, image.sheetIndex )
+        else
+          myImage = display.newImage( image.src )
+        end
+        M.fitImage(myImage, rect.contentWidth, rect.contentHeight, true)
+        if muiData.widgetDict[options.name] == nil then
+          muiData.widgetDict[options.name] = {}
+        end
+        muiData.widgetDict[options.name]["myImage"] = myImage
+        muiData.widgetDict[options.name][container]:insert( muiData.widgetDict[options.name]["myImage"] )
+
+        -- now the touch Image
+        if imageSheet ~= nil and image.touchIndex ~= nil and image.touchIndex > 0 then
+          myImageTouch = display.newImage( imageSheet, image.touchIndex )
+          M.fitImage(myImageTouch, rect.contentWidth, rect.contentHeight, true)
+          myImageTouch.isVisible = false
+          muiData.widgetDict[options.name]["myImageTouch"] = myImageTouch
+          muiData.widgetDict[options.name][container]:insert( muiData.widgetDict[options.name]["myImageTouch"] )
+        end
+    end
+  end
+end
+
 function M.split(str, sep)
    local result = {}
    local regex = ("([^%s]+)"):format(sep)

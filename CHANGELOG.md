@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.36] - 2016-08-11
+### Added
+- Image buttons. These can be specified using a single image or two images for on/off states.  See menu.lua and look for "Open Dialog" for an example. See project wiki too https://github.com/arcadefx/material-ui/wiki/Buttons for more information.
+
 ## [0.1.35] - 2016-08-03
 ### Added
 - tile widget method newTileGrid() supports "getWidgetProperty and child property"

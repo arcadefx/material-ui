@@ -283,14 +283,14 @@ function M.touchRRectButton (event)
                 M.transitionColor(
                     muiData.widgetDict[options.name]["rrect"],
                     {
-                        startColor=muiData.widgetDict[options.name]["rrect"].muiOptions.transitionStartColor, 
-                        endColor=muiData.widgetDict[options.name]["rrect"].muiOptions.fillColor,
+                        startColor=options.transitionStartColor,
+                        endColor=options.fillColor,
                         transition=easing.inOutExpo
                     }
                 )
             end
 
-            if muiOptions.transitionStartColor ~= nil then
+            if options.transitionStartColor ~= nil then
                 timer.performWithDelay(300, TransFunc, 1)
             end
 

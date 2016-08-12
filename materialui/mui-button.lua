@@ -309,6 +309,9 @@ function M.touchRRectButton (event)
             muiData.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.fillColor) )
         end
     elseif ( event.phase == "ended" ) then
+
+        M.deactivateImageTouch( options )
+
         if M.isTouchPointOutOfRange( event ) then
               event.phase = "offTarget"
               -- print("Its out of the button area")
@@ -338,7 +341,6 @@ function M.touchRRectButton (event)
         muiData.interceptOptions = nil
         muiData.interceptMoved = false
         muiData.touching = false
-        M.deactivateImageTouch( options )
     end
 end
 

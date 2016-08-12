@@ -385,6 +385,41 @@ function M.createButtonsFromList(options, rect, container)
   end
 end
 
+function M.transitionColor(displayObj, params)
+  if(params and params.startColor and params.endColor) then
+      local length = params.time or 300
+
+      local startTime = system.getTimer()
+
+      local easingFunc = params.transition or easing.inOutExpo
+      local function colorInterpolate(a,b,i,t)
+            colourTable = {
+          easingFunc(i,t,a[1],b[1]-a[1]),
+          easingFunc(i,t,a[2],b[2]-a[2]),
+          easingFunc(i,t,a[3],b[3]-a[3]),
+        }
+        if(b[4] and a[4]) then
+          easingFunc(i,t,a[4],b[4]-a[4])
+        end
+
+        return colourTable
+      end
+
+      displayObj.runFunc = function(event)
+      local runTime = system.getTimer()
+          if(startTime + length > runTime) then
+              displayObj:setFillColor(unpack(colorInterpolate(params.startColor, params.endColor, runTime-startTime, length)))
+          else
+              -- do it one last time to make sure we have the correct final color
+              displayObj:setFillColor(unpack(params.endColor))
+              Runtime:removeEventListener("enterFrame", displayObj.runFunc)
+          end
+      end
+
+      Runtime:addEventListener("enterFrame", displayObj.runFunc)
+  end
+end
+
 function M.split(str, sep)
    local result = {}
    local regex = ("([^%s]+)"):format(sep)

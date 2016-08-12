@@ -101,6 +101,7 @@ function M.newRoundedRectButton(options)
 
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "RRectButton"
+    -- muiData.widgetDict[options.name]["container"] = display.newGroup() --display.newContainer( nw, nh )
     muiData.widgetDict[options.name]["container"] = display.newContainer( nw, nh )
     muiData.widgetDict[options.name]["container"]:translate( x, y ) -- center the container
     muiData.widgetDict[options.name]["touching"] = false
@@ -152,8 +153,8 @@ function M.newRoundedRectButton(options)
 
     muiData.widgetDict[options.name]["rrect"] = display.newRoundedRect( 0, 0, options.width, options.height, radius )
     if options.strokeWidth > 0 then
-        muiData.widgetDict[options.name]["rrect"].strokeWidth = 1
-        muiData.widgetDict[options.name]["rrect"]:setStrokeColor( unpack(options.setStrokeColor) )
+        muiData.widgetDict[options.name]["rrect"].strokeWidth = options.strokeWidth or 1
+        muiData.widgetDict[options.name]["rrect"]:setStrokeColor( unpack(options.strokeColor) )
     end
     muiData.widgetDict[options.name]["rrect"]:setFillColor( unpack(fillColor) )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["rrect"] )
@@ -175,6 +176,10 @@ function M.newRoundedRectButton(options)
     local textColor = { 1, 1, 1 }
     if options.textColor ~= nil then
         textColor = options.textColor
+    end
+
+    if options.transitionStartColor == nil then
+
     end
 
     -- create image buttons if exist
@@ -202,10 +207,11 @@ function M.newRoundedRectButton(options)
     if options.circleColor ~= nil then
         circleColor = options.circleColor
     end
+    circleColor = {0.88,0.88,0.88,1}
 
     local maxWidth = muiData.widgetDict[options.name]["rrect"].path.width - (radius * 2)
 
-    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( options.height, options.height, maxWidth)
+    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( options.height, options.height, options.height * 0.5)
     muiData.widgetDict[options.name]["myCircle"]:setFillColor( unpack(circleColor) )
     muiData.widgetDict[options.name]["myCircle"].isVisible = false
     muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
@@ -272,6 +278,22 @@ function M.touchRRectButton (event)
                     muiData.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.clickAnimation["fillColor"]) )
                 end
             end
+
+            local TransFunc = function()
+                M.transitionColor(
+                    muiData.widgetDict[options.name]["rrect"],
+                    {
+                        startColor=muiData.widgetDict[options.name]["rrect"].muiOptions.transitionStartColor, 
+                        endColor=muiData.widgetDict[options.name]["rrect"].muiOptions.fillColor,
+                        transition=easing.inOutExpo
+                    }
+                )
+            end
+
+            if muiOptions.transitionStartColor ~= nil then
+                timer.performWithDelay(300, TransFunc, 1)
+            end
+
             if options.touchpoint ~= nil and options.touchpoint == true then
                 muiData.widgetDict[options.name]["myCircle"].x = event.x - muiData.widgetDict[options.name]["container"].x
                 muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["container"].y
@@ -390,7 +412,10 @@ function M.newRectButton(options)
     if paint ~= nil then
         muiData.widgetDict[options.name]["rrect"].fill = paint
     end
-    muiData.widgetDict[options.name]["rrect"].strokeWidth = strokeWidth
+    if options.strokeWidth ~= nil and options.strokeWidth > 0 then
+        muiData.widgetDict[options.name]["rrect"].strokeWidth = options.strokeWidth or 1
+        muiData.widgetDict[options.name]["rrect"]:setStrokeColor( unpack(options.strokeColor) )
+    end
     muiData.widgetDict[options.name]["rrect"]:setFillColor( unpack(fillColor) )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["rrect"] )
 

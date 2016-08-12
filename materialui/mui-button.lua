@@ -283,15 +283,16 @@ function M.touchRRectButton (event)
                 M.transitionColor(
                     muiData.widgetDict[options.name]["rrect"],
                     {
-                        startColor=options.transitionStartColor,
-                        endColor=options.fillColor,
-                        transition=easing.inOutExpo
+                        startColor = options.animation.transitionStartColor,
+                        endColor = options.animation.transitionEndColor or options.fillColor,
+                        transition = options.animation.transition or easing.inOutExpo,
+                        time = options.animation.time or 1000,
                     }
                 )
             end
 
-            if options.transitionStartColor ~= nil then
-                timer.performWithDelay(300, TransFunc, 1)
+            if options.animation ~= nil and options.animation.animationType == "colorTransition" and options.animation.transitionStartColor ~= nil then
+                timer.performWithDelay(1, TransFunc, 1)
             end
 
             if options.touchpoint ~= nil and options.touchpoint == true then

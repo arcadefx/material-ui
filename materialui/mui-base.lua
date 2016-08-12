@@ -387,7 +387,7 @@ end
 
 function M.transitionColor(displayObj, params)
   if(params and params.startColor and params.endColor) then
-      local length = params.time or 300
+      local length = params.time or 1500
 
       local startTime = system.getTimer()
 

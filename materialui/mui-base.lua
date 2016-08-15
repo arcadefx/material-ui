@@ -65,7 +65,7 @@ function M.init_base(options)
   muiData.dialogInUse = false
   muiData.dialogName = nil
   muiData.navbarHeight = 0
-  muiData.navbarSupportedTypes = { "Text", "EmbossedText", "CircleButton", "RRectButton", "RectButton", "IconButton", "Slider", "TextField", "Generic" }
+  muiData.navbarSupportedTypes = { "Text", "EmbossedText", "Image", "ImageRect", "CircleButton", "RRectButton", "RectButton", "IconButton", "Slider", "TextField", "Generic" }
   muiData.onBoardData = nil
   muiData.slideData = nil
   muiData.currentSlide = 0
@@ -206,6 +206,10 @@ function M.getWidgetBaseObject(name)
                widgetData = muiData.widgetDict[widget]["text"]
             elseif widgetType == "CircleButton" then
                widgetData = muiData.widgetDict[widget]["mygroup"]
+            elseif widgetType == "Image" then
+               widgetData = muiData.widgetDict[widget]["image"]
+            elseif widgetType == "ImageRect" then
+               widgetData = muiData.widgetDict[widget]["image_rect"]
             elseif widgetType == "DatePicker" then
                widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "EmbossedText" then
@@ -262,6 +266,10 @@ function M.getWidgetProperty( widgetName, propertyName )
     widgetData = M.getDialogProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "IconButton" then
     widgetData = M.getIconButtonProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "Image" then
+    widgetData = M.getImageProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "ImageRect" then
+    widgetData = M.getImageRectProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "NavBar" then
     widgetData = M.getNavBarProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "ProgressBar" then
@@ -699,6 +707,10 @@ function M.hideWidget(widgetName, options)
             muiData.widgetDict[widget]["circlemain"].isVisible = showWidget
         elseif widgetType == "DatePicker" or widgetType == "TimePicker" then
             muiData.widgetDict[widget]["mygroup"].isVisible = showWidget
+        elseif widgetType == "Image" then
+            muiData.widgetDict[widget]["image"].isVisible = showWidget
+        elseif widgetType == "ImageRect" then
+            muiData.widgetDict[widget]["image_rect"].isVisible = showWidget
         elseif widgetType == "RRectButton" or widgetType == "RectButton" then
             muiData.widgetDict[widget]["container"].isVisible = showWidget
         elseif widgetType == "IconButton" or widgetType == "RadioButton" then
@@ -749,6 +761,10 @@ function M.destroy()
             M.removeCircleButton(widget)
         elseif widgetType == "DatePicker" then
             M.removeDatePicker(widget)
+        elseif widgetType == "Image" then
+            M.removeImage(widget)
+        elseif widgetType == "ImageRect" then
+            M.removeImageRect(widget)
         elseif widgetType == "EmbossedText" then
             M.removeEmbossedText(widget)
         elseif widgetType == "RRectButton" then

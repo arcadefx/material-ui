@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.37] - 2016-08-15
+### Added
+- support for display.newImage() and display.newImageRect() via wrappers. See mui-image.lua for options. For an example usage see http://www.anedix.com/fileshare/login-form.zip
+- "value" to both newTextField and newTextBox properties. This allows pulling the information later in another method.  Example: local email = mui.getWidgetProperty("textfield_email", "value")
+
+### Change
+- Bug fix for newRoundedRect() method so it won't have the "white" outline on it if gradient shadows are not used.
+- Bug fixes.
+
 ## [0.1.36] - 2016-08-11
 ### Added
 - Image buttons. These can be specified using a single image or two images for on/off states.  See menu.lua and look for "Open Dialog" for an example. See project wiki too https://github.com/arcadefx/material-ui/wiki/Buttons for more information.

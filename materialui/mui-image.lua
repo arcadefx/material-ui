@@ -1,7 +1,7 @@
 --[[
     A loosely based Material UI module
 
-    mui-text.lua : This is a wrapper for creating text widgets.
+    mui-image.lua : This is a wrapper for creating image widgets.
 
     The MIT License (MIT)
 
@@ -40,69 +40,59 @@ local mathABS = math.abs
 local M = muiData.M -- {} -- for module array/table
 
 -- define methods here
-function M.createText(options)
-    M.newText(options)
-end
-
-function M.newText(options)
+function M.newImage(options)
 	if options == nil then return end
+    if options.image == nil then return end
 
     muiData.widgetDict[options.name] = {}
-    muiData.widgetDict[options.name]["type"] = "Text"
+    muiData.widgetDict[options.name]["type"] = "Image"
     muiData.widgetDict[options.name]["options"] = options
 
-    muiData.widgetDict[options.name]["text"] = display.newText( options )
-    muiData.widgetDict[options.name]["text"]:setFillColor( unpack(options.fillColor) )
+    muiData.widgetDict[options.name]["image"] = display.newImage( options.image )
 end
 
-function M.getTextProperty(widgetName, property_name)
+function M.getImageProperty(widgetName, property_name)
     if options == nil then return nil end
-    return muiData.widgetDict[options.name]["text"]
+    return muiData.widgetDict[options.name]["image"]
 end
 
-function M.removeWidgetText(widgetName)
-    M.removeText(widgetName)
-end
-
-function M.removeText(widgetName)
+function M.removeImage(widgetName)
     if widgetName == nil then
         return
     end
 
     if muiData.widgetDict[widgetName] == nil then return end
 
-    muiData.widgetDict[widgetName]["text"]:removeSelf()
-    muiData.widgetDict[widgetName]["text"] = nil
+    muiData.widgetDict[widgetName]["image"]:removeSelf()
+    muiData.widgetDict[widgetName]["image"] = nil
     muiData.widgetDict[widgetName] = nil
 end
 
-function M.newEmbossedText(options)
+function M.newImageRect(options)
     if options == nil then return end
+    if options.image == nil or options.width == nil or options.height == nil then return end
 
     muiData.widgetDict[options.name] = {}
-    muiData.widgetDict[options.name]["type"] = "EmbossedText"
+    muiData.widgetDict[options.name]["type"] = "ImageRect"
     muiData.widgetDict[options.name]["options"] = options
 
-    muiData.widgetDict[options.name]["text"] = display.newEmbossedText( options )
-    muiData.widgetDict[options.name]["text"]:setFillColor( unpack(options.fillColor) )
-    if options.embossedColor ~= nil then
-        muiData.widgetDict[options.name]["text"]:setEmbossColor( options.embossedColor )
-    end
+    muiData.widgetDict[options.name]["image_rect"] = display.newImageRect( options.image, options.width, options.height )
 end
 
-function M.getEmbossedTextProperties(options)
-  return M.getTextProperties(options)
+function M.getImageRectProperty(widgetName, property_name)
+    if options == nil then return nil end
+    return muiData.widgetDict[options.name]["image_rect"]
 end
 
-function M.removeEmbossedText(widgetName)
+function M.removeImageRect(widgetName)
     if widgetName == nil then
         return
     end
 
     if muiData.widgetDict[widgetName] == nil then return end
 
-    muiData.widgetDict[widgetName]["text"]:removeSelf()
-    muiData.widgetDict[widgetName]["text"] = nil
+    muiData.widgetDict[widgetName]["image_rect"]:removeSelf()
+    muiData.widgetDict[widgetName]["image_rect"] = nil
     muiData.widgetDict[widgetName] = nil
 end
 

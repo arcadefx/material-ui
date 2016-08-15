@@ -135,6 +135,8 @@ function M.newRoundedRectButton(options)
     muiData.widgetDict[options.name]["rrect2"] = display.newRoundedRect( 0, 1, options.width+M.getScaleVal(8), options.height+M.getScaleVal(8), nr )
     if paint ~= nil then
         muiData.widgetDict[options.name]["rrect2"].fill = paint
+    else
+        muiData.widgetDict[options.name]["rrect2"].isVisible = false
     end
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["rrect2"] )
 
@@ -145,10 +147,6 @@ function M.newRoundedRectButton(options)
 
     if options.strokeWidth == nil then
         options.strokeWidth = 0
-    end
-
-    if options.strokeColor == nil then
-        options.strokeColor = { 0.9, 0.9, 0.9, 1 }
     end
 
     muiData.widgetDict[options.name]["rrect"] = display.newRoundedRect( 0, 0, options.width, options.height, radius )

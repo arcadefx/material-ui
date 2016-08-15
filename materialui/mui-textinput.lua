@@ -201,6 +201,8 @@ function M.getTextFieldProperty(widgetName, propertyName)
         data = muiData.widgetDict[widgetName]["rect"] -- clickable area
     elseif propertyName == "layer_2" then
         data = muiData.widgetDict[widgetName]["textfield"] -- native text field
+    elseif propertyName == "value" then
+        data = muiData.widgetDict[widgetName]["textfield"].text -- native text field value
     elseif propertyName == "layer_3" then
         data = muiData.widgetDict[widgetName]["textfieldfake"] -- fake text field
     elseif propertyName == "layer_4" then

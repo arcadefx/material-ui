@@ -46,6 +46,7 @@ local modules = {
   "materialui.mui-button",
   "materialui.mui-datetime",
   "materialui.mui-dialog",
+  "materialui.mui-image",
   "materialui.mui-navbar",
   "materialui.mui-onboarding",
   "materialui.mui-progressbar",

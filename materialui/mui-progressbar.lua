@@ -186,6 +186,8 @@ function M.getProgressBarProperty(widgetName, propertyName)
         data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
     elseif propertyName == "label" then
         data = muiData.widgetDict[widgetName]["label"] -- the progress text
+    elseif propertyName == "value" then
+        data = muiData.widgetDict[widgetName]["progressbar"].percentComplete
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["progressbackdrop"] -- backdrop of whole bar
     elseif propertyName == "layer_2" then

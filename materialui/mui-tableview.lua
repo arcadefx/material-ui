@@ -172,6 +172,8 @@ function M.getTableViewProperty(widgetName, propertyName)
 
     if propertyName == "object" then
         data = muiData.widgetDict[widgetName]["tableview"] -- x,y movement
+    elseif propertyName == "value" then
+        data = muiData.widgetDict[widgetName]["value"] -- value
     end
     return data
 end
@@ -386,6 +388,7 @@ function M.onRowTouch( event )
         M.setEventParameter(event, "muiTargetIndex", event.target.index)
         if row.params ~= nil then
             M.setEventParameter(event, "muiTargetValue", row.params.value)
+            muiData.widgetDict[row.params.name]["value"] = row.params.value
         end
         if row.params ~= nil and row.params.callBackTouch ~= nil then
             assert( row.params.callBackTouch )(event)

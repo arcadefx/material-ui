@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.38] - 2016-08-15
+### Added
+- "value" property to all buttons, user input and such. Use getWidgetProperty() to get the value of the widget.
+
 ## [0.1.37] - 2016-08-15
 ### Added
 - support for display.newImage() and display.newImageRect() via wrappers. See mui-image.lua for options. For an example usage see http://www.anedix.com/fileshare/login-form.zip

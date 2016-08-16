@@ -313,6 +313,8 @@ function M.getTileProperty( widgetName, propertyName )
 
     if propertyName == "object" then
         data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+    elseif propertyName == "value" then
+        data = muiData.widgetDict[widgetName]["value"] -- value
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["scrollview"] -- the scrollview layer
     elseif propertyName == "layer_2" then
@@ -427,12 +429,13 @@ function M.tileCallBack( options, e )
     if muiTargetName == "grid_demo-tile-1" then
         e.muiDict["muiTargetCallBackData"] = {
             sceneDestination = "menu",
-            sceneTransitionColor = { 1, 0.6, 0.19, 1 }            
+            sceneTransitionColor = { 1, 0.6, 0.19, 1 }
         }
         M.actionSwitchScene(e)
     end
     if muiTargetValue ~= nil then
         print("tile value: "..muiTargetValue)
+        muiData.widgetDict[options.basename]["value"] = muiTargetValue
         local w = M.getTileButtonProperty("grid_demo", "layer_1", 1)
         if w ~= nil then
             -- w.x = w.x + 50  -- demo getting the tile layer_1 only and moving it.

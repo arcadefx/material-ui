@@ -234,6 +234,8 @@ function M.getRoundedRectButtonProperty(widgetName, propertyName)
         data = muiData.widgetDict[widgetName]["container"] -- x,y movement
     elseif propertyName == "text" then
         data = muiData.widgetDict[widgetName]["myText"] -- button text
+    elseif propertyName == "value" then
+        data = muiData.widgetDict[widgetName]["value"] -- value of button
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["rrect2"] -- button shadow
     elseif propertyName == "layer_2" then
@@ -326,6 +328,7 @@ function M.touchRRectButton (event)
                 event.target = muiData.widgetDict[options.name]["rrect"]
                 --event.callBackData = options.callBackData
 
+                muiData.widgetDict[options.name]["value"] = options.value
                 M.setEventParameter(event, "muiTargetValue", options.value)
                 M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["rrect"])
                 M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
@@ -485,6 +488,8 @@ function M.getRectButtonProperty(widgetName, propertyName)
         data = muiData.widgetDict[widgetName]["container"] -- x,y movement
     elseif propertyName == "text" then
         data = muiData.widgetDict[widgetName]["myText"] -- button text
+    elseif propertyName == "value" then
+        data = muiData.widgetDict[widgetName]["value"] -- value of button
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["rrect"] -- button face
     elseif propertyName == "image" then
@@ -637,6 +642,8 @@ function M.getIconButtonProperty(widgetName, propertyName)
         data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
     elseif propertyName == "icon" then
         data = muiData.widgetDict[widgetName]["myText"] -- button
+    elseif propertyName == "value" then
+        data = muiData.widgetDict[widgetName]["value"] -- value of button
     elseif propertyName == "image" then
         data = muiData.widgetDict[widgetName]["myImage"]
     elseif propertyName == "image_touch" then
@@ -685,6 +692,7 @@ function M.touchIconButton (event)
                 event.altTarget = muiData.widgetDict[options.name]["myText"]
                 event.myTargetName = options.name
 
+                muiData.widgetDict[options.name]["value"] = options.value
                 M.setEventParameter(event, "muiTargetValue", options.value)
                 M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["myText"])
                 M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
@@ -838,6 +846,8 @@ function M.getCircleButtonProperty(widgetName, propertyName)
         data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
     elseif propertyName == "text" then
         data = muiData.widgetDict[widgetName]["myText"] -- button
+    elseif propertyName == "value" then
+        data = muiData.widgetDict[widgetName]["value"] -- value of button
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["circlemain"] -- the base
     elseif propertyName == "image" then
@@ -888,6 +898,7 @@ function M.touchCircleButton (event)
                 event.target = muiData.widgetDict[options.name]["circlemain"]
                 event.myTargetName = options.name
 
+                muiData.widgetDict[options.name]["value"] = options.value
                 M.setEventParameter(event, "muiTargetValue", options.value)
                 M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["circlemain"])
                 M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
@@ -1100,6 +1111,8 @@ function M.getRadioButtonProperty(parentWidgetName, propertyName, index)
         data = muiData.widgetDict[parentWidgetName]["radio"][widgetName]["myText"] -- button
     elseif propertyName == "label" then
         data = muiData.widgetDict[parentWidgetName]["radio"][widgetName]["myLabel"] -- the base
+    elseif propertyName == "value" then
+        data = muiData.widgetDict[parentWidgetName]["value"] -- value of button
     end
     return data
 end
@@ -1143,6 +1156,7 @@ function M.touchCheckbox (event)
                 event.myTargetBasename = options.basename
                 event.altTarget = muiData.widgetDict[options.basename]["radio"][options.name]["myText"]
 
+                muiData.widgetDict[options.basename]["value"] = options.value
                 M.setEventParameter(event, "muiTargetValue", options.value)
                 M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.basename]["radio"][options.name]["myText"])
                 M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
@@ -1273,6 +1287,7 @@ function M.actionForRadioButton( e )
             muiTarget.text = "radio_button_checked"
         end
         if muiTargetValue ~= nil then
+            muiData.widgetDict[basename]["value"] = muiTargetValue
             print("radio button value = "..muiTargetValue)
         end
     end

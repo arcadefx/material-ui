@@ -147,6 +147,8 @@ function M.getToggleSwitchProperty(widgetName, propertyName)
 
     if propertyName == "object" then
         data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+    elseif propertyName == "value" then
+        data = muiData.widgetDict[widgetName]["value"] -- clickable area
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["rectmaster"] -- clickable area
     elseif propertyName == "layer_2" then
@@ -200,6 +202,7 @@ function M.toggleSwitchTouch (event)
                 else
                     muiData.widgetDict[options.name]["isChecked"] = true
                     M.setEventParameter(event, "muiTargetValue", options.value)
+                    muiData.widgetDict[options.name]["value"] = options.value
                 end
                 M.setEventParameter(event, "muiTargetChecked", muiData.widgetDict[options.name]["isChecked"])
                 M.flipSwitch(options.name, nil)

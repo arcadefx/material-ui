@@ -190,6 +190,8 @@ function M.getSelectorProperty(widgetName, propertyName)
         data = muiData.widgetDict[widgetName]["container"] -- x,y movement
     elseif propertyName == "label" then
         data = muiData.widgetDict[widgetName]["textlabel"] -- label
+    elseif propertyName == "value" then
+        data = muiData.widgetDict[widgetName]["value"] -- value
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["rect"] -- clickable area
     elseif propertyName == "layer_2" then
@@ -311,6 +313,7 @@ function M.onRowTouchSelector(event)
         local parentName = string.gsub(event.row.miscEvent.name, "-List", "")
 
         muiData.widgetDict[parentName]["selectorfieldfake"].text = muiTargetValue
+        muiData.widgetDict[parentName]["value"] = muiTargetValue
         timer.performWithDelay(500, function() M.finishSelector(parentName) end, 1)
     end
 end

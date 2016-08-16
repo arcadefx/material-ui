@@ -229,6 +229,8 @@ function M.getSlidePanelProperty(widgetName, propertyName)
         data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
     elseif propertyName == "title" then
         data = muiData.widgetDict[widgetName .. "header-text"] -- the header/title text of menu
+    elseif propertyName == "value" then
+        data = muiData.widgetDict[widgetName]["value"] -- value
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["rectbackdrop"] -- backdrop of whole widget
     elseif propertyName == "layer_2" then
@@ -517,6 +519,7 @@ function M.slidePanelEventButton (event)
                 event.altTarget2 = muiData.widgetDict[options.basename]["slidebar"][options.name]["myText2"]
                 event.callBackData = options.callBackData
 
+                muiData.widgetDict[options.basename]["value"] = options.value
                 M.setEventParameter(event, "muiTargetValue", options.value)
                 M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.basename]["slidebar"][options.name]["myText"])
                 M.setEventParameter(event, "muiTarget2", muiData.widgetDict[options.basename]["slidebar"][options.name]["myText2"])

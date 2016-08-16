@@ -320,6 +320,7 @@ function M.toolBarButton (event)
                 event.altTarget2 = muiData.widgetDict[options.basename]["toolbar"][options.name]["myText2"]
                 event.callBackData = options.callBackData
 
+                muiData.widgetDict[options.basename]["value"] = options.value
                 M.setEventParameter(event, "muiTargetValue", options.value)
                 M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.basename]["toolbar"][options.name]["myText"])
                 M.setEventParameter(event, "muiTarget2", muiData.widgetDict[options.basename]["toolbar"][options.name]["myText2"])
@@ -414,6 +415,8 @@ function M.getToolBarProperty(widgetName, propertyName)
 
     if propertyName == "object" then
         data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+    elseif propertyName == "value" then
+        data = muiData.widgetDict[widgetName]["value"] -- toolbar value
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["toolbar"]["rectBak"] -- toolbar background
     elseif propertyName == "layer_2" then

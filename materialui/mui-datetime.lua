@@ -826,7 +826,6 @@ function M.pickerGetCurrentValue(muiName)
     if muiName == nil then return nil end
     local value = {}
 
-    -- muiData.widgetDict[muiName][listName.."CurrentRowData"]
     if muiData.widgetDict[muiName]["type"] == 'DatePicker' then
         value = { 
             month = muiData.widgetDict[muiName]["monthsCurrentRowData"],

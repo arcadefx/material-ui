@@ -157,6 +157,8 @@ function M.getSliderProperty(widgetName, propertyName)
 
     if propertyName == "object" then
         data = muiData.widgetDict[widgetName]["container"] -- x,y movement
+    elseif propertyName == "value" then
+        data = muiData.widgetDict[widgetName]["value"] -- clickable area
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["sliderrect"] -- clickable area
     elseif propertyName == "layer_2" then

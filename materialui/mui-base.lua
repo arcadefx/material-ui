@@ -264,6 +264,8 @@ function M.getWidgetProperty( widgetName, propertyName )
     widgetData = M.getCircleButtonProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "Dialog" then
     widgetData = M.getDialogProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "DatePicker" then
+    widgetData = M.pickerGetCurrentValue( widgetName )
   elseif muiData.widgetDict[widgetName]["type"] == "IconButton" then
     widgetData = M.getIconButtonProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "Image" then
@@ -292,6 +294,8 @@ function M.getWidgetProperty( widgetName, propertyName )
     widgetData = M.getTextFieldProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "TileGrid" then
     widgetData = M.getTileProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "TimePicker" then
+    widgetData = M.pickerGetCurrentValue( widgetName )
   elseif muiData.widgetDict[widgetName]["type"] == "Toast" then
     widgetData = M.getToastProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "ToggleSwitch" then

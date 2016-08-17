@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.39] - 2016-08-17
+### Added
+- "newShadowShape()" method -- create a shadow shape for rectangle (rect), rounded rectangle (rounded_rect) and circle (circle).
+- shadow support to newRectButton, newRoundedRectButton and newCircleButton. See wiki https://github.com/arcadefx/material-ui/wiki/Buttons for more information.
+
 ## [0.1.38] - 2016-08-15
 ### Added
 - "value" property to all buttons, user input and such. Use getWidgetProperty() to get the value of the widget.

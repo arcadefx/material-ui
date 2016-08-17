@@ -102,7 +102,12 @@ function M.newRoundedRectButton(options)
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "RRectButton"
     -- muiData.widgetDict[options.name]["container"] = display.newGroup() --display.newContainer( nw, nh )
-    muiData.widgetDict[options.name]["container"] = display.newContainer( nw, nh )
+
+    local padding = 0
+    if options.useShadow == true then padding = M.getScaleVal(50) end
+
+    muiData.widgetDict[options.name]["container"] = display.newContainer( nw+padding, nh+padding )
+
     muiData.widgetDict[options.name]["container"]:translate( x, y ) -- center the container
     muiData.widgetDict[options.name]["touching"] = false
 
@@ -114,6 +119,20 @@ function M.newRoundedRectButton(options)
     local radius = options.height * 0.2
     if options.radius ~= nil and options.radius < options.height and options.radius > 1 then
         radius = options.radius
+    end
+
+    if options.useShadow == true then
+        local size = options.shadowSize or M.getScaleVal(20)
+        local opacity = options.shadowOpacity or 0.3
+        local shadow = M.newShadowShape("rounded_rect", {
+            width = options.width,
+            height = options.height,
+            size = size,
+            opacity = opacity,
+            cornerRadius = radius,
+        })
+        muiData.widgetDict[options.name]["shadow"] = shadow
+        muiData.widgetDict[options.name]["container"]:insert( shadow )
     end
 
     local nr = radius + M.getScaleVal(8) -- (options.height+M.getScaleVal(8)) * 0.2
@@ -379,9 +398,12 @@ function M.newRectButton(options)
         y = options.y
     end
 
+    local padding = M.getScaleVal(4)
+    if options.useShadow == true then padding = M.getScaleVal(50) end
+
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "RectButton"
-    muiData.widgetDict[options.name]["container"] = display.newContainer( options.width+4, options.height+4 )
+    muiData.widgetDict[options.name]["container"] = display.newContainer( options.width+padding, options.height+padding )
     muiData.widgetDict[options.name]["container"]:translate( x, y ) -- center the container
     muiData.widgetDict[options.name]["touching"] = false
 
@@ -411,6 +433,19 @@ function M.newRectButton(options)
 
     local strokeWidth = 0
     if paint ~= nil then strokeWidth = 1 end
+
+    if options.useShadow == true then
+        local size = options.shadowSize or M.getScaleVal(20)
+        local opacity = options.shadowOpacity or 0.3
+        local shadow = M.newShadowShape("rect", {
+            width = options.width,
+            height = options.height,
+            size = size,
+            opacity = opacity,
+        })
+        muiData.widgetDict[options.name]["shadow"] = shadow
+        muiData.widgetDict[options.name]["container"]:insert( shadow )
+    end
 
     muiData.widgetDict[options.name]["rrect"] = display.newRect( 0, 0, options.width, options.height )
     if paint ~= nil then
@@ -779,6 +814,19 @@ function M.newCircleButton(options)
     muiData.widgetDict[options.name]["font"] = font
     muiData.widgetDict[options.name]["fontSize"] = fontSize
     muiData.widgetDict[options.name]["textMargin"] = textMargin
+
+    if options.useShadow == true then
+        local size = options.shadowSize or M.getScaleVal(options.radius * 0.55)
+        local opacity = options.shadowOpacity or 0.4
+        local shadow = M.newShadowShape("circle", {
+            width = options.radius,
+            height = options.radius,
+            size = size,
+            opacity = opacity,
+        })
+        muiData.widgetDict[options.name]["shadow"] = shadow
+        muiData.widgetDict[options.name]["mygroup"]:insert( shadow )
+    end
 
     -- scale font
     -- Calculate a font size that will best fit the given text field's height
@@ -1328,6 +1376,11 @@ function M.removeRoundedRectButton(widgetName)
         muiData.widgetDict[widgetName]["myImageSheet"] = nil
     end
 
+    if muiData.widgetDict[widgetName]["shadow"] ~= nil then
+        muiData.widgetDict[widgetName]["shadow"]:removeSelf()
+        muiData.widgetDict[widgetName]["shadow"] = nil
+    end
+
     muiData.widgetDict[widgetName]["rrect"]:removeSelf()
     muiData.widgetDict[widgetName]["rrect"] = nil
     muiData.widgetDict[widgetName]["rrect2"]:removeSelf()
@@ -1366,6 +1419,12 @@ function M.removeRectButton(widgetName)
     if muiData.widgetDict[widgetName]["myImageSheet"] ~= nil then
         muiData.widgetDict[widgetName]["myImageSheet"] = nil
     end
+
+    if muiData.widgetDict[widgetName]["shadow"] ~= nil then
+        muiData.widgetDict[widgetName]["shadow"]:removeSelf()
+        muiData.widgetDict[widgetName]["shadow"] = nil
+    end
+
     muiData.widgetDict[widgetName]["rrect"]:removeSelf()
     muiData.widgetDict[widgetName]["rrect"] = nil
     muiData.widgetDict[widgetName]["container"]:removeSelf()
@@ -1402,6 +1461,12 @@ function M.removeCircleButton(widgetName)
     if muiData.widgetDict[widgetName]["myImageSheet"] ~= nil then
         muiData.widgetDict[widgetName]["myImageSheet"] = nil
     end
+
+    if muiData.widgetDict[widgetName]["shadow"] ~= nil then
+        muiData.widgetDict[widgetName]["shadow"]:removeSelf()
+        muiData.widgetDict[widgetName]["shadow"] = nil
+    end
+
     muiData.widgetDict[widgetName]["circlemain"]:removeSelf()
     muiData.widgetDict[widgetName]["circlemain"] = nil
     muiData.widgetDict[widgetName]["mygroup"]:removeSelf()

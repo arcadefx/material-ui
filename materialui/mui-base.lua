@@ -478,6 +478,58 @@ function M.newShadowShape( shape, options )
   return c
 end
 
+--[[--
+local arc = display.newArc(group, options)
+
+options {
+  x = x corrdinate,
+  y = y corrdinate,
+  width = width,
+  height = height,
+  startAngle = start angle,
+  endAngle = end on angle,
+  rotate = rotate angle,
+  lineWidth = width of the line,
+  lineColor = color of the line
+}
+--]]--
+
+function display.newArc(group, options)
+    local theArc = display.newGroup()
+
+    local x,y = options.x, options.y
+    local w,h = options.width, options.height
+    local s,e = options.startAngle, options.endAngle
+    local rot = options.rotate
+    local lineWidth = options.lineWidth
+    local lineColor = options.lineColor
+
+    local xc,yc,cos,sin = 0,0,math.cos,math.sin
+    s,e = s or 0, e or 360
+    s,e = math.rad(s),math.rad(e)
+    w,h = w*0.5,h*0.5
+    local l = display.newLine(0,0,0,0)
+    lineColor = lineColor or { 1, 0, 0 }
+    l:setColor( unpack(lineColor) )
+    l.width = lineWidth or M.getScaleVal(4)
+
+    theArc:insert( l )
+
+    for t=s,e,0.02 do
+        local cx,cy = xc + w*cos(t), yc - h*sin(t)
+        l:append(cx,cy)
+    end
+
+    group:insert( theArc )
+
+    -- Center, Rotate, then translate
+    theArc.x,theArc.y = 0,0
+    theArc.rotation = rot
+    theArc.x,theArc.y = x,y
+
+    return theArc
+end
+
 function M.split(str, sep)
    local result = {}
    local regex = ("([^%s]+)"):format(sep)

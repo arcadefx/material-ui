@@ -432,6 +432,52 @@ function M.transitionColor(displayObj, params)
   end
 end
 
+--
+-- options: style, width, height, offsetX, offsetY, size, cornerRadius, opacity
+--
+function M.newShadowShape( shape, options )
+  local g = display.newGroup()
+  g.x, g.y = display.contentCenterX, display.contentCenterY
+
+  local style = options.style or "filter.blurGaussian"
+  local width, height = options.width, options.height
+  local offsetX, offsetY = (options.offsetX or 0), (options.offsetY or 0)
+  local size = options.size
+  local cornerRadius = options.cornerRadius or 5
+  local opacity = options.opacity
+
+  if shape == "rect" then
+    display.newRect( g, offsetX, offsetY, width+size, height+size ).fill = {1,1,1,0}
+    display.newRect( g, offsetX, offsetY, width, height ).fill = {0,0,0}
+  elseif shape == "rounded_rect" then
+    display.newRoundedRect( g, offsetX, offsetY, width+size, height+size, cornerRadius ).fill = {1,1,1,0}
+    display.newRoundedRect( g, offsetX, offsetY, width, height, cornerRadius ).fill = {0,0,0}
+  elseif shape == "circle" then
+    local radius = width * 0.5
+    display.newCircle( g, offsetX, offsetY, radius * 1.5 ).fill = {1,1,1,0}
+    display.newCircle( g, offsetX, offsetY, radius ).fill = {0,0,0}
+  end
+
+  local c = display.capture( g )
+  g = display.remove( g )
+
+  c.fill.effect = style
+  if style == "filter.blurGaussian" then
+    c.fill.effect.horizontal.blurSize = size
+    c.fill.effect.horizontal.sigma = size
+    c.fill.effect.vertical.blurSize = size
+    c.fill.effect.vertical.sigma = size
+  elseif style == "filter.linearWipe" then
+    c.fill.effect.direction = { 1, 1 }
+    c.fill.effect.smoothness = 1
+    c.fill.effect.progress = 0.5
+  end
+
+  c.alpha = opacity or 0.3
+
+  return c
+end
+
 function M.split(str, sep)
    local result = {}
    local regex = ("([^%s]+)"):format(sep)

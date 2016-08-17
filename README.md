@@ -76,7 +76,7 @@ Please read Lua code to find all parameters and see example in the repo call men
 
 *Buttons*
 
-Buttons can contain image sheets for handling single or multiple images for a button (two states available on/off).  Buttons can also be a single graphic button.  See [Wiki for Buttons](https://github.com/arcadefx/material-ui/wiki/Buttons).  In menu.lua there is an example and it's used to "Open Dialog" in the demo.
+Buttons can contain image sheets for handling single or multiple images for a button (two states available on/off).  Buttons can also be a single graphic button.  See [Wiki for Buttons](https://github.com/arcadefx/material-ui/wiki/Buttons).  In menu.lua there is an example and it's used to "Open Dialog" in the demo.  Shadows can be added as well see wiki for more information.
 
 | Method        | Short Description | Example  |
 | ------------- | ------------- | :-----:|
@@ -146,6 +146,7 @@ Helper Methods
 - `getWidgetBaseObject` - returns the base object of a named widget created with one of the above methods. It can be inserted into another container, group, scrollview and moved around, etc.  Example: rectangle_surface:insert( mui.getWidgetBaseObject("okay_button") )
 - `getEventParameter` - returns the event MUI widget parameters for the current widget.  Get the event target, widget name, widget value ( ex: getEventParameter(event, "muiTargetValue") ).  The value is set when creating a widget.  See menu.lua for setting the values and mui.lua callBacks for getting values (example would be actionForSwitch() method).
 - `hideWidget` - hide a widget by name. It will hide/show a widget by setting the isVisible attribute.
+- `newShadowShape` - create a shadow shape for rectangle (rect), rounded rectangle (rounded_rect) and circle (circle).
 - `setDisplayToActualDimensions` - Set the display dimensions to use display.actualContentWidth and height or display.contentWidth and height.  Apply this when calling muiData.init(...), example: muiData.init( nil, {useActualDimensions = true} ).
 
 Remove widget methods - these will remove the widget by name and release memory:

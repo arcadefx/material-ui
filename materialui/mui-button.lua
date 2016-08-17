@@ -263,6 +263,8 @@ function M.getRoundedRectButtonProperty(widgetName, propertyName)
         data = muiData.widgetDict[widgetName]["myImage"]
     elseif propertyName == "image_touch" then
         data = muiData.widgetDict[widgetName]["myImageTouch"]
+    elseif propertyName == "shadow" then
+        data = muiData.widgetDict[widgetName]["shadow"]
     end
     return data
 end
@@ -531,6 +533,8 @@ function M.getRectButtonProperty(widgetName, propertyName)
         data = muiData.widgetDict[widgetName]["myImage"]
     elseif propertyName == "image_touch" then
         data = muiData.widgetDict[widgetName]["myImageTouch"]
+    elseif propertyName == "shadow" then
+        data = muiData.widgetDict[widgetName]["shadow"]
     end
     return data
 end
@@ -902,6 +906,8 @@ function M.getCircleButtonProperty(widgetName, propertyName)
         data = muiData.widgetDict[widgetName]["myImage"]
     elseif propertyName == "image_touch" then
         data = muiData.widgetDict[widgetName]["myImageTouch"]
+    elseif propertyName == "shadow" then
+        data = muiData.widgetDict[widgetName]["shadow"]
     end
     return data
 end

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [0.1.39] - 2016-08-17
 ### Added
+- Updated README to point to *new* API Documentation at http://www.anedix.com/docs/mui/
+- Updated Wiki to reflect the new documentation.
+- Bug fixes.
+
+## [0.1.39] - 2016-08-17
+### Added
 - "newShadowShape()" method -- create a shadow shape for rectangle (rect), rounded rectangle (rounded_rect) and circle (circle).
 - shadow support to newRectButton, newRoundedRectButton and newCircleButton. See wiki https://github.com/arcadefx/material-ui/wiki/Buttons for more information.
 

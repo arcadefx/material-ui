@@ -72,10 +72,6 @@ function M.newToggleSwitch(options)
         textColor = options.textColor
     end
 
-    if options.foregroundColor == nil then
-        options.foregroundColor = { 0, 0, 1, 0, 1 }
-    end
-
     if options.backgroundColor == nil then
         options.backgroundColor = { 0, 0, 1, 0, 0.8 }
     end

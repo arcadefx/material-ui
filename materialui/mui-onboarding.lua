@@ -17,6 +17,10 @@ function M.createParentOnBoard( options )
     return M.newParentOnBoard(options)
 end
 
+function M.newOnBoard( options )
+    return M.newParentOnBoard(options)
+end
+
 function M.newParentOnBoard( options )
 	if options == nil then return end
 

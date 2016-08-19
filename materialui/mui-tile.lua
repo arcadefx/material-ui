@@ -69,22 +69,6 @@ function M.newTileGrid(options)
         options.fillColor = options.backgroundColor
     end
 
-    options.easing = options.easing or easing.inOutCubic
-
-    -- paint normal or use gradient?
-    local paint = nil
-    if options.gradientBorderShadowColor1 ~= nil and options.gradientBorderShadowColor2 ~= nil then
-        if options.gradientDirection == nil then
-            options.gradientDirection = "down"
-        end
-        paint = {
-            type = "gradient",
-            color1 = options.gradientBorderShadowColor1,
-            color2 = options.gradientBorderShadowColor2,
-            direction = options.gradientDirection
-        }
-    end
-
     -- place on scrollview???
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["rectbackdrop"] = display.newRect( muiData.contentWidth * 0.5, muiData.contentHeight * 0.5, muiData.contentWidth, muiData.contentHeight)

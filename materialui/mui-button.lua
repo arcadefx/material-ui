@@ -462,6 +462,9 @@ function M.newRectButton(options)
 
     local rrect = muiData.widgetDict[options.name]["rrect"]
 
+    -- create image buttons if exist
+    M.createButtonsFromList(options, rrect, "container")
+
     local fontSize = 10
     local textMargin = options.height * 0.4
     if options.textMargin ~= nil and options.textMargin > 0 then
@@ -504,7 +507,7 @@ function M.newRectButton(options)
         radius = options.radius
     end
 
-    local maxWidth = muiData.widgetDict[options.name]["rrect"].path.width - (radius * 2)
+    local maxWidth = muiData.widgetDict[options.name]["rrect"].width - (radius * 2)
 
     muiData.widgetDict[options.name]["myCircle"] = display.newCircle( options.height, options.height, maxWidth )
     muiData.widgetDict[options.name]["myCircle"]:setFillColor( unpack(circleColor) )
@@ -808,11 +811,6 @@ function M.newCircleButton(options)
     local fillColor = { 0, 0, 0 }
     if options.fillColor ~= nil then
         fillColor = options.fillColor
-    end
-
-    local isChecked = false
-    if options.isChecked ~= nil then
-        isChecked = options.isChecked
     end
 
     muiData.widgetDict[options.name]["font"] = font

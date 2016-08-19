@@ -62,7 +62,7 @@ Sample Screenshot
 - Note: The text input is the "Hello, world!"
 - Video: https://youtu.be/c8p3DMA6PzU
 
-Available Methods
+Available Methods and Documentation
 -------------
 * See Documentation. [View Documentation](http://www.anedix.com/docs/mui/) for more information on methods, examples and properties.
 

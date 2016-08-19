@@ -190,7 +190,6 @@ function scene:create( event )
         y = mui.getScaleVal(40),
         font = "MaterialIcons-Regular.ttf",
         textColor = { 0.25, 0.75, 1, 1 },
-        textAlign = "center",
         callBack = mui.actionSwitchScene,
         callBackData = {
             sceneDestination = "onboard",

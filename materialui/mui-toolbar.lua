@@ -382,7 +382,7 @@ function M.newToolbar( options )
                 textColorOff = options.labelColorOff,
                 textAlign = "center",
                 labelColor = options.labelColor,
-                backgroundColor = options.color,
+                backgroundColor = options.color or options.fillColor,
                 numberOfButtons = count,
                 callBack = options.callBack,
                 callBackData = options.callBackData

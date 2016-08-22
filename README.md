@@ -6,7 +6,7 @@ This README is just an overview document. You can find more detailed documentati
 What is material-ui?
 --------------
 
-material-ui is a loosely based Material UI module for Corona Labs SDK.  It is written in Lua using the free edition of the SDK.  The module will help build a UI based on Material Design.
+material-ui is a loosely based Material UI library for Corona Labs SDK.  It is written in Lua using the free edition of the SDK.  The library will help build a UI based on Material Design.
 
 Using material-ui
 --------------
@@ -79,7 +79,7 @@ Change Log
 
 To-Do
 -------------
-* Expand the module (new widgets: switches, hamburger menu, input fields, etc)
+* Expand the library (new widgets: card, clock, calendar, etc)
 * Develop a layout engine 
 * Develop a palette engine
 

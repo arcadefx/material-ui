@@ -50,6 +50,7 @@ local modules = {
   "materialui.mui-navbar",
   "materialui.mui-onboarding",
   "materialui.mui-progressbar",
+  "materialui.mui-progresscircle",
   "materialui.mui-select",
   "materialui.mui-slider",
   "materialui.mui-slidepanel",

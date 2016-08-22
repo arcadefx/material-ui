@@ -62,6 +62,8 @@ local M = muiData.M -- {} -- for module array/table
     labelEmbossedHighlight = { R,G,B,A},
     labelEmbossedShadow = { R,G,B,A},
     callBack = mui.postProgressCallBack,
+    --repeatCallBack = <your method here>,
+    hideBackdropWhenDone = false
 --]]--
 function M.createProgressCircle(options)
     M.newProgressCircle(options)
@@ -260,21 +262,28 @@ function M.increaseProgressCircle( widgetName, percent, __forceprocess__ )
 
     muiData.widgetDict[options.name]["label"].text = muiData.widgetDict[widgetName]["progresscircle"].percentComplete .. "%"
 
+    local percentComplete = muiData.widgetDict[widgetName]["progresscircle"].percentComplete
+    if muiData.widgetDict[widgetName]["progresscircle"].percentComplete > 100 then
+        percentComplete = 100
+    end
     if options.fillType == "outward" then
         muiData.widgetDict[options.name]["transition"] = transition.to( muiData.widgetDict[options.name]["progresscircle"], {
             time = options.delay,
-            xScale = muiData.widgetDict[widgetName]["progresscircle"].percentComplete / 100,
-            yScale = muiData.widgetDict[widgetName]["progresscircle"].percentComplete / 100,
+            xScale = percentComplete / 100,
+            yScale = percentComplete / 100,
             transition = easing.linear,
             iterations = options.iterations,
             onComplete = M.completeProgressCircleCallBack,
             onRepeat = M.repeatProgressCircleCallBack,
         } )
     else
+        if muiData.widgetDict[widgetName]["progresscircle"].percentComplete > 100 then
+            percentComplete = 100
+        end
         muiData.widgetDict[options.name]["transition"] = transition.to( muiData.widgetDict[options.name]["progresscircle"], {
             time = options.delay,
-            xScale = 1 - (muiData.widgetDict[widgetName]["progresscircle"].percentComplete / 100),
-            yScale = 1 - (muiData.widgetDict[widgetName]["progresscircle"].percentComplete / 100),
+            xScale = 1 - (percentComplete / 100),
+            yScale = 1 - (percentComplete / 100),
             transition = easing.linear,
             iterations = options.iterations,
             onComplete = M.completeProgressCircleCallBack,

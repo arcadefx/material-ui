@@ -175,6 +175,9 @@ function M.newProgressCircle(options)
     if options.callBack ~= nil then
         muiData.widgetDict[options.name]["progresscircle"].callBack = options.callBack
     end
+    if options.onComplete ~= nil then
+        muiData.widgetDict[options.name]["progresscircle"].onComplete = options.onComplete
+    end
     if options.repeatCallBack ~= nil then
         muiData.widgetDict[options.name]["progresscircle"].repeatCallBack = options.repeatCallBack
     end
@@ -307,11 +310,22 @@ function M.completeProgressCircleCallBack( object )
     muiData.widgetDict[object.name]["busy"] = false
 
     if object.noFinishAnimation == nil and object.percentComplete >= 99 and muiData.widgetDict[object.name]["fillType"] == "outward" then
-        transition.fadeOut( muiData.widgetDict[object.name]["progresscircle"], {})
+        transition.fadeOut( muiData.widgetDict[object.name]["progresscircle"], {onComplete=M.completeProgressCircleFinalCallBack})
     elseif #muiData.progresscircleDict > 0 then
         M.increaseProgressCircle( object.name, 1, "__forceprocess__")
+    else
+        M.postProgressCircleCompleteCallBack(object)
     end
     muiData.widgetDict[object.name]["label"].text = object.percentComplete .. "%"
+end
+
+function M.postProgressCircleCompleteCallBack( object )
+    if object.name ~= nil then
+        if muiData.widgetDict[object.name] == nil then return end
+        if object.onComplete ~= nil then
+            assert(object.onComplete)( object )
+        end
+    end
 end
 
 function M.completeProgressCircleFinalCallBack(object)

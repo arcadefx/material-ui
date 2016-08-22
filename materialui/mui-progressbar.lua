@@ -167,6 +167,9 @@ function M.newProgressBar(options)
     if options.callBack ~= nil then
         muiData.widgetDict[options.name]["progressbar"].callBack = options.callBack
     end
+    if options.onComplete ~= nil then
+        muiData.widgetDict[options.name]["progressbar"].onComplete = options.onComplete
+    end
     if options.repeatCallBack ~= nil then
         muiData.widgetDict[options.name]["progressbar"].repeatCallBack = options.repeatCallBack
     end
@@ -269,6 +272,17 @@ function M.completeProgressBarCallBack( object )
         end
     elseif #muiData.progressbarDict > 0 then
         M.increaseProgressBar( object.name, 1, "__forceprocess__")
+    else
+        M.postProgressCircleCompleteCallBack( object )
+    end
+end
+
+function M.postProgressCircleCompleteCallBack( object )
+    if object.name ~= nil then
+        if muiData.widgetDict[object.name] == nil then return end
+        if object.onComplete ~= nil then
+            assert(object.onComplete)( object )
+        end
     end
 end
 

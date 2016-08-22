@@ -56,6 +56,7 @@ function M.init_base(options)
   muiData.tableCircle = nil
   muiData.widgetDict = {}
   muiData.progressbarDict = {}
+  muiData.progresscircleDict = {}
   muiData.currentNativeFieldName = ""
   muiData.currentTargetName = ""
   muiData.lastTargetName = ""

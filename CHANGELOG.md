@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.41] - 2016-08-22
+### Added
+- 'onComplete' parameter to newProgressCircle() method. This is a function and if set it will be called on each step interval minus 100%. On 100% the 'callBack' method if defined will be called.  See demo at http://www.anedix.com/fileshare/progress-circle.zip
+- Bug fixes.
+
 ## [0.1.40] - 2016-08-22
 ### Added
 - newProgressCircle() method to create a "determinate" fill circle. It can contain text which is either normal or embossed text.  See demo at http://www.anedix.com/fileshare/progress-circle.zip

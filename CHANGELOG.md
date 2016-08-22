@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.1.40] - 2016-08-22
 ### Added
-- newProgressCircle() method to create a "determinate" fill circle.  See demo at http://www.anedix.com/fileshare/progress-circle.zip
+- newProgressCircle() method to create a "determinate" fill circle. It can contain text which is either normal or embossed text.  See demo at http://www.anedix.com/fileshare/progress-circle.zip
 - Bug fixes.
 
 ## [0.1.39] - 2016-08-19

@@ -221,11 +221,16 @@ function M.increaseProgressBar( widgetName, percent, __forceprocess__ )
         table.insert(muiData.progressbarDict, {name=widgetName, value=percent})
         return
     elseif #muiData.progressbarDict > 0 then
-        entry = muiData.progressbarDict[1]
-        if entry.name == widgetName then
-            percent = entry.value
+        -- find entry
+        local idx = 0
+        for i, v in ipairs(muiData.progressbarDict) do
+           if v.name == widgetName then
+                idx = i
+                percent = v.value
+                break
+           end
         end
-        table.remove(muiData.progressbarDict, 1)
+        if idx > 0 then table.remove(muiData.progressbarDict, idx) end
     end
 
     muiData.widgetDict[widgetName]["busy"] = true

@@ -255,11 +255,16 @@ function M.increaseProgressCircle( widgetName, percent, __forceprocess__ )
         table.insert(muiData.progresscircleDict, {name=widgetName, value=percent})
         return
     elseif #muiData.progresscircleDict > 0 then
-        entry = muiData.progresscircleDict[1]
-        if entry.name == widgetName then
-            percent = entry.value
+        -- find entry
+        local idx = 0
+        for i, v in ipairs(muiData.progresscircleDict) do
+           if v.name == widgetName then
+                idx = i
+                percent = v.value
+                break
+           end
         end
-        table.remove(muiData.progresscircleDict, 1)
+        if idx > 0 then table.remove(muiData.progresscircleDict, idx) end
     end
 
     muiData.widgetDict[widgetName]["busy"] = true

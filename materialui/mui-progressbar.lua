@@ -212,16 +212,19 @@ function M.increaseProgressBar( widgetName, percent, __forceprocess__ )
 
     local options = muiData.widgetDict[widgetName]["options"]
 
-    if muiData.widgetDict[options.name]["transition"] ~= nil and options.iterations == -1 then
+    if muiData.widgetDict[widgetName]["transition"] ~= nil and options.iterations == -1 then
         return
     end
 
     if muiData.widgetDict[widgetName]["busy"] == true then
         -- queue the percent increase for later processing
-        table.insert(muiData.progressbarDict, percent)
+        table.insert(muiData.progressbarDict, {name=widgetName, value=percent})
         return
     elseif #muiData.progressbarDict > 0 then
-        percent = muiData.progressbarDict[1]
+        entry = muiData.progressbarDict[1]
+        if entry.name == widgetName then
+            percent = entry.value
+        end
         table.remove(muiData.progressbarDict, 1)
     end
 

@@ -246,16 +246,19 @@ function M.increaseProgressCircle( widgetName, percent, __forceprocess__ )
 
     local options = muiData.widgetDict[widgetName]["options"]
 
-    if muiData.widgetDict[options.name]["transition"] ~= nil and options.iterations == -1 then
+    if muiData.widgetDict[widgetName]["transition"] ~= nil and options.iterations == -1 then
         return
     end
 
     if muiData.widgetDict[widgetName]["busy"] == true then
         -- queue the percent increase for later processing
-        table.insert(muiData.progresscircleDict, percent)
+        table.insert(muiData.progresscircleDict, {name=widgetName, value=percent})
         return
     elseif #muiData.progresscircleDict > 0 then
-        percent = muiData.progresscircleDict[1]
+        entry = muiData.progresscircleDict[1]
+        if entry.name == widgetName then
+            percent = entry.value
+        end
         table.remove(muiData.progresscircleDict, 1)
     end
 

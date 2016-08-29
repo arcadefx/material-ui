@@ -51,7 +51,9 @@ local modules = {
   "materialui.mui-onboarding",
   "materialui.mui-progressbar",
   "materialui.mui-progresscircle",
+  "materialui.mui-progressarc",
   "materialui.mui-select",
+  "materialui.mui-shapes",
   "materialui.mui-slider",
   "materialui.mui-slidepanel",
   "materialui.mui-switch",
@@ -83,7 +85,7 @@ end
 
 function M.init(mui_modules, options)
     local baseModules = {
-      "materialui.mui-base"
+      "materialui.mui-base",
     }
     for i=1, #baseModules do
         table.insert(parents, require(baseModules[i]))

@@ -1,7 +1,7 @@
 --[[
     A loosely based Material UI module
 
-    mui-progresscircle.lua : This is for creating progress circles. Percentage based (0..100%)
+    mui-progressarc.lua : This is for creating progress arcs. Percentage based (0..100%)
 
     The MIT License (MIT)
 
@@ -40,7 +40,7 @@ local mathABS = math.abs
 local M = muiData.M -- {} -- for module array/table
 
 --
--- createProgressCircle
+-- createProgressArc
 --
 --[[
   params:
@@ -65,11 +65,11 @@ local M = muiData.M -- {} -- for module array/table
     --repeatCallBack = <your method here>,
     hideBackdropWhenDone = false
 --]]--
-function M.createProgressCircle(options)
-    M.newProgressCircle(options)
+function M.createProgressArc(options)
+    M.newProgressArc(options)
 end
 
-function M.newProgressCircle(options)
+function M.newProgressArc(options)
     if options == nil then return end
 
     local x,y = 160, 240
@@ -88,20 +88,17 @@ function M.newProgressCircle(options)
         options.backgroundColor = { 0, 0, 1, 0, 0.8 }
     end
 
-    options.backgroundStrokeWidth = options.backgroundStrokeWidth or 5
-    options.backgroundStrokeColor = options.backgroundStrokeColor or { 0, 0, 0 }
+    if options.angle == nil then options.angle = 180 end
+    if options.outer == nil then options.outer = 100 end
+    if options.inner == nil then options.inner = 40 end
+    if options.fromAngle == nil then options.fromAngle = 0 end
+    if options.range == nil then options.range = 1 end
+    if options.time == nil then options.time = 2000 end
+    if options.progressIndicator == nil then options.progressIndicator = "endpoint" end
+    options.strokerColor = options.backgroundStrokeColor or { 0, 0, 0 }
 
     if options.iterations == nil then
         options.iterations = 1
-    end
-
-    if options.fillType == nil then
-        options.fillType = "outward" -- or "inward"
-        -- options.iterations = -1
-    end
-
-    if options.delay == nil then
-        options.delay = 500
     end
 
     local startPercent = 1
@@ -132,10 +129,10 @@ function M.newProgressCircle(options)
 
     muiData.widgetDict[options.name] = {}
 
-    local objectSize = (options.radius or 100)
+    local objectSize = (options.radius or 200)
     objectSize = objectSize * 2
 
-    muiData.widgetDict[options.name]["mygroup"] = display.newContainer(objectSize, objectSize)
+    muiData.widgetDict[options.name]["mygroup"] = display.newGroup(objectSize, objectSize)
     muiData.widgetDict[options.name]["mygroup"].x = x
     muiData.widgetDict[options.name]["mygroup"].y = y
     muiData.widgetDict[options.name]["touching"] = false
@@ -147,34 +144,60 @@ function M.newProgressCircle(options)
 
     muiData.widgetDict[options.name]["busy"] = false
     muiData.widgetDict[options.name]["options"] = options
-    muiData.widgetDict[options.name]["type"] = "ProgressCircle"
-    muiData.widgetDict[options.name]["progressbackdrop"] = display.newCircle( 0, 0, options.radius - options.backgroundStrokeWidth)
-    muiData.widgetDict[options.name]["progressbackdrop"]:setFillColor( unpack(options.backgroundColor) )
-    muiData.widgetDict[options.name]["progressbackdrop"].strokeWidth = options.backgroundStrokeWidth
-    muiData.widgetDict[options.name]["progressbackdrop"]:setStrokeColor( unpack(options.backgroundStrokeColor) )
-    muiData.widgetDict[options.name]["progresscircle"] = display.newCircle( 0, 0, options.radius - options.backgroundStrokeWidth)
-    muiData.widgetDict[options.name]["progresscircle"]:setFillColor( unpack(options.foregroundColor) )
-    muiData.widgetDict[options.name]["progresscircle"].name = options.name
-    muiData.widgetDict[options.name]["progresscircle"].percentComplete = 0
+    muiData.widgetDict[options.name]["type"] = "ProgressArc"
 
-    if options.fillType == "outward" then
-        transition.from(muiData.widgetDict[options.name]["progresscircle"], {xScale=0.01,yScale=0.01,time=0})
-    else
-        transition.to(muiData.widgetDict[options.name]["progresscircle"], {xScale=1,yScale=1,time=0})
-    end
-    muiData.widgetDict[options.name]["fillType"] = options.fillType
+    local arc_options = {
+        x = options.arcX or -(options.width * 0.5),
+        y = options.arcY or 0,
+        angle = options.angle,
+        inner = options.inner, -- inner - outer is arc thinkness
+        outer = options.outer,
+        fromAngle = options.fromAngle, -- start angle at
+        range = options.range, -- range to start rendering using time delay below
+        time = options.time,
+        strokeColor = options.backgroundColor, -- color of the Arc
+    }
+    muiData.widgetDict[options.name]["progressbackdrop"] = M.newArc(arc_options)
+
+    muiData.widgetDict[options.name]["progressarc"] = display.newGroup()
+    muiData.widgetDict[options.name]["progressarc"].arc_options = {
+        group = muiData.widgetDict[options.name]["progressarc"],
+        name = options.name,
+        x = options.arcX or -(options.width * 0.5),
+        y = options.arcY or 0,
+        angle = options.angle,
+        inner = options.inner, -- inner - outer is arc thinkness
+        outer = options.outer,
+        fromAngle = options.fromAngle, -- start angle at
+        toAngle = (options.angle * options.startPercent),
+        range = options.range, -- range to start rendering using time delay below
+        time = options.time,
+        strokeColor = options.foregroundColor, -- color of the Arc
+        updatePercent = options.updatePercent,
+        lastUpdatePercent = 0,
+        lastPercent = 0,
+        callBackUpdate = M.updatePercent,
+        onCycle = options.onCycle,
+        onComplete = options.onComplete, -- if needed, call the function when percentage is completed.
+        onCompleteInternal = M.processQueue, -- internal usage only
+    }
+    --muiData.widgetDict[options.name]["progressarc"] = M.newArcByRenderTime(arc_options)
+
+    muiData.widgetDict[options.name]["progressarc"].name = options.name
+    muiData.widgetDict[options.name]["progressIndicator"] = options.progressIndicator
+    muiData.widgetDict[options.name]["progressarc"].percentComplete = 0
 
     if options.callBack ~= nil then
-        muiData.widgetDict[options.name]["progresscircle"].callBack = options.callBack
+        muiData.widgetDict[options.name]["progressarc"].callBack = options.callBack
     end
     if options.onComplete ~= nil then
-        muiData.widgetDict[options.name]["progresscircle"].onComplete = options.onComplete
+        muiData.widgetDict[options.name]["progressarc"].onComplete = options.onComplete
     end
     if options.repeatCallBack ~= nil then
-        muiData.widgetDict[options.name]["progresscircle"].repeatCallBack = options.repeatCallBack
+        muiData.widgetDict[options.name]["progressarc"].repeatCallBack = options.repeatCallBack
     end
     muiData.widgetDict[options.name]["mygroup"]:insert(muiData.widgetDict[options.name]["progressbackdrop"])
-    muiData.widgetDict[options.name]["mygroup"]:insert(muiData.widgetDict[options.name]["progresscircle"])
+    muiData.widgetDict[options.name]["mygroup"]:insert(muiData.widgetDict[options.name]["progressarc"])
 
     if options.labelText ~= nil and options.labelFontSize ~= nil then
         if options.labelAlign == nil then
@@ -184,7 +207,7 @@ function M.newProgressCircle(options)
         {
             text = "",
             x = 0,
-            y = 0,
+            y = options.labelTextY or 0,
             width = options.width,
             font = options.labelFont,
             fontSize = options.labelFontSize,
@@ -202,11 +225,34 @@ function M.newProgressCircle(options)
         muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["label"] )
     end
 
-    muiData.widgetDict[options.name]["progresscircle"].percentComplete = 0
-    M.increaseProgressCircle( options.name, startPercent )
+    muiData.widgetDict[options.name]["progressarc"].percentComplete = 0
+    if muiData.widgetDict[options.name]["progressIndicator"] == "endpoint" then
+        muiData.widgetDict[options.name]["label"].text = muiData.widgetDict[options.name]["progressarc"].percentComplete .. "%"
+    end
+    M.increaseProgressArc( options.name, startPercent )
 end
 
-function M.getProgressCircleProperty(widgetName, propertyName)
+function M.updatePercent( group, range )
+    local widgetName = group.name
+    percent = 0
+    if range > 0 then
+        percent = mathFloor(mathFloor(range) / group.muiArcOptions.angle * 100)
+    end
+    if range > 0 and group.muiArcOptions.onComplete ~= nil and group.muiArcOptions.lastPercent ~= percent then
+        local p = mathFloor((range / group.muiArcOptions.angle) * 100)
+        muiData.widgetDict[widgetName]["progressarc"].percentComplete = p
+        muiData.widgetDict[widgetName]["progressarc"].range = range
+        if muiData.widgetDict[widgetName]["progressIndicator"] == "continuous" then
+            muiData.widgetDict[widgetName]["label"].text = muiData.widgetDict[widgetName]["progressarc"].percentComplete .. "%"
+        end
+    end
+    group.muiArcOptions.lastPercent = percent
+    if group.muiArcOptions.onCycle ~= nil then
+        assert(group.muiArcOptions.onCycle)( group, range )
+    end
+end
+
+function M.getProgressArcProperty(widgetName, propertyName)
     local data = nil
 
     if widgetName == nil or propertyName == nil then return data end
@@ -216,110 +262,80 @@ function M.getProgressCircleProperty(widgetName, propertyName)
     elseif propertyName == "label" then
         data = muiData.widgetDict[widgetName]["label"] -- the progress text
     elseif propertyName == "value" then
-        data = muiData.widgetDict[widgetName]["progresscircle"].percentComplete
+        data = muiData.widgetDict[widgetName]["progressarc"].percentComplete
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["progressbackdrop"] -- backdrop of whole bar
     elseif propertyName == "layer_2" then
-        data = muiData.widgetDict[widgetName]["progresscircle"] -- the bar that gets sized horizontally
+        data = muiData.widgetDict[widgetName]["progressarc"] -- the bar that gets sized horizontally
     end
     return data
+end
+
+
+--
+--
+--
+function M.processQueue(data)
+    if data == nil then return end
+    local widgetName = data.name
+    muiData.widgetDict[widgetName]["busy"] = false
+    if #muiData.progressarcDict > 0 then
+        M.increaseProgressArc(widgetName, 1, true) -- force processing
+    end
+    if muiData.widgetDict[widgetName]["progressIndicator"] == "endpoint" then
+        muiData.widgetDict[widgetName]["label"].text = muiData.widgetDict[widgetName]["progressarc"].percentComplete .. "%"
+    end
 end
 
 --
 -- expects: widget name and percent to increase the progress bar by.
 --
--- example: M.increaseProgressCircle("foo", 20) -- increase progress bar widget named "foo" by 20%
+-- example: M.increaseProgressArc("foo", 20) -- increase progress bar widget named "foo" by 20%
 --
 -- note: queue any additional increases if already processing one
 --
-function M.increaseProgressCircle( widgetName, percent, __forceprocess__ )
+function M.increaseProgressArc( widgetName, percent, __forceprocess__ )
     if percent < 1 and __forceprocess__ == nil then return end
     if muiData.widgetDict[widgetName] == nil then return end
 
     local options = muiData.widgetDict[widgetName]["options"]
-
     if muiData.widgetDict[widgetName]["transition"] ~= nil and options.iterations == -1 then
         return
     end
-
-    if muiData.widgetDict[widgetName]["busy"] == true then
+    if muiData.widgetDict[widgetName]["busy"] == true and percent ~= nil and percent > -1 then
         -- queue the percent increase for later processing
-        table.insert(muiData.progresscircleDict, {name=widgetName, value=percent})
+        table.insert(muiData.progressarcDict, {name=widgetName, value=percent})
         return
-    elseif #muiData.progresscircleDict > 0 then
+    elseif #muiData.progressarcDict > 0 then
         -- find entry
         local idx = 0
-        for i, v in ipairs(muiData.progresscircleDict) do
+        for i, v in ipairs(muiData.progressarcDict) do
            if v.name == widgetName then
                 idx = i
                 percent = v.value
+                percent = percent + muiData.widgetDict[widgetName]["progressarc"].percentComplete
                 break
            end
         end
-        if idx > 0 then table.remove(muiData.progresscircleDict, idx) end
+        if idx > 0 then table.remove(muiData.progressarcDict, idx) end
     end
 
     muiData.widgetDict[widgetName]["busy"] = true
-
-    muiData.widgetDict[widgetName]["progresscircle"].percentComplete = muiData.widgetDict[widgetName]["progresscircle"].percentComplete + percent
-
-    muiData.widgetDict[options.name]["label"].text = muiData.widgetDict[widgetName]["progresscircle"].percentComplete .. "%"
-
-    local percentComplete = muiData.widgetDict[widgetName]["progresscircle"].percentComplete
-    if muiData.widgetDict[widgetName]["progresscircle"].percentComplete > 100 then
-        percentComplete = 100
+    muiData.widgetDict[widgetName]["progressarc"].arc_options.toAngle = muiData.widgetDict[widgetName]["progressarc"].arc_options.angle * (percent / 100)
+    if muiData.widgetDict[widgetName]["progressarc"].range ~= nil then
+        muiData.widgetDict[widgetName]["progressarc"].arc_options.range = muiData.widgetDict[widgetName]["progressarc"].range + 1
     end
-    if options.fillType == "outward" then
-        muiData.widgetDict[options.name]["transition"] = transition.to( muiData.widgetDict[options.name]["progresscircle"], {
-            time = options.delay,
-            xScale = percentComplete / 100,
-            yScale = percentComplete / 100,
-            transition = easing.linear,
-            iterations = options.iterations,
-            onComplete = M.completeProgressCircleCallBack,
-            onRepeat = M.repeatProgressCircleCallBack,
-        } )
-    else
-        if muiData.widgetDict[widgetName]["progresscircle"].percentComplete > 100 then
-            percentComplete = 100
-        end
-        muiData.widgetDict[options.name]["transition"] = transition.to( muiData.widgetDict[options.name]["progresscircle"], {
-            time = options.delay,
-            xScale = 1 - (percentComplete / 100),
-            yScale = 1 - (percentComplete / 100),
-            transition = easing.linear,
-            iterations = options.iterations,
-            onComplete = M.completeProgressCircleCallBack,
-            onRepeat = M.repeatProgressCircleCallBack,
-        } )
-    end
+    M.newArcByRenderTime(muiData.widgetDict[widgetName]["progressarc"].arc_options)
 end
 
-function M.repeatProgressCircleCallBack( object )
-    -- print("repeatProgressCircleCallBack")
+function M.repeatProgressArcCallBack( object )
+    -- print("repeatProgressArcCallBack")
     if object.callBack ~= nil then
         assert(object.callBack)( object )
     end
 end
 
-function M.completeProgressCircleCallBack( object )
-    -- print("completeProgressCircleCallBack")
-    if object.name == nil then return end
-    if muiData.widgetDict[object.name] == nil then return end
-
-    muiData.widgetDict[object.name]["busy"] = false
-
-    if object.noFinishAnimation == nil and object.percentComplete >= 99 and muiData.widgetDict[object.name]["fillType"] == "outward" then
-        transition.fadeOut( muiData.widgetDict[object.name]["progresscircle"], {onComplete=M.completeProgressCircleFinalCallBack})
-    elseif #muiData.progresscircleDict > 0 then
-        M.increaseProgressCircle( object.name, 1, "__forceprocess__")
-    else
-        M.postProgressCircleCompleteCallBack(object)
-    end
-    muiData.widgetDict[object.name]["label"].text = object.percentComplete .. "%"
-end
-
-function M.postProgressCircleCompleteCallBack( object )
+function M.postProgressArcCompleteCallBack( object )
     if object.name ~= nil then
         if muiData.widgetDict[object.name] == nil then return end
         if object.onComplete ~= nil then
@@ -328,35 +344,39 @@ function M.postProgressCircleCompleteCallBack( object )
     end
 end
 
-function M.completeProgressCircleFinalCallBack(object)
+function M.completeProgressArcFinalCallBack(object)
     if object.name ~= nil then
         if muiData.widgetDict[object.name] == nil then return end
-        muiData.widgetDict[object.name]["progresscircle"].isVisible = false
+        muiData.widgetDict[object.name]["progressarc"].isVisible = false
         if object.callBack ~= nil then
             assert(object.callBack)( object )
         end
     end
 end
 
-function M.postProgressCircleCallBack( object )
+function M.postProgressArcCallBack( object )
     print("postProgressCallBack")
 end
 
-function M.removeWidgetProgressCircle(widgetName)
-    M.removeProgressCircle(widgetName)
+function M.removeWidgetProgressArc(widgetName)
+    M.removeProgressArc(widgetName)
 end
 
-function M.removeProgressCircle(widgetName)
+function M.removeProgressArc(widgetName)
     if widgetName == nil then
         return
     end
 
     if muiData.widgetDict[widgetName] == nil then return end
 
-    muiData.widgetDict[widgetName]["progressbackdrop"]:removeSelf()
+    M.removeNewArcByRenderTime( muiData.widgetDict[widgetName]["progressbackdrop"] )
+    -- muiData.widgetDict[widgetName]["progressbackdrop"]:removeSelf()
     muiData.widgetDict[widgetName]["progressbackdrop"] = nil
-    muiData.widgetDict[widgetName]["progresscircle"]:removeSelf()
-    muiData.widgetDict[widgetName]["progresscircle"] = nil
+
+    M.removeNewArcByRenderTime( muiData.widgetDict[widgetName]["progressarc"] )
+    -- muiData.widgetDict[widgetName]["progressarc"]:removeSelf()
+    muiData.widgetDict[widgetName]["progressarc"] = nil
+
     if muiData.widgetDict[widgetName]["label"] ~= nil then
         muiData.widgetDict[widgetName]["label"]:removeSelf()
         muiData.widgetDict[widgetName]["label"] = nil

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.42] - 2016-08-29
+### Added
+- newProgressArc() method with "endpoint" and "continuous" indicators. Multiple callBacks and parameters.  See demo at http://www.anedix.com/fileshare/progress-arc.zip and API documentation.
+- Bug fixes.
+
 ## [0.1.41] - 2016-08-22
 ### Added
 - 'onComplete' parameter to newProgressCircle() method. This is a function and if set it will be called on each step interval minus 100%. On 100% the 'callBack' method if defined will be called.  See demo at http://www.anedix.com/fileshare/progress-circle.zip

@@ -42,29 +42,6 @@ local M = muiData.M -- {} -- for module array/table
 --
 -- createProgressArc
 --
---[[
-  params:
-    name = <name of widget>
-    radius = mui.getScaleVal(200),
-    x = display.contentCenterX,
-    y = display.contentCenterY,
-    foregroundColor = { 0, 0.78, 1, 1 },
-    backgroundColor = { 0.82, 0.95, 0.98, 0.8 },
-    startPercent = 20,
-    fillType = "outward", -- "outward" or "inward"
-    iterations = 1,
-    labelText = "20%",
-    labelFont = native.systemFont,
-    labelFontSize = mui.getScaleVal(24),
-    labelColor = {  0.4, 0.4, 0.4, 1 },
-    labelAlign = "center",
-    labelStyle = "basic", -- "basic" or "embossed"
-    labelEmbossedHighlight = { R,G,B,A},
-    labelEmbossedShadow = { R,G,B,A},
-    callBack = mui.postProgressCallBack,
-    --repeatCallBack = <your method here>,
-    hideBackdropWhenDone = false
---]]--
 function M.createProgressArc(options)
     M.newProgressArc(options)
 end
@@ -129,10 +106,10 @@ function M.newProgressArc(options)
 
     muiData.widgetDict[options.name] = {}
 
-    local objectSize = (options.radius or 200)
+    local objectSize = (options.width or 200)
     objectSize = objectSize * 2
 
-    muiData.widgetDict[options.name]["mygroup"] = display.newGroup(objectSize, objectSize)
+    muiData.widgetDict[options.name]["mygroup"] = display.newGroup()
     muiData.widgetDict[options.name]["mygroup"].x = x
     muiData.widgetDict[options.name]["mygroup"].y = y
     muiData.widgetDict[options.name]["touching"] = false
@@ -199,34 +176,35 @@ function M.newProgressArc(options)
     muiData.widgetDict[options.name]["mygroup"]:insert(muiData.widgetDict[options.name]["progressbackdrop"])
     muiData.widgetDict[options.name]["mygroup"]:insert(muiData.widgetDict[options.name]["progressarc"])
 
-    if options.labelText ~= nil and options.labelFontSize ~= nil then
-        if options.labelAlign == nil then
-            options.labelAlign = "center"
+    if options.hideProgressText == false then
+        if options.labelText ~= nil and options.labelFontSize ~= nil then
+            if options.labelAlign == nil then
+                options.labelAlign = "center"
+            end
+            local textOptions =
+            {
+                text = "",
+                x = 0,
+                y = options.labelTextY or 0,
+                width = options.width,
+                font = options.labelFont,
+                fontSize = options.labelFontSize,
+                align = options.labelAlign,  --new alignment parameter
+            }
+            if options.embossedColor == nil then
+                muiData.widgetDict[options.name]["label"] = display.newText( textOptions )
+            else
+                muiData.widgetDict[options.name]["label"] = display.newEmbossedText( textOptions )
+            end
+            muiData.widgetDict[options.name]["label"]:setFillColor( unpack(options.labelColor) )
+            if options.embossedColor ~= nil then
+                muiData.widgetDict[options.name]["label"]:setEmbossColor( options.embossedColor )
+            end
+            muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["label"] )
         end
-        local textOptions =
-        {
-            text = "",
-            x = 0,
-            y = options.labelTextY or 0,
-            width = options.width,
-            font = options.labelFont,
-            fontSize = options.labelFontSize,
-            align = options.labelAlign,  --new alignment parameter
-        }
-        if options.embossedColor == nil then
-            muiData.widgetDict[options.name]["label"] = display.newText( textOptions )
-        else
-            muiData.widgetDict[options.name]["label"] = display.newEmbossedText( textOptions )
-        end
-        muiData.widgetDict[options.name]["label"]:setFillColor( unpack(options.labelColor) )
-        if options.embossedColor ~= nil then
-            muiData.widgetDict[options.name]["label"]:setEmbossColor( options.embossedColor )
-        end
-        muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["label"] )
     end
-
     muiData.widgetDict[options.name]["progressarc"].percentComplete = 0
-    if muiData.widgetDict[options.name]["progressIndicator"] == "endpoint" then
+    if options.hideProgressText == false and muiData.widgetDict[options.name]["progressIndicator"] == "endpoint" then
         muiData.widgetDict[options.name]["label"].text = muiData.widgetDict[options.name]["progressarc"].percentComplete .. "%"
     end
     M.increaseProgressArc( options.name, startPercent )
@@ -242,7 +220,7 @@ function M.updatePercent( group, range )
         local p = mathFloor((range / group.muiArcOptions.angle) * 100)
         muiData.widgetDict[widgetName]["progressarc"].percentComplete = p
         muiData.widgetDict[widgetName]["progressarc"].range = range
-        if muiData.widgetDict[widgetName]["progressIndicator"] == "continuous" then
+        if muiData.widgetDict[widgetName]["label"] ~= nil and muiData.widgetDict[widgetName]["progressIndicator"] == "continuous" then
             muiData.widgetDict[widgetName]["label"].text = muiData.widgetDict[widgetName]["progressarc"].percentComplete .. "%"
         end
     end
@@ -282,7 +260,7 @@ function M.processQueue(data)
     if #muiData.progressarcDict > 0 then
         M.increaseProgressArc(widgetName, 1, true) -- force processing
     end
-    if muiData.widgetDict[widgetName]["progressIndicator"] == "endpoint" then
+    if muiData.widgetDict[widgetName]["label"] ~= nil and muiData.widgetDict[widgetName]["progressIndicator"] == "endpoint" then
         muiData.widgetDict[widgetName]["label"].text = muiData.widgetDict[widgetName]["progressarc"].percentComplete .. "%"
     end
 end

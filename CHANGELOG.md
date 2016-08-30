@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.43] - 2016-08-30
+### Added
+- newProgressArc() parameter "hideProgressText" a boolean.  Enables or disables the progress text (100%) used in the arc.
+
 ## [0.1.42] - 2016-08-29
 ### Added
 - newProgressArc() method with "endpoint" and "continuous" indicators. Multiple callBacks and parameters.  See demo at http://www.anedix.com/fileshare/progress-arc.zip and API documentation.

@@ -44,6 +44,7 @@ local parents = {}
 
 local modules = {
   "materialui.mui-button",
+  "materialui.mui-card",
   "materialui.mui-datetime",
   "materialui.mui-dialog",
   "materialui.mui-image",

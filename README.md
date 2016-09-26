@@ -71,7 +71,7 @@ Contributing
 * Feel free to contribute code, testing and feedback.
 * Once we get additional authors they will be included in the repo and get recognition for their efforts.
 * Please follow the licensing terms for any software included.
-* See materialui/mui-example.lua for creating additional modules or review any mui-<name>.lua module to see the format.
+* See materialui/mui-example.lua for creating additional modules or review any mui-[name].lua module to see the format.
 
 Change Log
 -------------

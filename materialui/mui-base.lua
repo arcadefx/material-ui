@@ -208,6 +208,8 @@ function M.getWidgetBaseObject(name)
                widgetData = muiData.widgetDict[widget]["text"]
             elseif widgetType == "CircleButton" then
                widgetData = muiData.widgetDict[widget]["mygroup"]
+            elseif widgetType == "Card" then
+               widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "Image" then
                widgetData = muiData.widgetDict[widget]["image"]
             elseif widgetType == "ImageRect" then
@@ -806,6 +808,62 @@ function M.hideNativeWidgets()
   end
 end
 
+function M.removeWidgetByName(widgetName)
+  if widgetName == nil then return end
+
+  local widget = muiData.widgetDict[widgetName]
+  if widget ~= nil then
+    local widgetType = muiData.widgetDict[widgetName]["type"]
+    if widgetType == "CircleButton" then
+        M.removeCircleButton(widgetName)
+    elseif widgetType == "DatePicker" then
+        M.removeDatePicker(widgetName)
+    elseif widgetType == "Image" then
+        M.removeImage(widgetName)
+    elseif widgetType == "ImageRect" then
+        M.removeImageRect(widgetName)
+    elseif widgetType == "EmbossedText" then
+        M.removeEmbossedText(widgetName)
+    elseif widgetType == "RRectButton" then
+        M.removeRoundedRectButton(widgetName)
+    elseif widgetType == "RectButton" then
+        M.removeRectButton(widgetName)
+    elseif widgetType == "IconButton" then
+        M.removeIconButton(widgetName)
+    elseif widgetType == "RadioButton" then
+        M.removeRadioButton(widgetName)
+    elseif widgetType == "Toolbar" then
+        M.removeToolbar(widgetName)
+    elseif widgetType == "TableView" then
+        M.removeTableView(widgetName)
+    elseif widgetType == "TextField" then
+        M.removeTextField(widgetName)
+    elseif widgetType == "TextBox" then
+        M.removeTextBox(widgetName)
+    elseif widgetType == "TimePicker" then
+        M.removeTimePicker(widgetName)
+    elseif widgetType == "ProgressBar" then
+        M.removeProgressBar(widgetName)
+    elseif widgetType == "ToggleSwitch" then
+        M.removeToggleSwitch(widgetName)
+    elseif widgetType == "SlidePanel" then
+        M.removeSlidePanel(widgetName)
+    elseif widgetType == "Slider" then
+        M.removeSlider(widgetName)
+    elseif widgetType == "Selector" then
+        M.removeSelector(widgetName)
+    elseif widgetType == "Navbar" then
+        M.removeNavbar(widgetName)
+    elseif widgetType == "Text" then
+        M.removeText(widgetName)
+    elseif widgetType == "Generic" then
+      if muiData.widgetDict[widgetName]["destroy"] ~= nil and muiData.widgetDict[widgetName]["destroy"][widgetName] ~= nil then
+        assert( muiData.widgetDict[widgetName]["destroy"][widgetName] )(event)
+      end
+    end
+  end
+end
+
 function M.removeWidgets()
   M.destroy()
 end
@@ -817,6 +875,8 @@ function M.destroy()
       if widgetType ~= nil and muiData.widgetDict[widget] ~= nil then
         if widgetType == "Text" then
             M.removeText(widget)
+        elseif widgetType == "Card" then
+            M.removeCard(widget)
         elseif widgetType == "CircleButton" then
             M.removeCircleButton(widget)
         elseif widgetType == "DatePicker" then

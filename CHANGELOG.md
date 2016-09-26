@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.44] - 2016-09-26
+### Added
+- newCard() method to create a basic card that can contain up to two colors for top and bottom area. The card can be defined in a Corona SDK group or container.
+- newCardObject() method to attach MUI library objects or non-mui library objects like Corona newText(..) for example.
+- removeWidgetByName() method to remove a widget by name.
+
 ## [0.1.43] - 2016-08-30
 ### Added
 - newProgressArc() parameter "hideProgressText" a boolean.  Enables or disables the progress text (100%) used in the arc.

@@ -116,6 +116,11 @@ function M.newRoundedRectButton(options)
         muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["container"] )
     end
 
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["container"] )
+    end
+
     local radius = options.height * 0.2
     if options.radius ~= nil and options.radius < options.height and options.radius > 1 then
         radius = options.radius
@@ -414,6 +419,11 @@ function M.newRectButton(options)
         muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["container"] )
     end
 
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["container"] )
+    end
+
     -- paint normal or use gradient?
     local paint = nil
     if options.gradientColor1 ~= nil and options.gradientColor2 ~= nil then
@@ -586,6 +596,11 @@ function M.newIconButton(options)
     if options.scrollView ~= nil then
         muiData.widgetDict[options.name]["scrollView"] = options.scrollView
         muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+    end
+
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["mygroup"] )
     end
 
     local radius = options.height * (0.2 * M.getSizeRatio())
@@ -784,6 +799,11 @@ function M.newCircleButton(options)
     if options.scrollView ~= nil then
         muiData.widgetDict[options.name]["scrollView"] = options.scrollView
         muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+    end
+
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["mygroup"] )
     end
 
     if options.radius == nil then
@@ -1014,6 +1034,11 @@ function M.newRadioButton(options)
     if options.scrollView ~= nil and muiData.widgetDict[options.name]["scrollView"] == nil then
         muiData.widgetDict[options.name]["scrollView"] = options.scrollView
         muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+    end
+
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["mygroup"] )
     end
 
     local radius = options.height * 0.2

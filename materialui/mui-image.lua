@@ -49,6 +49,10 @@ function M.newImage(options)
     muiData.widgetDict[options.name]["options"] = options
 
     muiData.widgetDict[options.name]["image"] = display.newImage( options.image )
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["image"] )
+    end
 end
 
 function M.getImageProperty(widgetName, property_name)
@@ -77,6 +81,10 @@ function M.newImageRect(options)
     muiData.widgetDict[options.name]["options"] = options
 
     muiData.widgetDict[options.name]["image_rect"] = display.newImageRect( options.image, options.width, options.height )
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["image_rect"] )
+    end
 end
 
 function M.getImageRectProperty(widgetName, property_name)

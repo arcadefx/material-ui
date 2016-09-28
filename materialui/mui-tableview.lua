@@ -107,6 +107,11 @@ function M.newTableView( options )
     tableView.isVisible = false
     muiData.widgetDict[options.name]["tableview"] = tableView
 
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["tableView"] )
+    end
+
     -- Insert the row data
     for i, v in ipairs(options.list) do
 

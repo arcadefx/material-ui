@@ -133,6 +133,11 @@ function M.newProgressBar(options)
         muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
     end
 
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+    end
+
     if options.labelText ~= nil and options.labelFontSize ~= nil then
         if options.labelAlign == nil then
             options.labelAlign = "center"

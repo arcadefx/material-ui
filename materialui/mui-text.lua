@@ -53,6 +53,11 @@ function M.newText(options)
 
     muiData.widgetDict[options.name]["text"] = display.newText( options )
     muiData.widgetDict[options.name]["text"]:setFillColor( unpack(options.fillColor) )
+
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["text"] )
+    end
 end
 
 function M.getTextProperty(widgetName, property_name)
@@ -87,6 +92,10 @@ function M.newEmbossedText(options)
     muiData.widgetDict[options.name]["text"]:setFillColor( unpack(options.fillColor) )
     if options.embossedColor ~= nil then
         muiData.widgetDict[options.name]["text"]:setEmbossColor( options.embossedColor )
+    end
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["text"] )
     end
 end
 

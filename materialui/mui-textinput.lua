@@ -87,6 +87,11 @@ function M.newTextField(options)
         muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["container"] )
     end
 
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["container"] )
+    end
+
     if options.inactiveColor == nil then
         options.inactiveColor = { 0.4, 0.4, 0.4, 1 }
     end
@@ -338,6 +343,11 @@ function M.newTextBox(options)
     if options.scrollView ~= nil then
         muiData.widgetDict[options.name]["scrollView"] = options.scrollView
         muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["container"] )
+    end
+
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["container"] )
     end
 
     if options.inactiveColor == nil then

@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.45] - 2016-09-28
+### Added
+- Support for 'parent' parameter for all controls (buttons, cards, date, time, image, slider, etc).  It will insert the mui object into the 'parent' or group.  This will help adding to the current view's group for one.
+
 ## [0.1.44] - 2016-09-26
 ### Added
 - newCard() method to create a basic card that can contain up to two colors for top and bottom area. The card can be defined in a Corona SDK group or container.

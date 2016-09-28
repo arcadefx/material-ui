@@ -109,6 +109,11 @@ function M.newSlider(options)
         muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["container"] )
     end
 
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["container"] )
+    end
+
     -- the bar
     if options.position == "horizontal" then
         muiData.widgetDict[options.name]["sliderbar"] = display.newLine( 0, 0, options.width, 0 )

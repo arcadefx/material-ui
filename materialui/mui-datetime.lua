@@ -68,6 +68,11 @@ function M.newDatePicker(options)
         muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
     end
 
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+    end
+
     if options.fromYear == nil then
         options.fromYear = 1969
     end

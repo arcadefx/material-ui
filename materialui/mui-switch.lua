@@ -99,6 +99,11 @@ function M.newToggleSwitch(options)
         muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
     end
 
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+    end
+
     local radius = options.height
 
     x = 0

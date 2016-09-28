@@ -145,6 +145,11 @@ function M.newProgressCircle(options)
         muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
     end
 
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+    end
+
     muiData.widgetDict[options.name]["busy"] = false
     muiData.widgetDict[options.name]["options"] = options
     muiData.widgetDict[options.name]["type"] = "ProgressCircle"

@@ -340,6 +340,50 @@ function scene:create( event )
         callBack = showSlidePanel -- do not like wheel picker on native device.
     })
 
+
+    local function showDropDown( ... )
+        local button = mui.getWidgetBaseObject( "vertical-menu-button" )
+
+        mui.newPopover({
+            name = "popovermenu_demo1",
+            font = native.systemFont,
+            textColor = { 0.4, 0.4, 0.4 },
+            backgroundColor = {0.94,0.94,0.94,1},
+            touchpointColor = { 0.4, 0.4, 0.4 }, -- the touchpoint color
+            activeColor = { 0.12, 0.67, 0.27, 1 },
+            inactiveColor = { 0.8, 0.8, 0.8, 1 },
+            strokeColor = { 0.8, 0.8, 0.8, 1 },
+            strokeWidth = 1,
+            leftMargin = mui.getScaleVal(20),
+            width = mui.getScaleVal(400),
+            height = mui.getScaleVal(46),
+            listHeight = mui.getScaleVal(46) * 4,
+            x = button.x - ((mui.getScaleVal(400) * 0.55)),
+            y = button.y - button.contentHeight,
+            callBackTouch = mui.onRowTouchPopover,
+            list = { -- if 'key' use it for 'id' in the table row
+                { key = "Row1", text = "Popover Item 1", value = "Popover Item 1", },
+                { key = "Row2", text = "Popover Item 2", value = "Popover Item 2", },
+                { key = "Row3", text = "Popover Item 3", value = "Popover Item 3", },
+                { key = "Row4", text = "Popover Item 4", value = "Popover Item 4", },
+            },
+        })
+    end
+
+    mui.newIconButton({
+        name = "vertical-menu-button",
+        text = "more_vert",
+        width = mui.getScaleVal(46),
+        height = mui.getScaleVal(46),
+        x = mui.getScaleVal(570),
+        y = mui.getScaleVal(320),
+        font = "MaterialIcons-Regular.ttf",
+        textColor = { 0, 0, 0, 1 },
+        fillColor = { 0, 0.46, 1 },
+        textAlign = "center",
+        callBack = showDropDown
+    })
+
     -- tile widget example
     mui.newCircleButton({
         name = "tile-button",
@@ -417,7 +461,7 @@ function scene:create( event )
         textColor = { 0, 0, 0, 1 },
         lineColor = { 1, 1, 1, 1 },
         lineHeight = mui.getScaleVal(4),
-        rowColor = { default={1,1,1}, over={1,0.5,0,0.2} },
+        rowColor = {1, 1, 1, 1}, --{ default={1,1,1}, over={1,0.5,0,0.2} },
         rowHeight = mui.getScaleVal(60),
         -- rowAnimation = false, -- turn on rowAnimation
         noLines = false,

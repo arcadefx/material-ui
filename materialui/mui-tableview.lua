@@ -102,6 +102,7 @@ function M.newTableView( options )
             onRowRender = M.onRowRender,
             onRowTouch = M.onRowTouch,
             listener = options.scrollListener,
+            isLocked = options.isLocked or false,
         }
     )
     tableView.isVisible = false
@@ -138,6 +139,8 @@ function M.newTableView( options )
         -- Insert a row into the tableView
         if v.backgroundColor ~= nil then
             v.fillColor = v.backgroundColor
+        else
+            v.fillColor = rowColor
         end
         local optionList = {
             isCategory = isCategory,
@@ -359,9 +362,14 @@ end
 
 function M.onRowTouch( event )
     local phase = event.phase
- 
-    if muiData.dialogInUse == true then return end
     local row = event.row
+ 
+    if muiData.dialogInUse == true then
+        if muiData.dialogName == nil then return end
+        if string.find(row.params.name, muiData.dialogName) == nil then
+            return
+        end
+    end
 
     if "press" == phase and muiData.touching == false then
         muiData.touching = true

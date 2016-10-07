@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.46] - 2016-10-07
+### Added
+- 'isLocked' parameter to newTableView(..). Boolean to lock/unlock scrolling of table.
+- 'newPopover()' method to create popover menu lists.  See menu.lua for an example.
+
 ## [0.1.45] - 2016-09-28
 ### Added
 - Support for 'parent' parameter for all controls (buttons, cards, date, time, image, slider, etc).  It will insert the mui object into the 'parent' or group.  This will help adding to the current view's group for one.

@@ -341,7 +341,7 @@ function scene:create( event )
     })
 
 
-    local function showDropDown( ... )
+    local function showPopover( ... )
         local button = mui.getWidgetBaseObject( "vertical-menu-button" )
 
         mui.newPopover({
@@ -381,7 +381,7 @@ function scene:create( event )
         textColor = { 0, 0, 0, 1 },
         fillColor = { 0, 0.46, 1 },
         textAlign = "center",
-        callBack = showDropDown
+        callBack = showPopover
     })
 
     -- tile widget example

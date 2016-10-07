@@ -50,6 +50,7 @@ local modules = {
   "materialui.mui-image",
   "materialui.mui-navbar",
   "materialui.mui-onboarding",
+  "materialui.mui-popover",
   "materialui.mui-progressbar",
   "materialui.mui-progresscircle",
   "materialui.mui-progressarc",

@@ -241,6 +241,8 @@ function M.getWidgetBaseObject(name)
                widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "ProgressBar" then
                widgetData = muiData.widgetDict[widget]["mygroup"]
+            elseif widgetType == "Popover" then
+               widgetData = muiData.widgetDict[widget]["container"]
             elseif widgetType == "ToggleSwitch" then
                widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "Dialog" then
@@ -278,6 +280,8 @@ function M.getWidgetProperty( widgetName, propertyName )
     widgetData = M.getImageRectProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "NavBar" then
     widgetData = M.getNavBarProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "Popover" then
+    widgetData = M.getPopoverProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "ProgressBar" then
     widgetData = M.getProgressBarProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "RectButton" then
@@ -854,6 +858,8 @@ function M.removeWidgetByName(widgetName)
         M.removeSelector(widgetName)
     elseif widgetType == "Navbar" then
         M.removeNavbar(widgetName)
+    elseif widgetType == "Popover" then
+        M.removePopover(widgetName)
     elseif widgetType == "Text" then
         M.removeText(widgetName)
     elseif widgetType == "Generic" then

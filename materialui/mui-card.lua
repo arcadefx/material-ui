@@ -203,6 +203,10 @@ function M.getCardProperty( widgetName, propertyName )
         data = muiData.widgetDict[widgetName]["rectTop"] -- the background layer
     elseif propertyName == "layer_4" then
         data = muiData.widgetDict[widgetName]["rectTopRound"] -- the background layer
+    elseif propertyName == "topHeight" then
+        data = muiData.widgetDict[widgetName]["options"].topHeight -- the top height layer
+    elseif propertyName == "bottomHeight" then
+        data = muiData.widgetDict[widgetName]["options"].height - muiData.widgetDict[widgetName]["options"].topHeight -- the top height layer
     elseif propertyName == "objects" then
         data = muiData.widgetDict[widgetName]["objects"] -- mui card objects
     elseif propertyName == "objects_ext" then

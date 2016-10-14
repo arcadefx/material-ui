@@ -239,6 +239,8 @@ function M.getWidgetBaseObject(name)
                widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "TimePicker" then
                widgetData = muiData.widgetDict[widget]["mygroup"]
+            elseif widgetType == "ProgressArc" then
+               widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "ProgressBar" then
                widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "Popover" then
@@ -266,7 +268,9 @@ function M.getWidgetProperty( widgetName, propertyName )
   if widgetName == nil or propertyName == nil then return widgetData end
   if muiData.widgetDict[widgetName] == nil then return widgetData end
 
-  if muiData.widgetDict[widgetName]["type"] == "CircleButton" then
+  if muiData.widgetDict[widgetName]["type"] == "Card" then
+    widgetData = M.getCardProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "CircleButton" then
     widgetData = M.getCircleButtonProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "Dialog" then
     widgetData = M.getDialogProperty( widgetName, propertyName )
@@ -282,6 +286,8 @@ function M.getWidgetProperty( widgetName, propertyName )
     widgetData = M.getNavBarProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "Popover" then
     widgetData = M.getPopoverProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "ProgressArc" then
+    widgetData = M.getProgressArcProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "ProgressBar" then
     widgetData = M.getProgressBarProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "RectButton" then

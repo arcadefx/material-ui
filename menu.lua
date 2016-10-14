@@ -353,7 +353,7 @@ function scene:create( event )
             activeColor = { 0.12, 0.67, 0.27, 1 },
             inactiveColor = { 0.8, 0.8, 0.8, 1 },
             strokeColor = { 0.8, 0.8, 0.8, 1 },
-            strokeWidth = 1,
+            strokeWidth = 0,
             leftMargin = mui.getScaleVal(20),
             width = mui.getScaleVal(400),
             height = mui.getScaleVal(46),

@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.47] - 2016-10-14
+### Changes
+- 'arcX' and 'arcY' removed from newProgressArc(..) as parameters.  Instead uses 'x' and 'y' for corrdinates.
+
 ## [0.1.46] - 2016-10-07
 ### Added
 - 'isLocked' parameter to newTableView(..). Boolean to lock/unlock scrolling of table.

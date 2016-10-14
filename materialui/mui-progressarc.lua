@@ -106,12 +106,9 @@ function M.newProgressArc(options)
 
     muiData.widgetDict[options.name] = {}
 
-    local objectSize = (options.width or 200)
-    objectSize = objectSize * 2
-
     muiData.widgetDict[options.name]["mygroup"] = display.newGroup()
-    muiData.widgetDict[options.name]["mygroup"].x = x
-    muiData.widgetDict[options.name]["mygroup"].y = y
+    muiData.widgetDict[options.name]["mygroup"].x = 0
+    muiData.widgetDict[options.name]["mygroup"].y = 0
     muiData.widgetDict[options.name]["touching"] = false
 
     if options.scrollView ~= nil then
@@ -129,8 +126,8 @@ function M.newProgressArc(options)
     muiData.widgetDict[options.name]["type"] = "ProgressArc"
 
     local arc_options = {
-        x = options.arcX or -(options.width * 0.5),
-        y = options.arcY or 0,
+        x = options.x or 0,
+        y = options.y or 0,
         angle = options.angle,
         inner = options.inner, -- inner - outer is arc thinkness
         outer = options.outer,
@@ -145,8 +142,8 @@ function M.newProgressArc(options)
     muiData.widgetDict[options.name]["progressarc"].arc_options = {
         group = muiData.widgetDict[options.name]["progressarc"],
         name = options.name,
-        x = options.arcX or -(options.width * 0.5),
-        y = options.arcY or 0,
+        x = options.x or 0,
+        y = options.y or 0,
         angle = options.angle,
         inner = options.inner, -- inner - outer is arc thinkness
         outer = options.outer,
@@ -189,7 +186,7 @@ function M.newProgressArc(options)
             local textOptions =
             {
                 text = "",
-                x = 0,
+                x = options.labelTextX or 0,
                 y = options.labelTextY or 0,
                 width = options.width,
                 font = options.labelFont,

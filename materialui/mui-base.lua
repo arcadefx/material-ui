@@ -43,6 +43,32 @@ local mathABS = math.abs
 
 local M = {} -- for module array/table
 
+local function updateTheShadows( e )
+    for k,v in pairs(muiData.shadowShapeDict) do
+        -- remove object etc from group and re-create!
+        v["snapshot"]:removeSelf()
+        local x = M.newShadowShape(v["shape"], v["options"], v["group"])
+        --v:invalidate()
+    end
+end
+
+local function onSystemEvent( event )
+   if ( event.type == "applicationExit" ) then
+      --save_state()
+
+   elseif ( event.type == "applicationOpen" ) then
+      --load_saved_state()
+
+   elseif ( event.type == "applicationResume" ) then
+      timer.performWithDelay(100, function() updateTheShadows() end, 1)
+
+   elseif (event.type == "applicationSuspend") then
+      --pause_game()
+
+   end
+end
+Runtime:addEventListener( "system", onSystemEvent )
+
 function M.init_base(options)
   options = options or {}
   muiData.M = M -- all modules need access to parent methods
@@ -58,6 +84,7 @@ function M.init_base(options)
   muiData.progressbarDict = {}
   muiData.progresscircleDict = {}
   muiData.progressarcDict = {}
+  muiData.shadowShapeDict = {}
   muiData.currentNativeFieldName = ""
   muiData.currentTargetName = ""
   muiData.lastTargetName = ""
@@ -457,7 +484,7 @@ end
 --
 -- options: style, width, height, offsetX, offsetY, size, cornerRadius, opacity
 --
-function M.newShadowShape( shape, options )
+function M.newShadowShapeOld( shape, options )
   local g = display.newGroup()
   g.x, g.y = display.contentCenterX, display.contentCenterY
 
@@ -498,6 +525,54 @@ function M.newShadowShape( shape, options )
   c.alpha = opacity or 0.3
 
   return c
+end
+
+function M.newShadowShape( shape, options, restoreGroup )
+  local g = restoreGroup or display.newGroup()
+  local style = options.style or "filter.blurGaussian"
+  local width, height = options.width, options.height
+  local offsetX, offsetY = (options.offsetX or 0), (options.offsetY or 0)
+  local size = options.size
+  local cornerRadius = options.cornerRadius or 5
+  local opacity = options.opacity
+  local d = nil
+
+  g.x, g.y = offsetX, offsetY
+
+  if shape == "rect" then
+    d = display.newRect( offsetX, offsetY, width, height )
+    d:setFillColor( unpack({0,0,0}) )
+  elseif shape == "rounded_rect" then
+    d = display.newRoundedRect( offsetX, offsetY, width, height, cornerRadius )
+    d:setFillColor( unpack({0,0,0}) )
+  elseif shape == "circle" then
+    local radius = width * 0.5
+    d = display.newCircle( offsetX, offsetY, radius )
+    d:setFillColor( unpack({0,0,0}) )
+  end
+
+  if d == nil then return g end
+
+  local cW = (width+size)
+  local cH = (height+size)
+  local snapshot = display.newSnapshot(cW, cH )
+  snapshot.group:insert(d)
+  snapshot.fill.effect = "filter.blurGaussian"
+  snapshot.fill.effect.horizontal.blurSize = size
+  snapshot.fill.effect.horizontal.sigma = size
+  snapshot.fill.effect.vertical.blurSize = size
+  snapshot.fill.effect.vertical.sigma = size
+  snapshot.alpha = options.opacity or 0.2
+  snapshot:invalidate()
+  g:insert(snapshot)
+
+  muiData.shadowShapeDict[options.name] = {}
+  muiData.shadowShapeDict[options.name]["shape"] = shape
+  muiData.shadowShapeDict[options.name]["snapshot"] = snapshot
+  muiData.shadowShapeDict[options.name]["options"] = options
+  muiData.shadowShapeDict[options.name]["group"] = g
+
+  return g
 end
 
 function M.split(str, sep)

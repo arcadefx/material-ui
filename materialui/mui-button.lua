@@ -841,6 +841,7 @@ function M.newCircleButton(options)
         local size = options.shadowSize or M.getScaleVal(options.radius * 0.55)
         local opacity = options.shadowOpacity or 0.4
         local shadow = M.newShadowShape("circle", {
+            name = options.name,
             width = options.radius,
             height = options.radius,
             size = size,
@@ -1406,6 +1407,11 @@ function M.removeRoundedRectButton(widgetName)
     end
 
     if muiData.widgetDict[widgetName]["shadow"] ~= nil then
+        if muiData.shadowShapeDict[widgetName] ~= nil then
+            muiData.shadowShapeDict[widgetName]["snapshot"]:removeSelf()
+            muiData.shadowShapeDict[widgetName]["snapshot"] = nil
+            muiData.shadowShapeDict[widgetName] = nil
+        end
         muiData.widgetDict[widgetName]["shadow"]:removeSelf()
         muiData.widgetDict[widgetName]["shadow"] = nil
     end
@@ -1450,6 +1456,11 @@ function M.removeRectButton(widgetName)
     end
 
     if muiData.widgetDict[widgetName]["shadow"] ~= nil then
+        if muiData.shadowShapeDict[widgetName] ~= nil then
+            muiData.shadowShapeDict[widgetName]["snapshot"]:removeSelf()
+            muiData.shadowShapeDict[widgetName]["snapshot"] = nil
+            muiData.shadowShapeDict[widgetName] = nil
+        end
         muiData.widgetDict[widgetName]["shadow"]:removeSelf()
         muiData.widgetDict[widgetName]["shadow"] = nil
     end
@@ -1492,6 +1503,11 @@ function M.removeCircleButton(widgetName)
     end
 
     if muiData.widgetDict[widgetName]["shadow"] ~= nil then
+        if muiData.shadowShapeDict[widgetName] ~= nil then
+            muiData.shadowShapeDict[widgetName]["snapshot"]:removeSelf()
+            muiData.shadowShapeDict[widgetName]["snapshot"] = nil
+            muiData.shadowShapeDict[widgetName] = nil
+        end
         muiData.widgetDict[widgetName]["shadow"]:removeSelf()
         muiData.widgetDict[widgetName]["shadow"] = nil
     end

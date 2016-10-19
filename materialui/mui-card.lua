@@ -101,6 +101,7 @@ function M.newCard(options)
         muiData.widgetDict[options.name]["rect"] = display.newRect( 0, 0, options.width, options.height)
         if options.useShadow == true then
             local shadow = M.newShadowShape("rect", {
+                name = options.name,
                 width = options.width,
                 height = options.height,
                 size = options.shadowSize,
@@ -113,6 +114,7 @@ function M.newCard(options)
         muiData.widgetDict[options.name]["rect"] = display.newRoundedRect( 0, 0, options.width, options.height - nr, nr)
         if options.useShadow == true then
             local shadow = M.newShadowShape("rounded_rect", {
+                name = options.name,
                 width = options.width,
                 height = options.height,
                 size = options.shadowSize,
@@ -266,6 +268,11 @@ function M.removeCard(widgetName)
         muiData.widgetDict[widgetName]["rectTop"] = nil
     end
     if muiData.widgetDict[widgetName]["shadow"] ~= nil then
+        if muiData.shadowShapeDict[widgetName] ~= nil then
+            muiData.shadowShapeDict[widgetName]["snapshot"]:removeSelf()
+            muiData.shadowShapeDict[widgetName]["snapshot"] = nil
+            muiData.shadowShapeDict[widgetName] = nil
+        end
         muiData.widgetDict[widgetName]["shadow"]:removeSelf()
         muiData.widgetDict[widgetName]["shadow"] = nil
     end

@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.48] - 2016-10-19
+### Changes
+- Refactored shadows for buttons, cards, shadow shapes.  newShadowShape() has been refactored. Added system event to handle re-creating the opengl textures that make up the shadows per widget. This is run automatically on device resume.
+
 ## [0.1.47] - 2016-10-14
 ### Changes
 - 'arcX' and 'arcY' removed from newProgressArc(..) as parameters.  Instead uses 'x' and 'y' for corrdinates.

@@ -158,17 +158,17 @@ function M.newTextField(options)
     local fadeText = options.text
     if options.placeholder ~= nil and options.text ~= nil and string.len(options.text) < 1 then
        fadeText = options.placeholder
+    else
+       if muiData.widgetDict[options.name]["isSecure"] == true then
+           local length = string.len(fadeText)
+           text = ""
+           for i=1, length do
+               text = text .. "*"
+           end
+           fadeText = text
+       end
     end
-
-    if muiData.widgetDict[options.name]["isSecure"] == true then
-        local length = string.len(fadeText)
-        text = ""
-        for i=1, length do
-            text = text .. "*"
-        end
-        fadeText = text
-    end
-
+    
     local textOptions =
     {
         --parent = textGroup,

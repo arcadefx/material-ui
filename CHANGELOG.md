@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.49] - 2017-01-06
+### Changes
+- Added "useTimeOut" parameter to newToast(..) method.  useTimeOut is boolean.  This is used to automatically timeout and close the toast notification.  If not "timeOut" in microseconds is specified it defaults to 2000 or 2 seconds.
+- Added "timeOut" parameter to newToast(..) method.  timeOut is in microseconds.  This is used to automatically timeout and close the toast notification.
+
+
 ## [0.1.48] - 2016-10-19
 ### Changes
 - Refactored shadows for buttons, cards, shadow shapes.  newShadowShape() has been refactored. Added system event to handle re-creating the opengl textures that make up the shadows per widget. This is run automatically on device resume.

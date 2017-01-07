@@ -42,6 +42,32 @@ local mathABS = math.abs
 
 local M = muiData.M -- {} -- for module array/table
 
+function M.removeToastNow( event )
+    local options = nil
+    local params = event.source.params
+
+    if params.name ~= nil and muiData.widgetDict[params.name]["removeInProgress"] == false then
+        local options = muiData.widgetDict[params.name]["options"]
+        muiData.widgetDict[params.name]["removeInProgress"] = true
+
+        if muiData.interceptMoved == false then
+            if options.easingOut == nil then
+                options.easingOut = 500
+            end
+            muiData.widgetDict[options.name]["container"].name = options.name
+            transition.to(muiData.widgetDict[options.name]["container"],{time=options.easingOut, y=-(options.top), transition=easing.inOutCubic, onComplete=M.removeMyToast})
+
+            event.target = muiData.widgetDict[options.name]["rrect"]
+            event.callBackData = options.callBackData
+
+            M.setEventParameter(event, "muiTargetValue", options.value)
+            M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["rrect"])
+
+            assert( options.callBack )(event)
+        end
+    end
+end
+
 function M.createToast( options )
     M.newToast( options )
 end
@@ -84,8 +110,17 @@ function M.newToast( options )
         options.top = M.getScaleVal(80)
     end
 
+    if options.useTimeOut == nil then
+        options.useTimeOut = true
+    end
+
+    if options.timeOut == nil then
+        options.timeOut = 2000 -- microseconds, 2 seconds
+    end
+
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "Toast"
+    muiData.widgetDict[options.name]["removeInProgress"] = false
 
     muiData.widgetDict[options.name]["container"] = widget.newScrollView(
         {
@@ -137,9 +172,15 @@ function M.newToast( options )
     function rrect:touch (event)
         if muiData.dialogInUse == true and options.dialogName == nil then return end
 
+        if muiData.widgetDict[options.name]["removeInProgress"] == true then return end
+
         M.addBaseEventParameters(event, options)
 
         if ( event.phase == "began" ) then
+            if options.useTimeOut == true and muiData.widgetDict[options.name]["removeTimer"] ~= nil then
+                timer.cancel( muiData.widgetDict[options.name]["removeTimer"] )
+                muiData.widgetDict[options.name]["removeTimer"] = nil
+            end
             --event.target:takeFocus(event)
             -- if scrollView then use the below
             muiData.interceptEventHandler = rrect
@@ -148,6 +189,8 @@ function M.newToast( options )
                 muiData.touching = true
             end
         elseif ( event.phase == "ended" ) then
+            if muiData.widgetDict[options.name]["removeInProgress"] == true then return end
+            muiData.widgetDict[options.name]["removeInProgress"] = true
             if M.isTouchPointOutOfRange( event ) then
                   event.phase = "offTarget"
                   -- print("Its out of the button area")
@@ -180,6 +223,12 @@ function M.newToast( options )
         options.easingIn = 500
     end
     transition.to(muiData.widgetDict[options.name]["container"],{time=options.easingIn, y=options.top, transition=easing.inOutCubic})
+    muiData.widgetDict[options.name]["options"] = options
+
+    if options.useTimeOut == true then
+        muiData.widgetDict[options.name]["removeTimer"] = timer.performWithDelay(options.timeOut + options.easingIn, M.removeToastNow, 1)
+        muiData.widgetDict[options.name]["removeTimer"].params = { name = options.name }
+    end
 end
 
 function M.getToastProperty(widgetName, propertyName)
@@ -215,6 +264,12 @@ function M.removeToast(widgetName)
 
     if muiData.widgetDict[widgetName] == nil then return end
 
+    local options = muiData.widgetDict[widgetName]["options"]
+    if options.useTimeOut == true and muiData.widgetDict[widgetName]["removeTimer"] ~= nil then
+        timer.cancel( muiData.widgetDict[widgetName]["removeTimer"] )
+        muiData.widgetDict[widgetName]["removeTimer"] = nil
+    end
+
     muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["sliderrect"])
     muiData.widgetDict[widgetName]["myText"]:removeSelf()
     muiData.widgetDict[widgetName]["myText"] = nil
@@ -222,6 +277,7 @@ function M.removeToast(widgetName)
     muiData.widgetDict[widgetName]["rrect"] = nil
     muiData.widgetDict[widgetName]["container"]:removeSelf()
     muiData.widgetDict[widgetName]["container"] = nil
+    muiData.widgetDict[widgetName]["removeInProgress"] = false
     muiData.widgetDict[widgetName] = nil
 end
 

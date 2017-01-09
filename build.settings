@@ -79,6 +79,6 @@ settings =
 		{
 			"android.permission.INTERNET",
 		},
-		CoronaWindowMovesWhenKeyboardAppears = true,
+		coronaWindowMovesWhenKeyboardAppears = true,
 	},
 }

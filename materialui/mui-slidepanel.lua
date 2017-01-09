@@ -135,6 +135,14 @@ function M.newSlidePanel(options)
         muiData.widgetDict[options.name]["scrollview"]:insert( muiData.widgetDict[options.name]["rect"] )
     end
 
+    -- place header image if present
+    if options.headerImage ~= nil then
+        muiData.widgetDict[options.name]["header_image"] = display.newImageRect( options.headerImage, muiData.widgetDict[options.name]["rect"].contentWidth, muiData.widgetDict[options.name]["rect"].contentHeight )
+        muiData.widgetDict[options.name]["scrollview"]:insert( muiData.widgetDict[options.name]["header_image"] )
+        muiData.widgetDict[options.name]["header_image"].x = muiData.widgetDict[options.name]["rect"].contentWidth * 0.5
+        muiData.widgetDict[options.name]["header_image"].y = muiData.widgetDict[options.name]["rect"].contentHeight * 0.5
+     end
+
     textOptions = {
         y = tw,
         x = ((options.width - tw) * 0.5),
@@ -148,7 +156,6 @@ function M.newSlidePanel(options)
     }
     M.newText(textOptions)
     muiData.widgetDict[options.name]["scrollview"]:insert( M.getWidgetBaseObject(options.name .. "header-text") )
-
 
     -- add the buttons
 
@@ -631,6 +638,8 @@ function M.removeSlidePanel(widgetName)
 
     -- remove the header if used
     if muiData.widgetDict[widgetName]["rect"] ~= nil then
+        muiData.widgetDict[widgetName]["header_image"]:removeSelf()
+        muiData.widgetDict[widgetName]["header_image"] = nil
         muiData.widgetDict[widgetName]["rect"]:removeSelf()
         muiData.widgetDict[widgetName]["rect"] = nil
     end

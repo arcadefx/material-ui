@@ -58,6 +58,7 @@ local modules = {
   "materialui.mui-shapes",
   "materialui.mui-slider",
   "materialui.mui-slidepanel",
+  "materialui.mui-snackbar",
   "materialui.mui-switch",
   "materialui.mui-tableview",
   "materialui.mui-textinput",

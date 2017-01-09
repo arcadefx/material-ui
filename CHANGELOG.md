@@ -2,11 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.50] - 2017-01-08
+### Added
+- Method "newSnackBar" for creating snack bar and action button text. These flow up from the bottom.  Like "Removed Msgs  UNDO" and it times out after 3 seconds.  Use "timeOut" to specify timeout in microseconds.
+
+### Change
+- Fixed all "parent" group/scene paramater for all controls.  The demo is updated using a parent for all buttons.  Click "coffee cup" to see all the controls slide up (snack bar).
+
 ## [0.1.49] - 2017-01-06
 ### Changes
 - Added "useTimeOut" parameter to newToast(..) method.  useTimeOut is boolean.  This is used to automatically timeout and close the toast notification.  If not "timeOut" in microseconds is specified it defaults to 2000 or 2 seconds.
 - Added "timeOut" parameter to newToast(..) method.  timeOut is in microseconds.  This is used to automatically timeout and close the toast notification.
-
 
 ## [0.1.48] - 2016-10-19
 ### Changes

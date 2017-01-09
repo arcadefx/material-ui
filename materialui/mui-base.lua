@@ -74,6 +74,8 @@ function M.init_base(options)
   muiData.M = M -- all modules need access to parent methods
   muiData.environment = system.getInfo("environment")
   muiData.value = options
+  muiData.group = options.group
+  muiData.parent = options.parent
   muiData.circleSceneSwitch = nil
   muiData.circleSceneSwitchComplete = false
   muiData.touching = false
@@ -280,6 +282,8 @@ function M.getWidgetBaseObject(name)
                widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "Slider" then
                widgetData = muiData.widgetDict[widget]["container"]
+            elseif widgetType == "SnackBar" then
+               widgetData = muiData.widgetDict[widget]["container"]
             elseif widgetType == "Toast" then
                widgetData = muiData.widgetDict[widget]["container"]
             end
@@ -327,6 +331,8 @@ function M.getWidgetProperty( widgetName, propertyName )
     widgetData = M.getSliderProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "SlidePanel" then
     widgetData = M.getSlidePanelProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "SnackBar" then
+    widgetData = M.getSnackBarProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "EmbossedText" or muiData.widgetDict[widgetName]["type"] == "Text" then
     widgetData = M.getTextProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "TableView" then
@@ -875,7 +881,7 @@ function M.hideWidget(widgetName, options)
         elseif widgetType == "Slider" then
             muiData.widgetDict[widget]["sliderrect"].isVisible = showWidget
             muiData.widgetDict[widget]["container"].isVisible = showWidget
-        elseif widgetType == "Toast" or widgetType == "Selector" then
+        elseif widgetType == "Toast" or widgetType == "Selector" or widgetType == "SnackBar" then
             muiData.widgetDict[widget]["container"].isVisible = showWidget
         end
       end
@@ -1002,6 +1008,8 @@ function M.destroy()
             M.removeSlidePanel(widget)
         elseif widgetType == "Slider" then
             M.removeSlider(widget)
+        elseif widgetType == "SnackBar" then
+            M.removeSnackBar(widget)
         elseif widgetType == "Toast" then
             M.removeToast(widget)
         elseif widgetType == "Selector" then

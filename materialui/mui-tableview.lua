@@ -110,7 +110,7 @@ function M.newTableView( options )
 
     if options.parent ~= nil then
         muiData.widgetDict[options.name]["parent"] = options.parent
-        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["tableView"] )
+        muiData.widgetDict[options.name]["parent"]:insert( tableView )
     end
 
     -- Insert the row data

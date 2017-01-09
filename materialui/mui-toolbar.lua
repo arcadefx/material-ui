@@ -77,6 +77,11 @@ function M.newToolbarButton( options )
     button["mygroup"].y = y
     button["touching"] = false
 
+    if options.parent ~= nil and false then
+        button["parent"] = options.parent
+        button["parent"]:insert( button["mygroup"] )
+    end
+
     -- label colors
     if options.labelColorOff == nil then
         options.labelColorOff = { 0, 0, 0 }
@@ -261,6 +266,10 @@ function M.getToolBarButtonProperty(widgetParentName, propertyName, index)
 
     if propertyName == "object" then
         data = muiData.widgetDict[widgetParentName]["toolbar"][widgetName]["mygroup"] -- x,y movement
+    elseif propertyName == "buttonHeight" then
+        data = muiData.widgetDict[widgetParentName]["toolbar"][widgetName]["buttonHeight"]
+    elseif propertyName == "buttonWidth" then
+        data = muiData.widgetDict[widgetParentName]["toolbar"][widgetName]["buttonWidth"]
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetParentName]["toolbar"][widgetName]["rectangle"] -- button background
     elseif propertyName == "text" then
@@ -357,8 +366,14 @@ function M.newToolbar( options )
         muiData.widgetDict[options.name] = {}
         muiData.widgetDict[options.name]["toolbar"] = {}
         muiData.widgetDict[options.name]["type"] = "Toolbar"
-        for i, v in ipairs(options.list) do            
+        muiData.widgetDict[options.name]["layout"] = options.layout
+        if muiData.widgetDict[options.name]["layout"] == "horizontal" then
+            muiData.widgetDict[options.name]["y_position"] = y
+            print("height is "..muiData.contentHeight)
+        end
+        for i, v in ipairs(options.list) do
             M.newToolbarButton({
+                parent = options.parent,
                 index = i,
                 name = options.name .. "_" .. i,
                 basename = options.name,

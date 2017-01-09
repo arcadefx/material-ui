@@ -1038,8 +1038,8 @@ function M.newRadioButton(options)
     end
 
     if options.parent ~= nil then
-        muiData.widgetDict[options.name]["parent"] = options.parent
-        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+        radioButton["parent"] = options.parent
+        radioButton["parent"]:insert( radioButton["mygroup"] )
     end
 
     local radius = options.height * 0.2
@@ -1274,6 +1274,7 @@ function M.newRadioGroup(options)
         muiData.widgetDict[options.name]["type"] = "RadioGroup"
         for i, v in ipairs(options.list) do            
             M.newRadioButton({
+                parent = options.parent,
                 name = options.name .. "_" .. i,
                 basename = options.name,
                 label = v.key,

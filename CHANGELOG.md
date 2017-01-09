@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.52] - 2017-01-09
+### Added
+- 'iconImage' parameter to newSlidePanel() method.  It will fit the image to the font size dimensions. This is so it will look correct. See demo and "list {}" for an example.
+
 ## [0.1.51] - 2017-01-09
 ### Added
 - 'headerImage' parameter to newSlidePanel() method.  It will fit the image to the menu header dimensions.

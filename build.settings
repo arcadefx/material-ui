@@ -29,7 +29,7 @@ settings =
 	{
 		plist =
 		{
-			coronaWindowMovesWhenKeyboardAppears = true,
+			CoronaWindowMovesWhenKeyboardAppears = true,
 			UIStatusBarHidden = false,
 			UIPrerenderedIcon = true, -- set to false for "shine" overlay
 			--UIApplicationExitsOnSuspend = true, -- uncomment to quit app on suspend
@@ -79,6 +79,6 @@ settings =
 		{
 			"android.permission.INTERNET",
 		},
-		coronaWindowMovesWhenKeyboardAppears = true,
+		CoronaWindowMovesWhenKeyboardAppears = true,
 	},
 }

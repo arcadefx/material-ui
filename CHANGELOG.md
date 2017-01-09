@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.51] - 2017-01-09
+### Added
+- 'headerImage' parameter to newSlidePanel() method.  It will fit the image to the menu header dimensions.
+
 ## [0.1.50] - 2017-01-08
 ### Added
 - Method "newSnackBar" for creating snack bar and action button text. These flow up from the bottom.  Like "Removed Msgs  UNDO" and it times out after 3 seconds.  Use "timeOut" to specify timeout in microseconds.

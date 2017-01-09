@@ -303,6 +303,7 @@ function scene:create( event )
             titleBackgroundColor = { 0.25, 0.75, 1, 1 },
             fontSize = mui.getScaleVal(20),
             fillColor = { 1, 1, 1, 1 }, -- background color
+            headerImage = "creative-blue-abstract-background-header-4803_0.jpg",
             buttonToAnimate = "slidepanel-button",
             callBack = mui.actionForSlidePanel,
             callBackData = {

@@ -316,8 +316,8 @@ function scene:create( event )
             buttonHighlightColorAlpha = 0.5,
             lineSeparatorHeight = mui.getScaleVal(1),
             list = {
-                { key = "Home", value = "1", icon="home", labelText="Home", isActive = true },
-                { key = "Newsroom", value = "2", icon="new_releases", labelText="News", isActive = false },
+                { key = "Home", value = "1", icon="home", iconImage="1484022678_go-home.png", labelText="Home", isActive = true },
+                { key = "Newsroom", value = "2", icon="new_releases", iconImage="1484026171_02.png", labelText="News", isActive = false },
                 { key = "Location", value = "3", icon="location_searching", labelText="Location Information", isActive = false },
                 { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
                 { key = "LineSeparator" },

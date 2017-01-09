@@ -178,6 +178,7 @@ function M.newSlidePanel(options)
                 buttonHeight = options.buttonHeight,
                 x = options.buttonHeight * 0.5,
                 y = y,
+                iconImage = v.iconImage,
                 touchpoint = options.touchpoint,
                 isChecked = v.isChecked,
                 isActive = v.isActive,
@@ -405,15 +406,19 @@ function M.newSlidePanelButton( options )
     button["myButton"]:setFillColor( unpack( options.backgroundColor ) )
     button["mygroup"]:insert( button["myButton"] )
 
-    button["myText"] = display.newText( options2 )
-    button["myText"]:setFillColor( unpack(options.labelColorOff) )
-    button["myText"].isVisible = true
-    if isChecked then
-        button["myText"]:setFillColor( unpack(options.labelColor) )
-        button["myText"].isChecked = isChecked
+    if options.iconImage ~= nil then
+        button["myText"] = display.newImageRect( options.iconImage, textSize, textSize )
     else
+        button["myText"] = display.newText( options2 )
         button["myText"]:setFillColor( unpack(options.labelColorOff) )
-        button["myText"].isChecked = false
+        button["myText"].isVisible = true
+        if isChecked then
+            button["myText"]:setFillColor( unpack(options.labelColor) )
+            button["myText"].isChecked = isChecked
+        else
+            button["myText"]:setFillColor( unpack(options.labelColorOff) )
+            button["myText"].isChecked = false
+        end
     end
     button["mygroup"]:insert( button["myText"], false )
 
@@ -712,6 +717,10 @@ function M.removeSlidePanelButton(widgetDict, slidePanelName, name)
             if widgetDict[slidePanelName]["slidebar"][name]["myText2"] ~= nil then
                 widgetDict[slidePanelName]["slidebar"][name]["myText2"]:removeSelf()
                 widgetDict[slidePanelName]["slidebar"][name]["myText2"] = nil
+            end
+            if widgetDict[slidePanelName]["slidebar"][name]["myImage"] ~= nil then
+                widgetDict[slidePanelName]["slidebar"][name]["myImage"]:removeSelf()
+                widgetDict[slidePanelName]["slidebar"][name]["myImage"] = nil
             end
         else
             if widgetDict[slidePanelName]["slidebar"][name]["lineSeparator"] ~= nil then

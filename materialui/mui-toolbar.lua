@@ -191,14 +191,25 @@ function M.newToolbarButton( options )
         align = "center"
     }
 
-    button["myText"] = display.newText( options2 )
-    button["myText"]:setFillColor( unpack(textColor) )
+    if options.iconImage ~= nil then
+        button["myText"] = display.newImageRect( options.iconImage, textSize, textSize )
+        button["myText"].y = textY
+        button["myText"].isImage = true
+    else
+        button["myText"] = display.newText( options2 )
+        button["myText"]:setFillColor( unpack(textColor) )
+        button["myText"].isImage = false
+    end
     button["myText"].isVisible = true
     if isChecked then
-        button["myText"]:setFillColor( unpack(options.labelColor) )
+        if button["myText"].isImage == false then
+            button["myText"]:setFillColor( unpack(options.labelColor) )
+        end
         button["myText"].isChecked = isChecked
     else
-        button["myText"]:setFillColor( unpack(options.labelColorOff) )
+        if button["myText"].isImage == false then
+            button["myText"]:setFillColor( unpack(options.labelColorOff) )
+        end
         button["myText"].isChecked = false
     end
     button["mygroup"]:insert( button["myText"], false )
@@ -398,6 +409,7 @@ function M.newToolbar( options )
                 textAlign = "center",
                 labelColor = options.labelColor,
                 backgroundColor = options.color or options.fillColor,
+                iconImage = v.iconImage,
                 numberOfButtons = count,
                 callBack = options.callBack,
                 callBackData = options.callBackData
@@ -454,7 +466,9 @@ function M.actionForToolbar( options, e )
         end
         for k, v in pairs(list) do
             if v["myText"] ~= nil then
-                v["myText"]:setFillColor( unpack(muiData.widgetDict[basename]["toolbar"]["labelColorOff"]) )
+                if v["myText"].isImage == false then
+                    v["myText"]:setFillColor( unpack(muiData.widgetDict[basename]["toolbar"]["labelColorOff"]) )
+                end
                 if v["myText2"] ~= nil then
                     v["myText2"]:setFillColor( unpack(muiData.widgetDict[basename]["toolbar"]["labelColorOff"]) )
                 end
@@ -462,7 +476,9 @@ function M.actionForToolbar( options, e )
             end
         end
 
-        target:setFillColor( unpack(muiData.widgetDict[basename]["toolbar"]["labelColor"]) )
+        if target.isImage == false then
+            target:setFillColor( unpack(muiData.widgetDict[basename]["toolbar"]["labelColor"]) )
+        end
         if target2 ~= nil then
             target2:setFillColor( unpack(muiData.widgetDict[basename]["toolbar"]["labelColor"]) )
         end
@@ -479,7 +495,7 @@ function M.actionForToolbarDemo( event )
     local muiTarget = M.getEventParameter(event, "muiTarget")
     local muiTargetValue = M.getEventParameter(event, "muiTargetValue")
 
-    if muiTarget ~= nil then
+    if muiTarget ~= nil and muiTarget.text ~= nil then
         print("Toolbar button text: " .. muiTarget.text)
     end
     if muiTargetValue ~= nil then

@@ -608,6 +608,7 @@ function scene:create( event )
         callBack = mui.actionForToolbarDemo,
         sliderColor = { 1, 1, 1 },
         list = {
+            -- note use iconImage="<filename of jpg/png>" for custom graphic icons
             { key = "Home", value = "1", icon="home", labelText="Home", isActive = true },
             { key = "Newsroom", value = "2", icon="new_releases", labelText="News", isActive = false },
             { key = "Location", value = "3", icon="location_searching", labelText="Location", isActive = false },

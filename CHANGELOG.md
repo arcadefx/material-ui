@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.54] - 2017-01-11
+### Change
+- Fixed bug where newSlidePanel forced white background on buttons, user-defined now.  It uses the background color of the whole panel by parameter "fillColor"
+
 ## [0.1.53] - 2017-01-09
 ### Added
 - 'iconImage' parameter to newToolbar() method.  It will fit the image to the font size dimensions. This is so it will look correct. See demo and "list {}" for an example.

@@ -374,7 +374,8 @@ function M.newSlidePanelButton( options )
     local buttonWidth = textWidth
     local buttonHeight = textHeight
     local rectangle = display.newRect( buttonWidth * 0.5, 0, buttonWidth, buttonHeight )
-    rectangle:setFillColor( unpack({1,1,1,0}) ) -- options.backgroundColor
+    options.backgroundColor = options.backgroundColor or { 1, 1, 1, 1 }
+    rectangle:setFillColor( unpack( options.backgroundColor ) ) -- options.backgroundColor
     button["rectangle"] = rectangle
     button["rectangle"].value = options.value
     button["buttonWidth"] = rectangle.contentWidth

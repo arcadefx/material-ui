@@ -647,8 +647,10 @@ function M.removeSlidePanel(widgetName)
 
     -- remove the header if used
     if muiData.widgetDict[widgetName]["rect"] ~= nil then
-        muiData.widgetDict[widgetName]["header_image"]:removeSelf()
-        muiData.widgetDict[widgetName]["header_image"] = nil
+        if muiData.widgetDict[widgetName]["header_image"] ~= nil then
+            muiData.widgetDict[widgetName]["header_image"]:removeSelf()
+            muiData.widgetDict[widgetName]["header_image"] = nil
+        end
         muiData.widgetDict[widgetName]["rect"]:removeSelf()
         muiData.widgetDict[widgetName]["rect"] = nil
     end

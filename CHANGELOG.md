@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.55] - 2017-01-11
+### Added
+- 'iconColor' parameter to newToolbar list {} options. Specify color in on state per icon.
+- 'iconColorOff' parameter to newToolbar list {} options. Specify color in off state per icon.
+- 'iconColor' parameter to newSlidePanel list {} options. Specify color in on state per icon.
+- 'iconColorOff' parameter to newSlidePanel list {} options. Specify color in off state per icon.
+
+### Fixed
+- Color bugs in newSlidePanel and newToolbar methods.
+
 ## [0.1.54] - 2017-01-11
 ### Change
 - Fixed bug where newSlidePanel forced white background on buttons, user-defined now.  It uses the background color of the whole panel by parameter "fillColor"

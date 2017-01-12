@@ -189,6 +189,8 @@ function M.newSlidePanel(options)
                 textAlign = "center",
                 labelColor = options.labelColor,
                 labelColorOff = options.labelColorOff,
+                iconColor = v.iconColor or options.labelColor,
+                iconColorOff = v.iconColorOff or options.labelColorOff,
                 backgroundColor = options.fillColor,
                 buttonHighlightColor = options.buttonHighlightColor,
                 buttonHighlightColorAlpha = (options.buttonHighlightColorAlpha or 0.5),
@@ -317,8 +319,10 @@ function M.newSlidePanelButton( options )
     if options.labelColor == nil then
         options.labelColor = { 1, 1, 1 }
     end
-    muiData.widgetDict[options.basename]["slidebar"]["labelColorOff"] = options.labelColorOff
-    muiData.widgetDict[options.basename]["slidebar"]["labelColor"] = options.labelColor
+    muiData.widgetDict[options.basename]["slidebar"][options.name]["labelColorOff"] = options.labelColorOff
+    muiData.widgetDict[options.basename]["slidebar"][options.name]["labelColor"] = options.labelColor
+    muiData.widgetDict[options.basename]["slidebar"][options.name]["iconColorOff"] = options.iconColorOff
+    muiData.widgetDict[options.basename]["slidebar"][options.name]["iconColor"] = options.iconColor
 
     local fontSize = options.buttonHeight
     if options.fontSize ~= nil then
@@ -375,7 +379,7 @@ function M.newSlidePanelButton( options )
     local buttonHeight = textHeight
     local rectangle = display.newRect( buttonWidth * 0.5, 0, buttonWidth, buttonHeight )
     options.backgroundColor = options.backgroundColor or { 1, 1, 1, 1 }
-    rectangle:setFillColor( unpack( options.backgroundColor ) ) -- options.backgroundColor
+    rectangle:setFillColor( unpack( options.backgroundColor ) )
     button["rectangle"] = rectangle
     button["rectangle"].value = options.value
     button["buttonWidth"] = rectangle.contentWidth
@@ -411,13 +415,12 @@ function M.newSlidePanelButton( options )
         button["myText"] = display.newImageRect( options.iconImage, textSize, textSize )
     else
         button["myText"] = display.newText( options2 )
-        button["myText"]:setFillColor( unpack(options.labelColorOff) )
         button["myText"].isVisible = true
         if isChecked then
-            button["myText"]:setFillColor( unpack(options.labelColor) )
+            button["myText"]:setFillColor( unpack(options.iconColor) )
             button["myText"].isChecked = isChecked
         else
-            button["myText"]:setFillColor( unpack(options.labelColorOff) )
+            button["myText"]:setFillColor( unpack(options.iconColorOff) )
             button["myText"].isChecked = false
         end
     end

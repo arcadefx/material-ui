@@ -318,8 +318,8 @@ function scene:create( event )
             list = {
                 { key = "Home", value = "1", icon="home", iconImage="1484022678_go-home.png", labelText="Home", isActive = true },
                 { key = "Newsroom", value = "2", icon="new_releases", iconImage="1484026171_02.png", labelText="News", isActive = false },
-                { key = "Location", value = "3", icon="location_searching", labelText="Location Information", isActive = false },
-                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
+                { key = "Location", value = "3", icon="location_searching", labelText="Location Information", isActive = false, iconColor = { 0.26, 0.52, 0.96, 1 }, iconColorOff = { 0.26, 0.52, 0.96, 1 } },
+                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false, iconColor = { 0.92, 0.26, 0.21, 1 }, iconColorOff = { 0.92, 0.26, 0.21, 1 } },
                 { key = "LineSeparator" },
                 { key = "To-do 2", value = "To-do 2", icon="view_list", labelText="To-do 2", isActive = false },
                 { key = "To-do 3", value = "To-do 3", icon="view_list", labelText="To-do 3", isActive = false },
@@ -604,13 +604,13 @@ function scene:create( event )
         color = { 0, 0.46, 1 },
         fillColor = { 0, 0.46, 1 },
         labelColor = { 1, 1, 1 },
-        labelColorOff = { 0.41, 0.03, 0.49 },
+        labelColorOff = { 0, 0, 0 },
         callBack = mui.actionForToolbarDemo,
         sliderColor = { 1, 1, 1 },
         list = {
             -- note use iconImage="<filename of jpg/png>" for custom graphic icons
-            { key = "Home", value = "1", icon="home", labelText="Home", isActive = true },
-            { key = "Newsroom", value = "2", icon="new_releases", labelText="News", isActive = false },
+            { key = "Home", value = "1", icon="home", labelText="Home", isActive = true, iconColor = { 1, 1, 1 }, iconColorOff = { 0,0,0,1 } },
+            { key = "Newsroom", value = "2", icon="new_releases", labelText="News", isActive = false, iconColor = { 1, 1, 1 }, iconColorOff = { 0,0,0,1 } },
             { key = "Location", value = "3", icon="location_searching", labelText="Location", isActive = false },
             { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
             -- { key = "Viewer", value = "4", labelText="View", isActive = false } -- uncomment to see View as text

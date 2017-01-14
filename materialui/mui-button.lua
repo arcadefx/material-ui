@@ -130,6 +130,7 @@ function M.newRoundedRectButton(options)
         local size = options.shadowSize or M.getScaleVal(20)
         local opacity = options.shadowOpacity or 0.3
         local shadow = M.newShadowShape("rounded_rect", {
+            name = options.name,
             width = options.width,
             height = options.height,
             size = size,
@@ -450,6 +451,7 @@ function M.newRectButton(options)
         local size = options.shadowSize or M.getScaleVal(20)
         local opacity = options.shadowOpacity or 0.3
         local shadow = M.newShadowShape("rect", {
+            name = options.name,
             width = options.width,
             height = options.height,
             size = size,

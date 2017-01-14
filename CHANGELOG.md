@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.56] - 2017-01-14
+### Fixed
+- 'newShadowShape' being used in mui-card and mui-button.  These will render as intended.
+
 ## [0.1.55] - 2017-01-11
 ### Added
 - 'iconColor' parameter to newToolbar list {} options. Specify color in on state per icon.

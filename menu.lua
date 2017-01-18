@@ -552,7 +552,22 @@ function scene:create( event )
         width = mui.getScaleVal(400),
         height = mui.getScaleVal(46),
         x = mui.getScaleVal(240),
-        y = mui.getScaleVal(400),
+        y = mui.getScaleVal(330),
+        activeColor = { 0, 0, 0, 1 },
+        inactiveColor = { 0.5, 0.5, 0.5, 1 },
+        callBack = mui.textfieldCallBack
+    })
+
+    mui.newTextField({
+        name = "textfield_demo_with_placeholder",
+        labelText = "Test Placeholder",
+        placeholder = "You see me when text is empty",
+        text = "",
+        font = native.systemFont,
+        width = mui.getScaleVal(400),
+        height = mui.getScaleVal(46),
+        x = mui.getScaleVal(240),
+        y = mui.getScaleVal(420),
         activeColor = { 0, 0, 0, 1 },
         inactiveColor = { 0.5, 0.5, 0.5, 1 },
         callBack = mui.textfieldCallBack

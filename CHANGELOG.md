@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.57] - 2017-01-17
+- Added else statement in mui-textinput.lua from StevenWarren
+- Added new example to menu textfield_demo_with_placeholder from StevenWarren
+
 ## [0.1.56] - 2017-01-14
 ### Fixed
 - 'newShadowShape' being used in mui-card and mui-button.  These will render as intended.

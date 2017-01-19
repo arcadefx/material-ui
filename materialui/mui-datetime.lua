@@ -63,7 +63,7 @@ function M.newDatePicker(options)
         muiData.widgetDict[options.name]["callBack"] = options.callBack
     end
 
-    if options.scrollView ~= nil and false then
+    if options.scrollView ~= nil then
         muiData.widgetDict[options.name]["scrollView"] = options.scrollView
         muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
     end

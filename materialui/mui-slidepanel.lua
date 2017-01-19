@@ -195,8 +195,8 @@ function M.newSlidePanel(options)
                 buttonHighlightColor = options.buttonHighlightColor,
                 buttonHighlightColorAlpha = (options.buttonHighlightColorAlpha or 0.5),
                 numberOfButtons = count,
-                callBack = options.callBack,
-                callBackData = options.callBackData
+                callBack = v.callBack or options.callBack,
+                callBackData = v.callBackData or options.callBackData
             })
             else
                 M.newSlidePanelLineSeparator({
@@ -557,8 +557,10 @@ function M.slidePanelEventButton (event)
 end
 
 function M.sliderButtonResetColor( e )
-    e:setFillColor( unpack(e.muiOptions.backgroundColor) )
-    e.alpha = 0.01
+    if e.target ~= nil then
+        e:setFillColor( unpack(e.muiOptions.backgroundColor) )
+        e.alpha = 0.01
+    end
 end
 
 function M.actionForSlidePanel( options, e )
@@ -571,6 +573,19 @@ function M.actionForSlidePanel( options, e )
     end
     if muiTargetCallBackData ~= nil then
         print("Item from callBackData: "..muiTargetCallBackData.item)
+    end
+    if e.myTargetBasename ~= nil then
+        M.closeSlidePanel(e.myTargetBasename)
+    end
+end
+
+function M.closeSlidePanel( widgetName )
+    if widgetName ~= nil and muiData.widgetDict[widgetName] ~= nil then
+        event = {}
+        event.target = muiData.widgetDict[widgetName]["scrollview"]
+        event.target.muiOptions = muiData.widgetDict[widgetName]["mygroup"].muiOptions
+        event.phase = "ended"
+        M.touchSlidePanelBarrier( event )
     end
 end
 

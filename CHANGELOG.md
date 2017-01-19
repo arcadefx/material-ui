@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.59] - 2017-01-19
+### Added
+- 'closeSlidePanel()' method to close a newSlidePanel() widget by name.  This is now the default action if used the built-in callBack.  You may call this in your own callBacks.
+Example: mui.closeSlidePanel("slidepanel-demo")
+- 'callBack' parameter added to each menu item.  If used this callBack will be called instead of the parent callBack for the entire newSlidePanel() widget.
+- 'callBackData' parameter added to each menu item. if used the data will be passed to the callBack being used.
+
 ## [0.1.58] - 2017-01-19
 ### Changes
 - Fixed issue #143 reported by StevenWarren: "useActualDimensions" parameter to mui.init() was setting useActualDimensions to true.

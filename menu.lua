@@ -289,6 +289,11 @@ function scene:create( event )
     })
 
     -- slide panel example
+    local closeSlidePanel = function(event)
+        print("home bound")
+        mui.closeSlidePanel("slidepanel-demo")
+    end
+
     local showSlidePanel = function(event)
         mui.newSlidePanel({
             parent = muiData.parent,
@@ -316,7 +321,7 @@ function scene:create( event )
             buttonHighlightColorAlpha = 0.5,
             lineSeparatorHeight = mui.getScaleVal(1),
             list = {
-                { key = "Home", value = "1", icon="home", iconImage="1484022678_go-home.png", labelText="Home", isActive = true },
+                { key = "Home", value = "1", icon="home", iconImage="1484022678_go-home.png", labelText="Home", isActive = true, callBack = closeSlidePanel },
                 { key = "Newsroom", value = "2", icon="new_releases", iconImage="1484026171_02.png", labelText="News", isActive = false },
                 { key = "Location", value = "3", icon="location_searching", labelText="Location Information", isActive = false, iconColor = { 0.26, 0.52, 0.96, 1 }, iconColorOff = { 0.26, 0.52, 0.96, 1 } },
                 { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false, iconColor = { 0.92, 0.26, 0.21, 1 }, iconColorOff = { 0.92, 0.26, 0.21, 1 } },

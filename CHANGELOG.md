@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.] - 2017-01-19
+## [0.1.60] - 2017-01-19
 ### Added
 - 'hideSlidePanel()' method to hide a newSlidePanel() widget by name. This can be used in your callBacks. You may call this in your own callBacks.  This keeps the newSlidePanel in memory and hides it.  See menu.lua for example.
 - 'showSlidePanel()' method to show a newSlidePanel() widget by name. This can be used in your callBacks. You may call this in your own callBacks. This uses the newSlidePanel in memory and shows it.

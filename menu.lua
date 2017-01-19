@@ -289,60 +289,67 @@ function scene:create( event )
     })
 
     -- slide panel example
-    local closeSlidePanel = function(event)
-        print("home bound")
-        mui.closeSlidePanel("slidepanel-demo")
+    local hideSlidePanel = function(event)
+        print("home button pushed")
+        -- or use close method below to close and release slider from memory
+        -- mui.closeSlidePanel("slidepanel-demo")
+        mui.hideSlidePanel("slidepanel-demo")
     end
 
     local showSlidePanel = function(event)
-        mui.newSlidePanel({
-            parent = muiData.parent,
-            name = "slidepanel-demo",
-            title = "MUI Demo", -- leave blank for no panel title text
-            titleAlign = "center",
-            font = native.systemFont,
-            width = mui.getScaleVal(400),
-            titleFontSize = mui.getScaleVal(30),
-            titleFontColor = { 1, 1, 1, 1 },
-            titleFont = native.systemFont,
-            titleBackgroundColor = { 0.25, 0.75, 1, 1 },
-            fontSize = mui.getScaleVal(20),
-            fillColor = { 1, 1, 1, 1 }, -- background color
-            headerImage = "creative-blue-abstract-background-header-4803_0.jpg",
-            buttonToAnimate = "slidepanel-button",
-            callBack = mui.actionForSlidePanel,
-            callBackData = {
-                item = "cake"
-            },
-            labelColor = { 0.3, 0.3, 0.3, 1 }, -- active
-            labelColorOff = { 0.5, 0.5, 0.5, 1 }, -- non-active
-            buttonHeight = mui.getScaleVal(60),
-            buttonHighlightColor = { 0.5, 0.5, 0.5 },
-            buttonHighlightColorAlpha = 0.5,
-            lineSeparatorHeight = mui.getScaleVal(1),
-            list = {
-                { key = "Home", value = "1", icon="home", iconImage="1484022678_go-home.png", labelText="Home", isActive = true, callBack = closeSlidePanel },
-                { key = "Newsroom", value = "2", icon="new_releases", iconImage="1484026171_02.png", labelText="News", isActive = false },
-                { key = "Location", value = "3", icon="location_searching", labelText="Location Information", isActive = false, iconColor = { 0.26, 0.52, 0.96, 1 }, iconColorOff = { 0.26, 0.52, 0.96, 1 } },
-                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false, iconColor = { 0.92, 0.26, 0.21, 1 }, iconColorOff = { 0.92, 0.26, 0.21, 1 } },
-                { key = "LineSeparator" },
-                { key = "To-do 2", value = "To-do 2", icon="view_list", labelText="To-do 2", isActive = false },
-                { key = "To-do 3", value = "To-do 3", icon="view_list", labelText="To-do 3", isActive = false },
-                { key = "To-do 4", value = "To-do 4", icon="view_list", labelText="To-do 4", isActive = false },
-                { key = "To-do 5", value = "To-do 5", icon="view_list", labelText="To-do 5", isActive = false },
-                { key = "LineSeparator" },
-                { key = "To-do 6", value = "To-do 6", icon="view_list", labelText="To-do 6", isActive = false },
-                { key = "To-do 7", value = "To-do 7", icon="view_list", labelText="To-do 7", isActive = false },
-                { key = "To-do 8", value = "To-do 8", icon="view_list", labelText="To-do 8", isActive = false },
-                { key = "To-do 9", value = "To-do 9", icon="view_list", labelText="To-do 9", isActive = false },
-                { key = "To-do 10", value = "To-do 10", icon="view_list", labelText="To-do 10", isActive = false },
-                { key = "LineSeparator" },
-                { key = "To-do 11", value = "To-do 11", icon="view_list", labelText="To-do 11", isActive = false },
-                { key = "To-do 12", value = "To-do 12", icon="view_list", labelText="To-do 12", isActive = false },
-            },
-        })
+        if mui.getWidgetBaseObject("slidepanel-demo") ~= nil then
+            mui.showSlidePanel("slidepanel-demo")
+            print("slidePanel exists, show it")
+        else
+            print("slidePanel is new")
+            mui.newSlidePanel({
+                parent = muiData.parent,
+                name = "slidepanel-demo",
+                title = "MUI Demo", -- leave blank for no panel title text
+                titleAlign = "center",
+                font = native.systemFont,
+                width = mui.getScaleVal(400),
+                titleFontSize = mui.getScaleVal(30),
+                titleFontColor = { 1, 1, 1, 1 },
+                titleFont = native.systemFont,
+                titleBackgroundColor = { 0.25, 0.75, 1, 1 },
+                fontSize = mui.getScaleVal(20),
+                fillColor = { 1, 1, 1, 1 }, -- background color
+                headerImage = "creative-blue-abstract-background-header-4803_0.jpg",
+                buttonToAnimate = "slidepanel-button",
+                callBack = mui.actionForSlidePanel,
+                callBackData = {
+                    item = "cake"
+                },
+                labelColor = { 0.3, 0.3, 0.3, 1 }, -- active
+                labelColorOff = { 0.5, 0.5, 0.5, 1 }, -- non-active
+                buttonHeight = mui.getScaleVal(60),
+                buttonHighlightColor = { 0.5, 0.5, 0.5 },
+                buttonHighlightColorAlpha = 0.5,
+                lineSeparatorHeight = mui.getScaleVal(1),
+                list = {
+                    { key = "Home", value = "1", icon="home", iconImage="1484022678_go-home.png", labelText="Home", isActive = true, callBack = hideSlidePanel },
+                    { key = "Newsroom", value = "2", icon="new_releases", iconImage="1484026171_02.png", labelText="News", isActive = false },
+                    { key = "Location", value = "3", icon="location_searching", labelText="Location Information", isActive = false, iconColor = { 0.26, 0.52, 0.96, 1 }, iconColorOff = { 0.26, 0.52, 0.96, 1 } },
+                    { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false, iconColor = { 0.92, 0.26, 0.21, 1 }, iconColorOff = { 0.92, 0.26, 0.21, 1 } },
+                    { key = "LineSeparator" },
+                    { key = "To-do 2", value = "To-do 2", icon="view_list", labelText="To-do 2", isActive = false },
+                    { key = "To-do 3", value = "To-do 3", icon="view_list", labelText="To-do 3", isActive = false },
+                    { key = "To-do 4", value = "To-do 4", icon="view_list", labelText="To-do 4", isActive = false },
+                    { key = "To-do 5", value = "To-do 5", icon="view_list", labelText="To-do 5", isActive = false },
+                    { key = "LineSeparator" },
+                    { key = "To-do 6", value = "To-do 6", icon="view_list", labelText="To-do 6", isActive = false },
+                    { key = "To-do 7", value = "To-do 7", icon="view_list", labelText="To-do 7", isActive = false },
+                    { key = "To-do 8", value = "To-do 8", icon="view_list", labelText="To-do 8", isActive = false },
+                    { key = "To-do 9", value = "To-do 9", icon="view_list", labelText="To-do 9", isActive = false },
+                    { key = "To-do 10", value = "To-do 10", icon="view_list", labelText="To-do 10", isActive = false },
+                    { key = "LineSeparator" },
+                    { key = "To-do 11", value = "To-do 11", icon="view_list", labelText="To-do 11", isActive = false },
+                    { key = "To-do 12", value = "To-do 12", icon="view_list", labelText="To-do 12", isActive = false },
+                },
+            })
+        end
         -- add some buttons to the menu!
-
     end
     mui.newCircleButton({
         parent = muiData.parent,

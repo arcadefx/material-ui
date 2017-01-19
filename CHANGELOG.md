@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.58] - 2017-01-19
+### Changes
+- Fixed issue #143 reported by StevenWarren: "useActualDimensions" parameter to mui.init() was setting useActualDimensions to true.
+- Fixed issue #142 reported by taigak: newCard demo example in documentation was incorrect. It's fixed.
+
 ## [0.1.57] - 2017-01-17
 - Added else statement in mui-textinput.lua from StevenWarren
 - Added new example to menu textfield_demo_with_placeholder from StevenWarren

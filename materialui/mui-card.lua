@@ -131,7 +131,9 @@ function M.newCard(options)
     if options.strokeColor ~= nil then
         muiData.widgetDict[options.name]["rect"]:setStrokeColor( unpack( options.strokeColor ) )
     end
-    muiData.widgetDict[options.name]["rect"]:setFillColor( unpack( options.fillColorTop ) )
+    if options.fillColorBottom ~= nil then
+        muiData.widgetDict[options.name]["rect"]:setFillColor( unpack( options.fillColorBottom ) )
+    end
     muiData.widgetDict[options.name]["rect"].isVisible = true
     muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["rect"] )
     muiData.widgetDict[options.name]["touching"] = false
@@ -147,13 +149,17 @@ function M.newCard(options)
         if options.strokeColor ~= nil then
             muiData.widgetDict[options.name]["rectTopRound"]:setStrokeColor( unpack( options.strokeColor ) )
         end
-        muiData.widgetDict[options.name]["rectTopRound"]:setFillColor(unpack(options.fillColorBottom))
         muiData.widgetDict[options.name]["rectTopRound"].y = (muiData.widgetDict[options.name]["rect"].y - (options.height * 0.5)) + ((options.topHeight+nr) * 0.5)
         muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["rectTopRound"] )
         muiData.widgetDict[options.name]["rectTop"] = display.newRect( 0, 0, options.width - (options.strokeWidth), nr * 2)
         muiData.widgetDict[options.name]["rectTop"].y = (muiData.widgetDict[options.name]["rectTopRound"].y + (options.topHeight * 0.5)) - ((nr * 1.5)*0.5)
     end
-    muiData.widgetDict[options.name]["rectTop"]:setFillColor(unpack(options.fillColorBottom))
+    if options.fillColorTop ~= nil and muiData.widgetDict[options.name]["rectTopRound"] ~= nil then
+        muiData.widgetDict[options.name]["rectTopRound"]:setFillColor( unpack( options.fillColorTop ) )
+    end
+    if options.fillColorTop ~= nil and muiData.widgetDict[options.name]["rectTop"] ~= nil then
+        muiData.widgetDict[options.name]["rectTop"]:setFillColor(unpack(options.fillColorTop))
+    end
     muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["rectTop"] )
 
 end

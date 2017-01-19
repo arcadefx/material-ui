@@ -579,6 +579,40 @@ function M.actionForSlidePanel( options, e )
     end
 end
 
+function M.showSlidePanel( widgetName )
+    if widgetName ~= nil and muiData.widgetDict[widgetName] ~= nil then
+        -- animate the menu button
+        if muiData.widgetDict[widgetName]["buttonToAnimate"] ~= nil then
+            transition.to( muiData.widgetDict[widgetName]["buttonToAnimate"], { rotation=90, time=300, transition=easing.inOutCubic } )
+        end
+        local options = muiData.widgetDict[widgetName]["mygroup"].muiOptions
+        transition.fadeIn(muiData.widgetDict[widgetName]["rectclick"],{time=300})
+        transition.fadeIn(muiData.widgetDict[widgetName]["rectbackdrop"],{time=300})
+        transition.to( muiData.widgetDict[widgetName]["scrollview"], { time=300, x=(options.width * 0.5), transition=easing.linear } )
+        muiData.dialogName = widgetName
+        muiData.dialogInUse = true
+        muiData.slidePanelName = widgetName
+        muiData.slidePanelInUse = true
+    end
+end
+
+function M.hideSlidePanel( widgetName )
+    if widgetName ~= nil and muiData.widgetDict[widgetName] ~= nil then
+        local options = muiData.widgetDict[widgetName]["mygroup"].muiOptions
+        transition.to( muiData.widgetDict[widgetName]["scrollview"], { time=300, x=-(options.width * 0.5), transition=easing.linear } )
+        transition.fadeOut(muiData.widgetDict[widgetName]["rectbackdrop"],{time=300})
+        transition.fadeOut(muiData.widgetDict[widgetName]["rectclick"],{time=300})
+        muiData.dialogName = nil
+        muiData.dialogInUse = false
+        muiData.slidePanelName = nil
+        muiData.slidePanelInUse = false
+        -- animate the menu button
+        if muiData.widgetDict[options.name]["buttonToAnimate"] ~= nil then
+            transition.to( muiData.widgetDict[options.name]["buttonToAnimate"], { rotation=0, time=300, transition=easing.inOutCubic } )
+        end
+    end
+end
+
 function M.closeSlidePanel( widgetName )
     if widgetName ~= nil and muiData.widgetDict[widgetName] ~= nil then
         event = {}

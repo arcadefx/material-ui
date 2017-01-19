@@ -571,6 +571,7 @@ function scene:create( event )
     })
 
     mui.newTextField({
+        parent = muiData.parent,
         name = "textfield_demo_with_placeholder",
         labelText = "Test Placeholder",
         placeholder = "You see me when text is empty",

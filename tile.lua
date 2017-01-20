@@ -11,6 +11,9 @@ local scene = composer.newScene()
 local background = nil
 local widget = require( "widget" )
 
+-- mui
+local muiData = require( "materialui.mui-data" )
+
 -- -----------------------------------------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE unless "composer.removeScene()" is called
 -- -----------------------------------------------------------------------------------------------------------------
@@ -40,10 +43,11 @@ function scene:create( event )
 
     sceneGroup:insert( background )
 
-    mui.init()
+    mui.init(nil, { parent=self.view })
 
     -- tile grid example
     mui.newTileGrid({
+        parent = muiData.parent,
         name = "grid_demo",
         width = mui.contentWidth,
         height = mui.contentHeight,
@@ -51,7 +55,9 @@ function scene:create( event )
         tilesPerRow = 4,
         x = 0,
         y = 0,
+        fontIsScaled = false, -- default is true for scaling font to fit tile size width or false to not scale.
         iconFont = "MaterialIcons-Regular.ttf",
+        fontSize = mui.getScaleVal(100),
         labelFont = native.systemFont,
         textColor = { 1, 1, 1 },
         labelColor = { 1, 1, 1 },
@@ -67,7 +73,7 @@ function scene:create( event )
         },
         list = {
             { key = "Home", value = "1", icon="home", labelText="Home", tileFillColor = {1,0.6,0.19,1}, tileHighlightColor = { 1, 1, 1, 1}, tileHighlightColorAlpha = 0.5, isActive = true },
-            { key = "Newsroom", value = "2", size = "2x", image="cloud-in-blue-sky855.jpg", padding=mui.getScaleVal(30), align="right", icon="wb_sunny", labelText="70 deg", tileFillColor = {0,0.34,0.6,1}, isActive = false },
+            { key = "Newsroom", value = "2", size = "2x", image="cloud-in-blue-sky855.jpg", iconImage="1484026171_02.png", padding=mui.getScaleVal(30), align="right", icon="wb_sunny", labelText="70 deg", tileFillColor = {0,0.34,0.6,1}, isActive = false },
             { key = "Location", value = "3", icon="location_searching", labelText="Location", tileFillColor = {0.36,0.81,0.42,1}, isActive = false },
             { key = "To-do", value = "4", icon="watch", tileFillColor = {0.36,0.81,0.42,1}, isActive = false },
             { key = "To-do 2", value = "5", labelText="Simple Walk", tileFillColor = {0,0.6,1,1}, isActive = false },

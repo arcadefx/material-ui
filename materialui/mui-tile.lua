@@ -65,6 +65,10 @@ function M.newTileGrid(options)
     options.textColor = options.textColor or {1, 1, 1, 1}
     options.fillColor = options.fillColor or {1, 1, 1, 1}
 
+    if options.fontIsScaled == nil then
+        options.fontIsScaled = true
+    end
+
     if options.backgroundColor ~= nil then
         options.fillColor = options.backgroundColor
     end
@@ -95,6 +99,12 @@ function M.newTileGrid(options)
 
     scrollView.muiOptions = options
     muiData.widgetDict[options.name]["scrollview"] = scrollView
+
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["rectbackdrop"] )
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["scrollview"] )
+    end
 
     -- now for the rest of the dialog
     local centerX = (muiData.contentWidth * 0.5)
@@ -137,11 +147,16 @@ function M.newTileGrid(options)
             textColor = options.textColor,
             labelText = v.labelText,
             align = v.align,
-            padding = v.padding,
+            padding = v.padding or M.getScaleVal(10),
             image = v.image,
+            fontIsScaled = v.fontIsScaled or options.fontIsScaled,
+            fontSize = options.fontSize or M.getScaleVal(24),
+            iconImage = v.iconImage,
             icon = v.icon,
             iconFont = options.iconFont,
+            iconFontSize = v.iconFontSize or options.fontSize,
             labelFont = options.labelFont,
+            labelFontSize = v.labelFontSize or options.fontSize,
     		tileFillColor = v.tileFillColor or options.tileFillColor,
     		highlightColor = v.tileHighlightColor or highlightColor,
     		highlightColorAlpha = v.tileHighlightColorAlpha or highlightColorAlpha,
@@ -212,15 +227,16 @@ function M.newTile(options)
     end
     -- place the icon and text (could be an updatable widget?)
 
-    local fontSize = options.height
-    if options.fontSize ~= nil then
-        fontSize = options.fontSize
-    end
-    fontSize = mathFloor(tonumber(fontSize))
+    local fontSize = options.fontSize
+
+    iconFont = options.iconFont
+    iconFontSize = mathFloor(tonumber(options.iconFontSize or M.getScaleVal(24)))
+
+    labelFont = options.labelFont
+    labelFontSize = mathFloor(tonumber(options.labelFontSize or M.getScaleVal(24)))
 
     -- Calculate a font size that will best fit the given field's height
     local field = nil
-    local fontSize = 10
     local text = nil
     local boxTextCount = 0
     if options.labelText ~= nil then
@@ -233,15 +249,21 @@ function M.newTile(options)
     elseif options.iconFont ~= nil then
         font = options.iconFont
     end
+
     local field = {contentHeight=options.height * 0.60, contentWidth=options.height * 0.60}
     local textToMeasure = display.newText( text, 0, 0, font, fontSize )
-    local fontSize = fontSize * ( ( field.contentHeight ) / textToMeasure.contentHeight )
+    local newFontSize = fontSize * ( ( field.contentHeight ) / textToMeasure.contentHeight )
     local textWidth = textToMeasure.contentWidth
     textToMeasure:removeSelf()
     textToMeasure = nil
 
     local textY = 0
     local textSize = fontSize
+
+    if options.fontIsScaled == true then
+        textSize = newFontSize
+        print("scale the font?")
+    end
 
     if options.icon ~= nil then boxTextCount = boxTextCount + 1 end
     if options.labelText ~= nil then boxTextCount = boxTextCount + 1 end
@@ -251,7 +273,7 @@ function M.newTile(options)
         iconOffset = 0.35
     end
 
-    if options.icon ~= nil then
+    if options.icon ~= nil and options.iconImage == nil then
         local options2 = 
         {
             --parent = textGroup,
@@ -266,6 +288,20 @@ function M.newTile(options)
         tile["icon"] = display.newText( options2 )
         tile["icon"]:setFillColor( unpack(options.textColor) )
         tile["mygroup"]:insert( tile["icon"] )
+    elseif options.iconImage ~= nil then
+        local x = options.width * 0.5
+        local y = options.height * iconOffset
+        tile["icon"] = display.newImageRect( options.iconImage, textSize, textSize )
+        tile["icon"].x = x
+        tile["icon"].y = y
+        tile["mygroup"]:insert( tile["icon"] )
+        if options.align == "left" then
+            tile["icon"].x = 0
+            tile["icon"].x = (tile["icon"].contentWidth * .5) + options.padding
+        elseif options.align == "right" then
+            tile["icon"].x = options.width
+            tile["icon"].x = options.width - ((tile["icon"].contentWidth * .5) + options.padding)
+        end
     end
 
     local textY = options.height * 0.5
@@ -282,7 +318,7 @@ function M.newTile(options)
             y = textY,
             width = options.width - options.padding,
             font = options.labelFont,
-            fontSize = fontSize * 0.35,
+            fontSize = textSize * 0.35,
             align = options.align or "center",
         }
         tile["text"] = display.newText( options3 )

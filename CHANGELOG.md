@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.61] - 2017-01-20
+### Added
+- 'iconImage' parameter to newTileGrid() list options. Allows a tile to use an image (jpg/png) instead of icon font text.
+- 'fontIsScaled' parameter to newTileGrid(). Defaults to true.  If true scale the font to fit the width of the tile. If false let the user define the font to any size.
+- 'fontSize' parameter to newTileGrid(). Sets the overall font size for icon and text.
+- 'parent' parameter to newTileGrid().  If used it will place the newTileGrid widget into the group/parent.
+
 ## [0.1.60] - 2017-01-19
 ### Added
 - 'hideSlidePanel()' method to hide a newSlidePanel() widget by name. This can be used in your callBacks. This keeps the slide panel in memory and hides it.

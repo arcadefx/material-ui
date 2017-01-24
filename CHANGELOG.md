@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.62] - 2017-01-24
+### Added
+- 'textFieldFontSize' parameter to newTextField() options. Sets font size used in text field.
+- 'textBoxFontSize' parameter to newTextBox() options. Sets font size used in text box.
+- 'fontSize' parameter added to both newTextField() and newTextBox() to set the label size.
+### Fixed
+- Font size of textboxes were really small. Now it sets the font and the size appropriately.
+
 ## [0.1.61] - 2017-01-20
 ### Added
 - 'iconImage' parameter to newTileGrid() list options. Allows a tile to use an image (jpg/png) instead of icon font text.

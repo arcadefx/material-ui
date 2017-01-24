@@ -259,6 +259,8 @@ function scene:create( event )
         scrollView = scrollView
     })
 
+    mui.setTextBoxValue("textbox_demo1", "toys in store")
+
     local textOptions =
     {
         --parent = textGroup,

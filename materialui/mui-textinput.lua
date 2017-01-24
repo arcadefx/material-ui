@@ -100,6 +100,10 @@ function M.newTextField(options)
         options.activeColor = { 0.12, 0.67, 0.27, 1 }
     end
 
+    if options.textFieldFontSize == nil then
+        options.textFieldFontSize = options.fontSize or options.height
+    end
+
     muiData.widgetDict[options.name]["options"] = options
 
     muiData.widgetDict[options.name]["rect"] = display.newRect( 0, 0, options.width, options.height )
@@ -127,7 +131,7 @@ function M.newTextField(options)
         y = -(rect.contentHeight * 0.95),
         width = rect.contentWidth * 0.5,     --required for multi-line and alignment
         font = options.font,
-        fontSize = options.height * 0.55,
+        fontSize = options.fontSize or options.height * 0.55,
         align = "left"  --new alignment parameter
     }
     if options.labelText ~= nil then
@@ -152,6 +156,7 @@ function M.newTextField(options)
     muiData.widgetDict[options.name]["textfield"].isVisible = false
     muiData.widgetDict[options.name]["textfield"].inputType = options.inputType
     muiData.widgetDict[options.name]["textfield"].isSecure = false
+    muiData.widgetDict[options.name]["textfield"].font = native.newFont( options.font, options.textFieldFontSize * 0.55 )
     muiData.widgetDict[options.name]["textfield"].text = options.text
     muiData.widgetDict[options.name]["textfield"]:setTextColor( unpack(options.inactiveColor) )
 
@@ -362,6 +367,10 @@ function M.newTextBox(options)
         options.isEditable = false
     end
 
+    if options.textBoxFontSize == nil then
+        options.textBoxFontSize = options.fontSize
+    end
+
     muiData.widgetDict[options.name]["options"] = options
 
     muiData.widgetDict[options.name]["rect"] = display.newRect( 0, 0, options.width, options.height )
@@ -407,6 +416,7 @@ function M.newTextBox(options)
     muiData.widgetDict[options.name]["textfield"].hasBackground = false
     muiData.widgetDict[options.name]["textfield"].isEditable = options.isEditable
     muiData.widgetDict[options.name]["textfield"].isVisible = false
+    muiData.widgetDict[options.name]["textfield"].font = native.newFont( options.font, options.textBoxFontSize * 0.55 )
     muiData.widgetDict[options.name]["textfield"].text = options.text
     muiData.widgetDict[options.name]["textfield"]:setTextColor( unpack(muiData.widgetDict[options.name]["textlabel"].inactiveColor) )
 
@@ -440,6 +450,20 @@ function M.textfieldCallBack(event)
 
     if muiTargetValue ~= nil then
         print("TextField contains: "..muiTargetValue)
+    end
+end
+
+function M.setTextFieldValue(widgetName, value)
+    if widgetName ~= nil then
+        muiData.widgetDict[widgetName]["textfield"].text = value
+        muiData.widgetDict[widgetName]["textfieldfake"].text = value
+    end
+end
+
+function M.setTextBoxValue(widgetName, value)
+    if widgetName ~= nil then
+        muiData.widgetDict[widgetName]["textfield"].text = value
+        muiData.widgetDict[widgetName]["textfieldfake"].text = value
     end
 end
 

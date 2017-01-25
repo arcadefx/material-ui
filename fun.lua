@@ -109,6 +109,7 @@ function scene:create( event )
         textColor = { 0.4, 0.4, 0.4 },
         fieldBackgroundColor = { 1, 1, 1, 1 },
         rowColor = { default={ 1, 1, 1, 1 }, over={ 1, 0.5, 0, 0.2 } }, -- default is the highlighting
+        rowBackgroundColor = { 1, 1, 1, 1 }, -- the drop down color of each row
         touchpointColor = { 0.4, 0.4, 0.4 }, -- the touchpoint color
         activeColor = { 0.12, 0.67, 0.27, 1 },
         inactiveColor = { 0.4, 0.4, 0.4, 1 },
@@ -122,7 +123,7 @@ function scene:create( event )
         callBackTouch = mui.onRowTouchSelector,
         scrollListener = nil,
         list = { -- if 'key' use it for 'id' in the table row
-            { key = "Row1", text = "Apple", value = "Apple", isCategory = false },
+            { key = "Row1", text = "Apple", value = "Apple", isCategory = false, backgroundColor = {1,1,1,1} },
             { key = "Row2", text = "Cookie", value = "Cookie", isCategory = false },
             { key = "Row3", text = "Pizza", value = "Pizza", isCategory = false },
             { key = "Row4", text = "Shake", value = "Shake", isCategory = false },
@@ -252,7 +253,7 @@ function scene:create( event )
         height = mui.getScaleVal(200),
         x = mui.getScaleVal(240),
         y = mui.getScaleVal(750),
-        trimAtLength = 80, -- trim at 1..79 characters.
+        trimFakeTextAt = 80, -- trim at 1..79 characters.
         activeColor = { 0.12, 0.67, 0.27, 1 },
         inactiveColor = { 0.4, 0.4, 0.4, 1 },
         callBack = mui.textfieldCallBack,

@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.64] - 2017-01-25
+### Added
+- 'rowBackgroundColor' parameter to newTableView() and newSelect().  If no background color is specified per row use this color for background.
+
 ## [0.1.63] - 2017-01-24
 ### Added
 - 'trimFakeTextAt' parameter to newTextField() and newTextBox() options. Trim the text displayed when not editing to 1..Number and add ".." on end.

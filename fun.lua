@@ -252,6 +252,7 @@ function scene:create( event )
         height = mui.getScaleVal(200),
         x = mui.getScaleVal(240),
         y = mui.getScaleVal(750),
+        trimAtLength = 80, -- trim at 1..79 characters.
         activeColor = { 0.12, 0.67, 0.27, 1 },
         inactiveColor = { 0.4, 0.4, 0.4, 1 },
         callBack = mui.textfieldCallBack,
@@ -259,7 +260,7 @@ function scene:create( event )
         scrollView = scrollView
     })
 
-    mui.setTextBoxValue("textbox_demo1", "toys in store")
+    -- mui.setTextBoxValue("textbox_demo1", "toys in store")
 
     local textOptions =
     {

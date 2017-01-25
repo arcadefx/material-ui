@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.63] - 2017-01-24
+### Added
+- 'trimFakeTextAt' parameter to newTextField() and newTextBox() options. Trim the text displayed when not editing to 1..Number and add ".." on end.
+
 ## [0.1.62] - 2017-01-24
 ### Added
 - 'textFieldFontSize' parameter to newTextField() options. Sets font size used in text field.

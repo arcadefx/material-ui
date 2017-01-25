@@ -174,6 +174,13 @@ function M.newTextField(options)
        end
     end
     
+    if options.trimFakeTextAt ~= nil then
+        local lenOfText = string.len(fadeText)
+        fadeText = string.sub(fadeText, 1, options.trimFakeTextAt)
+        if lenOfText > options.trimFakeTextAt then
+            fadeText = fadeText .. ".."
+        end
+    end
     local textOptions =
     {
         --parent = textGroup,
@@ -282,6 +289,7 @@ function M.textListener(event)
         muiData.widgetDict[name]["textfield"].isSecure = false
         M.highlightTextField(name, false)
         if event.target.callBack ~= nil then
+            local options = muiData.widgetDict[name].options
             M.updateUI(event)
             if muiData.widgetDict[name]["textfieldfake"] ~= nil then
                 local text = event.target.text
@@ -293,7 +301,16 @@ function M.textListener(event)
                     end
                 end
                 if text ~= nil and string.len(text) > 0 then
-                    muiData.widgetDict[name]["textfieldfake"].text = text
+
+                    if options.trimFakeTextAt ~= nil then
+                        muiData.widgetDict[name]["textfieldfake"].text = string.sub(text, 1, options.trimFakeTextAt)
+                        if string.len(text) > options.trimFakeTextAt then
+                            muiData.widgetDict[name]["textfieldfake"].text = muiData.widgetDict[name]["textfieldfake"].text .. ".."
+                        end
+                    else
+                        muiData.widgetDict[name]["textfieldfake"].text = text
+                    end
+                    --muiData.widgetDict[name]["textfieldfake"].text = text
                 else
                     muiData.widgetDict[name]["textfieldfake"].text = muiData.widgetDict[name]["textfield"].placeholder
                 end
@@ -420,10 +437,18 @@ function M.newTextBox(options)
     muiData.widgetDict[options.name]["textfield"].text = options.text
     muiData.widgetDict[options.name]["textfield"]:setTextColor( unpack(muiData.widgetDict[options.name]["textlabel"].inactiveColor) )
 
+    local fadeText = options.text
+    if options.trimFakeTextAt ~= nil then
+        local lenOfText = string.len(fadeText)
+        fadeText = string.sub(fadeText, 1, options.trimFakeTextAt)
+        if lenOfText > options.trimFakeTextAt then
+            fadeText = fadeText .. ".."
+        end
+    end
     local textOptions =
     {
         --parent = textGroup,
-        text = options.text,
+        text = fadeText,
         x = 0,
         y = 0,
         width = options.width,
@@ -455,15 +480,41 @@ end
 
 function M.setTextFieldValue(widgetName, value)
     if widgetName ~= nil then
+        local options = muiData.widgetDict[widgetName].options
         muiData.widgetDict[widgetName]["textfield"].text = value
-        muiData.widgetDict[widgetName]["textfieldfake"].text = value
+        if value ~= nil then
+            if options.trimFakeTextAt ~= nil then
+                value = string.sub(value, 1, options.trimFakeTextAt)
+                if string.len(text) > options.trimFakeTextAt then
+                    value = value .. ".."
+                end
+                muiData.widgetDict[widgetName]["textfieldfake"].text = value
+            else
+                muiData.widgetDict[widgetName]["textfieldfake"].text = value
+            end
+        else
+            muiData.widgetDict[widgetName]["textfieldfake"].text = value
+        end
     end
 end
 
 function M.setTextBoxValue(widgetName, value)
     if widgetName ~= nil then
+        local options = muiData.widgetDict[widgetName].options
         muiData.widgetDict[widgetName]["textfield"].text = value
-        muiData.widgetDict[widgetName]["textfieldfake"].text = value
+        if value ~= nil then
+            if options.trimFakeTextAt ~= nil then
+                value = string.sub(value, 1, options.trimFakeTextAt)
+                if string.len(text) > options.trimFakeTextAt then
+                    value = value .. ".."
+                end
+                muiData.widgetDict[widgetName]["textfieldfake"].text = value
+            else
+                muiData.widgetDict[widgetName]["textfieldfake"].text = value
+            end
+        else
+            muiData.widgetDict[widgetName]["textfieldfake"].text = value
+        end
     end
 end
 

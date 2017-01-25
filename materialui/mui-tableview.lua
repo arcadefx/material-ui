@@ -138,9 +138,9 @@ function M.newTableView( options )
 
         -- Insert a row into the tableView
         if v.backgroundColor ~= nil then
-            v.fillColor = v.backgroundColor
+            v.fillColor = v.backgroundColor or options.rowBackgroundColor
         else
-            v.fillColor = rowColor
+            v.fillColor = rowColor.default or options.rowBackgroundColor
         end
         local optionList = {
             isCategory = isCategory,

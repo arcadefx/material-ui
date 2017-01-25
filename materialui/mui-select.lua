@@ -228,6 +228,7 @@ function M.revealTableViewForSelector(name, options)
         noLines = true,
         rowColor = options.rowColor,
         rowHeight = options.height,
+        rowBackgroundColor = options.rowBackgroundColor, -- default if backgroundColor not in list below
         callBackTouch = options.callBackTouch,
         callBackRender = M.onRowRenderSelect,
         scrollListener = options.listener,

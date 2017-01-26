@@ -85,7 +85,6 @@ function M.newToolbarButton( options )
     -- label colors
     if options.labelColorOff == nil then
         options.labelColorOff = { 0, 0, 0 }
-        print("WHIIOP?")
     end
     if options.labelColor == nil then
         options.labelColor = { 1, 1, 1 }
@@ -183,6 +182,7 @@ function M.newToolbarButton( options )
         textSize = fontSize * 0.9
     end
 
+    textSize = mathFloor(textSize)
     local options2 = 
     {
         --parent = textGroup,
@@ -190,6 +190,7 @@ function M.newToolbarButton( options )
         x = 0,
         y = textY,
         font = font,
+        width = textSize,
         fontSize = textSize,
         align = "center"
     }

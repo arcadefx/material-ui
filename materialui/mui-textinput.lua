@@ -458,7 +458,10 @@ function M.newTextBox(options)
     }
     muiData.widgetDict[options.name]["textfieldfake"] = display.newText( textOptions )
     muiData.widgetDict[options.name]["textfieldfake"]:setFillColor( unpack(muiData.widgetDict[options.name]["textlabel"].inactiveColor) )
-    muiData.widgetDict[options.name]["textfieldfake"]:addEventListener("touch", M.showNativeInput)
+    -- muiData.widgetDict[options.name]["textfieldfake"]:addEventListener("touch", M.showNativeInput)
+    muiData.widgetDict[options.name]["rect"]:addEventListener("touch", M.showNativeInput)
+    muiData.widgetDict[options.name]["rect"].name = options.name
+    muiData.widgetDict[options.name]["rect"].dialogName = options.dialogName
     muiData.widgetDict[options.name]["textfieldfake"].name = options.name
     muiData.widgetDict[options.name]["textfieldfake"].dialogName = options.dialogName
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["textfieldfake"] )

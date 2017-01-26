@@ -639,9 +639,13 @@ function M.newIconButton(options)
     -- Calculate a font size that will best fit the given text field's height
     local checkbox = {contentHeight=options.height, contentWidth=options.width}
     local textToMeasure = display.newText( options.text, 0, 0, font, fontSize )
-    local fontSize = fontSize * ( ( checkbox.contentHeight ) / textToMeasure.contentHeight )
+    local fontSize = mathFloor(fontSize * ( ( checkbox.contentHeight ) / textToMeasure.contentHeight ))
     local tw = textToMeasure.contentWidth
     local th = textToMeasure.contentHeight
+
+    if string.len(options.text) < 2 then
+        tw = fontSize
+    end
 
     textToMeasure:removeSelf()
     textToMeasure = nil
@@ -857,10 +861,13 @@ function M.newCircleButton(options)
     -- Calculate a font size that will best fit the given text field's height
     local tempSize = {contentHeight=options.radius, contentWidth=options.radius}
     local textToMeasure = display.newText( options.text, 0, 0, font, fontSize )
-    local fontSize = fontSize * ( ( tempSize.contentHeight ) / textToMeasure.contentHeight )
+    local fontSize = mathFloor(fontSize * ( ( tempSize.contentHeight ) / textToMeasure.contentHeight ))
     local tw = textToMeasure.contentWidth
     local th = textToMeasure.contentHeight
 
+    if string.len(options.text) < 2 then
+        tw = fontSize
+    end
     textToMeasure:removeSelf()
     textToMeasure = nil
 

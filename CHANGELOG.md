@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.65] - 2017-01-25
+### Changes
+- fixed fontSize issue with newIconButton() and newCircleButton and newToolbarButton().
+- fixed newTextBox() on focus issue, it now uses the full width x height of textbox fake area.
+
 ## [0.1.64] - 2017-01-25
 ### Added
 - 'rowBackgroundColor' parameter to newTableView() and newSelect().  If no background color is specified per row use this color for background.

@@ -81,4 +81,11 @@ settings =
 		},
 		coronaWindowMovesWhenKeyboardAppears = true,
 	},
+    plugins =
+    {
+        ["plugin.utf8"] =
+        {
+            publisherId = "com.coronalabs"
+        },
+    },
 }

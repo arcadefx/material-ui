@@ -174,6 +174,7 @@ function scene:create( event )
         height = mui.getScaleVal(50),
         x = backgroundBottom.contentWidth * 0.5,
         y = screenH + mui.getScaleVal(150),
+        isFontIcon = true,
         font = "MaterialIcons-Regular.ttf",
         textColor = { 0, 0, 0 },
         textAlign = "center",

@@ -156,7 +156,7 @@ function M.newSelect(options)
     textOptions =
     {
         --parent = textGroup,
-        text = "keyboard_arrow_down",
+        text = M.getMaterialFontCodePointByName("keyboard_arrow_down"),
         x = 0,
         y = 0,
         width = options.width,

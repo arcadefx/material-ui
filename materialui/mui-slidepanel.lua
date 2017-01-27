@@ -182,6 +182,7 @@ function M.newSlidePanel(options)
                 touchpoint = options.touchpoint,
                 isChecked = v.isChecked,
                 isActive = v.isActive,
+                isFontIcon = true,
                 font = "MaterialIcons-Regular.ttf",
                 labelText = v.labelText,
                 labelFont = options.labelFont,
@@ -361,6 +362,14 @@ function M.newSlidePanelButton( options )
         isChecked = options.isActive
     end
 
+    if options.isFontIcon == nil then
+        options.isFontIcon = false
+        -- backwards compatiblity
+        if M.isMaterialFont(font) == true then
+            options.isFontIcon = true
+        end
+    end
+
     button["font"] = font
     button["fontSize"] = fontSize
     button["textMargin"] = textMargin
@@ -376,7 +385,9 @@ function M.newSlidePanelButton( options )
     textToMeasure = nil
 
     local buttonWidth = textWidth
+    textWidth = fontSize
     local buttonHeight = textHeight
+    -- local rectangle = display.newRect( buttonWidth * 0.5, 0, buttonWidth, buttonHeight )
     local rectangle = display.newRect( buttonWidth * 0.5, 0, buttonWidth, buttonHeight )
     options.backgroundColor = options.backgroundColor or { 1, 1, 1, 1 }
     rectangle:setFillColor( unpack( options.backgroundColor ) )
@@ -396,6 +407,15 @@ function M.newSlidePanelButton( options )
         textSize = fontSize * 0.9
     end
 
+    if options.isFontIcon == true then
+        tw = fontSize
+        if M.isMaterialFont(font) == true then
+            options.text = M.getMaterialFontCodePointByName(options.text)
+        end
+    elseif string.len(options.text) < 2 then
+        tw = fontSize
+    end
+
     local options2 =
     {
         --parent = textGroup,
@@ -403,6 +423,7 @@ function M.newSlidePanelButton( options )
         x = 0,
         y = textY,
         font = font,
+        width = textSize,
         fontSize = textSize,
         align = "left"
     }
@@ -436,15 +457,12 @@ function M.newSlidePanelButton( options )
             text = options.labelText,
             x = 0,
             y = 0,
-            width = labelWidth,
             font = options.labelFont,
             fontSize = fontSize * 0.45,
-            align = "left"
         }
         button["myText2"] = display.newText( options3 )
         button["myText2"]:setFillColor( unpack(textColor) )
-        button["myText2"].x = (labelWidth * 0.5) + button["rectangle"].contentWidth
-        button["myText2"].isVisible = true
+        button["myText2"].x = fontSize + (button["myText2"].contentWidth * 0.5)
         if isChecked then
             button["myText2"]:setFillColor( unpack(options.labelColor) )
             button["myText2"].isChecked = isChecked

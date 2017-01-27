@@ -36,10 +36,11 @@ local widget = require( "widget" )
 
 -- mui
 local muiData = require( "materialui.mui-data" )
-
+local materialFontCodePoints = require( "materialui.codepoints" )
 local mathFloor = math.floor
 local mathMod = math.fmod
 local mathABS = math.abs
+local utf8 = require( "plugin.utf8" )
 
 local M = {} -- for module array/table
 
@@ -73,6 +74,17 @@ function M.init_base(options)
   options = options or {}
   muiData.M = M -- all modules need access to parent methods
   muiData.environment = system.getInfo("environment")
+  muiData.androidApiLevel = system.getInfo("androidApiLevel")
+  muiData.platform = system.getInfo("platform")
+
+  -- utf8 support required for Android API < 23 (to be safe)
+  muiData.utf8 = utf8
+  muiData.utf8Assist = false
+  if muiData.androidApiLevel ~= nil and tonumber(muiData.androidApiLevel) < 23 then
+    muiData.utf8Assist = true
+  end
+
+  muiData.materialFontCodePoints = materialFontCodePoints
   muiData.value = options
   muiData.group = options.group
   muiData.parent = options.parent
@@ -619,6 +631,30 @@ function M.tableLength(T)
   local count = 0
   for _ in pairs(T) do count = count + 1 end
   return count
+end
+
+function M.isMaterialFont(font)
+  local result = false
+  if font ~= nil and string.find(font, "MaterialIcons%-Regular") ~= nil then
+    result = true
+  end
+  return result
+end
+
+function M.getMaterialFontCodePointByName(name)
+  local codepoint = nil
+  -- if muiData.utf8Assist == true and name ~= nil then
+  if name ~= nil then
+    for j,v in pairs(muiData.materialFontCodePoints) do
+      if j == name and v ~= nil then
+        codepoint = muiData.utf8.escape( "%x{"..v.."}" )
+        break
+      end
+    end
+  else
+    codepoint = name
+  end
+  return codepoint
 end
 
 function M.getColor(colorArray, index)

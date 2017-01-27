@@ -141,6 +141,16 @@ function M.newToolbarButton( options )
         isChecked = options.isActive
     end
 
+    if options.isFontIcon == nil then
+        options.isFontIcon = false
+        -- backwards compatiblity
+        print("font is "..font)
+        if M.isMaterialFont(font) == true then
+            options.isFontIcon = true
+            print("isMaterialFont!")
+        end
+    end
+
     button["font"] = font
     button["fontSize"] = fontSize
     button["textMargin"] = textMargin
@@ -180,6 +190,16 @@ function M.newToolbarButton( options )
     if useBothIconAndText == true then
         textY = -rectangle.contentHeight * 0.18
         textSize = fontSize * 0.9
+    end
+
+    if options.isFontIcon == true then
+        tw = textSize
+        print("font is so far "..font)
+        if M.isMaterialFont(font) == true then
+            options.text = M.getMaterialFontCodePointByName(options.text)
+        end
+    elseif string.len(options.text) < 2 then
+        tw = textSize
     end
 
     textSize = mathFloor(textSize)
@@ -406,6 +426,7 @@ function M.newToolbar( options )
                 touchpoint = options.touchpoint,
                 isChecked = v.isChecked,
                 isActive = v.isActive,
+                isFontIcon = true,
                 font = "MaterialIcons-Regular.ttf",
                 labelText = v.labelText,
                 labelFont = options.labelFont,

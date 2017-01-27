@@ -182,6 +182,7 @@ function M.newSlidePanel(options)
                 touchpoint = options.touchpoint,
                 isChecked = v.isChecked,
                 isActive = v.isActive,
+                isFontIcon = true,
                 font = "MaterialIcons-Regular.ttf",
                 labelText = v.labelText,
                 labelFont = options.labelFont,
@@ -361,6 +362,14 @@ function M.newSlidePanelButton( options )
         isChecked = options.isActive
     end
 
+    if options.isFontIcon == nil then
+        options.isFontIcon = false
+        -- backwards compatiblity
+        if M.isMaterialFont(font) == true then
+            options.isFontIcon = true
+        end
+    end
+
     button["font"] = font
     button["fontSize"] = fontSize
     button["textMargin"] = textMargin
@@ -396,6 +405,15 @@ function M.newSlidePanelButton( options )
         textSize = fontSize * 0.9
     end
 
+    if options.isFontIcon == true then
+        tw = fontSize
+        if M.isMaterialFont(font) == true then
+            options.text = M.getMaterialFontCodePointByName(options.text)
+        end
+    elseif string.len(options.text) < 2 then
+        tw = fontSize
+    end
+
     local options2 =
     {
         --parent = textGroup,
@@ -403,6 +421,7 @@ function M.newSlidePanelButton( options )
         x = 0,
         y = textY,
         font = font,
+        width = textSize,
         fontSize = textSize,
         align = "left"
     }

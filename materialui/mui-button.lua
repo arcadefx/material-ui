@@ -631,6 +631,14 @@ function M.newIconButton(options)
         isChecked = options.isChecked
     end
 
+    if options.isFontIcon == nil then
+        options.isFontIcon = false
+        -- backwards compatiblity
+        if M.isMaterialFont(options.font) == true then
+            options.isFontIcon = true
+        end
+    end
+
     muiData.widgetDict[options.name]["font"] = font
     muiData.widgetDict[options.name]["fontSize"] = fontSize
     muiData.widgetDict[options.name]["textMargin"] = textMargin
@@ -643,7 +651,12 @@ function M.newIconButton(options)
     local tw = textToMeasure.contentWidth
     local th = textToMeasure.contentHeight
 
-    if string.len(options.text) < 2 then
+    if options.isFontIcon == true then
+        tw = fontSize
+        if M.isMaterialFont(options.font) == true then
+            options.text = M.getMaterialFontCodePointByName(options.text)
+        end
+    elseif string.len(options.text) < 2 then
         tw = fontSize
     end
 
@@ -839,6 +852,14 @@ function M.newCircleButton(options)
         fillColor = options.fillColor
     end
 
+    if options.isFontIcon == nil then
+        options.isFontIcon = false
+        -- backwards compatiblity
+        if M.isMaterialFont(options.font) == true then
+            options.isFontIcon = true
+        end
+    end
+
     muiData.widgetDict[options.name]["font"] = font
     muiData.widgetDict[options.name]["fontSize"] = fontSize
     muiData.widgetDict[options.name]["textMargin"] = textMargin
@@ -865,9 +886,15 @@ function M.newCircleButton(options)
     local tw = textToMeasure.contentWidth
     local th = textToMeasure.contentHeight
 
-    if string.len(options.text) < 2 then
+    if options.isFontIcon == true then
+        tw = fontSize
+        if M.isMaterialFont(options.font) == true then
+            options.text = M.getMaterialFontCodePointByName(options.text)
+        end
+    elseif string.len(options.text) < 2 then
         tw = fontSize
     end
+
     textToMeasure:removeSelf()
     textToMeasure = nil
 
@@ -891,7 +918,7 @@ function M.newCircleButton(options)
     muiData.widgetDict[options.name]["myText"] = display.newText( options2 )
     muiData.widgetDict[options.name]["myText"]:setFillColor( unpack(textColor) )
     muiData.widgetDict[options.name]["myText"].isVisible = true
-    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myText"], true )
+    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myText"], false )
 
     local circle = muiData.widgetDict[options.name]["circlemain"]
 
@@ -1092,6 +1119,14 @@ function M.newRadioButton(options)
         isChecked = options.isChecked
     end
 
+    if options.isFontIcon == nil then
+        options.isFontIcon = false
+        -- backwards compatiblity
+        if M.isMaterialFont(font) == true then
+            options.isFontIcon = true
+        end
+    end
+
     radioButton["font"] = font
     radioButton["fontSize"] = fontSize
     radioButton["textMargin"] = textMargin
@@ -1107,6 +1142,15 @@ function M.newRadioButton(options)
     textToMeasure:removeSelf()
     textToMeasure = nil
 
+    if options.isFontIcon == true then
+        tw = fontSize
+        if M.isMaterialFont(font) == true then
+            options.text = M.getMaterialFontCodePointByName(options.text)
+        end
+    elseif string.len(options.text) < 2 then
+        tw = fontSize
+    end
+
     local options2 =
     {
         --parent = textGroup,
@@ -1114,7 +1158,7 @@ function M.newRadioButton(options)
         x = 0,
         y = 0,
         font = font,
-        width = textWidth,
+        width = fontSize,
         fontSize = fontSize,
         align = "center"
     }
@@ -1141,7 +1185,7 @@ function M.newRadioButton(options)
     local labelX = radioButton["mygroup"].x
     -- x,y of both myText and label is centered so divide by half
     local labelSpacing = fontSize * 0.1
-    labelX = radioButton["myText"].x + (textWidth * 0.5) + labelSpacing    
+    labelX = radioButton["myText"].x + (fontSize * 0.5) + labelSpacing    
     labelX = labelX + (labelWidth * 0.5)
     local options3 = 
     {
@@ -1295,6 +1339,7 @@ function M.newRadioGroup(options)
                 x = x,
                 y = y,
                 isChecked = v.isChecked,
+                isFontIcon = true,
                 font = "MaterialIcons-Regular.ttf",
                 labelFont = options.labelFont,
                 textColor = options.textColor,
@@ -1323,10 +1368,10 @@ function M.actionForPlus( e )
     if muiTarget ~= nil then
         if muiTarget.isChecked == true then
             muiTarget.isChecked = false
-            muiTarget.text = "add_circle"
+            muiTarget.text = M.getMaterialFontCodePointByName("add_circle")
          else
             muiTarget.isChecked = true
-            muiTarget.text = "add_circle"
+            muiTarget.text = M.getMaterialFontCodePointByName("add_circle")
             if muiTargetValue ~= nil then
                 print("checkbox value = "..muiTargetValue)
             end
@@ -1341,10 +1386,10 @@ function M.actionForCheckbox( e )
     if muiTarget ~= nil then
         if muiTarget.isChecked == true then
             muiTarget.isChecked = false
-            muiTarget.text = "check_box_outline_blank"
+            muiTarget.text = M.getMaterialFontCodePointByName("check_box_outline_blank")
          else
             muiTarget.isChecked = true
-            muiTarget.text = "check_box"
+            muiTarget.text = M.getMaterialFontCodePointByName("check_box")
             if muiTargetValue ~= nil then
                 print("checkbox value = "..muiTargetValue)
             end
@@ -1364,15 +1409,15 @@ function M.actionForRadioButton( e )
         local list = muiData.widgetDict[basename]["radio"]
         for k, v in pairs(list) do
             v["myText"].isChecked = false
-            v["myText"].text = "radio_button_unchecked"
+            v["myText"].text = M.getMaterialFontCodePointByName("radio_button_unchecked")
         end
 
         if muiTarget.isChecked == true then
             muiTarget.isChecked = false
-            muiTarget.text = "radio_button_unchecked"
+            muiTarget.text = M.getMaterialFontCodePointByName("radio_button_unchecked")
          else
             muiTarget.isChecked = true
-            muiTarget.text = "radio_button_checked"
+            muiTarget.text = M.getMaterialFontCodePointByName("radio_button_checked")
         end
         if muiTargetValue ~= nil then
             muiData.widgetDict[basename]["value"] = muiTargetValue

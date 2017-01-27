@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.1.67] - 2017-01-27
 ### Changes
+
 - fixed issue with attachToNavBar() when attaching a custom widget and supplying a destroy method was crashing.
 
 ## [0.1.66] - 2017-01-27

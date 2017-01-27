@@ -161,8 +161,10 @@ function M.attachToNavBar(navbar_name, options )
     muiData.widgetDict[navbar_name]["list"][widgetName] = options.widgetType
     if muiData.widgetDict[navbar_name]["destroy"] == nil then
         muiData.widgetDict[navbar_name]["destroy"] = {}
+        muiData.widgetDict[navbar_name]["destroy_object"] = {}
     end
     muiData.widgetDict[navbar_name]["destroy"][widgetName] = options.destroyCallBack
+    muiData.widgetDict[navbar_name]["destroy_object"][widgetName] = widget    
 
     if options.align == nil then
         options.align = "left"
@@ -219,7 +221,7 @@ function M.removeNavbar(widgetName)
                 M.removeTextField(name)
             elseif widgetType == "Generic" then
               if muiData.widgetDict[widgetName]["destroy"] ~= nil and muiData.widgetDict[widgetName]["destroy"][name] ~= nil then
-                assert( muiData.widgetDict[widgetName]["destroy"][name] )(event)
+                assert( muiData.widgetDict[widgetName]["destroy"][name] )( muiData.widgetDict[widgetName]["destroy_object"][name] )
               end
             end
         end

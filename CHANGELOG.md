@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.67] - 2017-01-27
+### Changes
+
+- fixed issue with attachToNavBar() when attaching a custom widget and supplying a destroy method was crashing.
+
 ## [0.1.66] - 2017-01-27
 ### Added
 - UTF-8 string plugin from Corona Labs is now "required" and must be installed to use this version.  See updated README or online documentation for installation.  This was done to support UTF-8 in material icon font and for future UTF-8 support.  

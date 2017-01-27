@@ -385,7 +385,9 @@ function M.newSlidePanelButton( options )
     textToMeasure = nil
 
     local buttonWidth = textWidth
+    textWidth = fontSize
     local buttonHeight = textHeight
+    -- local rectangle = display.newRect( buttonWidth * 0.5, 0, buttonWidth, buttonHeight )
     local rectangle = display.newRect( buttonWidth * 0.5, 0, buttonWidth, buttonHeight )
     options.backgroundColor = options.backgroundColor or { 1, 1, 1, 1 }
     rectangle:setFillColor( unpack( options.backgroundColor ) )
@@ -455,15 +457,12 @@ function M.newSlidePanelButton( options )
             text = options.labelText,
             x = 0,
             y = 0,
-            width = labelWidth,
             font = options.labelFont,
             fontSize = fontSize * 0.45,
-            align = "left"
         }
         button["myText2"] = display.newText( options3 )
         button["myText2"]:setFillColor( unpack(textColor) )
-        button["myText2"].x = (labelWidth * 0.5) + button["rectangle"].contentWidth
-        button["myText2"].isVisible = true
+        button["myText2"].x = fontSize + (button["myText2"].contentWidth * 0.5)
         if isChecked then
             button["myText2"]:setFillColor( unpack(options.labelColor) )
             button["myText2"].isChecked = isChecked

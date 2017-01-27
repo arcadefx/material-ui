@@ -643,8 +643,8 @@ end
 
 function M.getMaterialFontCodePointByName(name)
   local codepoint = nil
-  -- if muiData.utf8Assist == true and name ~= nil then
-  if name ~= nil then
+  if muiData.utf8Assist == true and name ~= nil then
+  --if name ~= nil then
     for j,v in pairs(muiData.materialFontCodePoints) do
       if j == name and v ~= nil then
         codepoint = muiData.utf8.escape( "%x{"..v.."}" )

@@ -331,8 +331,8 @@ function scene:create( event )
                 buttonHighlightColorAlpha = 0.5,
                 lineSeparatorHeight = mui.getScaleVal(1),
                 list = {
-                    { key = "Home", value = "1", icon="home", iconImage="1484022678_go-home.png", labelText="Home", isActive = true, callBack = hideSlidePanel },
-                    { key = "Newsroom", value = "2", icon="new_releases", iconImage="1484026171_02.png", labelText="News", isActive = false },
+                    { key = "Home", value = "1", icon="home", iconImage="1484022678_go-home.png", labelText="Home", isActive = false, callBack = hideSlidePanel },
+                    { key = "Newsroom", value = "2", icon="new_releases", iconImage="1484026171_02.png", labelText="News", isActive = true },
                     { key = "Location", value = "3", icon="location_searching", labelText="Location Information", isActive = false, iconColor = { 0.26, 0.52, 0.96, 1 }, iconColorOff = { 0.26, 0.52, 0.96, 1 } },
                     { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false, iconColor = { 0.92, 0.26, 0.21, 1 }, iconColorOff = { 0.92, 0.26, 0.21, 1 } },
                     { key = "LineSeparator" },

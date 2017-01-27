@@ -153,6 +153,7 @@ function M.newTileGrid(options)
             fontSize = options.fontSize or M.getScaleVal(24),
             iconImage = v.iconImage,
             icon = v.icon,
+            isFontIcon = true,
             iconFont = options.iconFont,
             iconFontSize = v.iconFontSize or options.fontSize,
             labelFont = options.labelFont,
@@ -277,7 +278,7 @@ function M.newTile(options)
         local options2 = 
         {
             --parent = textGroup,
-            text = options.icon,
+            text = M.getMaterialFontCodePointByName(options.icon),
             x = options.width * 0.5,
             y = options.height * iconOffset,
             width = options.width - options.padding,

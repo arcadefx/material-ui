@@ -1168,7 +1168,7 @@ function M.newRadioButton(options)
     radioButton["myText"].isVisible = true
     if isChecked then
         if options.textOn ~= nil then
-            radioButton["myText"].text = options.textOn
+            radioButton["myText"].text = M.getMaterialFontCodePointByName(options.textOn)
         end
         radioButton["myText"].isChecked = isChecked
     end

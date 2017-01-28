@@ -77,14 +77,20 @@ function M.init_base(options)
   muiData.androidApiLevel = system.getInfo("androidApiLevel")
   muiData.platform = system.getInfo("platform")
 
+  muiData.materialFont = "MaterialIcons-Regular.ttf"
+  muiData.materialFontCodePoints = materialFontCodePoints
+  M.materialFont = muiData.materialFont
+
   -- utf8 support required for Android API < 23 (to be safe)
   muiData.utf8 = utf8
   muiData.utf8Assist = false
   if muiData.androidApiLevel ~= nil and tonumber(muiData.androidApiLevel) < 23 then
     muiData.utf8Assist = true
+    muiData.materialFont = "MaterialIcons-Regular.otf"
+    muiData.materialFontCodePoints = materialFontCodePoints
+    M.materialFont = muiData.materialFont
   end
 
-  muiData.materialFontCodePoints = materialFontCodePoints
   muiData.value = options
   muiData.group = options.group
   muiData.parent = options.parent
@@ -644,7 +650,6 @@ end
 function M.getMaterialFontCodePointByName(name)
   local codepoint = nil
   if muiData.utf8Assist == true and name ~= nil then
-  --if name ~= nil then
     for j,v in pairs(muiData.materialFontCodePoints) do
       if j == name and v ~= nil then
         codepoint = muiData.utf8.escape( "%x{"..v.."}" )

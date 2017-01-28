@@ -1340,7 +1340,7 @@ function M.newRadioGroup(options)
                 y = y,
                 isChecked = v.isChecked,
                 isFontIcon = true,
-                font = "MaterialIcons-Regular.ttf",
+                font = muiData.materialFont,
                 labelFont = options.labelFont,
                 textColor = options.textColor,
                 textAlign = "center",

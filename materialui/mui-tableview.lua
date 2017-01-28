@@ -271,7 +271,7 @@ function M.onRowRenderDemo( event )
         height = M.getScaleVal(40),
         x = 0,
         y = 0,
-        font = "MaterialIcons-Regular.ttf",
+        font = muiData.materialFont,
         textColor = { 1, 0, 0.4 },
         textAlign = "center",
         callBack = M.actionForButton

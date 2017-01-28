@@ -56,7 +56,7 @@ function scene:create( event )
         x = 0,
         y = 0,
         fontIsScaled = false, -- default is true for scaling font to fit tile size width or false to not scale.
-        iconFont = "MaterialIcons-Regular.ttf",
+        iconFont = muiData.materialFont, -- use pre-defined font
         fontSize = mui.getScaleVal(100),
         labelFont = native.systemFont,
         textColor = { 1, 1, 1 },

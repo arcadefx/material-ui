@@ -194,7 +194,6 @@ function M.newToolbarButton( options )
 
     if options.isFontIcon == true then
         tw = textSize
-        print("font is so far "..font)
         if M.isMaterialFont(font) == true then
             options.text = M.getMaterialFontCodePointByName(options.text)
         end
@@ -427,7 +426,7 @@ function M.newToolbar( options )
                 isChecked = v.isChecked,
                 isActive = v.isActive,
                 isFontIcon = true,
-                font = "MaterialIcons-Regular.ttf",
+                font = muiData.materialFont,
                 labelText = v.labelText,
                 labelFont = options.labelFont,
                 labelFontSize = options.labelFontSize,

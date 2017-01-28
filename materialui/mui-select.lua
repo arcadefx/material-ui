@@ -160,7 +160,7 @@ function M.newSelect(options)
         x = 0,
         y = 0,
         width = options.width,
-        font = "MaterialIcons-Regular.ttf",
+        font = muiData.materialFont,
         fontSize = options.height * 0.55,
         align = "right"  --new alignment parameter
     }

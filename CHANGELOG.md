@@ -2,9 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.68] - 2017-01-28
+### Added
+- "mui.materialFont" variable. The font is mapped to use "MaterialIcons-Regular.ttf" or "MaterialIcons-Regular.otf" font icons.  The font is automatically assigned to the variable and is  determined by mobile OS compability.  This is optional usage, but can help so there are no 'hard coded' fonts to replace.
+
 ## [0.1.67] - 2017-01-27
 ### Changes
-
 - fixed issue with attachToNavBar() when attaching a custom widget and supplying a destroy method was crashing.
 
 ## [0.1.66] - 2017-01-27

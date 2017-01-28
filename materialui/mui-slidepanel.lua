@@ -183,7 +183,7 @@ function M.newSlidePanel(options)
                 isChecked = v.isChecked,
                 isActive = v.isActive,
                 isFontIcon = true,
-                font = "MaterialIcons-Regular.ttf",
+                font = muiData.materialFont,
                 labelText = v.labelText,
                 labelFont = options.labelFont,
                 labelFontSize = options.labelFontSize,

@@ -329,7 +329,7 @@ function scene:create( event )
         height = mui.getScaleVal(50),
         x = mui.getScaleVal(0),
         y = mui.getScaleVal(0),
-        font = "MaterialIcons-Regular.ttf",
+        font = mui.materialFont,
         textColor = { 1, 1, 1 },
         textAlign = "center",
         callBack = showSlidePanel2
@@ -346,7 +346,7 @@ function scene:create( event )
         height = mui.getScaleVal(50),
         x = mui.getScaleVal(0),
         y = mui.getScaleVal(0),
-        font = "MaterialIcons-Regular.ttf",
+        font = mui.materialFont,
         textColor = { 1, 1, 1 },
         textAlign = "center",
         callBack = mui.actionForButton
@@ -382,7 +382,7 @@ function scene:create( event )
         height = mui.getScaleVal(50),
         x = mui.getScaleVal(0),
         y = mui.getScaleVal(0),
-        font = "MaterialIcons-Regular.ttf",
+        font = mui.materialFont,
         textColor = { 1, 1, 1 },
         textAlign = "center",
         callBack = mui.actionForButton

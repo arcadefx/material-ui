@@ -530,6 +530,12 @@ function M.slidePanelEventButton (event)
         M.updateUI(event)
         if muiData.touching == false then
             muiData.touching = true
+            for name in pairs(muiData.widgetDict[options.basename]["slidebar"]) do
+                if muiData.widgetDict[options.basename]["slidebar"][name]["myButton"] ~= nil then
+                  muiData.widgetDict[options.basename]["slidebar"][name]["myButton"]:setFillColor( unpack(options.backgroundColor) )
+                  muiData.widgetDict[options.basename]["slidebar"][name]["myButton"].alpha = 0.01
+                end
+            end
             muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"]:setFillColor( unpack( options.buttonHighlightColor ) )
             muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"].alpha = options.buttonHighlightColorAlpha
         end

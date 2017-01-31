@@ -534,10 +534,15 @@ function M.slidePanelEventButton (event)
                 if muiData.widgetDict[options.basename]["slidebar"][name]["myButton"] ~= nil then
                   muiData.widgetDict[options.basename]["slidebar"][name]["myButton"]:setFillColor( unpack(options.backgroundColor) )
                   muiData.widgetDict[options.basename]["slidebar"][name]["myButton"].alpha = 0.01
+
+                  muiData.widgetDict[options.basename]["slidebar"][name]["myText2"]:setFillColor( unpack(options.labelColorOff) )
+                  muiData.widgetDict[options.basename]["slidebar"][name]["myText2"].isChecked = false
                 end
             end
             muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"]:setFillColor( unpack( options.buttonHighlightColor ) )
             muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"].alpha = options.buttonHighlightColorAlpha
+            muiData.widgetDict[options.basename]["slidebar"][options.name]["myText2"]:setFillColor( unpack(options.labelColor) )
+            muiData.widgetDict[options.basename]["slidebar"][options.name]["myText2"].isChecked = isChecked
         end
     elseif ( event.phase == "cancelled" or event.phase == "moved" ) then
         M.sliderButtonResetColor( muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"] )

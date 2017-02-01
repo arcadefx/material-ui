@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.69] - 2017-02-01
+### Changes
+- removed dependency of utf8 plugin. This may be added back in future versions.  For now it simplifies the installation and not requiring Internet access to build.  A pure lua utf8 method was put in place to handle the requirements.  Feel free to use the utf8 plugin as the method here will not conflict with it. uft8 plugin is awesome for internationalization.
+- "newSlidePanel" now will highlight the last menu item selected. This requires the methods hideSlidePanel() and showSlidePanel(). If not it will 'destroy' the menu after an item is selected. Just use these in your callbacks.
+- Fixed some bugs.
+
 ## [0.1.68] - 2017-01-28
 ### Added
 - "mui.materialFont" variable. The font is mapped to use "MaterialIcons-Regular.ttf" or "MaterialIcons-Regular.otf" font icons.  The font is automatically assigned to the variable and is  determined by mobile OS compability.  This is optional usage, but can help so there are no 'hard coded' fonts to replace.

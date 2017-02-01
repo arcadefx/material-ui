@@ -23,14 +23,6 @@ materialui (folder)
 icon-font (folder)
 ```
 
-* Install required plugin from Coronalabs UTF-8 string plugin (free) *
-
-[UTF-8 string plugin - Activate for Install](https://marketplace.coronalabs.com/plugin/utf-8)
-
-[UTF-8 string plugin - Install Guide](https://coronalabs.com/blog/2016/03/21/introducing-the-utf-8-string-plugin/)
-
-Basically, just activate the plugin and in your build.settings file add in the plugin reference. See supplied build.settings for an example.
-
 * Edit your scene file and be sure to include at the top:
 ```
 local mui = require( "materialui.mui" )

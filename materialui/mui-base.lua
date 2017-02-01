@@ -40,9 +40,27 @@ local materialFontCodePoints = require( "materialui.codepoints" )
 local mathFloor = math.floor
 local mathMod = math.fmod
 local mathABS = math.abs
-local utf8 = require( "plugin.utf8" )
+-- local utf8 = require( "plugin.utf8" )
 
 local M = {} -- for module array/table
+
+local string_char = string.char
+local utf8v1 = function(cp)
+  if cp < 128 then
+    return string_char(cp)
+  end
+  local s = ""
+  local prefix_max = 32
+  while true do
+    local suffix = cp % 64
+    s = string_char(128 + suffix)..s
+    cp = (cp - suffix) / 64
+    if cp < prefix_max then
+      return string_char((256 - (2 * prefix_max)) + cp)..s
+    end
+    prefix_max = prefix_max / 2
+  end
+end
 
 local function updateTheShadows( e )
     for k,v in pairs(muiData.shadowShapeDict) do
@@ -82,7 +100,7 @@ function M.init_base(options)
   M.materialFont = muiData.materialFont
 
   -- utf8 support required for Android API < 23 (to be safe)
-  muiData.utf8 = utf8
+  muiData.utf8 = utf8v1
   muiData.utf8Assist = false
   if muiData.androidApiLevel ~= nil and tonumber(muiData.androidApiLevel) < 23 then
     muiData.utf8Assist = true
@@ -650,9 +668,11 @@ end
 function M.getMaterialFontCodePointByName(name)
   local codepoint = nil
   if muiData.utf8Assist == true and name ~= nil then
+    --if name ~= nil then
     for j,v in pairs(muiData.materialFontCodePoints) do
       if j == name and v ~= nil then
-        codepoint = muiData.utf8.escape( "%x{"..v.."}" )
+        -- codepoint = muiData.utf8.escape( "%x{"..v.."}" )
+        codepoint = muiData.utf8( tonumber(v, 16) )
         break
       end
     end

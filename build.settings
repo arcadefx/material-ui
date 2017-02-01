@@ -81,6 +81,7 @@ settings =
 		},
 		coronaWindowMovesWhenKeyboardAppears = true,
 	},
+	--[[
     plugins =
     {
         ["plugin.utf8"] =
@@ -88,4 +89,5 @@ settings =
             publisherId = "com.coronalabs"
         },
     },
+    --]]
 }

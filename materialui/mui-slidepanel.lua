@@ -66,6 +66,7 @@ function M.newSlidePanel(options)
     muiData.dialogInUse = true
     muiData.slidePanelName = options.name
     muiData.slidePanelInUse = true
+    muiData.slideBarrierTouched = false
 
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "SlidePanel"
@@ -609,7 +610,13 @@ function M.actionForSlidePanel( options, e )
 end
 
 function M.showSlidePanel( widgetName )
-    if widgetName ~= nil and muiData.widgetDict[widgetName] ~= nil then
+
+    if widgetName ~= nil and muiData.widgetDict[widgetName] ~= nil and muiData.slideBarrierTouched == false then
+
+        if muiData.slidePanelInUse == true then
+            M.hideSlidePanel( widgetName )
+            return
+        end
         -- animate the menu button
         if muiData.widgetDict[widgetName]["buttonToAnimate"] ~= nil then
             transition.to( muiData.widgetDict[widgetName]["buttonToAnimate"], { rotation=90, time=300, transition=easing.inOutCubic } )
@@ -623,6 +630,7 @@ function M.showSlidePanel( widgetName )
         muiData.slidePanelName = widgetName
         muiData.slidePanelInUse = true
     end
+    muiData.slideBarrierTouched = false
 end
 
 function M.hideSlidePanel( widgetName )
@@ -635,6 +643,7 @@ function M.hideSlidePanel( widgetName )
         muiData.dialogInUse = false
         muiData.slidePanelName = nil
         muiData.slidePanelInUse = false
+        print("muiData.slidePanelInUse is false now")
         -- animate the menu button
         if muiData.widgetDict[options.name]["buttonToAnimate"] ~= nil then
             transition.to( muiData.widgetDict[options.name]["buttonToAnimate"], { rotation=0, time=300, transition=easing.inOutCubic } )
@@ -648,7 +657,10 @@ function M.closeSlidePanel( widgetName )
         event.target = muiData.widgetDict[widgetName]["scrollview"]
         event.target.muiOptions = muiData.widgetDict[widgetName]["mygroup"].muiOptions
         event.phase = "ended"
-        M.touchSlidePanelBarrier( event )
+        --M.touchSlidePanelBarrier( event )
+        if event.target.muiOptions ~= nil and event.target.muiOptions.name ~= nil then
+            M.hideSlidePanel( event.target.muiOptions.name )
+        end
     end
 end
 
@@ -658,27 +670,9 @@ function M.touchSlidePanelBarrier( event )
         options = event.target.muiOptions
     end
 
-    if ( event.phase == "began" ) then
-
-        muiData.widgetDict[options.name]["interceptEventHandler"] = M.touchSlidePanelBarrier
-        M.updateUI(event)
-        if muiData.touching == false then
-            muiData.touching = true
-        end
-    elseif ( event.phase == "ended" ) then
-        local width = muiData.widgetDict[options.name]["width"]
-
-        transition.fadeOut(muiData.widgetDict[options.name]["rectclick"],{time=200})
-        transition.fadeOut(muiData.widgetDict[options.name]["rectbackdrop"],{time=300})
-        muiData.widgetDict[options.name]["scrollview"].muiOptions = options
-        transition.to( muiData.widgetDict[options.name]["scrollview"], { time=300, x=-(options.width * 0.5), transition=easing.linear, onComplete=M.sliderPanelFinish } )
-        -- animate the menu button
-        if muiData.widgetDict[options.name]["buttonToAnimate"] ~= nil then
-            transition.to( muiData.widgetDict[options.name]["buttonToAnimate"], { rotation=0, time=300, transition=easing.inOutCubic } )
-        end
-        muiData.touching = false
-        muiData.interceptEventHandler = nil
-        muiData.widgetDict[options.name]["interceptEventHandler"] = nil
+    if options ~= nil and options.name ~= nil then
+        M.hideSlidePanel( options.name )
+        muiData.slideBarrierTouched = true
     end
 end
 

@@ -222,7 +222,6 @@ function M.onRowRender( event )
 
         if row.params.rowColor ~= nil then
             rowColor = row.params.rowColor
-            print("rowColor sent? "..(row.params.value or "crap"))
         end
 
         if row.params.textColor ~= nil then textColor = row.params.textColor end

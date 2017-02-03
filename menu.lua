@@ -537,6 +537,7 @@ function scene:create( event )
         top = mui.getScaleVal(40),
         left = display.contentWidth - mui.getScaleVal(315),
         font = native.systemFont,
+        fontSize = mui.getScaleVal(24),
         textColor = { 0, 0, 0, 1 },
         lineColor = { 1, 1, 1, 1 },
         lineHeight = mui.getScaleVal(4),
@@ -552,10 +553,32 @@ function scene:create( event )
             { key = "Row2", text = "Row 2", value = "2", isCategory = false },
             { key = "Row3", text = "Row 3", value = "3", isCategory = false },
             { key = "Row4", text = "Row 4", value = "4", isCategory = false },
+            { key = "Row5", text = "Row 5", value = "5", fontSize = mui.getScaleVal(18), isCategory = false, columns = {
+                    { text = "Row 5 Column 1", value = "5A", align = "left" },
+                    { text = "Row 5 Column 2", value = "5B", align = "left" },
+                    { text = "Row 5 Column 3", value = "5C", align = "left" },
+                },
+            },
+            { key = "Row6", text = "Row 6", value = "6", fontSize = mui.getScaleVal(18), isCategory = false, columns = {
+                    { text = "Row 6 Column 1", value = "6A", align = "center" },
+                    { text = "Row 6 Column 2", value = "6B", align = "center" },
+                    { text = "Row 6 Column 3", value = "6C", align = "center" },
+                },
+            },
+            { key = "Row7", text = "Row 7", value = "7", fontSize = mui.getScaleVal(18), isCategory = false, columns = {
+                    { text = "Row 7 Column 1", value = "7A", align = "right" },
+                    { text = "Row 7 Column 2", value = "7B", align = "right" },
+                    { text = "Row 7 Column 3", value = "7C", align = "right" },
+                },
+            },
+            { key = "Row8", text = "Row 8", value = "8", isCategory = false, fillColor = { 0, 0, 1, 0.2 }  },
             -- below are rows with different colors
             -- set "noLines" to true above to omit line border
             -- { key = "Row5", text = "Row 5", value = "5", isCategory = false, fillColor = { 0.67, 0.98, 0.65, 0.2 } },
             -- { key = "Row6", text = "Row 6", value = "6", isCategory = false, fillColor = { 1, 0, 0, 0.2 }  },
+        },
+        columnOptions = {
+            widths = { mui.getScaleVal(100), mui.getScaleVal(100), mui.getScaleVal(100) }, -- must supply each else "auto" is assumed.
         },
         categoryColor = { default={0.8,0.8,0.8,0.8} },
         categoryLineColor = { 1, 1, 1, 0 },

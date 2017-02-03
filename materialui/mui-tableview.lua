@@ -66,6 +66,10 @@ function M.newTableView( options )
         options.font = native.systemFont
     end
 
+    if options.fontSize == nil then
+        options.fontSize = M.getScaleVal(20)
+    end
+
     if options.strokeWidth == nil then
         options.strokeWidth = 0
     end
@@ -138,9 +142,9 @@ function M.newTableView( options )
 
         -- Insert a row into the tableView
         if v.backgroundColor ~= nil then
-            v.fillColor = v.backgroundColor or options.rowBackgroundColor
+            v.fillColor = v.fillColor or v.backgroundColor
         else
-            v.fillColor = rowColor.default or options.rowBackgroundColor
+            v.fillColor = v.fillColor or rowColor.default
         end
         local optionList = {
             isCategory = isCategory,
@@ -151,8 +155,13 @@ function M.newTableView( options )
                 basename = options.name,
                 name = options.name,
                 text = v.text,
-                font = options.font,
+                font = v.font or options.font,
+                fontSize = v.fontSize or options.fontSize,
+                align = v.align or "left",
                 value = v.value,
+                width = options.width,
+                columns = v.columns,
+                columnOptions = options.columnOptions,
                 padding = options.padding,
                 noLines = options.noLines,
                 lineHeight = options.lineHeight,
@@ -182,6 +191,8 @@ function M.getTableViewProperty(widgetName, propertyName)
         data = muiData.widgetDict[widgetName]["tableview"] -- x,y movement
     elseif propertyName == "value" then
         data = muiData.widgetDict[widgetName]["value"] -- value
+    elseif propertyName == "list" then
+        data = muiData.widgetDict[widgetName]["list"] -- rows and/or rows and columns
     end
     return data
 end
@@ -211,6 +222,7 @@ function M.onRowRender( event )
 
         if row.params.rowColor ~= nil then
             rowColor = row.params.rowColor
+            print("rowColor sent? "..(row.params.value or "crap"))
         end
 
         if row.params.textColor ~= nil then textColor = row.params.textColor end
@@ -284,13 +296,63 @@ function M.onRowRenderDemo( event )
     })
     --]]--
 
-    local rowTitle = display.newText( row, row.params.text, 0, 0, font, M.getScaleVal(30) )
-    rowTitle:setFillColor( unpack( textColor ) )
+    local row = event.row
+    local colWidth = 0
+    local x1 = 0
+    if row.params.columns ~= nil then
+        for i, v in ipairs(row.params.columns) do
 
-    -- Align the label left and vertically centered
-    rowTitle.anchorX = 0
-    rowTitle.x = 0
-    rowTitle.y = rowHeight * 0.5
+            colWidth = 0
+            if row.params.columnOptions ~= nil and row.params.columnOptions.widths ~= nil then
+                for j, k in ipairs(row.params.columnOptions.widths) do
+                    if j == i then
+                        colWidth = tonumber( k )
+                        colWidth = colWidth - 5
+                        break
+                    end
+                end
+            end
+            local container = display.newContainer( row, colWidth, rowHeight-10 )
+            local textOptions =
+            {
+                parent = container,
+                text = v.text,
+                x = 0,
+                y = 0,
+                width = colWidth,
+                font = font,
+                fontSize = row.params.fontSize,
+                align = v.align or "left"  -- Alignment parameter
+            }
+            local rowTitle = display.newText( textOptions )
+            rowTitle:setFillColor( unpack( textColor ) )
+            -- Align the label left and vertically centered
+            --rowTitle.anchorX = 0
+            --rowTitle.x = 0
+            --rowTitle.y = rowHeight * 0.5
+            x1 = x1 + colWidth
+            if i < 2 then x1 = x1 * 0.5 end
+            container.x = x1
+            container.y = rowHeight * 0.5
+        end
+    else
+        local textOptions =
+        {
+            parent = row,
+            text = row.params.text,
+            x = 0,
+            y = rowHeight * 0.5,
+            width = rowWidth,
+            font = font,
+            fontSize = row.params.fontSize,
+            align = row.params.align or "left"  -- Alignment parameter
+        }
+        local rowTitle = display.newText( textOptions )
+        rowTitle:setFillColor( unpack( textColor ) )
+
+        -- Align the label left and vertically centered
+        rowTitle.anchorX = 0
+    end
 end
 
 function M.attachToRow(row, options )
@@ -398,6 +460,7 @@ function M.onRowTouch( event )
         end
 
         M.setEventParameter(event, "muiTarget", row)
+        M.setEventParameter(event, "muiTargetRowParams", row.params)
         M.setEventParameter(event, "muiTargetIndex", event.target.index)
         if row.params ~= nil then
             M.setEventParameter(event, "muiTargetValue", row.params.value)
@@ -413,13 +476,35 @@ function M.onRowTouchDemo(event)
     local muiTarget = M.getEventParameter(event, "muiTarget")
     local muiTargetValue = M.getEventParameter(event, "muiTargetValue")
     local muiTargetIndex = M.getEventParameter(event, "muiTargetIndex")
+    local muiTargetRowParams = M.getEventParameter(event, "muiTargetRowParams")
 
     if muiTargetIndex ~= nil then
         print("row index: "..muiTargetIndex)
+
+        -- Example: set the color of line for bottom of row
+        -- muiTarget.bg1:setFillColor( unpack( { 0, 0, 0, 1 } ) )
+
+        -- uncomment the below for change a row parameter, will affect onRowRender() method too.
+        --[[
+        local rowColor = { 0, 1, 0, 1 }
+        muiTargetRowParams.rowColor = rowColor -- Example: for the color to be retained when onRowRender is called
+        muiTarget.bg2:setFillColor( unpack( rowColor ) ) -- Example: set the background color of the row itself    end
+        --]]--
+
     end
 
     if muiTargetValue ~= nil then
         print("row value: "..muiTargetValue)
+
+        -- access the columns of data
+        if muiTargetRowParams ~= nil and muiTargetRowParams.columns ~= nil then
+            print("columns of data are:")
+            for i, v in ipairs(muiTargetRowParams.columns) do
+                print("\tcolumn "..i.." text "..v.text)
+                print("\tcolumn "..i.." value "..v.value)
+                print("\tcolumn "..i.." align "..(v.align or "left"))
+            end
+        end
     end
 end
 

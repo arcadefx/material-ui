@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.71] - 2017-02-03
+### Changes
+- 'newTableView()' added support for multiple columns. See menu.lua and options for a row called "columns" which defines the columns (text, value, align).  Each row supports: text, value, font, fontSize, fillColor, isCategory.
+- 'newTableView()' see 'columnOptions' in options to set the width per column.
+- 'getTableViewProperty()' added 'list' to be able to access the list table (list = {}) for the rows or rows and columns.
+- 'onRowTouchDemo()' added example of pulling column data.
+- 'onRowTouchDemo()' added 'hidden' example of changing a rows color when clicked.
+- bugs fixes
+
 ## [0.1.70] - 2017-02-02
 ### Changes
 - 'newSlidePanel()' events fixed. Now the menu stays resident and hides/shows instead of destroying the menu. Menu is destroyed when switching scenes or when removeSlidePanel("name") is called.  It will also highlight the current selected item.

@@ -643,7 +643,6 @@ function M.hideSlidePanel( widgetName )
         muiData.dialogInUse = false
         muiData.slidePanelName = nil
         muiData.slidePanelInUse = false
-        print("muiData.slidePanelInUse is false now")
         -- animate the menu button
         if muiData.widgetDict[options.name]["buttonToAnimate"] ~= nil then
             transition.to( muiData.widgetDict[options.name]["buttonToAnimate"], { rotation=0, time=300, transition=easing.inOutCubic } )

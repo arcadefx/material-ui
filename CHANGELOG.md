@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.72] - 2017-02-05
+### Changes
+- Fixed bug in newTileGrid() when using composer to switch scenes and not using the built-in library method actionSwitchScene().
+
 ## [0.1.71] - 2017-02-03
 ### Changes
 - 'newTableView()' added support for multiple columns. See menu.lua and options for a row called "columns" which defines the columns (text, value, align).  Each row supports: text, value, font, fontSize, fillColor, isCategory.

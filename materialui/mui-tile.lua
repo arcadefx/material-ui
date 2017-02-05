@@ -437,8 +437,11 @@ function M.tileHighlightAnimFinish( e )
 end
 
 function M.tileResetColor( e )
-    e:setFillColor( unpack(e.muiOptions.tileFillColor) )
-    e.alpha = 1
+    -- check if exist to avoid issue with scene destroy call
+    if e ~= nil then
+        e:setFillColor( unpack(e.muiOptions.tileFillColor) )
+        e.alpha = 1
+    end
 end
 
 function M.tileCallBack( options, e )

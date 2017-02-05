@@ -438,7 +438,7 @@ end
 
 function M.tileResetColor( e )
     -- check if exist to avoid issue with scene destroy call
-    if e ~= nil then
+    if e ~= nil and e.setFillColor ~= nil then
         e:setFillColor( unpack(e.muiOptions.tileFillColor) )
         e.alpha = 1
     end
@@ -457,7 +457,7 @@ function M.tileCallBack( options, e )
         }
         M.actionSwitchScene(e)
     end
-    if muiTargetValue ~= nil then
+    if muiTargetValue ~= nil and muiData.widgetDict[options.basename] ~= nil then
         print("tile value: "..muiTargetValue)
         muiData.widgetDict[options.basename]["value"] = muiTargetValue
         local w = M.getTileButtonProperty("grid_demo", "layer_1", 1)

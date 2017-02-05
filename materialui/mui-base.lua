@@ -709,36 +709,46 @@ function M.fitImage( displayObject, fitWidth, fitHeight, enlarge )
 end
 
 function M.subtleRadius(e)
-    transition.fadeOut( e, { time=500, onComplete=M.subtleRadiusDone } )
+    if e ~= nil then
+      transition.fadeOut( e, { time=500, onComplete=M.subtleRadiusDone } )
+    end
 end
 
 function M.subtleRadiusDone(e)
-    e.isVisible = false
-    transition.to( e, { time=0,alpha=0.3, xScale=1, yScale=1 } )
-    muiData.touching = false
-    if muiData.tableCircle ~= nil then
-        muiData.tableCircle:toBack()
+    if e ~= nil then
+      e.isVisible = false
+      transition.to( e, { time=0,alpha=0.3, xScale=1, yScale=1 } )
+      muiData.touching = false
+      if muiData.tableCircle ~= nil then
+          muiData.tableCircle:toBack()
+      end
     end
 end
 
 function M.subtleRadius2(e)
-    transition.fadeOut( e, { time=300, onComplete=M.subtleRadiusDone2 } )
+    if e ~= nil then
+      transition.fadeOut( e, { time=300, onComplete=M.subtleRadiusDone2 } )
+    end
 end
 
 function M.subtleRadiusDone2(e)
-    e.isVisible = false
-    transition.to( e, { time=0,alpha=0.3, xScale=1, yScale=1 } )
-    muiData.touching = false
+    if e ~= nil then
+      e.isVisible = false
+      transition.to( e, { time=0,alpha=0.3, xScale=1, yScale=1 } )
+      muiData.touching = false
+    end
 end
 
 function M.subtleGlowRect( e )
-    transition.to( e, { time=300,alpha=1 } )
+    if e ~= nil then
+      transition.to( e, { time=300,alpha=1 } )
+    end
 end
 
 --[[ switch scene action ]]
 
 function M.actionSwitchScene( e )
-    if muiData.circleSceneSwitchComplete == true or muiData.circleSceneSwitch ~= nil then return end
+    if e == nil or muiData.circleSceneSwitchComplete == true or muiData.circleSceneSwitch ~= nil then return end
     local muiTarget = M.getEventParameter(e, "muiTarget")
     local muiTargetValue = M.getEventParameter(e, "muiTargetValue")
     local muiTargetCallBackData = M.getEventParameter(e, "muiTargetCallBackData")

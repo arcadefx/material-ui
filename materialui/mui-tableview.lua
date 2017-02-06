@@ -461,6 +461,7 @@ function M.onRowTouch( event )
         M.setEventParameter(event, "muiTarget", row)
         M.setEventParameter(event, "muiTargetRowParams", row.params)
         M.setEventParameter(event, "muiTargetIndex", event.target.index)
+        M.setEventParameter(event, "muiTableView", muiData.widgetDict[row.params.basename]["tableview"])
         if row.params ~= nil then
             M.setEventParameter(event, "muiTargetValue", row.params.value)
             muiData.widgetDict[row.params.name]["value"] = row.params.value
@@ -476,9 +477,18 @@ function M.onRowTouchDemo(event)
     local muiTargetValue = M.getEventParameter(event, "muiTargetValue")
     local muiTargetIndex = M.getEventParameter(event, "muiTargetIndex")
     local muiTargetRowParams = M.getEventParameter(event, "muiTargetRowParams")
+    local muiTableView = M.getEventParameter(event, "muiTableView")
 
     if muiTargetIndex ~= nil then
         print("row index: "..muiTargetIndex)
+
+        -- reset background color for all rows that are out of view.
+        --[[--
+        local tableViewRows = muiTableView._view._rows
+        for k, row in ipairs(tableViewRows) do
+            row.params.rowColor = { 1, 1, 1, 1 }
+        end
+        --]]--
 
         -- Example: set the color of line for bottom of row
         -- muiTarget.bg1:setFillColor( unpack( { 0, 0, 0, 1 } ) )

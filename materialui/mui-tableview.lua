@@ -90,6 +90,7 @@ function M.newTableView( options )
     muiData.tableCircle:setFillColor( unpack(options.circleColor) )
     muiData.tableCircle.isVisible = false
     muiData.tableCircle.alpha = 0.55
+    muiData.tableRow = nil
 
     -- Create the widget
     muiData.widgetDict[options.name] = {}
@@ -484,10 +485,18 @@ function M.onRowTouchDemo(event)
 
         -- reset background color for all rows that are out of view.
         --[[--
+
         local tableViewRows = muiTableView._view._rows
         for k, row in ipairs(tableViewRows) do
             row.params.rowColor = { 1, 1, 1, 1 }
         end
+        -- reset background color of previous selected row
+        if muiData.tableRow ~= nil and muiData.tableRow.bg2 ~= nil and muiData.tableRow.bg2.setFillColor ~= nil then
+            muiData.tableRow.bg2:setFillColor( 1 )
+        end
+        -- retain last row
+        muiData.tableRow = muiTarget
+
         --]]--
 
         -- Example: set the color of line for bottom of row
@@ -498,6 +507,7 @@ function M.onRowTouchDemo(event)
         local rowColor = { 0, 1, 0, 1 }
         muiTargetRowParams.rowColor = rowColor -- Example: for the color to be retained when onRowRender is called
         muiTarget.bg2:setFillColor( unpack( rowColor ) ) -- Example: set the background color of the row itself    end
+
         --]]--
 
     end

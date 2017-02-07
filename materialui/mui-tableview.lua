@@ -523,11 +523,7 @@ function M.onRowTouchDemo(event)
         local rowColor = { 0, 1, 0, 1 }
         muiTargetRowParams.rowColor = rowColor -- Example: for the color to be retained when onRowRender is called
         muiTarget.bg2:setFillColor( unpack( rowColor ) ) -- Example: set the background color of the row itself    end
-
         --]]--
-
-        -- retain last row
-        M.setLastRow(event, muiTarget)
     end
 
     if muiTargetValue ~= nil then
@@ -543,6 +539,9 @@ function M.onRowTouchDemo(event)
             end
         end
     end
+
+    -- retain last row
+    M.setLastRow(event, muiTarget)
 end
 
 function M.removeWidgetTableView(widgetName)

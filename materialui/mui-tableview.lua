@@ -90,11 +90,13 @@ function M.newTableView( options )
     muiData.tableCircle:setFillColor( unpack(options.circleColor) )
     muiData.tableCircle.isVisible = false
     muiData.tableCircle.alpha = 0.55
+    muiData.tableRow = nil
 
     -- Create the widget
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["tableview"] = {}
     muiData.widgetDict[options.name]["type"] = "TableView"
+    muiData.widgetDict[options.name]["tableRow"] = nil
 
     local tableView = widget.newTableView(
         {
@@ -458,6 +460,7 @@ function M.onRowTouch( event )
             row.myGlowTrans = transition.to( row, { time=300,delay=150,alpha=0.4, transition=easing.outCirc, onComplete=M.subtleGlowRect } )
         end
 
+        M.setEventParameter(event, "basename", row.params.basename)
         M.setEventParameter(event, "muiTarget", row)
         M.setEventParameter(event, "muiTargetRowParams", row.params)
         M.setEventParameter(event, "muiTargetIndex", event.target.index)
@@ -472,22 +475,44 @@ function M.onRowTouch( event )
     end
 end
 
+function M.setLastRow( event, target )
+    local basename = M.getEventParameter(event, "basename")
+    if basename then
+        muiData.widgetDict[basename]["tableRow"] = target
+    end
+end
+
+function M.getLastRow( event )
+    local basename = M.getEventParameter(event, "basename")
+    if basename then
+        row = muiData.widgetDict[basename]["tableRow"]
+    end
+    return row
+end
+
 function M.onRowTouchDemo(event)
     local muiTarget = M.getEventParameter(event, "muiTarget")
     local muiTargetValue = M.getEventParameter(event, "muiTargetValue")
     local muiTargetIndex = M.getEventParameter(event, "muiTargetIndex")
     local muiTargetRowParams = M.getEventParameter(event, "muiTargetRowParams")
     local muiTableView = M.getEventParameter(event, "muiTableView")
+    local muiTableLastRow = M.getLastRow(event)
 
     if muiTargetIndex ~= nil then
         print("row index: "..muiTargetIndex)
 
         -- reset background color for all rows that are out of view.
         --[[--
+
         local tableViewRows = muiTableView._view._rows
         for k, row in ipairs(tableViewRows) do
             row.params.rowColor = { 1, 1, 1, 1 }
         end
+        -- reset background color of previous selected row
+        if muiTableLastRow ~= nil and muiTableLastRow.bg2 ~= nil and muiTableLastRow.bg2.setFillColor ~= nil then
+            muiTableLastRow.bg2:setFillColor( 1 )
+        end
+
         --]]--
 
         -- Example: set the color of line for bottom of row
@@ -498,8 +523,11 @@ function M.onRowTouchDemo(event)
         local rowColor = { 0, 1, 0, 1 }
         muiTargetRowParams.rowColor = rowColor -- Example: for the color to be retained when onRowRender is called
         muiTarget.bg2:setFillColor( unpack( rowColor ) ) -- Example: set the background color of the row itself    end
+
         --]]--
 
+        -- retain last row
+        M.setLastRow(event, muiTarget)
     end
 
     if muiTargetValue ~= nil then

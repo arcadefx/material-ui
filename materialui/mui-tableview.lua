@@ -496,35 +496,26 @@ function M.onRowTouchDemo(event)
     local muiTargetIndex = M.getEventParameter(event, "muiTargetIndex")
     local muiTargetRowParams = M.getEventParameter(event, "muiTargetRowParams")
     local muiTableView = M.getEventParameter(event, "muiTableView")
-    local muiTableLastRow = M.getLastRow(event)
 
-    if muiTargetIndex ~= nil then
-        print("row index: "..muiTargetIndex)
+    -- reset background color for all rows that are out of view.
+    -- set background of selected row
 
-        -- reset background color for all rows that are out of view.
-        --[[--
-
-        local tableViewRows = muiTableView._view._rows
-        for k, row in ipairs(tableViewRows) do
-            row.params.rowColor = { 1, 1, 1, 1 }
-        end
-        -- reset background color of previous selected row
-        if muiTableLastRow ~= nil and muiTableLastRow.bg2 ~= nil and muiTableLastRow.bg2.setFillColor ~= nil then
-            muiTableLastRow.bg2:setFillColor( 1 )
-        end
-
-        --]]--
-
-        -- Example: set the color of line for bottom of row
-        -- muiTarget.bg1:setFillColor( unpack( { 0, 0, 0, 1 } ) )
-
-        -- uncomment the below for change a row parameter, will affect onRowRender() method too.
-        --[[
-        local rowColor = { 0, 1, 0, 1 }
-        muiTargetRowParams.rowColor = rowColor -- Example: for the color to be retained when onRowRender is called
-        muiTarget.bg2:setFillColor( unpack( rowColor ) ) -- Example: set the background color of the row itself    end
-        --]]--
+    --[[-- uncomment below to demo row selected stays highlighted and prior rows do not.
+    local tableViewRows = nil
+    if muiTableView ~= nil then
+        tableViewRows = muiTableView._view._rows
     end
+    if muiTargetIndex ~= nil and tableViewRows ~= nil then
+        for k, row in ipairs(tableViewRows) do
+            if k == muiTargetIndex then
+                row.params.rowColor = { 0, 1, 0, 1 }
+            else
+                row.params.rowColor = { 1, 1, 1, 1 }
+            end
+        end
+        muiTableView:reloadData()
+    end
+    --]]--
 
     if muiTargetValue ~= nil then
         print("row value: "..muiTargetValue)
@@ -540,8 +531,6 @@ function M.onRowTouchDemo(event)
         end
     end
 
-    -- retain last row
-    M.setLastRow(event, muiTarget)
 end
 
 function M.removeWidgetTableView(widgetName)

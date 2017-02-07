@@ -96,6 +96,7 @@ function M.newTableView( options )
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["tableview"] = {}
     muiData.widgetDict[options.name]["type"] = "TableView"
+    muiData.widgetDict[options.name]["tableRow"] = nil
 
     local tableView = widget.newTableView(
         {
@@ -459,6 +460,7 @@ function M.onRowTouch( event )
             row.myGlowTrans = transition.to( row, { time=300,delay=150,alpha=0.4, transition=easing.outCirc, onComplete=M.subtleGlowRect } )
         end
 
+        M.setEventParameter(event, "basename", row.params.basename)
         M.setEventParameter(event, "muiTarget", row)
         M.setEventParameter(event, "muiTargetRowParams", row.params)
         M.setEventParameter(event, "muiTargetIndex", event.target.index)
@@ -473,12 +475,28 @@ function M.onRowTouch( event )
     end
 end
 
+function M.setLastRow( event, target )
+    local basename = M.getEventParameter(event, "basename")
+    if basename then
+        muiData.widgetDict[basename]["tableRow"] = target
+    end
+end
+
+function M.getLastRow( event )
+    local basename = M.getEventParameter(event, "basename")
+    if basename then
+        row = muiData.widgetDict[basename]["tableRow"]
+    end
+    return row
+end
+
 function M.onRowTouchDemo(event)
     local muiTarget = M.getEventParameter(event, "muiTarget")
     local muiTargetValue = M.getEventParameter(event, "muiTargetValue")
     local muiTargetIndex = M.getEventParameter(event, "muiTargetIndex")
     local muiTargetRowParams = M.getEventParameter(event, "muiTargetRowParams")
     local muiTableView = M.getEventParameter(event, "muiTableView")
+    local muiTableLastRow = M.getLastRow(event)
 
     if muiTargetIndex ~= nil then
         print("row index: "..muiTargetIndex)
@@ -491,11 +509,9 @@ function M.onRowTouchDemo(event)
             row.params.rowColor = { 1, 1, 1, 1 }
         end
         -- reset background color of previous selected row
-        if muiData.tableRow ~= nil and muiData.tableRow.bg2 ~= nil and muiData.tableRow.bg2.setFillColor ~= nil then
-            muiData.tableRow.bg2:setFillColor( 1 )
+        if muiTableLastRow ~= nil and muiTableLastRow.bg2 ~= nil and muiTableLastRow.bg2.setFillColor ~= nil then
+            muiTableLastRow.bg2:setFillColor( 1 )
         end
-        -- retain last row
-        muiData.tableRow = muiTarget
 
         --]]--
 
@@ -510,6 +526,8 @@ function M.onRowTouchDemo(event)
 
         --]]--
 
+        -- retain last row
+        M.setLastRow(event, muiTarget)
     end
 
     if muiTargetValue ~= nil then

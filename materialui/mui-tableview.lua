@@ -519,15 +519,14 @@ function M.onRowTouchDemo(event)
 
     if muiTargetValue ~= nil then
         print("row value: "..muiTargetValue)
-
-        -- access the columns of data
-        if muiTargetRowParams ~= nil and muiTargetRowParams.columns ~= nil then
-            print("columns of data are:")
-            for i, v in ipairs(muiTargetRowParams.columns) do
-                print("\tcolumn "..i.." text "..v.text)
-                print("\tcolumn "..i.." value "..v.value)
-                print("\tcolumn "..i.." align "..(v.align or "left"))
-            end
+    end
+    -- access the columns of data
+    if muiTargetRowParams ~= nil and muiTargetRowParams.columns ~= nil then
+        print("columns of data are:")
+        for i, v in ipairs(muiTargetRowParams.columns) do
+            print("\tcolumn "..i.." text "..v.text)
+            print("\tcolumn "..i.." value "..v.value)
+            print("\tcolumn "..i.." align "..(v.align or "left"))
         end
     end
 

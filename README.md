@@ -8,7 +8,7 @@ What is material-ui?
 
 material-ui is a loosely based Material UI library for Corona Labs SDK.  It is written in Lua using the free edition of the SDK.  The library will help build a UI based on Material Design.
 
-* Supports: iOS 8+, Android 4.x to 7.x+ (Apple tvOS may work, but not tested)
+* Supports: iOS 8+, Android 4.x to 7.x+ and other Corona SDK supported platforms.
 
 Using material-ui
 --------------

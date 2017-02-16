@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.73] - 2017-02-17
+### Changes
+- newRoundedRectButton() and newRectButton() can now show a icon from material font or an image (jpg/png) to the left of the button text. See docs, example and list of options includes: iconText, iconFont, iconFontColor, iconImage.
+- newTableView() - bug fixes and example updated to show multi-columns. Example of highlighting a row is also been given but is commented out.
+
 ## [0.1.72] - 2017-02-05
 ### Changes
 - Fixed bug in newTileGrid() when using composer to switch scenes and not using the built-in library method actionSwitchScene().

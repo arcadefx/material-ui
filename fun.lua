@@ -58,6 +58,10 @@ function scene:create( event )
         font = native.systemFont,
         fillColor = { 0.31, 0.65, 0.03, 1 },
         textColor = { 1, 1, 1 },
+        iconText = "arrow_back",
+        iconFont = mui.materialFont,
+        iconFontColor = { 1, 1, 1, 1 },
+        -- iconImage = "1484026171_02.png",
         callBack = mui.actionSwitchScene,
         callBackData = { 
             sceneDestination = "menu",

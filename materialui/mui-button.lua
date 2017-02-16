@@ -222,9 +222,32 @@ function M.newRoundedRectButton(options)
     textToMeasure:removeSelf()
     textToMeasure = nil
 
-    muiData.widgetDict[options.name]["myText"] = display.newText( options.text, 0, 0, font, fontSize )
+    if options.iconText ~= nil and options.iconFont ~= nil and options.iconImage == nil then
+        if M.isMaterialFont(options.iconFont) == true then
+            options.iconText = M.getMaterialFontCodePointByName(options.iconText)
+        end
+        muiData.widgetDict[options.name]["myIconText"] = display.newText( options.iconText, 0, 0, options.iconFont, fontSize )
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myIconText"], false )
+    elseif options.iconImage ~= nil then
+        muiData.widgetDict[options.name]["myIconText"] = display.newImageRect( options.iconImage, fontSize, fontSize )
+        if muiData.widgetDict[options.name]["myIconText"] ~= nil then
+            muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myIconText"], false )
+        end
+    end
+
+    textXOffset = 0
+    if muiData.widgetDict[options.name]["myIconText"] ~= nil then
+        textXOffset = fontSize * 0.55
+    end
+
+    muiData.widgetDict[options.name]["myText"] = display.newText( options.text, textXOffset, 0, font, fontSize )
     muiData.widgetDict[options.name]["myText"]:setFillColor( unpack(textColor) )
-    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myText"], true )
+    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myText"], false )
+
+    if muiData.widgetDict[options.name]["myIconText"] ~= nil then
+        local width = muiData.widgetDict[options.name]["myText"].contentWidth * 0.55
+        muiData.widgetDict[options.name]["myIconText"].x = -(width)
+    end
 
     local circleColor = textColor
     if options.circleColor ~= nil then
@@ -505,9 +528,34 @@ function M.newRectButton(options)
     textToMeasure:removeSelf()
     textToMeasure = nil
 
-    muiData.widgetDict[options.name]["myText"] = display.newText( options.text, 0, 0, font, fontSize )
+    if options.iconText ~= nil and options.iconFont ~= nil and options.iconImage == nil then
+        if M.isMaterialFont(options.iconFont) == true then
+            options.iconText = M.getMaterialFontCodePointByName(options.iconText)
+        end
+        muiData.widgetDict[options.name]["myIconText"] = display.newText( options.iconText, 0, 0, options.iconFont, fontSize )
+        if options.iconFontColor ~= nil then
+            muiData.widgetDict[options.name]["myIconText"]:setFillColor( unpack(options.iconFontColor) )
+        end
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myIconText"], false )
+    elseif options.iconImage ~= nil then
+        muiData.widgetDict[options.name]["myIconText"] = display.newImageRect( options.iconImage, fontSize, fontSize )
+        if muiData.widgetDict[options.name]["myIconText"] ~= nil then
+            muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myIconText"], false )
+        end
+    end
+
+    textXOffset = 0
+    if muiData.widgetDict[options.name]["myIconText"] ~= nil then
+        textXOffset = fontSize * 0.55
+    end
+    muiData.widgetDict[options.name]["myText"] = display.newText( options.text, textXOffset, 0, font, fontSize )
     muiData.widgetDict[options.name]["myText"]:setFillColor( unpack(textColor) )
-    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myText"], true )
+    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myText"], false )
+
+    if muiData.widgetDict[options.name]["myIconText"] ~= nil then
+        local width = muiData.widgetDict[options.name]["myText"].contentWidth * 0.55
+        muiData.widgetDict[options.name]["myIconText"].x = -(width)
+    end
 
     local circleColor = textColor
     if options.circleColor ~= nil then
@@ -1447,6 +1495,11 @@ function M.removeRoundedRectButton(widgetName)
     muiData.widgetDict[widgetName]["myText"]:removeSelf()
     muiData.widgetDict[widgetName]["myText"] = nil
 
+    if muiData.widgetDict[widgetName]["myIconText"] ~= nil then
+        muiData.widgetDict[widgetName]["myIconText"]:removeSelf()
+        muiData.widgetDict[widgetName]["myIconText"] = nil
+    end
+
     if muiData.widgetDict[widgetName]["myImage"] ~= nil then
         muiData.widgetDict[widgetName]["myImage"]:removeSelf()
         muiData.widgetDict[widgetName]["myImage"] = nil
@@ -1494,6 +1547,10 @@ function M.removeRectButton(widgetName)
     muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", M.touchRRectButton)
     muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
     muiData.widgetDict[widgetName]["myCircle"] = nil
+    if muiData.widgetDict[widgetName]["myIconText"] ~= nil then
+        muiData.widgetDict[widgetName]["myIconText"]:removeSelf()
+        muiData.widgetDict[widgetName]["myIconText"] = nil
+    end
     muiData.widgetDict[widgetName]["myText"]:removeSelf()
     muiData.widgetDict[widgetName]["myText"] = nil
     if muiData.widgetDict[widgetName]["myImage"] ~= nil then

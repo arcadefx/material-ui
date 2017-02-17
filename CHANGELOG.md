@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.74] - 2017-02-17
+### Changes
+- Fixed issue with newSlidePanel() not hiding and showing correctly. Custom methods to hide/show the menu are optional.
+
 ## [0.1.73] - 2017-02-17
 ### Changes
 - newRoundedRectButton() and newRectButton() can now show a icon from material font or an image (jpg/png) to the left of the button text. See docs, example and list of options includes: iconText, iconFont, iconFontColor, iconImage.

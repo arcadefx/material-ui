@@ -281,35 +281,49 @@ function scene:create( event )
     infoText = display.newText( textOptions )
     infoText:setFillColor( 0.4, 0.4, 0.4 )
 
+    -- slide panel example
+    local hideSlidePanel = function(event)
+        print("home button pushed")
+        -- or use close method below to close and release slider from memory
+        -- mui.closeSlidePanel("slidepanel-demo")
+        mui.hideSlidePanel("slidepanel-demo2")
+    end
+
     -- slide panel example, uses navbar's "menu" icon below
     local showSlidePanel2 = function(event)
-        mui.newSlidePanel({
-            name = "slidepanel-demo2",
-            title = "MUI Demo", -- leave blank for no panel title text
-            titleAlign = "center",
-            font = native.systemFont,
-            width = mui.getScaleVal(400),
-            titleFontSize = mui.getScaleVal(30),
-            titleFontColor = { 1, 1, 1, 1 },
-            titleFont = native.systemFont,
-            titleBackgroundColor = { 0.63, 0.81, 0.181 },
-            fontSize = mui.getScaleVal(20),
-            fillColor = { 1, 1, 1, 1 }, -- background color
-            buttonToAnimate = "menu",
-            callBack = nil,
-            labelColor = { 0.3, 0.3, 0.3, 1 }, -- active
-            labelColorOff = { 0.5, 0.5, 0.5, 1 }, -- non-active
-            buttonHeight = mui.getScaleVal(60),
-            buttonHighlightColor = { 0.5, 0.5, 0.5 },
-            buttonHighlightColorAlpha = 0.5,
-             touchpoint = true,
-            list = {
-                { key = "Home", value = "1", icon="home", labelText="Home", isActive = true },
-                { key = "Newsroom", value = "2", icon="new_releases", labelText="News", isActive = false },
-                { key = "Location", value = "3", icon="location_searching", labelText="Location Information", isActive = false },
-                { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
-            },
-        })
+        if mui.getWidgetBaseObject("slidepanel-demo2") ~= nil then
+            mui.showSlidePanel("slidepanel-demo2")
+            print("slidePanel exists, show it")
+        else
+            print("slidePanel is new")
+            mui.newSlidePanel({
+                name = "slidepanel-demo2",
+                title = "MUI Demo", -- leave blank for no panel title text
+                titleAlign = "center",
+                font = native.systemFont,
+                width = mui.getScaleVal(400),
+                titleFontSize = mui.getScaleVal(30),
+                titleFontColor = { 1, 1, 1, 1 },
+                titleFont = native.systemFont,
+                titleBackgroundColor = { 0.63, 0.81, 0.181 },
+                fontSize = mui.getScaleVal(20),
+                fillColor = { 1, 1, 1, 1 }, -- background color
+                buttonToAnimate = "menu",
+                callBack = nil,
+                labelColor = { 0.3, 0.3, 0.3, 1 }, -- active
+                labelColorOff = { 0.5, 0.5, 0.5, 1 }, -- non-active
+                buttonHeight = mui.getScaleVal(60),
+                buttonHighlightColor = { 0.5, 0.5, 0.5 },
+                buttonHighlightColorAlpha = 0.5,
+                 touchpoint = true,
+                list = {
+                    { key = "Home", value = "1", icon="home", labelText="Home", isActive = true },
+                    { key = "Newsroom", value = "2", icon="new_releases", labelText="News", isActive = false },
+                    { key = "Location", value = "3", icon="location_searching", labelText="Location Information", isActive = false },
+                    { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false },
+                },
+            })
+        end
         -- add some buttons to the menu!
 
     end

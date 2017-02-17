@@ -462,7 +462,6 @@ function M.newSlidePanelButton( options )
             fontSize = fontSize * 0.45,
         }
         button["myText2"] = display.newText( options3 )
-        button["myText2"]:setFillColor( unpack(textColor) )
         button["myText2"].x = fontSize + (button["myText2"].contentWidth * 0.5)
         if isChecked then
             button["myText2"]:setFillColor( unpack(options.labelColor) )
@@ -611,7 +610,7 @@ end
 
 function M.showSlidePanel( widgetName )
 
-    if widgetName ~= nil and muiData.widgetDict[widgetName] ~= nil and muiData.slideBarrierTouched == false then
+    if widgetName ~= nil and muiData.widgetDict[widgetName] ~= nil then
 
         if muiData.slidePanelInUse == true then
             M.hideSlidePanel( widgetName )
@@ -643,6 +642,7 @@ function M.hideSlidePanel( widgetName )
         muiData.dialogInUse = false
         muiData.slidePanelName = nil
         muiData.slidePanelInUse = false
+        muiData.slideBarrierTouched = false
         -- animate the menu button
         if muiData.widgetDict[options.name]["buttonToAnimate"] ~= nil then
             transition.to( muiData.widgetDict[options.name]["buttonToAnimate"], { rotation=0, time=300, transition=easing.inOutCubic } )

@@ -46,8 +46,11 @@ local M = muiData.M -- {} -- for module array/table
 function M.newSlidePanel(options)
 	if options == nil then return end
 
-    if muiData.widgetDict[options.name] ~= nil then
+    if muiData.widgetDict[options.name] ~= nil and muiData.slidePanelInUse == true then
         M.touchSlidePanelBarrier({target={muiOptions=options}})
+        return
+    elseif muiData.widgetDict[options.name] ~= nil and muiData.slidePanelInUse == false then
+        M.showSlidePanel(options.name)
         return
     end
 

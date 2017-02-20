@@ -374,6 +374,7 @@ function M.newSlidePanelButton( options )
         end
     end
 
+    button["options"] = options
     button["font"] = font
     button["fontSize"] = fontSize
     button["textMargin"] = textMargin
@@ -535,16 +536,35 @@ function M.slidePanelEventButton (event)
             muiData.touching = true
             for name in pairs(muiData.widgetDict[options.basename]["slidebar"]) do
                 if muiData.widgetDict[options.basename]["slidebar"][name]["myButton"] ~= nil then
+                  local labelColorOff
+                  local opts = muiData.widgetDict[options.basename]["slidebar"][name]["options"]
+                  if opts ~= nil then
+                    labelColorOff = opts.iconColorOff or options.labelColorOff
+                  end
+
                   muiData.widgetDict[options.basename]["slidebar"][name]["myButton"]:setFillColor( unpack(options.backgroundColor) )
                   muiData.widgetDict[options.basename]["slidebar"][name]["myButton"].alpha = 0.01
 
-                  muiData.widgetDict[options.basename]["slidebar"][name]["myText2"]:setFillColor( unpack(options.labelColorOff) )
+                  if opts.iconImage == nil then
+                      muiData.widgetDict[options.basename]["slidebar"][name]["myText"]:setFillColor( unpack(labelColorOff) )
+                  end
+                  muiData.widgetDict[options.basename]["slidebar"][name]["myText"].isChecked = false
+                  muiData.widgetDict[options.basename]["slidebar"][name]["myText2"]:setFillColor( unpack(labelColorOff) )
                   muiData.widgetDict[options.basename]["slidebar"][name]["myText2"].isChecked = false
                 end
             end
+            local labelColor
+            local opts = muiData.widgetDict[options.basename]["slidebar"][options.name]["options"]
+            if opts ~= nil then
+              labelColor = opts.iconColor or options.labelColor
+            end
             muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"]:setFillColor( unpack( options.buttonHighlightColor ) )
             muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"].alpha = options.buttonHighlightColorAlpha
-            muiData.widgetDict[options.basename]["slidebar"][options.name]["myText2"]:setFillColor( unpack(options.labelColor) )
+            if opts.iconImage == nil then
+               muiData.widgetDict[options.basename]["slidebar"][options.name]["myText"]:setFillColor( unpack(labelColor) )
+            end
+            muiData.widgetDict[options.basename]["slidebar"][options.name]["myText"].isChecked = isChecked
+            muiData.widgetDict[options.basename]["slidebar"][options.name]["myText2"]:setFillColor( unpack(labelColor) )
             muiData.widgetDict[options.basename]["slidebar"][options.name]["myText2"].isChecked = isChecked
         end
     elseif ( event.phase == "cancelled" or event.phase == "moved" ) then

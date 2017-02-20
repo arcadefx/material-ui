@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.75] - 2017-02-20
+### Changes
+- Fixed issue with newSlidePanel() labelColor, labelColorOff and iconColor and iconColorOff not setting correctly when selected and de-selected.
+
 ## [0.1.74] - 2017-02-17
 ### Changes
 - Fixed issue with newSlidePanel() not hiding and showing correctly. Custom methods to hide/show the menu are optional.

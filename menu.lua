@@ -337,8 +337,8 @@ function scene:create( event )
                 list = {
                     { key = "Home", value = "1", icon="home", iconImage="1484022678_go-home.png", labelText="Home", isActive = false, callBack = hideSlidePanel },
                     { key = "Newsroom", value = "2", icon="new_releases", iconImage="1484026171_02.png", labelText="News", isActive = true },
-                    { key = "Location", value = "3", icon="location_searching", labelText="Location Information", isActive = false, iconColor = { 0.26, 0.52, 0.96, 1 }, iconColorOff = { 0.26, 0.52, 0.96, 1 } },
-                    { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false, iconColor = { 0.92, 0.26, 0.21, 1 }, iconColorOff = { 0.92, 0.26, 0.21, 1 } },
+                    { key = "Location", value = "3", icon="location_searching", labelText="Location Information", isActive = false, iconColor = { 1, 0, 0, 1 }, iconColorOff = { 0.26, 0.52, 0.96, 1 } },
+                    { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false, iconColor = { 1, 0, 0, 1 }, iconColorOff = { 0.92, 0.26, 0.21, 1 } },
                     { key = "LineSeparator" },
                     { key = "To-do 2", value = "To-do 2", icon="view_list", labelText="To-do 2", isActive = false },
                     { key = "To-do 3", value = "To-do 3", icon="view_list", labelText="To-do 3", isActive = false },

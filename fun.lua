@@ -305,7 +305,7 @@ function scene:create( event )
             fillColor = { 1, 1, 1, 1 }, -- background color
             buttonToAnimate = "menu",
             callBack = nil,
-            labelColor = { 0.3, 0.3, 0.3, 1 }, -- active
+            labelColor = { 0.63, 0.81, 0.181 }, -- active
             labelColorOff = { 0.5, 0.5, 0.5, 1 }, -- non-active
             buttonHeight = mui.getScaleVal(60),
             buttonHighlightColor = { 0.5, 0.5, 0.5 },

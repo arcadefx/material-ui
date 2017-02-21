@@ -51,6 +51,10 @@ function M.createNavbar( options )
 end
 
 function M.newNavbar( options )
+    M.newNavBar(options)
+end
+
+function M.newNavBar( options )
     if options == nil then return end
 
     if muiData.widgetDict[options.name] ~= nil then return end
@@ -85,7 +89,7 @@ function M.newNavbar( options )
     end
 
     muiData.widgetDict[options.name] = {}
-    muiData.widgetDict[options.name]["type"] = "Navbar"
+    muiData.widgetDict[options.name]["type"] = "NavBar"
     muiData.widgetDict[options.name]["list"] = {}
     muiData.widgetDict[options.name]["lastWidgetLeftX"] = 0
     muiData.widgetDict[options.name]["lastWidgetRightX"] = 0
@@ -201,6 +205,10 @@ function M.attachToNavBar(navbar_name, options )
 end
 
 function M.removeNavbar(widgetName)
+    M.removeNavBar(widgetName)
+end
+
+function M.removeNavBar(widgetName)
     if widgetName == nil then
         return
     end

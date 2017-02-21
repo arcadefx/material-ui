@@ -1016,8 +1016,8 @@ function M.removeWidgetByName(widgetName)
         M.removeSlider(widgetName)
     elseif widgetType == "Selector" then
         M.removeSelector(widgetName)
-    elseif widgetType == "Navbar" then
-        M.removeNavbar(widgetName)
+    elseif widgetType == "Navbar" or widgetType == "NavBar" then
+        M.removeNavBar(widgetName)
     elseif widgetType == "Popover" then
         M.removePopover(widgetName)
     elseif widgetType == "Text" then
@@ -1087,8 +1087,8 @@ function M.destroy()
             M.removeToast(widget)
         elseif widgetType == "Selector" then
             M.removeSelector(widget)
-        elseif widgetType == "Navbar" then
-            M.removeNavbar(widget)
+        elseif widgetType == "Navbar" or widgetType == "NavBar" then
+            M.removeNavBar(widget)
         elseif widgetType == "Text" then
             M.removeText(widget)
         end

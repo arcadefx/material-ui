@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.76] - 2017-02-20
+### Changes
+- newNavbar() added method support for getWidgetBaseObject() and 'parent' object support in options for newNavbar().
+
 ## [0.1.75] - 2017-02-20
 ### Changes
 - Fixed issue with newSlidePanel() labelColor, labelColorOff and iconColor and iconColorOff not setting correctly when selected and de-selected.

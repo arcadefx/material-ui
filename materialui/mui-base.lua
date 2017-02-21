@@ -304,6 +304,8 @@ function M.getWidgetBaseObject(name)
                widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "TimePicker" then
                widgetData = muiData.widgetDict[widget]["mygroup"]
+            elseif widgetType == "Navbar" or widgetType == "NavBar" then
+               widgetData = muiData.widgetDict[widget]["container"]
             elseif widgetType == "ProgressArc" then
                widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "ProgressBar" then
@@ -349,7 +351,7 @@ function M.getWidgetProperty( widgetName, propertyName )
     widgetData = M.getImageProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "ImageRect" then
     widgetData = M.getImageRectProperty( widgetName, propertyName )
-  elseif muiData.widgetDict[widgetName]["type"] == "NavBar" then
+  elseif muiData.widgetDict[widgetName]["type"] == "Navbar" or muiData.widgetDict[widgetName]["type"] == "NavBar" then
     widgetData = M.getNavBarProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "Popover" then
     widgetData = M.getPopoverProperty( widgetName, propertyName )

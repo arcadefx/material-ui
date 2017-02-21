@@ -105,6 +105,11 @@ function M.newNavbar( options )
         }
     )
 
+    if options.parent ~= nil then
+        muiData.widgetDict[options.name]["parent"] = options.parent
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["container"] )
+    end   
+
     local newX = muiData.widgetDict[options.name]["container"].contentWidth * 0.5
     local newY = muiData.widgetDict[options.name]["container"].contentHeight * 0.5
 

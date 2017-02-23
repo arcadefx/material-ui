@@ -575,7 +575,9 @@ function M.slidePanelEventButton (event)
             muiData.widgetDict[options.basename]["slidebar"][options.name]["myText2"].isChecked = isChecked
         end
     elseif event.phase == "cancelled" or event.phase == "moved" then
-        M.sliderButtonResetColor( muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"] )
+        if muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"] ~= nil then
+            M.sliderButtonResetColor( muiData.widgetDict[options.basename]["slidebar"][options.name]["myButton"] )
+        end
         muiData.touching = false
     elseif ( event.phase == "ended" ) then
         if M.isTouchPointOutOfRange( event ) then
@@ -814,11 +816,11 @@ function M.sliderScrollListener( event )
             muiData.widgetDict[name]["scrollview"]:setIsLocked(false, "vertical")
             muiData.widgetDict[name]["scrollview"].prevEventX = nil
             muiData.widgetDict[name]["scrollview"].origX = nil
-            muiData.widgetDict[name]["scrollview"].moved_object = false
         elseif muiData.widgetDict[name]["scrollview"].origX == nil then
             -- did not move, so hide it
             M.hideSlidePanel(name)
         end
+        muiData.widgetDict[name]["scrollview"].moved_object = false
         -- print( "Scroll view was released" )
     end
 

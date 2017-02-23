@@ -656,15 +656,14 @@ function M.showSlidePanel( widgetName, slideOut )
             transition.to( muiData.widgetDict[widgetName]["buttonToAnimate"], { rotation=90, time=300, transition=easing.inOutCubic } )
         end
         local options = muiData.widgetDict[widgetName]["mygroup"].muiOptions
-        muiData.widgetDict[widgetName]["rectclick"].isVisible = true
-        muiData.widgetDict[widgetName]["rectbackdrop"].isVisible = true
         if slideOut == false then
             transition.to( muiData.widgetDict[widgetName]["scrollview"], { time=300, x=(options.width * 0.5), transition=easing.linear } )
             transition.fadeIn(muiData.widgetDict[widgetName]["rectclick"],{time=300})
             transition.fadeIn(muiData.widgetDict[widgetName]["rectbackdrop"],{time=300})
+            muiData.widgetDict[widgetName]["rectclick"].isVisible = true
+            muiData.widgetDict[widgetName]["rectbackdrop"].isVisible = true
         else
             muiData.widgetDict[widgetName].isVisible = true
-            -- see eventHandler where these are used to avoid UI control issues.
             --transition.fadeIn(muiData.widgetDict[widgetName]["rectclick"],{time=0})
             --transition.fadeIn(muiData.widgetDict[widgetName]["rectbackdrop"],{time=0})
         end
@@ -770,6 +769,8 @@ function M.sliderScrollListener( event )
             muiData.widgetDict[name]["scrollview"].origX = muiData.widgetDict[name]["scrollview"].contentWidth * .5
             muiData.widgetDict[name]["scrollview"].prevEventX = event.x
             if muiData.widgetDict[name]["scrollview"].x <= 0 then
+                muiData.widgetDict[name]["rectclick"].isVisible = true
+                muiData.widgetDict[name]["rectbackdrop"].isVisible = true
                 transition.fadeIn(muiData.widgetDict[name]["rectclick"],{time=0})
                 transition.fadeIn(muiData.widgetDict[name]["rectbackdrop"],{time=0})
             end

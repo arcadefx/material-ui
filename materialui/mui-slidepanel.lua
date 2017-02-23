@@ -664,8 +664,9 @@ function M.showSlidePanel( widgetName, slideOut )
             transition.fadeIn(muiData.widgetDict[widgetName]["rectbackdrop"],{time=300})
         else
             muiData.widgetDict[widgetName].isVisible = true
-            transition.fadeIn(muiData.widgetDict[widgetName]["rectclick"],{time=0})
-            transition.fadeIn(muiData.widgetDict[widgetName]["rectbackdrop"],{time=0})
+            -- see eventHandler where these are used to avoid UI control issues.
+            --transition.fadeIn(muiData.widgetDict[widgetName]["rectclick"],{time=0})
+            --transition.fadeIn(muiData.widgetDict[widgetName]["rectbackdrop"],{time=0})
         end
         muiData.dialogName = widgetName
         muiData.dialogInUse = true
@@ -768,6 +769,10 @@ function M.sliderScrollListener( event )
         if muiData.widgetDict[name]["scrollview"].origX == nil then
             muiData.widgetDict[name]["scrollview"].origX = muiData.widgetDict[name]["scrollview"].contentWidth * .5
             muiData.widgetDict[name]["scrollview"].prevEventX = event.x
+            if muiData.widgetDict[name]["scrollview"].x <= 0 then
+                transition.fadeIn(muiData.widgetDict[name]["rectclick"],{time=0})
+                transition.fadeIn(muiData.widgetDict[name]["rectbackdrop"],{time=0})
+            end
         end
         if muiData.widgetDict[name]["scrollview"].prevEventX ~= nil then
 

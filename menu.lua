@@ -354,6 +354,7 @@ function scene:create( event )
                     { key = "To-do 11", value = "To-do 11", icon="view_list", labelText="To-do 11", isActive = false },
                     { key = "To-do 12", value = "To-do 12", icon="view_list", labelText="To-do 12", isActive = false },
                 },
+                isVisible = false, -- do show immediately but create the menu
             })
         end
         -- add some buttons to the menu!
@@ -680,6 +681,8 @@ function scene:create( event )
             -- { key = "Viewer", value = "4", labelText="View", isActive = false } -- uncomment to see View as text
         }
     })
+
+    showSlidePanel() -- create but do not show panel demo
 
     --local bTest = mui.getChildWidgetProperty("toolbar_demo", "text", 1)
     --bTest:setFillColor(1, 0, 0, 1)

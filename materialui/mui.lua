@@ -100,6 +100,7 @@ function M.init(mui_modules, options)
         table.insert(parents, require(modules[i]))
     end
     M.loadModule(M, parents)
+    M.init_calls()
 end
 
 return M

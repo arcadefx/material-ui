@@ -146,6 +146,23 @@ function M.init_base(options)
   Runtime:addEventListener( "touch", M.eventSuperListner )
 end
 
+function M.init_calls()
+  -- perform additional calls
+  M.addEventListenerForSlidePanel(muiData.parent)
+end
+
+function M.addEventListenerForSlidePanel(parent)
+  if parent ~= nil and M.slidePanelOut ~= nil then
+    parent:addEventListener( "touch", M.slidePanelOut )
+  end
+end
+
+function M.removeEventListenerForSlidePanel(parent)
+  if parent ~= nil and M.slidePanelOut ~= nil then
+    parent:removeEventListener( "touch", M.slidePanelOut )
+  end
+end
+
 function M.setDisplayToActualDimensions(options)
   if options.useActualDimensions == true then
     if string.find(system.orientation, "portrait") ~= nil then
@@ -1106,6 +1123,7 @@ function M.destroy()
     muiData.tableCircle:removeSelf()
   end
 
+  M.removeEventListenerForSlidePanel(muiData.parent)
   Runtime:removeEventListener( "touch", M.eventSuperListner )
 
 end

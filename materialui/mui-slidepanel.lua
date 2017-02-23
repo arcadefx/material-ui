@@ -239,6 +239,7 @@ function M.newSlidePanel(options)
         muiData.widgetDict[options.name]["rectclick"].isVisible = false
         muiData.widgetDict[options.name]["rectbackdrop"].isVisible = false
     end
+    muiData.widgetDict[options.name]["scrollview"].moved_object = false
 end
 
 function M.getSlidePanelProperty(widgetName, propertyName)

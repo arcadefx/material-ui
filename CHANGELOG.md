@@ -4,8 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [0.1.77] - 2017-02-23
 ### Changes
-- newSlidePanel() supports swipe guestures to open and close the menu.
-- newSlidePanel() 'isVisible' added to options of slide panel. If present, hide the slide panel and reveal once a button is touched or swipe guesture. See main.lua for demo.
+- newSlidePanel() supports swipe gestures to open and close the menu.
+- newSlidePanel() 'isVisible' added to options of slide panel. If present, hide the slide panel and reveal once a button is touched or swipe gestures. See main.lua for demo.
 
 ## [0.1.76] - 2017-02-20
 ### Changes

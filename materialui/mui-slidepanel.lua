@@ -238,6 +238,7 @@ function M.newSlidePanel(options)
         muiData.slidePanelName = options.name
         muiData.widgetDict[options.name]["rectclick"].isVisible = false
         muiData.widgetDict[options.name]["rectbackdrop"].isVisible = false
+        muiData.slideOut = false
     end
     muiData.widgetDict[options.name]["scrollview"].moved_object = false
 end
@@ -708,7 +709,7 @@ function M.slidePanelOut(event)
     if event == nil then return end
 
     -- the or condition is to avoid a bug state of 'moved'
-    if event.phase == "began" or (event.phase == "moved" and muiData.slideOut == false) then
+    if (event.phase == "moved" and muiData.slideOut == false) then
         local widgetName = muiData.slidePanelName
         if widgetName ~= nil and muiData.widgetDict[widgetName]["scrollview"].x <= 0 and event.x < muiData.widgetDict[muiData.slidePanelName]["scrollview"].contentWidth * .25 then
             M.showSlidePanel( widgetName, true )

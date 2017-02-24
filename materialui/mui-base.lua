@@ -768,6 +768,7 @@ end
 
 function M.actionSwitchScene( e )
     if e == nil or muiData.circleSceneSwitchComplete == true or muiData.circleSceneSwitch ~= nil then return end
+
     local muiTarget = M.getEventParameter(e, "muiTarget")
     local muiTargetValue = M.getEventParameter(e, "muiTargetValue")
     local muiTargetCallBackData = M.getEventParameter(e, "muiTargetCallBackData")
@@ -1052,7 +1053,7 @@ function M.removeWidgets()
 end
 
 function M.destroy()
-  print("Removing widgets")
+  --print("Removing widgets")
   for widget in pairs(muiData.widgetDict) do
       local widgetType = muiData.widgetDict[widget]["type"]
       if widgetType ~= nil and muiData.widgetDict[widget] ~= nil then

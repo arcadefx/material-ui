@@ -113,7 +113,7 @@ function M.init_base(options)
   muiData.group = options.group
   muiData.parent = options.parent
   muiData.circleSceneSwitch = nil
-  muiData.circleSceneSwitchComplete = false
+  muiData.circleSceneSwitchStarted = false
   muiData.touching = false
   muiData.masterRatio = nil
   muiData.masterRemainder = nil
@@ -767,7 +767,9 @@ end
 --[[ switch scene action ]]
 
 function M.actionSwitchScene( e )
-    if e == nil or muiData.circleSceneSwitchComplete == true or muiData.circleSceneSwitch ~= nil then return end
+    if e == nil or muiData.circleSceneSwitchStarted == true or muiData.circleSceneSwitch ~= nil then return end
+
+    M.circleSceneSwitchStarted = true
 
     local muiTarget = M.getEventParameter(e, "muiTarget")
     local muiTargetValue = M.getEventParameter(e, "muiTargetValue")
@@ -786,22 +788,18 @@ function M.actionSwitchScene( e )
     muiData.circleSceneSwitch:setFillColor( unpack(circleColor) )
     muiData.circleSceneSwitch.alpha = 1
     muiData.circleSceneSwitch.callBackData = muiTargetCallBackData
-    transition.to( muiData.circleSceneSwitch, { time=0, width=M.getScaleVal(100), height=M.getScaleVal(100), onComplete=M.postActionForSwitchScene }) --, onComplete=postActionForButton } )
-end
-
-function M.postActionForSwitchScene(e)
-    -- enlarge circle
-    if muiData.circleSceneSwitch == nil then return end
+    muiData.circleSceneSwitch.width = M.getScaleVal(100)
+    muiData.circleSceneSwitch.height = M.getScaleVal(100)
     transition.to( muiData.circleSceneSwitch, { time=900, xScale=2, yScale=2, onComplete=M.finalActionForSwitchScene } )
 end
 
 function M.finalActionForSwitchScene(e)
     -- switch to scene
-    if muiData.circleSceneSwitch == nil then return end
+    if muiData.circleSceneSwitch == nil or M.circleSceneSwitchStarted == false then return end
     muiData.circleSceneSwitch.isVisible = false
     muiData.circleSceneSwitch:removeSelf()
     muiData.circleSceneSwitch = nil
-    muiData.circleSceneSwitchComplete = true
+    muiData.circleSceneSwitchStarted = false
     if e.callBackData ~= nil and e.callBackData.sceneDestination ~= nil then
         composer.removeScene( muiData.scene.name )
         composer.gotoScene( e.callBackData.sceneDestination )
@@ -809,7 +807,7 @@ function M.finalActionForSwitchScene(e)
 end
 
 function M.goToScene(callBackData)
-    if muiData.circleSceneSwitchComplete == true then return end
+    if muiData.circleSceneSwitchStarted == true then return end
     if callBackData ~= nil and callBackData.onCompleteData ~= nil then
         local e = {
             callBackData = callBackData.onCompleteData

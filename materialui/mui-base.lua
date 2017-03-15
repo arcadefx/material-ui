@@ -114,6 +114,7 @@ function M.init_base(options)
   muiData.parent = options.parent
   muiData.circleSceneSwitch = nil
   muiData.circleSceneSwitchStarted = false
+  muiData.circleSceneName = ""
   muiData.touching = false
   muiData.masterRatio = nil
   muiData.masterRemainder = nil
@@ -801,8 +802,8 @@ function M.finalActionForSwitchScene(e)
     muiData.circleSceneSwitch = nil
     muiData.circleSceneSwitchStarted = false
     if e.callBackData ~= nil and e.callBackData.sceneDestination ~= nil then
+        muiData.circleSceneName = e.callBackData.sceneDestination
         composer.removeScene( muiData.scene.name )
-        composer.gotoScene( e.callBackData.sceneDestination )
     end
 end
 
@@ -1124,7 +1125,9 @@ function M.destroy()
 
   M.removeEventListenerForSlidePanel(muiData.parent)
   Runtime:removeEventListener( "touch", M.eventSuperListner )
-
+  if muiData.circleSceneName ~= nil and string.len(muiData.circleSceneName) > 0 then
+    composer.gotoScene( muiData.circleSceneName )
+  end
 end
 
 return M

@@ -79,14 +79,13 @@ local function onSystemEvent( event )
       --load_saved_state()
 
    elseif ( event.type == "applicationResume" ) then
-      timer.performWithDelay(100, function() updateTheShadows() end, 1)
+      timer.performWithDelay(500, function() updateTheShadows() end, 1)
 
    elseif (event.type == "applicationSuspend") then
       --pause_game()
 
    end
 end
-Runtime:addEventListener( "system", onSystemEvent )
 
 function M.init_base(options)
   options = options or {}
@@ -145,6 +144,7 @@ function M.init_base(options)
   muiData.scene = composer.getScene(composer.getSceneName("current"))
   muiData.scene.name = composer.getSceneName("current")
   Runtime:addEventListener( "touch", M.eventSuperListner )
+  Runtime:addEventListener( "system", onSystemEvent )
 end
 
 function M.init_calls()
@@ -1131,6 +1131,7 @@ function M.destroy()
 
   M.removeEventListenerForSlidePanel(muiData.parent)
   Runtime:removeEventListener( "touch", M.eventSuperListner )
+  Runtime:removeEventListener( "system", onSystemEvent )
   if muiData.switchToSceneName ~= nil and string.len(muiData.switchToSceneName) > 0 then
     composer.gotoScene( muiData.switchToSceneName )
   end

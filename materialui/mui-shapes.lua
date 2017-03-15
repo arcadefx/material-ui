@@ -168,6 +168,7 @@ function M.newArcByRenderTime(options)
 
 	local function onComplete()
 		group.transitionDone = true
+		Runtime:removeEventListener( "enterFrame", render )
 	end
 
 	local angle = group.muiArcOptions.angle

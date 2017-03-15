@@ -918,7 +918,7 @@ function M.pickerOnRowRender( event )
         parent = row,
         --x = display.contentCenterX,
         --y = display.contentCenterY,
-        text = row.params.text,   
+        text = ""..row.params.text,
         font = native.systemFont,
         fontSize = row.params.fontSize,
         width = rowWidth,

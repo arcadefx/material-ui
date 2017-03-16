@@ -28,7 +28,7 @@ application =
 		height = 1920, 
 		--]]--
 
-		scale = "letterBox",
+		-- scale = "letterBox",
 		fps = 30,
 		
 		--[[

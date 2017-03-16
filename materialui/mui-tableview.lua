@@ -41,6 +41,7 @@ local mathMod = math.fmod
 local mathABS = math.abs
 
 local M = muiData.M -- {} -- for module array/table
+local MySceneName = nil
 
 function M.createTableView( options )
     M.newTableView( options )
@@ -86,10 +87,11 @@ function M.newTableView( options )
         options.rowAnimation = true
     end
 
-    muiData.tableCircle = display.newCircle( 0, 0, M.getScaleVal(20 * 2.5) )
-    muiData.tableCircle:setFillColor( unpack(options.circleColor) )
-    muiData.tableCircle.isVisible = false
-    muiData.tableCircle.alpha = 0.55
+    MySceneName = M.getCurrentScene()
+    muiData.sceneData[MySceneName].tableCircle = display.newCircle( 0, 0, M.getScaleVal(20 * 2.5) )
+    muiData.sceneData[MySceneName].tableCircle:setFillColor( unpack(options.circleColor) )
+    muiData.sceneData[MySceneName].tableCircle.isVisible = false
+    muiData.sceneData[MySceneName].tableCircle.alpha = 0.55
     muiData.tableRow = nil
 
     -- Create the widget
@@ -448,15 +450,16 @@ function M.onRowTouch( event )
         end
 
         if rowAnimation == true then
-            muiData.tableCircle:toFront()
+            MySceneName = M.getCurrentScene()
+            muiData.sceneData[MySceneName].tableCircle:toFront()
 
-            muiData.tableCircle.alpha = 0.55
+            muiData.sceneData[MySceneName].tableCircle.alpha = 0.55
             if row.miscEvent == nil then return end
-            muiData.tableCircle.x = row.miscEvent.x
-            muiData.tableCircle.y = row.miscEvent.y
+            muiData.sceneData[MySceneName].tableCircle.x = row.miscEvent.x
+            muiData.sceneData[MySceneName].tableCircle.y = row.miscEvent.y
             local scaleFactor = 0.1 --2.5
-            muiData.tableCircle.isVisible = true
-            muiData.tableCircle.myCircleTrans = transition.from( muiData.tableCircle, { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+            muiData.sceneData[MySceneName].tableCircle.isVisible = true
+            muiData.sceneData[MySceneName].tableCircle.myCircleTrans = transition.from( muiData.sceneData[MySceneName].tableCircle, { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
             row.myGlowTrans = transition.to( row, { time=300,delay=150,alpha=0.4, transition=easing.outCirc, onComplete=M.subtleGlowRect } )
         end
 

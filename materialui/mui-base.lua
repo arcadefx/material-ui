@@ -41,6 +41,7 @@ local mathFloor = math.floor
 local mathMod = math.fmod
 local mathABS = math.abs
 -- local utf8 = require( "plugin.utf8" )
+local MySceneName = nil
 
 local M = {} -- for module array/table
 
@@ -63,6 +64,7 @@ local utf8v1 = function(cp)
 end
 
 local function updateTheShadows( e )
+    if muiData.shadowShapeDict == nil then return end
     for k,v in pairs(muiData.shadowShapeDict) do
         -- remove object etc from group and re-create!
         v["snapshot"]:removeSelf()
@@ -90,6 +92,10 @@ end
 function M.init_base(options)
   options = options or {}
   muiData.M = M -- all modules need access to parent methods
+  muiData.sceneData = {}
+  MySceneName = composer.getSceneName("current")
+  sceneName = composer.getSceneName("current")
+  muiData.sceneData[MySceneName] = {}
   muiData.environment = system.getInfo("environment")
   muiData.androidApiLevel = system.getInfo("androidApiLevel")
   muiData.platform = system.getInfo("platform")
@@ -108,16 +114,14 @@ function M.init_base(options)
     M.materialFont = muiData.materialFont
   end
 
-  muiData.value = options
-  muiData.group = options.group
-  muiData.parent = options.parent
-  muiData.circleSceneSwitch = nil
-  muiData.circleSceneSwitchStarted = false
-  muiData.switchToSceneName = ""
-  muiData.touching = false
+  muiData.parent = options.parent -- to be depreciated
+  muiData.sceneData[MySceneName].parent = options.parent
+  muiData.sceneData[MySceneName].circleSceneSwitch = nil
+  muiData.sceneData[MySceneName].circleSceneSwitchStarted = false
+  muiData.sceneData[MySceneName].switchToSceneName = ""
   muiData.masterRatio = nil
   muiData.masterRemainder = nil
-  muiData.tableCircle = nil
+  muiData.sceneData[MySceneName].tableCircle = nil
   muiData.widgetDict = {}
   muiData.progressbarDict = {}
   muiData.progresscircleDict = {}
@@ -149,7 +153,15 @@ end
 
 function M.init_calls()
   -- perform additional calls
-  M.addEventListenerForSlidePanel(muiData.parent)
+  M.addEventListenerForSlidePanel(M.getParent())
+end
+
+function M.getCurrentScene()
+  return MySceneName
+end
+
+function M.getParent()
+  return muiData.sceneData[MySceneName].parent
 end
 
 function M.addEventListenerForSlidePanel(parent)
@@ -166,11 +178,11 @@ end
 
 function M.setDisplayToActualDimensions(options)
   if options.useActualDimensions == true then
-    if string.find(system.orientation, "portrait") ~= nil then
-      muiData.contentWidth = display.actualContentWidth
+    if M.getOrientation() == "portrait" then
+      muiData.contentWidth = display.actualContentWidth -- these are always from holding device in portrait
       muiData.contentHeight = display.actualContentHeight
-    elseif string.find(system.orientation, "landscape") ~= nil then
-      muiData.contentWidth = display.actualContentHeight
+    else
+      muiData.contentWidth = display.actualContentHeight -- these are always from holding device in portrait
       muiData.contentHeight = display.actualContentWidth
     end
     muiData.useActualDimensions = options.useActualDimensions
@@ -235,6 +247,7 @@ end
 function M.updateUI(event, skipName)
     local widgetType = ""
 
+    -- print("updateUI called")
     for widget in pairs(muiData.widgetDict) do
         if widget ~= skipName or skipName == nil then
             widgetType = muiData.widgetDict[widget]["type"]
@@ -440,6 +453,16 @@ function M.getWidgetValue(widgetName)
     return muiData.widgetDict[widget]["value"]
 end
 
+function M.getOrientation()
+  local orientation
+   if display.contentWidth < display.contentHeight then
+      orientation = "portrait"
+   else
+      orientation = "landscape"
+   end
+   return orientation
+end
+
 function M.getScaleVal(n)
     if n == nil then n = 1 end
     return mathFloor(M.getSizeRatio() * n)
@@ -450,9 +473,9 @@ function M.getSizeRatio()
     return muiData.masterRatio
   end
   local divisor = 1
-  if string.find(system.orientation, "portrait") ~= nil then
+  if M.getOrientation() == "portrait" then
     divisor = muiData.minPixelScaleWidthForPortrait
-  elseif string.find(system.orientation, "landscape") ~= nil then
+  else
     divisor = muiData.minPixelScaleWidthForLandscape
   end
 
@@ -498,6 +521,45 @@ function M.createButtonsFromList(options, rect, container)
         end
     end
   end
+end
+
+function M.transitionCircleSwitch(params)
+  local length = params.time or 900
+  local duration = length * 10
+  local startTime = system.getTimer()
+  local newScaleX, newScaleY = 0.01, 0.01
+
+  local circleColor = params.circleColor
+  local callBackData = params.callBackData
+  muiData.sceneData[MySceneName].circleSceneSwitch = display.newCircle( 0, 0, muiData.contentWidth + (muiData.contentWidth * 0.25))
+  muiData.sceneData[MySceneName].circleSceneSwitch:setFillColor( unpack(circleColor) )
+  muiData.sceneData[MySceneName].circleSceneSwitch.alpha = 1
+  muiData.sceneData[MySceneName].circleSceneSwitch.callBackData = callBackData
+  muiData.sceneData[MySceneName].circleSceneSwitch.width = M.getScaleVal(100)
+  muiData.sceneData[MySceneName].circleSceneSwitch.height = M.getScaleVal(100)
+
+  muiData.sceneData[MySceneName].circleSceneSwitch.runFunc = function(event)
+  local runTime = system.getTimer()
+      local tm = startTime + length
+      local percentInc = (runTime - startTime) / duration
+      newScaleX = newScaleX + percentInc
+      newScaleY = newScaleY + percentInc
+      if(startTime + length > runTime) then
+          muiData.sceneData[MySceneName].circleSceneSwitch.xScale = newScaleX
+          muiData.sceneData[MySceneName].circleSceneSwitch.yScale = newScaleY
+      else
+          -- do it one last time to make sure we have the final size
+          Runtime:removeEventListener("enterFrame", muiData.sceneData[MySceneName].circleSceneSwitch.runFunc)
+          muiData.sceneData[MySceneName].circleSceneSwitch.xScale = 2
+          muiData.sceneData[MySceneName].circleSceneSwitch.yScale = 2
+          muiData.sceneData[MySceneName].circleSceneSwitch.isVisible = false
+          muiData.sceneData[MySceneName].circleSceneSwitch:removeSelf()
+          muiData.sceneData[MySceneName].circleSceneSwitch = nil
+          M.finalActionForSwitchScene({callBackData=callBackData})
+      end
+  end
+
+  Runtime:addEventListener("enterFrame", muiData.sceneData[MySceneName].circleSceneSwitch.runFunc)
 end
 
 function M.transitionColor(displayObj, params)
@@ -739,8 +801,8 @@ function M.subtleRadiusDone(e)
       e.isVisible = false
       transition.to( e, { time=0,alpha=0.3, xScale=1, yScale=1 } )
       muiData.touching = false
-      if muiData.tableCircle ~= nil then
-          muiData.tableCircle:toBack()
+      if muiData.sceneData[MySceneName].tableCircle ~= nil then
+          muiData.sceneData[MySceneName].tableCircle:toBack()
       end
     end
 end
@@ -768,9 +830,9 @@ end
 --[[ switch scene action ]]
 
 function M.actionSwitchScene( e )
-    if e == nil or muiData.circleSceneSwitchStarted == true or muiData.circleSceneSwitch ~= nil then return end
+    if e == nil or muiData.sceneData[MySceneName].circleSceneSwitchStarted == true or muiData.sceneData[MySceneName].circleSceneSwitch ~= nil then return end
 
-    M.circleSceneSwitchStarted = true
+    muiData.sceneData[MySceneName].circleSceneSwitchStarted = true
 
     local muiTarget = M.getEventParameter(e, "muiTarget")
     local muiTargetValue = M.getEventParameter(e, "muiTargetValue")
@@ -785,30 +847,49 @@ function M.actionSwitchScene( e )
     if muiTargetCallBackData ~= nil and muiTargetCallBackData.sceneTransitionColor ~= nil then
         circleColor = muiTargetCallBackData.sceneTransitionColor
     end
-    muiData.circleSceneSwitch = display.newCircle( 0, 0, muiData.contentWidth + (muiData.contentWidth * 0.25))
-    muiData.circleSceneSwitch:setFillColor( unpack(circleColor) )
-    muiData.circleSceneSwitch.alpha = 1
-    muiData.circleSceneSwitch.callBackData = muiTargetCallBackData
-    muiData.circleSceneSwitch.width = M.getScaleVal(100)
-    muiData.circleSceneSwitch.height = M.getScaleVal(100)
-    transition.to( muiData.circleSceneSwitch, { time=900, xScale=2, yScale=2, onComplete=M.finalActionForSwitchScene } )
+    --[[--
+    muiData.sceneData[MySceneName].circleSceneSwitch = display.newCircle( 0, 0, muiData.contentWidth + (muiData.contentWidth * 0.25))
+    muiData.sceneData[MySceneName].circleSceneSwitch:setFillColor( unpack(circleColor) )
+    muiData.sceneData[MySceneName].circleSceneSwitch.alpha = 1
+    muiData.sceneData[MySceneName].circleSceneSwitch.callBackData = muiTargetCallBackData
+    muiData.sceneData[MySceneName].circleSceneSwitch.width = M.getScaleVal(100)
+    muiData.sceneData[MySceneName].circleSceneSwitch.height = M.getScaleVal(100)
+    muiData.sceneData[MySceneName].circleSwitchTrans = transition.to( muiData.sceneData[MySceneName].circleSceneSwitch, { time=900, xScale=2, yScale=2, onComplete=M.finalActionForSwitchScene } )
+    --]]--
+    -- M.finalActionForSwitchScene({callBackData=muiTargetCallBackData})
+    local sceneTransitionAnimation = true
+    if muiTargetCallBackData ~= nil and muiTargetCallBackData.sceneTransitionAnimation ~= nil then
+      sceneTransitionAnimation = muiTargetCallBackData.sceneTransitionAnimation
+    end
+
+    if sceneTransitionAnimation == true then
+      M.transitionCircleSwitch({callBackData=muiTargetCallBackData, circleColor=circleColor})
+    else
+      M.finalActionForSwitchScene({callBackData=muiTargetCallBackData})
+    end
 end
 
 function M.finalActionForSwitchScene(e)
     -- switch to scene
-    if muiData.circleSceneSwitch == nil or M.circleSceneSwitchStarted == false then return end
-    muiData.circleSceneSwitch.isVisible = false
-    muiData.circleSceneSwitch:removeSelf()
-    muiData.circleSceneSwitch = nil
-    muiData.circleSceneSwitchStarted = false
+    -- if muiData.sceneData[MySceneName].circleSceneSwitch == nil or M.circleSceneSwitchStarted == false then return end
+    if muiData.sceneData[MySceneName].circleSceneSwitchStarted == false then return end
+    --[[--
+    if muiData.sceneData[MySceneName].circleSwitchTrans ~= nil then
+      transition.cancel( muiData.sceneData[MySceneName].circleSwitchTrans )
+    end
+    muiData.sceneData[MySceneName].circleSceneSwitch.isVisible = false
+    muiData.sceneData[MySceneName].circleSceneSwitch:removeSelf()
+    muiData.sceneData[MySceneName].circleSceneSwitch = nil
+    --]]--
+    muiData.sceneData[MySceneName].circleSceneSwitchStarted = false
     if e.callBackData ~= nil and e.callBackData.sceneDestination ~= nil then
         M.setSceneToSwitchToAfterDestroy( e.callBackData.sceneDestination )
-        composer.removeScene( muiData.scene.name )
+        composer.removeScene( MySceneName )
     end
 end
 
 function M.goToScene(callBackData)
-    if muiData.circleSceneSwitchStarted == true then return end
+    if muiData.sceneData[MySceneName].circleSceneSwitchStarted == true then return end
     if callBackData ~= nil and callBackData.onCompleteData ~= nil then
         local e = {
             callBackData = callBackData.onCompleteData
@@ -819,7 +900,7 @@ end
 
 function M.setSceneToSwitchToAfterDestroy(sceneName)
   if sceneName ~= nil and string.len(sceneName) > 0 then
-      muiData.switchToSceneName = sceneName
+      muiData.sceneData[MySceneName].switchToSceneName = sceneName
   end
 end
 
@@ -1058,7 +1139,11 @@ function M.removeWidgets()
 end
 
 function M.destroy()
-  --print("Removing widgets")
+  -- print("Removing widgets")
+
+  -- avoid transition issues and cancel any transitions in progress
+  transition.cancel()
+
   for widget in pairs(muiData.widgetDict) do
       local widgetType = muiData.widgetDict[widget]["type"]
       if widgetType ~= nil and muiData.widgetDict[widget] ~= nil then
@@ -1124,16 +1209,18 @@ function M.destroy()
   end
 
   -- remove circle if present
-  if muiData.tableCircle ~= nil then
-    muiData.tableCircle.isVisible = false
-    muiData.tableCircle:removeSelf()
+  if muiData.sceneData[MySceneName].tableCircle ~= nil then
+    muiData.sceneData[MySceneName].tableCircle.isVisible = false
+    muiData.sceneData[MySceneName].tableCircle:removeSelf()
   end
 
-  M.removeEventListenerForSlidePanel(muiData.parent)
+  M.removeEventListenerForSlidePanel(M.getParent())
   Runtime:removeEventListener( "touch", M.eventSuperListner )
   Runtime:removeEventListener( "system", onSystemEvent )
-  if muiData.switchToSceneName ~= nil and string.len(muiData.switchToSceneName) > 0 then
-    composer.gotoScene( muiData.switchToSceneName )
+  if muiData.sceneData[MySceneName].switchToSceneName ~= nil and string.len(muiData.sceneData[MySceneName].switchToSceneName) > 0 then
+    timer.performWithDelay(500, composer.gotoScene( muiData.sceneData[MySceneName].switchToSceneName ), 1)
+    -- sceneName = muiData.sceneData[MySceneName].switchToSceneName
+    -- composer.gotoScene( sceneName )
   end
 end
 

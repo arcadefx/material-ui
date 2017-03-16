@@ -8,6 +8,10 @@ local composer = require( "composer" )
 local mui = require( "materialui.mui" )
 
 local scene = composer.newScene()
+
+-- forward declarations and other locals
+local screenW, screenH, halfW = display.contentWidth, display.contentHeight, display.contentWidth*0.5
+
 local background = nil
 local widget = require( "widget" )
 
@@ -117,7 +121,7 @@ function scene:create( event )
     -- below is a rounded button with static image with two states (off/on)
     -- tap or click and "hold" to see shadow and release to see it fade to original image
     mui.newRoundedRectButton({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "newDialog",
         text = "Open Dialog",
         width = mui.getScaleVal(300),
@@ -157,7 +161,7 @@ function scene:create( event )
     })
 
     mui.newRectButton({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "switchSceneButton",
         text = "Go Scene",
         width = mui.getScaleVal(250),
@@ -173,9 +177,10 @@ function scene:create( event )
         --iconImage = "1484026171_02.png",
         touchpoint = true,
         callBack = mui.actionSwitchScene,
-        callBackData = { 
+        callBackData = {
             sceneDestination = "fun",
-            sceneTransitionColor = { 0, 0.73, 1 }
+            sceneTransitionColor = { 0, 0.73, 1 },
+            sceneTransitionAnimation = true
         } -- scene fun.lua
     })
 
@@ -191,7 +196,7 @@ function scene:create( event )
     end
 
     mui.newIconButton({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "plus",
         text = "help",
         width = mui.getScaleVal(50),
@@ -212,7 +217,7 @@ function scene:create( event )
     -- date picker example
     local showDatePicker = function(event)
         mui.newDatePicker({
-            parent = muiData.parent,
+            parent = mui.getParent(),
             name = "datepicker-demo",
             font = native.systemFont,
             fontSize = mui.getScaleVal(26),
@@ -240,7 +245,7 @@ function scene:create( event )
         })
     end
     mui.newCircleButton({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "alice-button",
         text = "date_range",
         radius = mui.getScaleVal(46),
@@ -256,7 +261,7 @@ function scene:create( event )
     -- time picker example
     local showTimePicker = function(event)
         mui.newTimePicker({
-            parent = muiData.parent,
+            parent = mui.getParent(),
             name = "timepicker-demo",
             font = native.systemFont,
             width = mui.getScaleVal(400),
@@ -281,7 +286,7 @@ function scene:create( event )
         })
     end
     mui.newCircleButton({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "bueler-button",
         text = "access_time",
         radius = mui.getScaleVal(46),
@@ -310,7 +315,7 @@ function scene:create( event )
         else
             print("slidePanel is new")
             mui.newSlidePanel({
-                parent = muiData.parent,
+                parent = mui.getParent(),
                 name = "slidepanel-demo",
                 title = "MUI Demo", -- leave blank for no panel title text
                 titleAlign = "center",
@@ -360,7 +365,7 @@ function scene:create( event )
         -- add some buttons to the menu!
     end
     mui.newCircleButton({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "slidepanel-button",
         text = "menu",
         radius = mui.getScaleVal(46),
@@ -379,7 +384,7 @@ function scene:create( event )
         local button = mui.getWidgetBaseObject( "vertical-menu-button" )
 
         mui.newPopover({
-            parent = muiData.parent,
+            parent = mui.getParent(),
             name = "popovermenu_demo1",
             font = native.systemFont,
             textColor = { 0.4, 0.4, 0.4 },
@@ -406,7 +411,7 @@ function scene:create( event )
     end
 
     mui.newIconButton({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "vertical-menu-button",
         text = "more_vert",
         width = mui.getScaleVal(46),
@@ -424,7 +429,7 @@ function scene:create( event )
     -- SnackBar example
     local function showSnackBar( ... )
         mui.newSnackBar({
-            parent = muiData.parent,
+            parent = mui.getParent(),
             name = "snackbar_demo1",
             text = "Updated Demo",
             radius = mui.getScaleVal(10),
@@ -446,7 +451,7 @@ function scene:create( event )
     end
 
     mui.newIconButton({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "snackbar_button",
         text = "local_cafe",
         width = mui.getScaleVal(46),
@@ -463,7 +468,7 @@ function scene:create( event )
 
     -- tile widget example
     mui.newCircleButton({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "tile-button",
         text = "view_list",
         radius = mui.getScaleVal(46),
@@ -482,7 +487,7 @@ function scene:create( event )
 
     -- checkbox example
     mui.newCheckBox({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "check",
         text = "check_box_outline_blank",
         width = mui.getScaleVal(50),
@@ -499,7 +504,7 @@ function scene:create( event )
 
     -- toggle switch example
     mui.newToggleSwitch({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "switch_demo",
         size = mui.getScaleVal(55),
         x = mui.getScaleVal(360),
@@ -515,7 +520,7 @@ function scene:create( event )
 
     -- radio button group example
     mui.newRadioGroup({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "radio_demo",
         width = mui.getScaleVal(30),
         height = mui.getScaleVal(30),
@@ -535,7 +540,7 @@ function scene:create( event )
 
     ---[[
     mui.newTableView({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "tableview_demo",
         width = mui.getScaleVal(300),
         height = mui.getScaleVal(300),
@@ -592,7 +597,7 @@ function scene:create( event )
     --]]--
 
     mui.newTextField({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "textfield_demo",
         labelText = "Subject",
         text = "Hello, world!",
@@ -608,7 +613,7 @@ function scene:create( event )
     })
 
     mui.newTextField({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "textfield_demo_with_placeholder",
         labelText = "Test Placeholder",
         placeholder = "You see me when text is empty",
@@ -625,7 +630,7 @@ function scene:create( event )
 
     -- create and animate the intial value (1% is always required due to scaling method)
     mui.newProgressBar({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "progressbar_demo",
         width = mui.getScaleVal(290),
         height = mui.getScaleVal(8),
@@ -657,7 +662,7 @@ function scene:create( event )
     -- on bottom and stay on top of other widgets.
     local buttonHeight = mui.getScaleVal(70)
     mui.newToolbar({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "toolbar_demo",
         --width = mui.getScaleVal(500), -- defaults to display.contentWidth
         height = mui.getScaleVal(70),
@@ -700,7 +705,7 @@ function scene:show( event )
         -- Called when the scene is now on screen
         -- Insert code here to make the scene come alive
         -- Example: start timers, begin animation, play audio, etc.
-
+        -- mui.actionSwitchScene({callBackData={sceneDestination="fun"}})
     end
 end
 
@@ -731,6 +736,7 @@ function scene:destroy( event )
     -- Insert code here to clean up the scene
     -- Example: remove display objects, save state, etc.
     mui.destroy()
+
     if background ~= nil then
         background:removeSelf()
         background = nil

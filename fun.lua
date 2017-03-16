@@ -8,7 +8,6 @@
 local composer = require( "composer" )
 local widget = require( "widget" )
 
--- mui
 local mui = require( "materialui.mui" )
 
 local scene = composer.newScene()
@@ -20,7 +19,6 @@ local screenW, screenH, halfW = display.contentWidth, display.contentHeight, dis
 
 local background = nil
 local scrollView = nil
-local infoText = nil
 
 local function destroyDemoText( demoText )
     print("destroyDemoText called")
@@ -45,8 +43,10 @@ function scene:create( event )
 	background.anchorX = 0
 	background.anchorY = 0
 	background:setFillColor( unpack(colorFill) )
+    sceneGroup:insert( background )
 
     mui.init()
+
     mui.newRoundedRectButton({
         scrollView = scrollView,
         name = "goBack",
@@ -63,9 +63,10 @@ function scene:create( event )
         iconFontColor = { 1, 1, 1, 1 },
         -- iconImage = "1484026171_02.png",
         callBack = mui.actionSwitchScene,
-        callBackData = { 
+        callBackData = {
             sceneDestination = "menu",
-            sceneTransitionColor = { 0, 0.73, 1 }
+            sceneTransitionColor = { 0, 0.73, 1 },
+            sceneTransitionAnimation = true
         } -- scene menu.lua
     })
 
@@ -169,20 +170,20 @@ function scene:create( event )
     })
     --]]--
 
-	-- Create the widget
+    -- Create the widget
     ---[[--
-	local scrollWidth = display.contentWidth * 0.5
-	scrollView = widget.newScrollView(
-	    {
-	        top = mui.getScaleVal(30),
-	        left = (display.contentWidth - scrollWidth),
-	        width = scrollWidth,
-	        height = mui.getScaleVal(450),
-	        scrollWidth = scrollWidth,
-	        scrollHeight = (display.contentHeight * 2),
-	        listener = scrollAListener
-	    }
-	)
+    local scrollWidth = display.contentWidth * 0.5
+    scrollView = widget.newScrollView(
+        {
+            top = mui.getScaleVal(30),
+            left = (display.contentWidth - scrollWidth),
+            width = scrollWidth,
+            height = mui.getScaleVal(450),
+            scrollWidth = scrollWidth,
+            scrollHeight = (display.contentHeight * 2),
+            listener = scrollAListener
+        }
+    )
 
     mui.newTextField({
         name = "textfield_demo2",
@@ -426,8 +427,6 @@ function scene:create( event )
         padding = mui.getScaleVal(20),
         align = "right",  -- left | right supported
     })
-
-	sceneGroup:insert( background )
 end
 
 --
@@ -475,6 +474,8 @@ function scene:show( event )
 		-- INSERT code here to make the scene come alive
 		-- e.g. start timers, begin animation, play audio, etc.
 		--physics.start()
+        -- mui.actionSwitchScene({callBackData={sceneDestination="menu"}})
+
 	end
 end
 
@@ -505,11 +506,10 @@ function scene:destroy( event )
 
     mui.destroy()
 
-    scrollView:removeSelf()
-    scrollView = nil
-
-    infoText:removeSelf()
-    infoText = nil
+    if scrollView ~= nil then
+        scrollView:removeSelf()
+        scrollView = nil
+    end
 
     if background ~= nil then
         background:removeSelf()

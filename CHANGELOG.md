@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.80] - 2017-03-16
+### Changes
+- getOrientation() gets the current orientation as locked. mui only supports Portrait or Landscape. It cannot be both at this time.
+- setSceneToSwitchToAfterDestroy([name]) to override what scene to go to after mui.destroy() executes.
+- 'sceneTransitionAnimation' parameter for scene transitions. Is boolean and if "true" (default) it will animate before going to next scene.  If "false" it will not animate and go to next scene immediately.  See menu.lua for an example.
+- muiData.parent variable is replaced with mui.getParent() method. muiData.parent is still supported but will be deprecated in the future.
+
+### Fixes
+- Fixed getScaleVal() and orientation issues. This was causing issues on device and in emulator. Issues like crashing since the device could be rotated, flipped etc messing up the calculations. Again use a locked position for now in "mui" and go with Portrait or Landscape. These in any "portait" or "landscape" orientation, but not both "portrait" and "landscape"
+- Using a new animation for switching between scenes. It's smoother.
+- Re-did the order of mui.destroy() and now it will cancel all "transitions" before proceeding to destroy.
+
+
 ## [0.1.77] - 2017-02-23
 ### Changes
 - newSlidePanel() supports swipe gestures to open and close the menu.

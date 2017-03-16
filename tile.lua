@@ -47,7 +47,7 @@ function scene:create( event )
 
     -- tile grid example
     mui.newTileGrid({
-        parent = muiData.parent,
+        parent = mui.getParent(),
         name = "grid_demo",
         width = mui.contentWidth,
         height = mui.contentHeight,

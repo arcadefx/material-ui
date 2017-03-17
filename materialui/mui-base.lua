@@ -107,7 +107,7 @@ function M.init_base(options)
   -- utf8 support required for Android API < 23 (to be safe)
   muiData.utf8 = utf8v1
   muiData.utf8Assist = false
-  if muiData.androidApiLevel ~= nil and tonumber(muiData.androidApiLevel) < 23 then
+  if (muiData.androidApiLevel ~= nil and tonumber(muiData.androidApiLevel) < 23) or string.find(muiData.platform, "win") then
     muiData.utf8Assist = true
     muiData.materialFont = "MaterialIcons-Regular.otf"
     muiData.materialFontCodePoints = materialFontCodePoints

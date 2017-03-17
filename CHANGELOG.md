@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.84] - 2017-03-17
+### Changes
+- setSelectorList() method added to set the named drop-down selector with the contents of a list. This makes it easier to dynamically update the list after declaration.  See commented out example in fun.lua.
+- setSelectorValue() method added to set the named drop-down selector's current text and value content.
+
+### Fixes
+- Fixed newTextBox() contents overflowing out of defined area. The text is now in a container and the text is always around to the top (shows first line of content on down).
+
 ## [0.1.80] - 2017-03-16
 ### Changes
 - getOrientation() gets the current orientation as locked. mui only supports Portrait or Landscape. It cannot be both at this time.

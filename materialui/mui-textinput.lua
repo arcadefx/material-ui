@@ -319,6 +319,7 @@ function M.textListener(event)
             M.setEventParameter(event, "muiTargetValue", event.target.text)
             M.setEventParameter(event, "muiTargetNewCharacters", event.newCharacters)
             M.setEventParameter(event, "muiTargetOldText", event.oldText)
+            M.adjustFakeTextBox(name)
             assert( event.target.callBack )(event)
         end
 
@@ -358,7 +359,8 @@ function M.newTextBox(options)
 
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "TextBox"
-    muiData.widgetDict[options.name]["container"] = display.newContainer( options.width+4, options.height * 4)
+    -- muiData.widgetDict[options.name]["container"] = display.newContainer( options.width+4, options.height * 4)
+    muiData.widgetDict[options.name]["container"] = display.newGroup()
     muiData.widgetDict[options.name]["container"]:translate( x, y ) -- center the container
     muiData.widgetDict[options.name]["touching"] = false
 
@@ -456,6 +458,7 @@ function M.newTextBox(options)
         fontSize = options.fontSize * 0.55,
         align = "left"  --new alignment parameter
     }
+    muiData.widgetDict[options.name]["containerfake"] = display.newContainer( options.width + 4, options.height*.95)
     muiData.widgetDict[options.name]["textfieldfake"] = display.newText( textOptions )
     muiData.widgetDict[options.name]["textfieldfake"]:setFillColor( unpack(muiData.widgetDict[options.name]["textlabel"].inactiveColor) )
     -- muiData.widgetDict[options.name]["textfieldfake"]:addEventListener("touch", M.showNativeInput)
@@ -464,12 +467,16 @@ function M.newTextBox(options)
     muiData.widgetDict[options.name]["rect"].dialogName = options.dialogName
     muiData.widgetDict[options.name]["textfieldfake"].name = options.name
     muiData.widgetDict[options.name]["textfieldfake"].dialogName = options.dialogName
-    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["textfieldfake"] )
+    muiData.widgetDict[options.name]["containerfake"]:insert( muiData.widgetDict[options.name]["textfieldfake"] )
+    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["containerfake"] )
+
+    -- muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["textfieldfake"] )
 
     -- muiData.widgetDict[options.name]["textfield"].placeholder = "Subject"
     muiData.widgetDict[options.name]["textfield"].callBack = options.callBack
     muiData.widgetDict[options.name]["textfield"]:addEventListener( "userInput", M.textListener )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["textfield"] )
+    M.adjustFakeTextBox(options.name)
 end
 
 function M.textfieldCallBack(event)
@@ -478,6 +485,19 @@ function M.textfieldCallBack(event)
 
     if muiTargetValue ~= nil then
         print("TextField contains: "..muiTargetValue)
+    end
+end
+
+function M.adjustFakeTextBox(widgetName)
+    if widgetName == nil then return end
+    -- if textbox then adjust text y position
+    if muiData.widgetDict[widgetName]["containerfake"] ~= nil then
+        local hContainer = muiData.widgetDict[widgetName]["containerfake"].contentHeight
+        local hText = muiData.widgetDict[widgetName]["textfieldfake"].contentHeight
+        if hText > hContainer then
+            local newY = (hText - hContainer) * .5
+            muiData.widgetDict[widgetName]["textfieldfake"].y = newY
+        end
     end
 end
 
@@ -498,6 +518,7 @@ function M.setTextFieldValue(widgetName, value)
         else
             muiData.widgetDict[widgetName]["textfieldfake"].text = value
         end
+        M.adjustFakeTextBox(widgetName)
     end
 end
 
@@ -518,6 +539,7 @@ function M.setTextBoxValue(widgetName, value)
         else
             muiData.widgetDict[widgetName]["textfieldfake"].text = value
         end
+        M.adjustFakeTextBox(widgetName)
     end
 end
 
@@ -534,6 +556,10 @@ function M.removeTextField(widgetName)
 
     muiData.widgetDict[widgetName]["textfieldfake"].isVisible = false
     muiData.widgetDict[widgetName]["textfieldfake"]:removeSelf()
+    if muiData.widgetDict[widgetName]["containerfake"] ~= nil then
+        muiData.widgetDict[widgetName]["containerfake"].isVisible = false
+        muiData.widgetDict[widgetName]["containerfake"]:removeSelf()
+    end
     muiData.widgetDict[widgetName]["textfield"].isVisible = false
     muiData.widgetDict[widgetName]["textfield"]:removeSelf()
     muiData.widgetDict[widgetName]["textfield"] = nil

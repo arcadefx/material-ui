@@ -251,7 +251,7 @@ function scene:create( event )
     mui.newTextBox({
         name = "textbox_demo1",
         labelText = "Secret Text Box",
-        text = "I am hidden in view\nYes, me too!\nFood\nDrink\nDesert",
+        text = "1\n2\n3\n4\n5\nI am hidden in view\nYes, me too!\nFood\nDrink\nDesert",
         font = native.systemFont,
         fontSize = mui.getScaleVal(46),
         width = mui.getScaleVal(400),

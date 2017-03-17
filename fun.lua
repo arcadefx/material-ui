@@ -140,7 +140,7 @@ function scene:create( event )
         },
     })
 
-    ---[[--
+    --[[--
     local newlist = {}
     newlist = {
         { key = "Row1", text = "Dog", value = "Puggle", isCategory = false},

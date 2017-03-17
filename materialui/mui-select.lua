@@ -102,6 +102,11 @@ function M.newSelect(options)
         options.strokeColor = { 0.4, 0.4, 0.4, 1 }
     end
 
+    muiData.widgetDict[options.name].list = nil
+    if options.list ~= nil then
+        muiData.widgetDict[options.name].list = options.list
+    end
+
     muiData.widgetDict[options.name]["rect"] = display.newRect( 0, 0, options.width, options.height )
     muiData.widgetDict[options.name]["rect"]:setFillColor( unpack( options.fieldBackgroundColor ) )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["rect"] )
@@ -200,6 +205,29 @@ function M.getSelectorProperty(widgetName, propertyName)
     return data
 end
 
+function M.setSelectorList(widgetName, list)
+    if widgetName == nil or list == nil then return end
+    if muiData.widgetDict[widgetName]["type"] == "Selector" then
+         muiData.widgetDict[widgetName].list = list
+         local text = ""
+         local value = ""
+         for k, v in pairs(list) do
+             text = v.text
+             value = v.value
+             break
+         end
+         M.setSelectorValue(widgetName, text, value)
+    end
+end
+
+function M.setSelectorValue(widgetName, text, value)
+    if widgetName == nil or text == nil or value == nil then return end
+    if muiData.widgetDict[widgetName]["type"] == "Selector" then
+         muiData.widgetDict[widgetName]["selectorfieldfake"].text = text
+         muiData.widgetDict[widgetName]["value"] = value
+    end
+end
+
 function M.revealTableViewForSelector(name, options)
     -- table view to hold pick list keyboard_arrow_down
     muiData.widgetDict[options.name]["mygroup"] = display.newGroup() -- options.width+4, options.height + options.listHeight)
@@ -235,7 +263,7 @@ function M.revealTableViewForSelector(name, options)
         categoryColor = options.categoryColor,
         categoryLineColor = options.categoryLineColor,
         touchpointColor = options.touchpointColor,
-        list = options.list
+        list = muiData.widgetDict[options.name].list
     })
 
     muiData.widgetDict[options.name]["rect2"] = display.newRect( options.width * 0.5, (options.listHeight * 0.45) + options.height, options.width, options.listHeight + (options.height * 0.5))

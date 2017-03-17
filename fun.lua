@@ -140,6 +140,16 @@ function scene:create( event )
         },
     })
 
+    ---[[--
+    local newlist = {}
+    newlist = {
+        { key = "Row1", text = "Dog", value = "Puggle", isCategory = false},
+        { key = "Row2", text = "Cat", value = "Tabby", isCategory = false },
+        { key = "Row3", text = "Dinosaur", value = "Raptor", isCategory = false },
+    }
+    mui.setSelectorList("selector_demo1", newlist)
+    --]]--
+
     -- horizontal slider (vertical in development)
     ---[[--
     mui.newSlider({

@@ -251,7 +251,7 @@ function M.updateUI(event, skipName)
     for widget in pairs(muiData.widgetDict) do
         if widget ~= skipName or skipName == nil then
             widgetType = muiData.widgetDict[widget]["type"]
-            if (widgetType == "TextField" or widgetType == "TextBox") and muiData.widgetDict[widget]["textfield"].isVisible == true then
+            if (widgetType == "TextField" or widgetType == "TextBox") and muiData.widgetDict[widget]["textfield"] ~= nil and muiData.widgetDict[widget]["textfield"].isVisible == true then
                 -- hide the native field
                 timer.performWithDelay(100, function() native.setKeyboardFocus(nil) end, 1)
                 muiData.widgetDict[widget]["textfieldfake"].isVisible = true
@@ -733,6 +733,16 @@ function M.getTextWidth(options)
   return width
 end
 
+function M.isMobile()
+  local isMobile = false
+
+  if muiData.platform == "ios" or muiData.platform == "android" or muiData.platform == "tvos" or muiData.platform == "winphone" then
+    isMobile = true
+  end
+
+  return isMobile
+end
+
 function M.tableLength(T)
   local count = 0
   for _ in pairs(T) do count = count + 1 end
@@ -963,10 +973,15 @@ end
 function M.showNativeInput(event)
     local name = event.target.name
     local dialogName = event.target.dialogName
+    local isTextBox = event.target.textbox
     muiData.currentNativeFieldName = name
 
     if muiData.dialogInUse == true and dialogName == nil then return end
     if event.phase == "began" then
+
+        if M.isMobile() == true and isTextBox ~= nil then
+          M.createTextBoxOverlay( muiData.widgetDict[name] )
+        end
 
         local madeAdjustment = false
         if muiData.widgetDict[name]["scrollView"] ~= nil then
@@ -1028,7 +1043,7 @@ function M.adjustScrollViewComplete(event)
     timer.performWithDelay(100, function() native.setKeyboardFocus(muiData.widgetDict[name]["textfield"]) end, 1)
 end
 
-function M.hideWidget(widgetName, options)
+function M.hideWidget(widgetName, showWidget)
   if showWidget == nil then showWidget = false end
   for widget in pairs(muiData.widgetDict) do
       local widgetType = muiData.widgetDict[widget]["type"]
@@ -1069,7 +1084,7 @@ function M.hideNativeWidgets()
   for widget in pairs(muiData.widgetDict) do
       local widgetType = muiData.widgetDict[widget]["type"]
       if widgetType ~= nil then
-        if widgetType == "TextField" or widgetType == "TextBox" then
+        if (widgetType == "TextField" or widgetType == "TextBox") and muiData.widgetDict[widget]["textfield"] ~= nil  then
             muiData.widgetDict[widget]["textfield"].isVisible = false
         end
       end

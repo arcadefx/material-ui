@@ -48,7 +48,6 @@ function scene:create( event )
     mui.init()
 
     mui.newRoundedRectButton({
-        scrollView = scrollView,
         name = "goBack",
         text = "Go Back",
         width = mui.getScaleVal(200),
@@ -261,7 +260,7 @@ function scene:create( event )
     mui.newTextBox({
         name = "textbox_demo1",
         labelText = "Secret Text Box",
-        text = "1\n2\n3\n4\n5\nI am hidden in view\nYes, me too!\nFood\nDrink\nDesert",
+        text = "I am hidden in view\nYes, me too!\nFood\nDrink\nDesert\n1\n2\n3\n4\n5",
         font = native.systemFont,
         fontSize = mui.getScaleVal(46),
         width = mui.getScaleVal(400),
@@ -273,6 +272,20 @@ function scene:create( event )
         inactiveColor = { 0.4, 0.4, 0.4, 1 },
         callBack = mui.textfieldCallBack,
         isEditable = true,
+        doneButton = {
+            width = mui.getScaleVal(140),
+            height = mui.getScaleVal(60),
+            fillColor = { 0.25, 0.75, 1, 1 },
+            textColor = { 1, 1, 1 },
+            text = "done",
+            iconText = "done",
+            iconFont = mui.materialFont,
+            iconFontColor = { 1, 1, 1, 1 },
+            radius = mui.getScaleVal(8), -- set to 0 for newRectButton() instead of rounded
+        },
+        overlayBackgroundColor = { 1, 1, 1, 1 },
+        overlayTextBoxBackgroundColor = { .9, .9, .9, 1 },
+        overlayTextBoxHeight = mui.getScaleVal(200),
         scrollView = scrollView
     })
 
@@ -437,6 +450,58 @@ function scene:create( event )
         padding = mui.getScaleVal(20),
         align = "right",  -- left | right supported
     })
+
+    --[[-- REMOVE THESE
+    mui.newTextBox({
+        name = "textbox_demo2222",
+        labelText = "Secret Text Box",
+        text = "1\n2\n3\n4\n5\nI am hidden in view\nYes, me too!\nFood\nDrink\nDesert",
+        font = native.systemFont,
+        fontSize = mui.getScaleVal(46),
+        width = mui.getScaleVal(400),
+        height = mui.getScaleVal(200),
+        x = display.contentWidth / 4,
+        y = display.contentHeight / 2,
+        trimFakeTextAt = 80, -- trim at 1..79 characters.
+        activeColor = { 0.12, 0.67, 0.27, 1 },
+        inactiveColor = { 0.4, 0.4, 0.4, 1 },
+        callBack = mui.textfieldCallBack,
+        isEditable = true,
+        doneButtonEnabled = true,
+        doneButtonPlacement = "left",
+        doneButtonWidth = mui.getScaleVal(140),
+        doneButtonHeight = mui.getScaleVal(60),
+        doneButtonFillColor = { 0.25, 0.75, 1, 1 },
+        doneButtonTextColor = { 1, 1, 1 },
+        doneButtonText = "done",
+        doneButtonIconText = "done",
+        doneButtonIconFont = mui.materialFont,
+        doneButtonIconFontColor = { 1, 1, 1, 1 },
+        doneButtonRadius = mui.getScaleVal(8), -- set to 0 for newRectButton() instead of rounded
+    })
+
+    mui.newRoundedRectButton({
+        name = "goBack",
+        text = "Go Back",
+        width = mui.getScaleVal(200),
+        height = mui.getScaleVal(60),
+        x = mui.getScaleVal(160),
+        y = mui.getScaleVal(120),
+        font = native.systemFont,
+        fillColor = { 0.31, 0.65, 0.03, 1 },
+        textColor = { 1, 1, 1 },
+        iconText = "arrow_back",
+        iconFont = mui.materialFont,
+        iconFontColor = { 1, 1, 1, 1 },
+        -- iconImage = "1484026171_02.png",
+        callBack = mui.actionSwitchScene,
+        callBackData = {
+            sceneDestination = "menu",
+            sceneTransitionColor = { 0, 0.73, 1 },
+            sceneTransitionAnimation = true
+        } -- scene menu.lua
+    })
+    --]]--
 end
 
 --

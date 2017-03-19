@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.86] - 2017-03-18
+### Changes
+- newTextBox() options for "doneButton", options for overlay.  Due to mobile devices not having an easy way to edit textareas an overlay w/ "done" button (on right of textbox) has been added.  The overlay and button is "not" used on non-mobile devices.  Please see documentation and fun.lua for a complete example.  This makes editing in a textbox easier on mobile.
+
 ## [0.1.84] - 2017-03-17
 ### Changes
 - setSelectorList() method added to set the named drop-down selector with the contents of a list. This makes it easier to dynamically update the list after declaration.  See commented out example in fun.lua.

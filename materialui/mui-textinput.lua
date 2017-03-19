@@ -248,6 +248,9 @@ function M.highlightTextField(widgetName, active)
     local color = nil
     local options = muiData.widgetDict[name]["options"]
     if active then
+
+        M.createTextBoxOverlay(options)
+
         color = options.activeColor
         if widget["textlabel"] ~= nil then
             widget["textlabel"]:setFillColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
@@ -258,6 +261,9 @@ function M.highlightTextField(widgetName, active)
         transition.to(widget["lineanim"],{time=0, alpha=0.01})
         widget["lineanim"].isVisible = true
         transition.from(widget["lineanim"],{time=800, alpha=0.01})
+        if M.isMobile() and muiData.widgetDict[widgetName .. "-Button"] ~= nil then
+            muiData.widgetDict[widgetName .. "-Button"]["container"].isVisible = true
+        end
     else
         muiData.widgetDict[options.name]["lineanim"].isVisible = false
         color = options.inactiveColor
@@ -268,6 +274,9 @@ function M.highlightTextField(widgetName, active)
         widget["line"]:setStrokeColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
         if widget["textfieldfake"] ~= nil then
             widget["textfieldfake"]:setFillColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
+        end
+        if M.isMobile() and muiData.widgetDict[widgetName .. "-Button"] ~= nil then
+            muiData.widgetDict[widgetName .. "-Button"]["container"].isVisible = false
         end
     end
 
@@ -283,9 +292,21 @@ function M.textListener(event)
         M.updateUI(event, name)
         muiData.currentNativeFieldName = name
         M.highlightTextField(name, true)
+        if muiData.widgetDict[name]["containerfake"] ~= nil then
+            if M.isMobile() then
+                muiData.widgetDict[name]["overlay"].isVisible = true
+                muiData.widgetDict[name]["overlayrect"].isVisible = true
+            end
+        end
     elseif ( event.phase == "ended" or event.phase == "submitted" ) then
         -- do something with text
         -- print( event.target.text )
+        if muiData.widgetDict[name]["containerfake"] ~= nil then
+            if M.isMobile() then
+                muiData.widgetDict[name]["overlay"].isVisible = false
+                muiData.widgetDict[name]["overlayrect"].isVisible = false
+            end
+        end
         muiData.widgetDict[name]["textfield"].isSecure = false
         M.highlightTextField(name, false)
         if event.target.callBack ~= nil then
@@ -325,9 +346,11 @@ function M.textListener(event)
 
     elseif ( event.phase == "editing" ) then
         M.highlightTextField(name, true)
+        -- muiData.widgetDict[name]["textfield"].y =  muiData.widgetDict[name]["textfield"].y - 50
+
         -- print( event.newCharacters )
         -- print( event.oldText )
-        -- print( event.startPosition )
+        print( event.startPosition )
         -- print( event.text )
     end
 end
@@ -390,6 +413,8 @@ function M.newTextBox(options)
         options.textBoxFontSize = options.fontSize
     end
 
+    muiData.widgetDict[options.name]["lastPosition"] = 0
+
     muiData.widgetDict[options.name]["options"] = options
 
     muiData.widgetDict[options.name]["rect"] = display.newRect( 0, 0, options.width, options.height )
@@ -398,12 +423,12 @@ function M.newTextBox(options)
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["rect"] )
 
     local rect = muiData.widgetDict[options.name]["rect"]
-    muiData.widgetDict[options.name]["line"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
+    muiData.widgetDict[options.name]["line"] = display.newLine( -(rect.contentWidth * 0.5), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
     muiData.widgetDict[options.name]["line"].strokeWidth = M.getScaleVal(4)
     muiData.widgetDict[options.name]["line"]:setStrokeColor( unpack(options.inactiveColor) )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["line"] )
 
-    muiData.widgetDict[options.name]["lineanim"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
+    muiData.widgetDict[options.name]["lineanim"] = display.newLine( -(rect.contentWidth * 0.5), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
     muiData.widgetDict[options.name]["lineanim"].strokeWidth = M.getScaleVal(4)
     muiData.widgetDict[options.name]["lineanim"]:setStrokeColor( unpack(options.inactiveColor) )
     muiData.widgetDict[options.name]["lineanim"].isVisible = false
@@ -426,18 +451,28 @@ function M.newTextBox(options)
     muiData.widgetDict[options.name]["textlabel"].activeColor = options.activeColor
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["textlabel"] )
 
+    if M.isMobile() == false then
+        muiData.widgetDict[options.name]["textfield"] = native.newTextBox( 0, 0, options.width, options.height )
+        muiData.widgetDict[options.name]["textfield"].name = options.name
+        muiData.widgetDict[options.name]["textfield"].hasBackground = true
+        muiData.widgetDict[options.name]["textfield"].isEditable = options.isEditable
+        muiData.widgetDict[options.name]["textfield"].isVisible = false
+        muiData.widgetDict[options.name]["textfield"].font = native.newFont( options.font, options.textBoxFontSize * 0.55 )
+        muiData.widgetDict[options.name]["textfield"].text = options.text
+        muiData.widgetDict[options.name]["textfield"]:setTextColor( unpack(muiData.widgetDict[options.name]["textlabel"].inactiveColor) )
+
+        -- set cursor position
+        muiData.widgetDict[options.name]["textfield"]:setSelection( 1, 1 ) 
+
+        muiData.widgetDict[options.name]["textfield"].callBack = options.callBack
+        muiData.widgetDict[options.name]["textfield"]:addEventListener( "userInput", M.textListener )
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["textfield"] )
+    end
+
     local scaleFontSize = 1
     if muiData.environment == "simulator" then
         scaleFontSize = 0.75
     end
-    muiData.widgetDict[options.name]["textfield"] = native.newTextBox( 0, 0, options.width, options.height )
-    muiData.widgetDict[options.name]["textfield"].name = options.name
-    muiData.widgetDict[options.name]["textfield"].hasBackground = false
-    muiData.widgetDict[options.name]["textfield"].isEditable = options.isEditable
-    muiData.widgetDict[options.name]["textfield"].isVisible = false
-    muiData.widgetDict[options.name]["textfield"].font = native.newFont( options.font, options.textBoxFontSize * 0.55 )
-    muiData.widgetDict[options.name]["textfield"].text = options.text
-    muiData.widgetDict[options.name]["textfield"]:setTextColor( unpack(muiData.widgetDict[options.name]["textlabel"].inactiveColor) )
 
     local fadeText = options.text
     if options.trimFakeTextAt ~= nil then
@@ -464,19 +499,136 @@ function M.newTextBox(options)
     -- muiData.widgetDict[options.name]["textfieldfake"]:addEventListener("touch", M.showNativeInput)
     muiData.widgetDict[options.name]["rect"]:addEventListener("touch", M.showNativeInput)
     muiData.widgetDict[options.name]["rect"].name = options.name
+    muiData.widgetDict[options.name]["rect"].textbox = 1
     muiData.widgetDict[options.name]["rect"].dialogName = options.dialogName
+    muiData.widgetDict[options.name]["rect"].options = options
     muiData.widgetDict[options.name]["textfieldfake"].name = options.name
     muiData.widgetDict[options.name]["textfieldfake"].dialogName = options.dialogName
     muiData.widgetDict[options.name]["containerfake"]:insert( muiData.widgetDict[options.name]["textfieldfake"] )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["containerfake"] )
-
-    -- muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["textfieldfake"] )
-
-    -- muiData.widgetDict[options.name]["textfield"].placeholder = "Subject"
-    muiData.widgetDict[options.name]["textfield"].callBack = options.callBack
-    muiData.widgetDict[options.name]["textfield"]:addEventListener( "userInput", M.textListener )
-    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["textfield"] )
     M.adjustFakeTextBox(options.name)
+end
+
+function M.createTextBoxOverlay( widget )
+    if widget.options == nil then
+        return
+    end
+    options = widget.options
+
+    if muiData.widgetDict[options.name]["overlay"] == nil then
+
+        options.overlayBackgroundColor = options.overlayBackgroundColor or { 1, 1, 1, 1 }
+        options.overlayTextBoxBackgroundColor = options.overlayTextBoxBackgroundColor or { .9, .9, .9, 1 }
+        options.overlayTextBoxHeight = options.overlayTextBoxHeight or options.height
+
+        muiData.widgetDict[options.name]["overlayrect"] = display.newRect( display.contentWidth / 2, display.contentHeight / 2, display.contentWidth, display.contentHeight )
+        muiData.widgetDict[options.name]["overlayrect"]:setFillColor( unpack( options.overlayBackgroundColor ) )
+
+        muiData.widgetDict[options.name]["overlay"] = display.newGroup()
+        muiData.widgetDict[options.name]["overlay"]:translate( 0, 0 ) -- center the container
+
+        muiData.widgetDict[options.name]["textfield"] = native.newTextBox( 0, 0, options.width, options.overlayTextBoxHeight )
+        muiData.widgetDict[options.name]["textfield"].name = options.name
+        muiData.widgetDict[options.name]["textfield"].hasBackground = false
+        muiData.widgetDict[options.name]["textfield"].isEditable = options.isEditable
+        muiData.widgetDict[options.name]["textfield"].isVisible = false
+        muiData.widgetDict[options.name]["textfield"].font = native.newFont( options.font, options.textBoxFontSize * 0.55 )
+        muiData.widgetDict[options.name]["textfield"].text = options.text
+        muiData.widgetDict[options.name]["textfield"]:setTextColor( unpack(muiData.widgetDict[options.name]["textlabel"].inactiveColor) )
+
+        muiData.widgetDict[options.name]["textfield"].callBack = options.callBack
+        muiData.widgetDict[options.name]["textfield"]:addEventListener( "userInput", M.textListener )
+        muiData.widgetDict[options.name]["overlay"]:insert( muiData.widgetDict[options.name]["textfield"] )
+
+        -- set cursor position
+        muiData.widgetDict[options.name]["textfield"]:setSelection( 1, 1 ) 
+
+        local cH = muiData.widgetDict[options.name]["overlay"].contentHeight * .5
+        muiData.widgetDict[options.name]["overlay"].x = display.contentWidth * .5
+        muiData.widgetDict[options.name]["overlay"].y = cH
+
+        local tWidth = muiData.widgetDict[options.name]["textfield"].contentWidth
+        local tHeight = muiData.widgetDict[options.name]["textfield"].contentHeight
+        muiData.widgetDict[options.name]["textboxrect"] = display.newRect( 0, 0, tWidth, tHeight )
+        muiData.widgetDict[options.name]["textboxrect"]:setFillColor( unpack( options.overlayTextBoxBackgroundColor ) )
+        muiData.widgetDict[options.name]["overlay"]:insert( muiData.widgetDict[options.name]["textboxrect"] )
+
+        M.addTextBoxDoneButton(options.name, options)
+    end
+end
+
+function M.addTextBoxDoneButton( widgetName, options )
+    if widgetName == nil or options == nil then return end
+    if options.doneButton == nil then options.doneButton = {} end
+
+    local doneOptions = options.doneButton
+
+    if doneOptions.enabled == nil then doneOptions.enabled = true end
+    if doneOptions.enabled == false then return end
+
+    doneOptions.width = doneOptions.width or M.getScaleVal(140)
+    doneOptions.height = doneOptions.height or M.getScaleVal(60)
+    doneOptions.text = doneOptions.text or "done"
+    doneOptions.iconText = doneOptions.iconText or "done"
+    doneOptions.fillColor = doneOptions.fillColor or { 0.25, 0.75, 1, 1 }
+    doneOptions.textColor = doneOptions.textColor or { 1, 1, 1, 1 }
+    doneOptions.iconText = doneOptions.iconText or "done"
+    doneOptions.iconFont = doneOptions.iconFont or M.materialFont
+    doneOptions.radius = doneOptions.radius or M.getScaleVal(8)
+
+    local x = muiData.widgetDict[widgetName]["textfield"].x
+    local y = 0
+
+    if doneOptions.radius > 0 then
+        M.newRoundedRectButton({
+            parent = muiData.widgetDict[widgetName]["overlay"],
+            name = widgetName .. "-Button",
+            text = doneOptions.text,
+            width = doneOptions.width,
+            height = doneOptions.height,
+            x = x + (muiData.widgetDict[widgetName]["textfield"].contentWidth * .5),
+            y = y,
+            font = native.systemFont,
+            fillColor = doneOptions.fillColor,
+            textColor = doneOptions.textColor,
+            iconText = doneOptions.iconText,
+            iconFont = M.materialFont,
+            iconFontColor = doneOptions.textColor,
+            touchpoint = true,
+            callBack = M.textDoneHandler,
+            radius = doneOptions.radius,
+        })
+    else
+        M.newRectButton({
+            parent = muiData.widgetDict[widgetName]["overlay"],
+            name = widgetName .. "-Button",
+            text = doneOptions.text,
+            width = doneOptions.width,
+            height = doneOptions.height,
+            x = x + (muiData.widgetDict[widgetName]["textfield"].contentWidth * .5),
+            y = y,
+            font = native.systemFont,
+            fillColor = doneOptions.fillColor,
+            textColor = doneOptions.textColor,
+            iconText = doneOptions.iconText,
+            iconFont = M.materialFont,
+            iconFontColor = doneOptions.textColor,
+            touchpoint = true,
+            callBack = M.textDoneHandler,
+        })
+    end
+    muiData.widgetDict[widgetName .. "-Button"]["container"].isVisible = false
+    x = muiData.widgetDict[widgetName .. "-Button"]["container"].x
+    x = x + muiData.widgetDict[widgetName .. "-Button"]["container"].contentWidth * .5
+    y = (muiData.widgetDict[widgetName]["textfield"].contentHeight - doneOptions.height) * .5
+    muiData.widgetDict[widgetName .. "-Button"]["container"].x = x
+    muiData.widgetDict[widgetName .. "-Button"]["container"].y = -(y)
+end
+
+function M.textDoneHandler(event)
+    if event.phase == "ended" or event.phase == "onTarget" then
+        native.setKeyboardFocus(nil)
+    end
 end
 
 function M.textfieldCallBack(event)
@@ -560,9 +712,11 @@ function M.removeTextField(widgetName)
         muiData.widgetDict[widgetName]["containerfake"].isVisible = false
         muiData.widgetDict[widgetName]["containerfake"]:removeSelf()
     end
-    muiData.widgetDict[widgetName]["textfield"].isVisible = false
-    muiData.widgetDict[widgetName]["textfield"]:removeSelf()
-    muiData.widgetDict[widgetName]["textfield"] = nil
+    if muiData.widgetDict[widgetName]["textfield"] ~= nil then
+        muiData.widgetDict[widgetName]["textfield"].isVisible = false
+        muiData.widgetDict[widgetName]["textfield"]:removeSelf()
+        muiData.widgetDict[widgetName]["textfield"] = nil
+    end
     if muiData.widgetDict[widgetName]["textlabel"] ~= nil then
         muiData.widgetDict[widgetName]["textlabel"]:removeSelf()
         muiData.widgetDict[widgetName]["textlabel"] = nil
@@ -574,6 +728,16 @@ function M.removeTextField(widgetName)
     muiData.widgetDict[widgetName]["rect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["rect"])
     muiData.widgetDict[widgetName]["rect"]:removeSelf()
     muiData.widgetDict[widgetName]["rect"] = nil
+
+    if muiData.widgetDict[widgetName]["overlay"] ~= nil then
+        muiData.widgetDict[widgetName]["textboxrect"]:removeSelf()
+        muiData.widgetDict[widgetName]["textboxrect"] = nil
+        muiData.widgetDict[widgetName]["overlay"]:removeSelf()
+        muiData.widgetDict[widgetName]["overlay"] = nil
+        muiData.widgetDict[widgetName]["overlayrect"]:removeSelf()
+        muiData.widgetDict[widgetName]["overlayrect"] = nil
+    end
+
     muiData.widgetDict[widgetName]["container"]:removeSelf()
     muiData.widgetDict[widgetName]["container"] = nil
     muiData.widgetDict[widgetName] = nil

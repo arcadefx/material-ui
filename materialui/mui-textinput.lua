@@ -442,7 +442,7 @@ function M.newTextBox(options)
         y = -(rect.contentHeight * 0.6),
         width = rect.contentWidth * 0.5,     --required for multi-line and alignment
         font = options.font,
-        fontSize = options.fontSize * 0.55,
+        fontSize = options.fontSize,
         align = "left"  --new alignment parameter
     }
     muiData.widgetDict[options.name]["textlabel"] = display.newText( labelOptions )
@@ -457,7 +457,7 @@ function M.newTextBox(options)
         muiData.widgetDict[options.name]["textfield"].hasBackground = true
         muiData.widgetDict[options.name]["textfield"].isEditable = options.isEditable
         muiData.widgetDict[options.name]["textfield"].isVisible = false
-        muiData.widgetDict[options.name]["textfield"].font = native.newFont( options.font, options.textBoxFontSize * 0.55 )
+        muiData.widgetDict[options.name]["textfield"].font = native.newFont( options.font, options.textBoxFontSize) --  * 0.55 
         muiData.widgetDict[options.name]["textfield"].text = options.text
         muiData.widgetDict[options.name]["textfield"]:setTextColor( unpack(muiData.widgetDict[options.name]["textlabel"].inactiveColor) )
 
@@ -490,7 +490,7 @@ function M.newTextBox(options)
         y = 0,
         width = options.width,
         font = options.font,
-        fontSize = options.fontSize * 0.55,
+        fontSize = options.fontSize, -- * 0.55
         align = "left"  --new alignment parameter
     }
     muiData.widgetDict[options.name]["containerfake"] = display.newContainer( options.width + 4, options.height*.95)
@@ -507,6 +507,8 @@ function M.newTextBox(options)
     muiData.widgetDict[options.name]["containerfake"]:insert( muiData.widgetDict[options.name]["textfieldfake"] )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["containerfake"] )
     M.adjustFakeTextBox(options.name)
+    print("textBoxFontSize is createTextBox: "..options.textBoxFontSize)
+
 end
 
 function M.createTextBoxOverlay( widget )
@@ -532,7 +534,8 @@ function M.createTextBoxOverlay( widget )
         muiData.widgetDict[options.name]["textfield"].hasBackground = false
         muiData.widgetDict[options.name]["textfield"].isEditable = options.isEditable
         muiData.widgetDict[options.name]["textfield"].isVisible = false
-        muiData.widgetDict[options.name]["textfield"].font = native.newFont( options.font, options.textBoxFontSize * 0.55 )
+        print("textBoxFontSize is createTextBoxOverlay: "..options.textBoxFontSize)
+        muiData.widgetDict[options.name]["textfield"].font = native.newFont( options.font, options.textBoxFontSize ) -- * 0.55 
         muiData.widgetDict[options.name]["textfield"].text = options.text
         muiData.widgetDict[options.name]["textfield"]:setTextColor( unpack(muiData.widgetDict[options.name]["textlabel"].inactiveColor) )
 
@@ -555,6 +558,7 @@ function M.createTextBoxOverlay( widget )
 
         M.addTextBoxDoneButton(options.name, options)
     end
+    -- transition.fadeIn(muiData.widgetDict[options.name]["overlay"], { time=2000 })
 end
 
 function M.addTextBoxDoneButton( widgetName, options )

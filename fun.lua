@@ -262,7 +262,8 @@ function scene:create( event )
         labelText = "Secret Text Box",
         text = "I am hidden in view\nYes, me too!\nFood\nDrink\nDesert\n1\n2\n3\n4\n5",
         font = native.systemFont,
-        fontSize = mui.getScaleVal(46),
+        fontSize = mui.getScaleVal(26),
+        textBoxFontSize = mui.getScaleVal(26),
         width = mui.getScaleVal(400),
         height = mui.getScaleVal(200),
         x = mui.getScaleVal(240),
@@ -299,7 +300,7 @@ function scene:create( event )
         y = display.contentHeight * 0.95,
         width = mui.getScaleVal(400),
         font = native.systemFont,
-        fontSize = (mui.getScaleVal(46) * 0.75),
+        fontSize = mui.getScaleVal(26),
         align = "left"  --new alignment parameter
     }
     infoText = display.newText( textOptions )

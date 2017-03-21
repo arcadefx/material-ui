@@ -213,7 +213,7 @@ function M.newDialog(options)
 
     ---[[--
     if options.buttons ~= nil and options.buttons["cancelButton"] ~= nil then
-        if options.buttons["cancelButton"].callBackOkay ~= nil then
+        if options.buttons["cancelButton"].callBackCancel ~= nil then
             muiData.widgetDict[options.name]["callBackCancel"] = options.buttons["cancelButton"].callBackCancel
         end
         if options.buttons["cancelButton"].fillColor == nil then

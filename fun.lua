@@ -21,7 +21,7 @@ local background = nil
 local scrollView = nil
 
 local function destroyDemoText( demoText )
-    print("destroyDemoText called")
+    mui.debug("destroyDemoText called")
     if demoText ~= nil then
         demoText:removeSelf()
         demoText = nil
@@ -308,7 +308,7 @@ function scene:create( event )
 
     -- slide panel example
     local hideSlidePanel = function(event)
-        print("home button pushed")
+        mui.debug("home button pushed")
         -- or use close method below to close and release slider from memory
         -- mui.closeSlidePanel("slidepanel-demo")
         mui.hideSlidePanel("slidepanel-demo2")
@@ -522,15 +522,15 @@ function scrollAListener( event )
     elseif ( phase == "moved" ) then
         mui.updateUI(event)
     elseif ( phase == "ended" ) then
-        -- print( "Scroll view was released" )
+        -- mui.debug( "Scroll view was released" )
     end
 
     -- In the event a scroll limit is reached...
     if ( event.limitReached ) then
-        if ( event.direction == "up" ) then print( "Reached bottom limit" )
-        elseif ( event.direction == "down" ) then print( "Reached top limit" )
-        elseif ( event.direction == "left" ) then print( "Reached right limit" )
-        elseif ( event.direction == "right" ) then print( "Reached left limit" )
+        if ( event.direction == "up" ) then mui.debug( "Reached bottom limit" )
+        elseif ( event.direction == "down" ) then mui.debug( "Reached top limit" )
+        elseif ( event.direction == "left" ) then mui.debug( "Reached right limit" )
+        elseif ( event.direction == "right" ) then mui.debug( "Reached left limit" )
         end
     end
 

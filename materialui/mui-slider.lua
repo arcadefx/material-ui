@@ -240,6 +240,7 @@ function M.sliderTouch (event)
         event.target.isFocus = false
         M.sliderPercentComplete(event, options)
     end
+    return true -- prevent propagation to other controls
 end
 
 function M.sliderPercentComplete(event, options)
@@ -284,7 +285,7 @@ function M.sliderCallBackMove( event )
     local muiTargetValue = M.getEventParameter(event, "muiTargetValue")
 
     if event.target ~= nil then
-        print("sliderCallBackMove is: "..muiTargetValue)
+        M.debug("sliderCallBackMove is: "..muiTargetValue)
     end
 end
 
@@ -293,7 +294,7 @@ function M.sliderCallBack( event )
     local muiTargetValue = M.getEventParameter(event, "muiTargetValue")
 
     if muiTarget ~= nil then
-        print("percentComplete is: "..muiTargetValue)
+        M.debug("percentComplete is: "..muiTargetValue)
     end
 end
 

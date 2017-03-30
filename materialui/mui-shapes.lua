@@ -96,7 +96,7 @@ end
 --
 function M.newArcByRenderTime(options)
 	if math.rotateAboutPoint == nil or math.rotateTo == nil then
-		print("mathliblua dependency not met. Be sure to enabled it.")
+		M.debug("mathliblua dependency not met. Be sure to enabled it.")
 		return nil
 	end 
 

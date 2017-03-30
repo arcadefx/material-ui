@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.87] - 2017-03-30
+### Changes
+- Event handlers updated with "return true" where needed. Prevent event propagation to other controls.
+- Added global debug variable "_mui_debug" and if true will use 'mui.debug()' else do not output debugging information.  Just defined it to true/false in your main.lua at top. It defaults to "false" or debugging off.
+- Added method mui.debug(<string>) to output debug information. See _mui_debug above for more information.
+
+### Fixes
+- onboard.lua example arrow button was non-responsive due to missing callback.
+
 ## [0.1.86] - 2017-03-18
 ### Changes
 - newTextBox() options for "doneButton", options for overlay.  Due to mobile devices not having an easy way to edit textareas an overlay w/ "done" button (on right of textbox) has been added.  The overlay and button is "not" used on non-mobile devices.  Please see documentation and fun.lua for a complete example.  This makes editing in a textbox easier on mobile.

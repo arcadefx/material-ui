@@ -309,7 +309,7 @@ function M.increaseProgressArc( widgetName, percent, __forceprocess__ )
 end
 
 function M.repeatProgressArcCallBack( object )
-    -- print("repeatProgressArcCallBack")
+    -- M.debug("repeatProgressArcCallBack")
     if object.callBack ~= nil then
         assert(object.callBack)( object )
     end
@@ -335,7 +335,7 @@ function M.completeProgressArcFinalCallBack(object)
 end
 
 function M.postProgressArcCallBack( object )
-    print("postProgressCallBack")
+    M.debug("postProgressCallBack")
 end
 
 function M.removeWidgetProgressArc(widgetName)

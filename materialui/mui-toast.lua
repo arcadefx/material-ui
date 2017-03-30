@@ -193,7 +193,7 @@ function M.newToast( options )
             muiData.widgetDict[options.name]["removeInProgress"] = true
             if M.isTouchPointOutOfRange( event ) then
                   event.phase = "offTarget"
-                  -- print("Its out of the button area")
+                  -- M.debug("Its out of the button area")
                   -- event.target:dispatchEvent(event)
             else
                 event.phase = "onTarget"
@@ -216,6 +216,7 @@ function M.newToast( options )
             muiData.interceptMoved = false
             muiData.touching = false
         end
+        return true -- prevent propagation to other controls
     end
     muiData.widgetDict[options.name]["rrect"]:addEventListener( "touch", muiData.widgetDict[options.name]["rrect"] )
 

@@ -167,6 +167,11 @@ function scene:create( event )
     backgroundBottom:setFillColor( unpack( colorFill ) )
     groupBottom:insert( backgroundBottom )
 
+    function forwardHandler( event )
+        if event.phase == "ended" or event.phase == "onTarget" then
+            mui.switchSlideForOnBoard( { callBackData = slideConfig } )
+        end
+    end
     mui.newIconButton({
         name = "continue-button",
         text = "arrow_forward",
@@ -178,13 +183,11 @@ function scene:create( event )
         font = mui.materialFont,
         textColor = { 0, 0, 0 },
         textAlign = "center",
-        callBack = nil,
+        callBack = forwardHandler,
         callBackData = slideConfig
     })
     function backgroundBottom:touch( event )
-        if event.phase == "ended" then
-            mui.switchSlideForOnBoard( { callBackData = slideConfig } )
-        end
+        forwardHandler( event )
     end
     backgroundBottom:addEventListener( "touch", backgroundBottom )
     groupBottom:insert( mui.getWidgetBaseObject("continue-button") )

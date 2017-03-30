@@ -300,7 +300,7 @@ function M.textListener(event)
         end
     elseif ( event.phase == "ended" or event.phase == "submitted" ) then
         -- do something with text
-        -- print( event.target.text )
+        -- M.debug( event.target.text )
         if muiData.widgetDict[name]["containerfake"] ~= nil then
             if M.isMobile() then
                 muiData.widgetDict[name]["overlay"].isVisible = false
@@ -348,11 +348,12 @@ function M.textListener(event)
         M.highlightTextField(name, true)
         -- muiData.widgetDict[name]["textfield"].y =  muiData.widgetDict[name]["textfield"].y - 50
 
-        -- print( event.newCharacters )
-        -- print( event.oldText )
-        print( event.startPosition )
-        -- print( event.text )
+        -- M.debug( event.newCharacters )
+        -- M.debug( event.oldText )
+        M.debug( event.startPosition )
+        -- M.debug( event.text )
     end
+    return true -- prevent propagation to other controls
 end
 
 --
@@ -631,6 +632,7 @@ function M.textDoneHandler(event)
     if event.phase == "ended" or event.phase == "onTarget" then
         native.setKeyboardFocus(nil)
     end
+    return true -- prevent propagation to other controls
 end
 
 function M.textfieldCallBack(event)
@@ -638,7 +640,7 @@ function M.textfieldCallBack(event)
     local muiTargetValue = M.getEventParameter(event, "muiTargetValue")
 
     if muiTargetValue ~= nil then
-        print("TextField contains: "..muiTargetValue)
+        M.debug("TextField contains: "..muiTargetValue)
     end
 end
 

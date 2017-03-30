@@ -155,7 +155,7 @@ function M.attachToNavBar(navbar_name, options )
 
     if isTypeSupported == false then
         if options.widgetType == nil then options.widgetType = "unknown widget" end
-        print("Warning: attachToNavBar does not support type of "..options.widgetType)
+        M.debug("Warning: attachToNavBar does not support type of "..options.widgetType)
         return
     end
 

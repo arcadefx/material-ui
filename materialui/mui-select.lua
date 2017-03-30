@@ -304,6 +304,7 @@ function M.selectorListener( event )
         M.revealTableViewForSelector(name, muiData.widgetDict[name]["options"])
         muiData.widgetDict[name]["mygroup"].isVisible = true
     end
+    return true -- prevent propagation to other controls
 end
 
 function M.onRowRenderSelect( event )
@@ -329,11 +330,11 @@ function M.onRowTouchSelector(event)
     local muiTargetIndex = M.getEventParameter(event, "muiTargetIndex")
 
     if muiTargetIndex ~= nil then
-        print("row index: "..muiTargetIndex)
+        M.debug("row index: "..muiTargetIndex)
     end
 
     if muiTargetValue ~= nil then
-        print("row value: "..muiTargetValue)
+        M.debug("row value: "..muiTargetValue)
     end
 
     if event.row.miscEvent ~= nil and event.row.miscEvent.name ~= nil then
@@ -343,6 +344,7 @@ function M.onRowTouchSelector(event)
         muiData.widgetDict[parentName]["value"] = muiTargetValue
         timer.performWithDelay(500, function() M.finishSelector(parentName) end, 1)
     end
+    return true -- prevent propagation to other controls
 end
 
 function M.finishSelector(parentName)

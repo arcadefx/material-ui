@@ -380,7 +380,7 @@ function M.attachToRow(row, options )
 
     if isTypeSupported == false then
         if options.widgetType == nil then options.widgetType = "unknown widget" end
-        print("Warning: attachToRow does not support type of "..options.widgetType)
+        M.debug("Warning: attachToRow does not support type of "..options.widgetType)
         return
     end
 
@@ -439,8 +439,8 @@ function M.onRowTouch( event )
     if "press" == phase and muiData.touching == false then
         muiData.touching = true
         M.updateUI(event)
-        --print( "Touched row:", event.target.id )
-        --print( "Touched row:", event.target.index )
+        --M.debug( "Touched row:", event.target.id )
+        --M.debug( "Touched row:", event.target.index )
     elseif "release" == phase then
         local row = event.row
 
@@ -476,6 +476,7 @@ function M.onRowTouch( event )
             assert( row.params.callBackTouch )(event)
         end
     end
+    return true -- prevent propagation to other controls
 end
 
 function M.setLastRow( event, target )
@@ -521,15 +522,15 @@ function M.onRowTouchDemo(event)
     --]]--
 
     if muiTargetValue ~= nil then
-        print("row value: "..muiTargetValue)
+        M.debug("row value: "..muiTargetValue)
     end
     -- access the columns of data
     if muiTargetRowParams ~= nil and muiTargetRowParams.columns ~= nil then
-        print("columns of data are:")
+        M.debug("columns of data are:")
         for i, v in ipairs(muiTargetRowParams.columns) do
-            print("\tcolumn "..i.." text "..v.text)
-            print("\tcolumn "..i.." value "..v.value)
-            print("\tcolumn "..i.." align "..(v.align or "left"))
+            M.debug("\tcolumn "..i.." text "..v.text)
+            M.debug("\tcolumn "..i.." value "..v.value)
+            M.debug("\tcolumn "..i.." align "..(v.align or "left"))
         end
     end
 

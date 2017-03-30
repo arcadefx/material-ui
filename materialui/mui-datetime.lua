@@ -228,7 +228,7 @@ function M.datePickerCallBack( event )
         local value = M.pickerGetCurrentValue(muiName)
 
         local text = "Date Column 1 Value: " .. (value.month or "") .. "\nColumn 2 Value: " .. (value.day or "") .. "\nColumn 3 Value: " .. (value.year or "")
-        print("text: "..text)
+        M.debug("text: "..text)
     end
     M.removeDateTimePicker(event)
 
@@ -244,7 +244,7 @@ function M.pickerAddExtraRows(list, options)
     local widgetHeight = options.height
     local visible = (mathCeil(widgetHeight / rowHeight)) -- approx rows on screen
     local extraRows = mathCeil(visible * 0.5)
-    -- print("visible rows: "..(visible) .. " widgetHeight: "..widgetHeight.. " rowHeight: "..rowHeight)
+    -- M.debug("visible rows: "..(visible) .. " widgetHeight: "..widgetHeight.. " rowHeight: "..rowHeight)
     muiData.visibleRows = visible
     local i
     local maxnum = (options.start+extraRows)
@@ -985,10 +985,10 @@ function M.pickerScrollListener( event )
 
     -- In the event a scroll limit is reached...
     if ( event.limitReached ) then
-        if ( event.direction == "up" ) then print( "Reached bottom limit" )
-        elseif ( event.direction == "down" ) then print( "Reached top limit" )
-        elseif ( event.direction == "left" ) then print( "Reached right limit" )
-        elseif ( event.direction == "right" ) then print( "Reached left limit" )
+        if ( event.direction == "up" ) then M.debug( "Reached bottom limit" )
+        elseif ( event.direction == "down" ) then M.debug( "Reached top limit" )
+        elseif ( event.direction == "left" ) then M.debug( "Reached right limit" )
+        elseif ( event.direction == "right" ) then M.debug( "Reached left limit" )
         end
     end
 
@@ -998,6 +998,7 @@ function M.pickerScrollListener( event )
         -- muiData.moving = true
         -- muiData.moveTime = system.getTimer()
     end
+    return true
 end
 
 function M.pickerOnRowTouch( event )
@@ -1007,9 +1008,9 @@ function M.pickerOnRowTouch( event )
     local row = event.row
 
     if "press" == phase then
-        --print( "Touched row:", event.target.id )
-        --print( "Touched row:", event.target.index )
-        --print( "Touched row:", event.target.x )
+        --M.debug( "Touched row:", event.target.id )
+        --M.debug( "Touched row:", event.target.index )
+        --M.debug( "Touched row:", event.target.x )
     elseif "release" == phase or "cancelled" == phase then
         local row = event.row
     end
@@ -1026,7 +1027,7 @@ function M.timePickerCallBack( event )
         local value = M.pickerGetCurrentValue(muiName)
 
         local text = "Time Column 1 Value: " .. (value.hour or "") .. "\nColumn 2 Value: " .. (value.minute or "") .. "\nColumn 3 Value: " .. (value.ampm or "")
-        print("text: "..text)
+        M.debug("text: "..text)
 
     end
     M.removeDateTimePicker(event)

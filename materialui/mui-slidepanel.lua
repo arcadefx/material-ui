@@ -617,7 +617,6 @@ function M.slidePanelEventButton (event)
         muiData.interceptMoved = false
         muiData.touching = false
     end
-    return true
 end
 
 function M.sliderButtonResetColor( e )
@@ -719,7 +718,6 @@ function M.slidePanelOut(event)
     elseif muiData.slideOut == true then
         M.sliderScrollListener(event)
     end
-    return true
 end
 
 function M.closeSlidePanel( widgetName )
@@ -844,7 +842,6 @@ function M.sliderScrollListener( event )
         end
     end
 
-    return true -- prevent propagation to other controls
 end
 
 

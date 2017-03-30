@@ -476,6 +476,7 @@ function M.onRowTouch( event )
             assert( row.params.callBackTouch )(event)
         end
     end
+    return true -- prevent propagation to other controls
 end
 
 function M.setLastRow( event, target )

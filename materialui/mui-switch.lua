@@ -217,6 +217,7 @@ function M.toggleSwitchTouch (event)
             muiData.touching = false
         end
     end
+    return true -- prevent propagation to other controls
 end
 
 function M.flipSwitch(widgetName, delay)

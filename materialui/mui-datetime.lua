@@ -998,6 +998,7 @@ function M.pickerScrollListener( event )
         -- muiData.moving = true
         -- muiData.moveTime = system.getTimer()
     end
+    return true
 end
 
 function M.pickerOnRowTouch( event )

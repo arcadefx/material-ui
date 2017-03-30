@@ -269,6 +269,7 @@ function M.newSnackBar( options )
             muiData.interceptMoved = false
             muiData.touching = false
         end
+        return true
     end
     muiData.widgetDict[options.name]["rrect"]:addEventListener( "touch", muiData.widgetDict[options.name]["rrect"] )
 

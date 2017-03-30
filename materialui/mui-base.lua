@@ -45,6 +45,8 @@ local MySceneName = nil
 
 local M = {} -- for module array/table
 
+if not _mui_debug then print = function() end end
+
 local string_char = string.char
 local utf8v1 = function(cp)
   if cp < 128 then

@@ -216,6 +216,7 @@ function M.newToast( options )
             muiData.interceptMoved = false
             muiData.touching = false
         end
+        return true -- prevent propagation to other controls
     end
     muiData.widgetDict[options.name]["rrect"]:addEventListener( "touch", muiData.widgetDict[options.name]["rrect"] )
 

@@ -393,6 +393,7 @@ function M.touchRRectButton (event)
         muiData.interceptMoved = false
         muiData.touching = false
     end
+    return true
 end
 
 --[[
@@ -832,6 +833,7 @@ function M.touchIconButton (event)
             M.deactivateImageTouch( options )
         end
     end
+    return true
 end
 
 function M.createCheckBox(options)
@@ -1071,6 +1073,7 @@ function M.touchCircleButton (event)
             M.deactivateImageTouch( options )
         end
     end
+    return true
 end
 
 --[[
@@ -1350,6 +1353,7 @@ function M.touchCheckbox (event)
             muiData.touching = false
         end
     end
+    return true
 end
 
 function M.createRadioGroup(options)

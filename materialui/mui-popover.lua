@@ -206,9 +206,9 @@ function M.touchPopoverBack( event )
             M.removePopover(event.target.muiName)
             muiData.dialogInUse = false
             muiData.dialogName = nil
-            return true -- prevent propagation to other controls
         end
     end
+    return true -- prevent propagation to other controls
 end
 
 function M.onRowRenderPopover( event )

@@ -430,6 +430,7 @@ function M.tileTouchEventHandler( event )
         muiData.interceptMoved = false
         muiData.touching = false
     end
+    return true -- prevent propagation to other controls
 end
 
 function M.tileHighlightAnimFinish( e )

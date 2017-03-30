@@ -378,6 +378,7 @@ function M.toolBarButton (event)
             muiData.touching = false
         end
     end
+    return true -- prevent propagation to other controls
 end
 
 function M.createToolbar( options )

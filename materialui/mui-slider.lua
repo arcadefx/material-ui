@@ -240,6 +240,7 @@ function M.sliderTouch (event)
         event.target.isFocus = false
         M.sliderPercentComplete(event, options)
     end
+    return true -- prevent propagation to other controls
 end
 
 function M.sliderPercentComplete(event, options)

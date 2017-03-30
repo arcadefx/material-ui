@@ -353,6 +353,7 @@ function M.textListener(event)
         print( event.startPosition )
         -- print( event.text )
     end
+    return true -- prevent propagation to other controls
 end
 
 --
@@ -631,6 +632,7 @@ function M.textDoneHandler(event)
     if event.phase == "ended" or event.phase == "onTarget" then
         native.setKeyboardFocus(nil)
     end
+    return true -- prevent propagation to other controls
 end
 
 function M.textfieldCallBack(event)

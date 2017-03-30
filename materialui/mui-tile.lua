@@ -263,7 +263,7 @@ function M.newTile(options)
 
     if options.fontIsScaled == true then
         textSize = newFontSize
-        print("scale the font?")
+        M.debug("scale the font?")
     end
 
     if options.icon ~= nil then boxTextCount = boxTextCount + 1 end
@@ -403,7 +403,7 @@ function M.tileTouchEventHandler( event )
         if M.isTouchPointOutOfRange( event ) then
             event.phase = "offTarget"
             -- event.target:dispatchEvent(event)
-            -- print("Its out of the button area")
+            -- M.debug("Its out of the button area")
         else
             event.phase = "onTarget"
             if muiData.interceptMoved == false then
@@ -459,7 +459,7 @@ function M.tileCallBack( options, e )
         M.actionSwitchScene(e)
     end
     if muiTargetValue ~= nil and muiData.widgetDict[options.basename] ~= nil then
-        print("tile value: "..muiTargetValue)
+        M.debug("tile value: "..muiTargetValue)
         muiData.widgetDict[options.basename]["value"] = muiTargetValue
         local w = M.getTileButtonProperty("grid_demo", "layer_1", 1)
         if w ~= nil then
@@ -467,7 +467,7 @@ function M.tileCallBack( options, e )
         end
     end
     if muiTargetCallBackData ~= nil then
-        print("Item from callBackData: "..muiTargetCallBackData.item)
+        M.debug("Item from callBackData: "..muiTargetCallBackData.item)
     end
 end
 
@@ -483,15 +483,15 @@ function M.tileScrollListener( event )
     elseif ( phase == "moved" ) then
         M.updateUI(event)
     elseif ( phase == "ended" ) then
-        -- print( "Scroll view was released" )
+        -- M.debug( "Scroll view was released" )
     end
 
     -- In the event a scroll limit is reached...
     if ( event.limitReached ) then
-        if ( event.direction == "up" ) then print( "Reached bottom limit" )
-        elseif ( event.direction == "down" ) then print( "Reached top limit" )
-        elseif ( event.direction == "left" ) then print( "Reached right limit" )
-        elseif ( event.direction == "right" ) then print( "Reached left limit" )
+        if ( event.direction == "up" ) then M.debug( "Reached bottom limit" )
+        elseif ( event.direction == "down" ) then M.debug( "Reached top limit" )
+        elseif ( event.direction == "left" ) then M.debug( "Reached right limit" )
+        elseif ( event.direction == "right" ) then M.debug( "Reached left limit" )
         end
     end
 

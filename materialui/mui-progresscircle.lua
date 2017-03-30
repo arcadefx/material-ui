@@ -301,14 +301,14 @@ function M.increaseProgressCircle( widgetName, percent, __forceprocess__ )
 end
 
 function M.repeatProgressCircleCallBack( object )
-    -- print("repeatProgressCircleCallBack")
+    -- M.debug("repeatProgressCircleCallBack")
     if object.callBack ~= nil then
         assert(object.callBack)( object )
     end
 end
 
 function M.completeProgressCircleCallBack( object )
-    -- print("completeProgressCircleCallBack")
+    -- M.debug("completeProgressCircleCallBack")
     if object.name == nil then return end
     if muiData.widgetDict[object.name] == nil then return end
 
@@ -344,7 +344,7 @@ function M.completeProgressCircleFinalCallBack(object)
 end
 
 function M.postProgressCircleCallBack( object )
-    print("postProgressCallBack")
+    M.debug("postProgressCallBack")
 end
 
 function M.removeWidgetProgressCircle(widgetName)

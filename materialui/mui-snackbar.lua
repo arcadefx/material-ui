@@ -251,7 +251,7 @@ function M.newSnackBar( options )
             if muiData.widgetDict[options.name]["removeInProgress"] == true then return end
             if M.isTouchPointOutOfRange( event ) then
                   event.phase = "offTarget"
-                  -- print("Its out of the button area")
+                  -- M.debug("Its out of the button area")
                   -- event.target:dispatchEvent(event)
             else
                 event.phase = "onTarget"

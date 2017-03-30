@@ -45,7 +45,10 @@ local MySceneName = nil
 
 local M = {} -- for module array/table
 
-if not _mui_debug then print = function() end end
+function M.debug(data)
+  if not _mui_debug then return end
+  print(data)
+end
 
 local string_char = string.char
 local utf8v1 = function(cp)
@@ -234,7 +237,7 @@ function M.updateEventHandler( event )
         if type(muiData.interceptEventHandler) == "function" then
           if event.target then
             event.target.muiOptions = muiData.interceptOptions
-            -- print("we have a special target! ") --..event.target.muiOptions.name)
+            -- M.debug("we have a special target! ") --..event.target.muiOptions.name)
           end
           muiData.interceptEventHandler(event)
         end
@@ -249,7 +252,7 @@ end
 function M.updateUI(event, skipName)
     local widgetType = ""
 
-    -- print("updateUI called")
+    -- M.debug("updateUI called")
     for widget in pairs(muiData.widgetDict) do
         if widget ~= skipName or skipName == nil then
             widgetType = muiData.widgetDict[widget]["type"]
@@ -283,7 +286,7 @@ function M.getEventParameter(event, key)
     if event ~= nil and event.muiDict ~= nil and key ~= nil then
         return event.muiDict[key]
     else
-      print("nothing for key "..key)
+      M.debug("nothing for key "..key)
     end
     return nil
 end
@@ -326,7 +329,7 @@ function M.getWidgetBaseObject(name)
                widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "Toolbar" then
                -- widgetData = muiData.widgetDict[widget]["container"]
-               print("getWidgetForInsert: Toolbar not supported at this time.")
+               M.debug("getWidgetForInsert: Toolbar not supported at this time.")
             elseif widgetType == "TableView" then
                widgetData = muiData.widgetDict[widget]["tableview"]
             elseif widgetType == "TextField" then
@@ -955,16 +958,16 @@ function M.scrollListener( event )
     elseif ( phase == "moved" ) then
         M.updateUI(event)
     elseif ( phase == "ended" ) then
-        -- print( "Scroll view was released" )
+        -- M.debug( "Scroll view was released" )
     end
 
     -- In the event a scroll limit is reached...
     --[[--
     if ( event.limitReached ) then
-        if ( event.direction == "up" ) then print( "Reached bottom limit" )
-        elseif ( event.direction == "down" ) then print( "Reached top limit" )
-        elseif ( event.direction == "left" ) then print( "Reached right limit" )
-        elseif ( event.direction == "right" ) then print( "Reached left limit" )
+        if ( event.direction == "up" ) then M.debug( "Reached bottom limit" )
+        elseif ( event.direction == "down" ) then M.debug( "Reached top limit" )
+        elseif ( event.direction == "left" ) then M.debug( "Reached right limit" )
+        elseif ( event.direction == "right" ) then M.debug( "Reached left limit" )
         end
     end
     --]]--
@@ -1156,7 +1159,7 @@ function M.removeWidgets()
 end
 
 function M.destroy()
-  -- print("Removing widgets")
+  -- M.debug("Removing widgets")
 
   -- avoid transition issues and cancel any transitions in progress
   transition.cancel()

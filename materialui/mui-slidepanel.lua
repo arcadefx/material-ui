@@ -584,7 +584,7 @@ function M.slidePanelEventButton (event)
         if M.isTouchPointOutOfRange( event ) then
             event.phase = "offTarget"
             -- event.target:dispatchEvent(event)
-            -- print("Its out of the button area")
+            -- M.debug("Its out of the button area")
         else
             event.phase = "onTarget"
             if muiData.interceptMoved == false then
@@ -633,10 +633,10 @@ function M.actionForSlidePanel( options, e )
     local muiTargetCallBackData = M.getEventParameter(e, "muiTargetCallBackData")
 
     if muiTargetValue ~= nil then
-        print("slide panel value: "..muiTargetValue)
+        M.debug("slide panel value: "..muiTargetValue)
     end
     if muiTargetCallBackData ~= nil then
-        print("Item from callBackData: "..muiTargetCallBackData.item)
+        M.debug("Item from callBackData: "..muiTargetCallBackData.item)
     end
     if e.myTargetBasename ~= nil then
         M.closeSlidePanel(e.myTargetBasename)
@@ -832,15 +832,15 @@ function M.sliderScrollListener( event )
             M.hideSlidePanel(name)
         end
         muiData.widgetDict[name]["scrollview"].moved_object = false
-        -- print( "Scroll view was released" )
+        -- M.debug( "Scroll view was released" )
     end
 
     -- In the event a scroll limit is reached...
     if ( event.limitReached ) then
-        if ( event.direction == "up" ) then print( "Reached bottom limit" )
-        elseif ( event.direction == "down" ) then print( "Reached top limit" )
-        elseif ( event.direction == "left" ) then print( "Reached right limit" )
-        elseif ( event.direction == "right" ) then print( "Reached left limit" )
+        if ( event.direction == "up" ) then M.debug( "Reached bottom limit" )
+        elseif ( event.direction == "down" ) then M.debug( "Reached top limit" )
+        elseif ( event.direction == "left" ) then M.debug( "Reached right limit" )
+        elseif ( event.direction == "right" ) then M.debug( "Reached left limit" )
         end
     end
 

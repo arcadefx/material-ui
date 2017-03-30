@@ -5,7 +5,8 @@ All notable changes to this project will be documented in this file.
 ## [0.1.87] - 2017-03-30
 ### Changes
 - Event handlers updated with "return true" where needed. Prevent event propagation to other controls.
-- Added global debug variable "_mui_debug" and if true will use 'print()' else no print statements output anything.  Just defined it to true/false in your main.lua at top. It defaults to "false" or debugging off.
+- Added global debug variable "_mui_debug" and if true will use 'mui.debug()' else do not output debugging information.  Just defined it to true/false in your main.lua at top. It defaults to "false" or debugging off.
+- Added method mui.debug(<string>) to output debug information. See _mui_debug above for more information.
 
 ### Fixes
 - onboard.lua example arrow button was non-responsive due to missing callback.

@@ -144,10 +144,10 @@ function M.newToolbarButton( options )
     if options.isFontIcon == nil then
         options.isFontIcon = false
         -- backwards compatiblity
-        print("font is "..font)
+        M.debug("font is "..font)
         if M.isMaterialFont(font) == true then
             options.isFontIcon = true
-            print("isMaterialFont!")
+            M.debug("isMaterialFont!")
         end
     end
 
@@ -350,7 +350,7 @@ function M.toolBarButton (event)
         if M.isTouchPointOutOfRange( event ) then
             event.phase = "offTarget"
             -- event.target:dispatchEvent(event)
-            -- print("Its out of the button area")
+            -- M.debug("Its out of the button area")
         else
             event.phase = "onTarget"
             if muiData.interceptMoved == false then
@@ -528,10 +528,10 @@ function M.actionForToolbarDemo( event )
     local muiTargetValue = M.getEventParameter(event, "muiTargetValue")
 
     if muiTarget ~= nil and muiTarget.text ~= nil then
-        print("Toolbar button text: " .. muiTarget.text)
+        M.debug("Toolbar button text: " .. muiTarget.text)
     end
     if muiTargetValue ~= nil then
-        print("Toolbar button value: " .. muiTargetValue)
+        M.debug("Toolbar button value: " .. muiTargetValue)
     end
 end
 

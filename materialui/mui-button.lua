@@ -364,7 +364,7 @@ function M.touchRRectButton (event)
 
         if M.isTouchPointOutOfRange( event ) then
               event.phase = "offTarget"
-              -- print("Its out of the button area")
+              -- M.debug("Its out of the button area")
               -- event.target:dispatchEvent(event)
         else
             event.phase = "onTarget"
@@ -809,7 +809,7 @@ function M.touchIconButton (event)
         if M.isTouchPointOutOfRange( event ) then
             event.phase = "offTarget"
             -- event.target:dispatchEvent(event)
-            -- print("Its out of the button area")
+            -- M.debug("Its out of the button area")
         else
           event.phase = "onTarget"
             if muiData.interceptMoved == false then
@@ -1050,7 +1050,7 @@ function M.touchCircleButton (event)
         if M.isTouchPointOutOfRange( event ) then
             event.phase = "offTarget"
             -- event.target:dispatchEvent(event)
-            -- print("Its out of the button area")
+            -- M.debug("Its out of the button area")
         else
           event.phase = "onTarget"
             if muiData.interceptMoved == false then
@@ -1329,7 +1329,7 @@ function M.touchCheckbox (event)
         if M.isTouchPointOutOfRange( event ) then
             event.phase = "offTarget"
             -- event.target:dispatchEvent(event)
-            -- print("Its out of the button area")
+            -- M.debug("Its out of the button area")
         else
           event.phase = "onTarget"
             if muiData.interceptMoved == false then
@@ -1425,7 +1425,7 @@ function M.actionForPlus( e )
             muiTarget.isChecked = true
             muiTarget.text = M.getMaterialFontCodePointByName("add_circle")
             if muiTargetValue ~= nil then
-                print("checkbox value = "..muiTargetValue)
+                M.debug("checkbox value = "..muiTargetValue)
             end
         end
     end
@@ -1443,7 +1443,7 @@ function M.actionForCheckbox( e )
             muiTarget.isChecked = true
             muiTarget.text = M.getMaterialFontCodePointByName("check_box")
             if muiTargetValue ~= nil then
-                print("checkbox value = "..muiTargetValue)
+                M.debug("checkbox value = "..muiTargetValue)
             end
         end
     end
@@ -1473,13 +1473,13 @@ function M.actionForRadioButton( e )
         end
         if muiTargetValue ~= nil then
             muiData.widgetDict[basename]["value"] = muiTargetValue
-            print("radio button value = "..muiTargetValue)
+            M.debug("radio button value = "..muiTargetValue)
         end
     end
 end
 
 function M.actionForButton( e )
-    print("button action!")
+    M.debug("button action!")
 end
 
 function M.removeWidgetRRectButton(widgetName)

@@ -54,7 +54,7 @@ function scene:create( event )
     local showDialog = function(e)
         local muiTargetValue = mui.getEventParameter(e, "muiTargetValue")
         local muiTargetCallBackData = mui.getEventParameter(e, "muiTargetCallBackData")
-        print("data passed: "..muiTargetCallBackData.food)
+        mui.debug("data passed: "..muiTargetCallBackData.food)
             mui.newDialog({
             name = "dialog_demo",
             width = mui.getScaleVal(450),
@@ -302,7 +302,7 @@ function scene:create( event )
 
     -- slide panel example
     local hideSlidePanel = function(event)
-        print("home button pushed")
+        mui.debug("home button pushed")
         -- or use close method below to close and release slider from memory
         -- mui.closeSlidePanel("slidepanel-demo")
         mui.hideSlidePanel("slidepanel-demo")
@@ -311,9 +311,9 @@ function scene:create( event )
     local showSlidePanel = function(event)
         if mui.getWidgetBaseObject("slidepanel-demo") ~= nil then
             mui.showSlidePanel("slidepanel-demo")
-            print("slidePanel exists, show it")
+            mui.debug("slidePanel exists, show it")
         else
-            print("slidePanel is new")
+            mui.debug("slidePanel is new")
             mui.newSlidePanel({
                 parent = mui.getParent(),
                 name = "slidepanel-demo",
@@ -653,7 +653,7 @@ function scene:create( event )
 
     -- show how to increase progress bar by percent using a timer or method after the above creation
     local function increaseMyProgressBar()
-        print("increaseMyProgressBar")
+        mui.debug("increaseMyProgressBar")
         mui.increaseProgressBar( "progressbar_demo", 80 )
     end
     timer.performWithDelay(3000, increaseMyProgressBar, 1)

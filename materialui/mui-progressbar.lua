@@ -254,14 +254,14 @@ function M.increaseProgressBar( widgetName, percent, __forceprocess__ )
 end
 
 function M.repeatProgressBarCallBack( object )
-    -- print("repeatProgressBarCallBack")
+    -- M.debug("repeatProgressBarCallBack")
     if object.callBack ~= nil then
         assert(object.callBack)( object )
     end
 end
 
 function M.completeProgressBarCallBack( object )
-    -- print("completeProgressBarCallBack")
+    -- M.debug("completeProgressBarCallBack")
     if object.name == nil then return end
     if muiData.widgetDict[object.name] == nil then return end
 
@@ -310,7 +310,7 @@ function M.completeProgressBarFinalCallBack(object)
 end
 
 function M.postProgressCallBack( object )
-    print("postProgressCallBack")
+    M.debug("postProgressCallBack")
 end
 
 function M.removeWidgetProgressBar(widgetName)

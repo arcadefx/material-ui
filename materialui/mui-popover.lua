@@ -234,11 +234,11 @@ function M.onRowTouchPopover(event)
     local muiTargetIndex = M.getEventParameter(event, "muiTargetIndex")
 
     if muiTargetIndex ~= nil then
-        print("row index: "..muiTargetIndex)
+        M.debug("row index: "..muiTargetIndex)
     end
 
     if muiTargetValue ~= nil then
-        print("row value: "..muiTargetValue)
+        M.debug("row value: "..muiTargetValue)
     end
 
     if event.row.miscEvent ~= nil and event.row.miscEvent.name ~= nil then

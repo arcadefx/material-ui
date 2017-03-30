@@ -289,7 +289,7 @@ function M.dialogOkayCallback(e)
 end
 
 function M.actionForOkayDialog(e)
-    print("actionForOkayDialog called")
+    M.debug("actionForOkayDialog called")
 end
 
 function M.dialogCancelCallback(e)

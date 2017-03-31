@@ -45,11 +45,6 @@ local MySceneName = nil
 
 local M = {} -- for module array/table
 
-function M.debug(data)
-  if not _mui_debug then return end
-  print(data)
-end
-
 local string_char = string.char
 local utf8v1 = function(cp)
   if cp < 128 then
@@ -92,6 +87,11 @@ local function onSystemEvent( event )
       --pause_game()
 
    end
+end
+
+function M.debug(data)
+  if not _mui_debug then return end
+  print(data)
 end
 
 function M.init_base(options)

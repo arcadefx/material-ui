@@ -70,6 +70,8 @@ function M.newTextField(options)
 
     if options.inputType == nil then
         options.inputType = "default"
+    elseif options.inputType == "number" then
+        options.inputType = "default" -- due to numpad on mobile not having a way to "enter" or "finish" input
     end
 
     if options.fillColor == nil then

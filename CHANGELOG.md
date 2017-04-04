@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.88] - 2017-04-04
+### Changes
+- Event handler added to method newRadioButton() "label" text.  This allows the user to touch/click on the radio button or the label text.
+
 ## [0.1.87] - 2017-03-30
 ### Changes
 - Event handlers updated with "return true" where needed. Prevent event propagation to other controls.

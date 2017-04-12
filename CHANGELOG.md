@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.90] - 2017-04-12
+### Changes
+- Plugin - The library will soon be a plug-in on Corona Marketplace. Free of course! Stay tuned for the release. The documenation has been updated to reflect this change.  The GitHub repo will continue to work as it did before, so either grab it by Plugin or Github. The GitHub will contain latest changes and once approved they will be migrated into the Plugin.
+- Copying the font files to your project's main directory is no longer required. It now uses the "icon-font" directory.
+- mui.init(module_list, options) has been changed. You No longer need to pre-append "materialui." to each module. Just name them like "mui-button" for example.
+
 ## [0.1.88] - 2017-04-04
 ### Changes
 - Event handler added to method newRadioButton() "label" text.  This allows the user to touch/click on the radio button or the label text.

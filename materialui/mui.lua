@@ -31,7 +31,7 @@
 --]]--
 
 -- mui
-local muiData = require( "materialui.mui-data" )
+-- local muiData = require( "mui-data" )
 
 local mathFloor = math.floor
 local mathMod = math.fmod
@@ -42,30 +42,37 @@ local M = {} -- for module array/table
 local cache_mt = {}
 local parents = {}
 
+M.muiReferences = {}
+
+local muiPath = "materialui."
+if _muiPlugin ~= nil and _muiPlugin == true then
+  muiPath = "plugin." .. muiPath
+end
+
 local modules = {
-  "materialui.mui-button",
-  "materialui.mui-card",
-  "materialui.mui-datetime",
-  "materialui.mui-dialog",
-  "materialui.mui-image",
-  "materialui.mui-navbar",
-  "materialui.mui-onboarding",
-  "materialui.mui-popover",
-  "materialui.mui-progressbar",
-  "materialui.mui-progresscircle",
-  "materialui.mui-progressarc",
-  "materialui.mui-select",
-  "materialui.mui-shapes",
-  "materialui.mui-slider",
-  "materialui.mui-slidepanel",
-  "materialui.mui-snackbar",
-  "materialui.mui-switch",
-  "materialui.mui-tableview",
-  "materialui.mui-textinput",
-  "materialui.mui-text",
-  "materialui.mui-tile",
-  "materialui.mui-toast",
-  "materialui.mui-toolbar"
+  "mui-button",
+  "mui-card",
+  "mui-datetime",
+  "mui-dialog",
+  "mui-image",
+  "mui-navbar",
+  "mui-onboarding",
+  "mui-popover",
+  "mui-progressbar",
+  "mui-progresscircle",
+  "mui-progressarc",
+  "mui-select",
+  "mui-shapes",
+  "mui-slider",
+  "mui-slidepanel",
+  "mui-snackbar",
+  "mui-switch",
+  "mui-tableview",
+  "mui-textinput",
+  "mui-text",
+  "mui-tile",
+  "mui-toast",
+  "mui-toolbar"
 }
 
 function M.loadModule(mui, parents)
@@ -86,21 +93,41 @@ function M.loadModule(mui, parents)
   setmetatable(M, { __index = cache })
 end
 
+function M.isPlugin()
+  return _muiPlugin or false
+end
+
 function M.init(mui_modules, options)
     local baseModules = {
-      "materialui.mui-base",
+      "mui-base",
     }
     for i=1, #baseModules do
-        table.insert(parents, require(baseModules[i]))
+        local t = require(muiPath .. baseModules[i])
+        table.insert(parents, t)
+        if M.isPlugin() then
+          for k,v in pairs(t) do
+              M.muiReferences[k] = v
+          end
+        end
     end
     M.loadModule(M, parents)
     M.init_base(options)
     if mui_modules ~= nil then modules = mui_modules end
     for i=1, #modules do
-        table.insert(parents, require(modules[i]))
+        if string.find(modules[i], "materialui.") ~= nil then
+          modules[i] = string.gsub(modules[i], "materialui.", "")
+        end
+        local t = require(muiPath .. modules[i])
+        table.insert(parents, t)
+        if M.isPlugin() then
+          for k,v in pairs(t) do
+              M.muiReferences[k] = v
+          end
+        end
     end
     M.loadModule(M, parents)
     M.init_calls()
+    return
 end
 
 return M

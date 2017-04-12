@@ -105,7 +105,13 @@ function M.init_base(options)
   muiData.androidApiLevel = system.getInfo("androidApiLevel")
   muiData.platform = system.getInfo("platform")
 
-  muiData.materialFont = "MaterialIcons-Regular.ttf"
+  local fontPath = ""
+  if _muiPlugin == true then
+    fontPath = "plugin/icon-font/"
+  else
+    fontPath = "icon-font/"
+  end
+  muiData.materialFont = fontPath .. "MaterialIcons-Regular.ttf"
   muiData.materialFontCodePoints = materialFontCodePoints
   M.materialFont = muiData.materialFont
 
@@ -114,7 +120,7 @@ function M.init_base(options)
   muiData.utf8Assist = false
   if (muiData.androidApiLevel ~= nil and tonumber(muiData.androidApiLevel) < 23) or string.find(muiData.platform, "win") then
     muiData.utf8Assist = true
-    muiData.materialFont = "MaterialIcons-Regular.otf"
+    muiData.materialFont = string.gsub(".ttf", ".otf")
     muiData.materialFontCodePoints = materialFontCodePoints
     M.materialFont = muiData.materialFont
   end

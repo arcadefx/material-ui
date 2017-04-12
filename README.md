@@ -6,29 +6,50 @@ This README is just an overview document. You can find more detailed documentati
 What is material-ui?
 --------------
 
-material-ui is a loosely based Material UI library for Corona Labs SDK.  It is written in Lua using the free edition of the SDK.  The library will help build a UI based on Material Design.
+A loosely based Material UI library for Corona Labs SDK. It is written in Lua using the free edition of the SDK. The library will help build a UI based on Material Design.
 
 * Supports: iOS 8+, Android 4.x to 7.x+ and other Corona SDK supported platforms.
 
-Using material-ui
+Installing material-ui as a Plugin from Coronal Marketplace
+--------------
+
+* To use the plugin, add it to the plugins section of build.settings as follows:
+```
+settings =
+{
+    plugins =
+    {
+        ["plugin.materialui"] = { publisherId = "com.anedix" },
+    },
+}
+```
+
+Installing material-ui from the repo on GitHub
 --------------
 
 * Clone the repo or download archive
-```bash
+```
 git clone git://github.com/arcadefx/material-ui.git
 ```
-* Copy the required files and folders into your project:
-```bash
-MaterialIcons-Regular.ttf
-MaterialIcons-Regular.otf
+* Copy the required folders into your project:
+```
 materialui (folder)
 icon-font (folder)
 ```
 
-* Edit your scene file and be sure to include at the top:
+Using material-ui
+--------------
+
+* If using as a plugin from Corona Marketplace, edit your scene file and be sure to include at the top:
+```
+local mui = require( "plugin.materialui" )
+```
+
+* If using the GitHub repo, edit your scene file and be sure to include at the top:
 ```
 local mui = require( "materialui.mui" )
 ```
+
 * In the scene create function add in the initializer and any user-interface elements
 ```
     mui.init()
@@ -54,7 +75,7 @@ Building for Device
 -------------
 Due to device keyboard possibly covering up input fields, be sure to include "coronaWindowMovesWhenKeyboardAppears=true" into iOS settings->iphone->plist table and Android settings.
 
-For an example, see build.settings file included.
+For an example, see [build.settings](https://github.com/arcadefx/material-ui/blob/master/build.settings) file.
 
 Try a Demo
 -------------

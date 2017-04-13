@@ -438,7 +438,11 @@ function M.onRowTouch( event )
 
     if "press" == phase and muiData.touching == false then
         muiData.touching = true
-        M.updateUI(event)
+        local skipNameToRemove = nil
+        if string.find(string.lower(row.params.basename), "-list") then
+            skipNameToRemove = "__skipRemove"
+        end
+        M.updateUI(event, skipNameToRemove)
         --M.debug( "Touched row:", event.target.id )
         --M.debug( "Touched row:", event.target.index )
     elseif "release" == phase then

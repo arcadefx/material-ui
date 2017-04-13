@@ -232,6 +232,8 @@ function M.revealTableViewForSelector(name, options)
     -- table view to hold pick list keyboard_arrow_down
     muiData.widgetDict[options.name]["mygroup"] = display.newGroup() -- options.width+4, options.height + options.listHeight)
 
+    M.setFocus( options.name, M.finishSelector )
+
     local x = options.x
     local y = options.y
     if muiData.widgetDict[options.name]["calculated"] ~= nil and muiData.widgetDict[options.name]["calculated"].y ~= nil then
@@ -289,12 +291,45 @@ function M.revealTableViewForSelector(name, options)
         else
             dy = muiData.widgetDict[options.name]["mygroup"].y - options.height
         end
+
         muiData.widgetDict[options.name]["mygroup"].y = dy
         muiData.widgetDict[options.name]["calculated"].x = muiData.widgetDict[options.name]["mygroup"].x
         muiData.widgetDict[options.name]["calculated"].y = muiData.widgetDict[options.name]["mygroup"].y
+
+        -- adjust position for scrollView if present
+        if false and muiData.widgetDict[options.name]["scrollView"] ~= nil then
+            local newX = muiData.widgetDict[options.name]["scrollView"].x - (muiData.widgetDict[options.name]["scrollView"].contentWidth * .5)
+            newX = (newX + muiData.widgetDict[options.name]["container"].x) - (muiData.widgetDict[options.name]["container"].contentWidth * .5)
+            muiData.widgetDict[options.name]["calculated"].x = newX
+            muiData.widgetDict[options.name]["mygroup"].x = muiData.widgetDict[options.name]["calculated"].x
+        end
     end
-    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name.."-List"]["tableview"] )
-    muiData.widgetDict[options.name]["mygroup"].isVisible = false
+
+    -- adjust position for scrollView if present
+    if muiData.widgetDict[options.name]["scrollView"] ~= nil then
+        local scroller = muiData.widgetDict[options.name]["scrollView"]
+        local xView, yView = scroller:getContentPosition()
+        -- print("X: " .. (xView))
+        -- print("Y: " .. (yView))
+        local table_height = muiData.widgetDict[options.name.."-List"]["tableview"].contentHeight
+        local widget_y = muiData.widgetDict[options.name]["mygroup"].y
+        local widget_height = muiData.widgetDict[options.name]["mygroup"].contentHeight
+        local sY = (yView)
+
+        if sY == 0 then
+            if table_height < (widget_y + widget_height) then
+                local newY = (widget_y + widget_height) - table_height
+                newY = muiData.widgetDict[options.name]["mygroup"].y - ( widget_height - options.height )
+                muiData.widgetDict[options.name]["mygroup"].y = newY
+            end
+        end
+    end
+
+    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name.."-List"]["tableview"], false )
+    muiData.widgetDict[options.name]["mygroup"].isVisible = true -- false
+    if muiData.widgetDict[options.name]["scrollView"] ~= nil then
+        muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+    end
 end
 
 function M.selectorListener( event )
@@ -339,6 +374,12 @@ function M.onRowTouchSelector(event)
 
     if event.row.miscEvent ~= nil and event.row.miscEvent.name ~= nil then
         local parentName = string.gsub(event.row.miscEvent.name, "-List", "")
+
+        muiData.widgetDict[parentName]["selectorfieldfake"].text = muiTargetValue
+        muiData.widgetDict[parentName]["value"] = muiTargetValue
+        timer.performWithDelay(500, function() M.finishSelector(parentName) end, 1)
+    else
+        local parentName = muiData.focus
 
         muiData.widgetDict[parentName]["selectorfieldfake"].text = muiTargetValue
         muiData.widgetDict[parentName]["value"] = muiTargetValue

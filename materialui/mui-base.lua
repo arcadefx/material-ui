@@ -156,6 +156,9 @@ function M.init_base(options)
   options.useActualDimensions = options.useActualDimensions or true
   M.setDisplayToActualDimensions( {useActualDimensions = options.useActualDimensions} )
 
+  muiData.focus = nil
+  muiData.focusCallBack = nil
+
   muiData.scene = composer.getScene(composer.getSceneName("current"))
   muiData.scene.name = composer.getSceneName("current")
   Runtime:addEventListener( "touch", M.eventSuperListner )
@@ -258,7 +261,6 @@ end
 function M.updateUI(event, skipName)
     local widgetType = ""
 
-    -- M.debug("updateUI called")
     for widget in pairs(muiData.widgetDict) do
         if widget ~= skipName or skipName == nil then
             widgetType = muiData.widgetDict[widget]["type"]
@@ -269,6 +271,27 @@ function M.updateUI(event, skipName)
                 muiData.widgetDict[widget]["textfield"].isVisible = false
             end
         end
+    end
+    if skipName == nil or (skipName ~= nil and skipName ~= "__skipRemove") then
+      M.removeFocus(skipName)
+    end
+end
+
+function M.setFocus(widgetName, callBack)
+    if widgetName ~= nil and callBack ~= nil then
+        muiData.focus = widgetName
+        muiData.focusCallBack = callBack
+    end
+end
+
+function M.removeFocus(skipName)
+    if skipName ~= nil and muiData.focus ~= nil and skipName == muiData.focus then
+      return
+    end
+    if muiData.focus ~= nil and muiData.focusCallBack ~= nil then
+        assert( muiData.focusCallBack )( muiData.focus )
+        muiData.focus = nil
+        muiData.focusCallBack = nil
     end
 end
 

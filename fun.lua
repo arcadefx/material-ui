@@ -104,6 +104,7 @@ function scene:create( event )
     })
 
     -- create a drop down list
+    --[[--
     local numOfRowsToShow = 3
     mui.newSelect({
         name = "selector_demo1",
@@ -138,6 +139,7 @@ function scene:create( event )
             { key = "Row9", text = "Shake 6", value = "Shake 6", isCategory = false },
         },
     })
+    --]]--
 
     --[[--
     local newlist = {}
@@ -208,7 +210,6 @@ function scene:create( event )
         callBack = mui.textfieldCallBack,
         scrollView = scrollView
     })
-    --]]--
 
     mui.newTextField({
         name = "textfield_demo3",
@@ -226,6 +227,44 @@ function scene:create( event )
         isSecure = true
     })
 
+    -- create a drop down list
+    local numOfRowsToShow = 3
+    mui.newSelect({
+        name = "selector_demo2",
+        labelText = "Favorite Food",
+        text = "Apple",
+        font = native.systemFont,
+        textColor = { 0.4, 0.4, 0.4 },
+        fieldBackgroundColor = { 1, 1, 1, 1 },
+        rowColor = { default={ 1, 1, 1, 1 }, over={ 1, 0.5, 0, 0.2 } }, -- default is the highlighting
+        rowBackgroundColor = { 1, 1, 1, 1 }, -- the drop down color of each row
+        touchpointColor = { 0.4, 0.4, 0.4 }, -- the touchpoint color
+        activeColor = { 0.12, 0.67, 0.27, 1 },
+        inactiveColor = { 0.4, 0.4, 0.4, 1 },
+        strokeColor = { 0.4, 0.4, 0.4, 1 },
+        strokeWidth = 2,
+        width = mui.getScaleVal(400),
+        height = mui.getScaleVal(46),
+        listHeight = mui.getScaleVal(46) * numOfRowsToShow,
+        x = mui.getScaleVal(240),
+        y = mui.getScaleVal(350),
+        callBackTouch = mui.onRowTouchSelector,
+        scrollListener = nil,
+        list = { -- if 'key' use it for 'id' in the table row
+            { key = "Row1", text = "Apple", value = "Apple", isCategory = false, backgroundColor = {1,1,1,1} },
+            { key = "Row2", text = "Cookie", value = "Cookie", isCategory = false },
+            { key = "Row3", text = "Pizza", value = "Pizza", isCategory = false },
+            { key = "Row4", text = "Shake", value = "Shake", isCategory = false },
+            { key = "Row5", text = "Shake 2", value = "Shake 2", isCategory = false },
+            { key = "Row6", text = "Shake 3", value = "Shake 3", isCategory = false },
+            { key = "Row7", text = "Shake 4", value = "Shake 4", isCategory = false },
+            { key = "Row8", text = "Shake 5", value = "Shake 5", isCategory = false },
+            { key = "Row9", text = "Shake 6", value = "Shake 6", isCategory = false },
+        },
+        scrollView = scrollView,
+    })
+
+
     mui.newTextField({
         name = "textfield_demo4",
         labelText = "My Topic",
@@ -234,27 +273,10 @@ function scene:create( event )
         width = mui.getScaleVal(400),
         height = mui.getScaleVal(46),
         x = mui.getScaleVal(240),
-        y = mui.getScaleVal(380),
+        y = mui.getScaleVal(350),
         activeColor = { 0.12, 0.67, 0.27, 1 },
         inactiveColor = { 0.4, 0.4, 0.4, 1 },
-        callBack = mui.textfieldCallBack,
-        scrollView = scrollView
-    })
-
-    mui.newTextField({
-        name = "textfield_demo5",
-        labelText = "Numbers Only",
-        text = "12345",
-        font = native.systemFont,
-        width = mui.getScaleVal(400),
-        height = mui.getScaleVal(46),
-        x = mui.getScaleVal(240),
-        y = mui.getScaleVal(530),
-        activeColor = { 0.12, 0.67, 0.27, 1 },
-        inactiveColor = { 0.4, 0.4, 0.4, 1 },
-        callBack = mui.textfieldCallBack,
-        scrollView = scrollView,
-        inputType = "number"
+        callBack = mui.textfieldCallBack
     })
 
     mui.newTextBox({
@@ -267,7 +289,7 @@ function scene:create( event )
         width = mui.getScaleVal(400),
         height = mui.getScaleVal(200),
         x = mui.getScaleVal(240),
-        y = mui.getScaleVal(750),
+        y = mui.getScaleVal(550),
         trimFakeTextAt = 80, -- trim at 1..79 characters.
         activeColor = { 0.12, 0.67, 0.27, 1 },
         inactiveColor = { 0.4, 0.4, 0.4, 1 },
@@ -291,6 +313,25 @@ function scene:create( event )
     })
 
     -- mui.setTextBoxValue("textbox_demo1", "toys in store")
+    --[[--
+
+    mui.newTextField({
+        name = "textfield_demo5",
+        labelText = "Numbers Only",
+        text = "12345",
+        font = native.systemFont,
+        width = mui.getScaleVal(400),
+        height = mui.getScaleVal(46),
+        x = mui.getScaleVal(240),
+        y = mui.getScaleVal(530),
+        activeColor = { 0.12, 0.67, 0.27, 1 },
+        inactiveColor = { 0.4, 0.4, 0.4, 1 },
+        callBack = mui.textfieldCallBack,
+        scrollView = scrollView,
+        inputType = "number"
+    })
+
+    --]]--
 
     local textOptions =
     {
@@ -522,6 +563,7 @@ function scrollAListener( event )
     elseif ( phase == "moved" ) then
         mui.updateUI(event)
     elseif ( phase == "ended" ) then
+        mui.removeFocus()
         -- mui.debug( "Scroll view was released" )
     end
 

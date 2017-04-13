@@ -309,8 +309,7 @@ function M.revealTableViewForSelector(name, options)
     if muiData.widgetDict[options.name]["scrollView"] ~= nil then
         local scroller = muiData.widgetDict[options.name]["scrollView"]
         local xView, yView = scroller:getContentPosition()
-        -- print("X: " .. (xView))
-        -- print("Y: " .. (yView))
+        local scroll_height = muiData.widgetDict[options.name]["scrollView"].contentHeight
         local table_height = muiData.widgetDict[options.name.."-List"]["tableview"].contentHeight
         local widget_y = muiData.widgetDict[options.name]["mygroup"].y
         local widget_height = muiData.widgetDict[options.name]["mygroup"].contentHeight

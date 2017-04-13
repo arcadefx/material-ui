@@ -300,6 +300,12 @@ function scene:create( event )
         callBack = showTimePicker -- do not like wheel picker on native device.
     })
 
+    -- Demo of how to switch scenes and avoid using the built-in animated switching.
+    local switchToDemoMoreScene = function(event)
+        mui.setSceneToSwitchToAfterDestroy( "fun" )
+        composer.removeScene( mui.getCurrentScene() )
+    end
+
     -- slide panel example
     local hideSlidePanel = function(event)
         mui.debug("home button pushed")
@@ -345,8 +351,9 @@ function scene:create( event )
                     { key = "Location", value = "3", icon="location_searching", labelText="Location Information", isActive = false, iconColor = { 1, 0, 0, 1 }, iconColorOff = { 0.26, 0.52, 0.96, 1 } },
                     { key = "To-do", value = "4", icon="view_list", labelText="To-do", isActive = false, iconColor = { 1, 0, 0, 1 }, iconColorOff = { 0.92, 0.26, 0.21, 1 } },
                     { key = "LineSeparator" },
-                    { key = "To-do 2", value = "To-do 2", icon="view_list", labelText="To-do 2", isActive = false },
-                    { key = "To-do 3", value = "To-do 3", icon="view_list", labelText="To-do 3", isActive = false },
+                    { key = "Onboard Demo", value = "Onboard Demo", icon="view_list", labelText="Onboard Demo", isActive = false, callBack = mui.actionSwitchScene, callBackData = { sceneDestination = "onboard", sceneTransitionColor = { 0.08, 0.9, 0.31 } } },
+                    { key = "Tile Demo", value = "Tile Demo", icon="view_list", labelText="Tile Demo", isActive = false, callBack = mui.actionSwitchScene, callBackData = { sceneDestination = "tile", sceneTransitionColor = { 0, 0.73, 1 } } },
+                    { key = "Demo More Widgets", value = "Demo More Widgets", icon="view_list", labelText="Demo More Widgets", isActive = false, callBack = switchToDemoMoreScene },
                     { key = "To-do 4", value = "To-do 4", icon="view_list", labelText="To-do 4", isActive = false },
                     { key = "To-do 5", value = "To-do 5", icon="view_list", labelText="To-do 5", isActive = false },
                     { key = "LineSeparator" },
@@ -364,6 +371,7 @@ function scene:create( event )
         end
         -- add some buttons to the menu!
     end
+
     mui.newCircleButton({
         parent = mui.getParent(),
         name = "slidepanel-button",

@@ -15,9 +15,6 @@ local screenW, screenH, halfW = display.contentWidth, display.contentHeight, dis
 local background = nil
 local widget = require( "widget" )
 
--- mui
-local muiData = require( "materialui.mui-data" )
-
 -- -----------------------------------------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE unless "composer.removeScene()" is called
 -- -----------------------------------------------------------------------------------------------------------------

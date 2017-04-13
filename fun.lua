@@ -103,53 +103,19 @@ function scene:create( event )
         callBack = showToast
     })
 
-    -- create a drop down list
-    --[[--
-    local numOfRowsToShow = 3
-    mui.newSelect({
-        name = "selector_demo1",
-        labelText = "Favorite Food",
-        text = "Apple",
+    mui.newTextField({
+        name = "textfield_demo4",
+        labelText = "My Topic",
+        text = "Hello, World!",
         font = native.systemFont,
-        textColor = { 0.4, 0.4, 0.4 },
-        fieldBackgroundColor = { 1, 1, 1, 1 },
-        rowColor = { default={ 1, 1, 1, 1 }, over={ 1, 0.5, 0, 0.2 } }, -- default is the highlighting
-        rowBackgroundColor = { 1, 1, 1, 1 }, -- the drop down color of each row
-        touchpointColor = { 0.4, 0.4, 0.4 }, -- the touchpoint color
-        activeColor = { 0.12, 0.67, 0.27, 1 },
-        inactiveColor = { 0.4, 0.4, 0.4, 1 },
-        strokeColor = { 0.4, 0.4, 0.4, 1 },
-        strokeWidth = 2,
         width = mui.getScaleVal(400),
         height = mui.getScaleVal(46),
-        listHeight = mui.getScaleVal(46) * numOfRowsToShow,
         x = mui.getScaleVal(240),
         y = mui.getScaleVal(350),
-        callBackTouch = mui.onRowTouchSelector,
-        scrollListener = nil,
-        list = { -- if 'key' use it for 'id' in the table row
-            { key = "Row1", text = "Apple", value = "Apple", isCategory = false, backgroundColor = {1,1,1,1} },
-            { key = "Row2", text = "Cookie", value = "Cookie", isCategory = false },
-            { key = "Row3", text = "Pizza", value = "Pizza", isCategory = false },
-            { key = "Row4", text = "Shake", value = "Shake", isCategory = false },
-            { key = "Row5", text = "Shake 2", value = "Shake 2", isCategory = false },
-            { key = "Row6", text = "Shake 3", value = "Shake 3", isCategory = false },
-            { key = "Row7", text = "Shake 4", value = "Shake 4", isCategory = false },
-            { key = "Row8", text = "Shake 5", value = "Shake 5", isCategory = false },
-            { key = "Row9", text = "Shake 6", value = "Shake 6", isCategory = false },
-        },
+        activeColor = { 0.12, 0.67, 0.27, 1 },
+        inactiveColor = { 0.4, 0.4, 0.4, 1 },
+        callBack = mui.textfieldCallBack
     })
-    --]]--
-
-    --[[--
-    local newlist = {}
-    newlist = {
-        { key = "Row1", text = "Dog", value = "Puggle", isCategory = false},
-        { key = "Row2", text = "Cat", value = "Tabby", isCategory = false },
-        { key = "Row3", text = "Dinosaur", value = "Raptor", isCategory = false },
-    }
-    mui.setSelectorList("selector_demo1", newlist)
-    --]]--
 
     -- horizontal slider (vertical in development)
     ---[[--
@@ -247,7 +213,7 @@ function scene:create( event )
         height = mui.getScaleVal(46),
         listHeight = mui.getScaleVal(46) * numOfRowsToShow,
         x = mui.getScaleVal(240),
-        y = mui.getScaleVal(350),
+        y = mui.getScaleVal(350), -- 350
         callBackTouch = mui.onRowTouchSelector,
         scrollListener = nil,
         list = { -- if 'key' use it for 'id' in the table row
@@ -264,20 +230,15 @@ function scene:create( event )
         scrollView = scrollView,
     })
 
-
-    mui.newTextField({
-        name = "textfield_demo4",
-        labelText = "My Topic",
-        text = "Hello, World!",
-        font = native.systemFont,
-        width = mui.getScaleVal(400),
-        height = mui.getScaleVal(46),
-        x = mui.getScaleVal(240),
-        y = mui.getScaleVal(350),
-        activeColor = { 0.12, 0.67, 0.27, 1 },
-        inactiveColor = { 0.4, 0.4, 0.4, 1 },
-        callBack = mui.textfieldCallBack
-    })
+    --[[--
+    local newlist = {}
+    newlist = {
+        { key = "Row1", text = "Dog", value = "Puggle", isCategory = false},
+        { key = "Row2", text = "Cat", value = "Tabby", isCategory = false },
+        { key = "Row3", text = "Dinosaur", value = "Raptor", isCategory = false },
+    }
+    mui.setSelectorList("selector_demo2", newlist)
+    --]]--
 
     mui.newTextBox({
         name = "textbox_demo1",
@@ -289,7 +250,7 @@ function scene:create( event )
         width = mui.getScaleVal(400),
         height = mui.getScaleVal(200),
         x = mui.getScaleVal(240),
-        y = mui.getScaleVal(550),
+        y = mui.getScaleVal(550), -- 550
         trimFakeTextAt = 80, -- trim at 1..79 characters.
         activeColor = { 0.12, 0.67, 0.27, 1 },
         inactiveColor = { 0.4, 0.4, 0.4, 1 },
@@ -493,57 +454,6 @@ function scene:create( event )
         align = "right",  -- left | right supported
     })
 
-    --[[-- REMOVE THESE
-    mui.newTextBox({
-        name = "textbox_demo2222",
-        labelText = "Secret Text Box",
-        text = "1\n2\n3\n4\n5\nI am hidden in view\nYes, me too!\nFood\nDrink\nDesert",
-        font = native.systemFont,
-        fontSize = mui.getScaleVal(46),
-        width = mui.getScaleVal(400),
-        height = mui.getScaleVal(200),
-        x = display.contentWidth / 4,
-        y = display.contentHeight / 2,
-        trimFakeTextAt = 80, -- trim at 1..79 characters.
-        activeColor = { 0.12, 0.67, 0.27, 1 },
-        inactiveColor = { 0.4, 0.4, 0.4, 1 },
-        callBack = mui.textfieldCallBack,
-        isEditable = true,
-        doneButtonEnabled = true,
-        doneButtonPlacement = "left",
-        doneButtonWidth = mui.getScaleVal(140),
-        doneButtonHeight = mui.getScaleVal(60),
-        doneButtonFillColor = { 0.25, 0.75, 1, 1 },
-        doneButtonTextColor = { 1, 1, 1 },
-        doneButtonText = "done",
-        doneButtonIconText = "done",
-        doneButtonIconFont = mui.materialFont,
-        doneButtonIconFontColor = { 1, 1, 1, 1 },
-        doneButtonRadius = mui.getScaleVal(8), -- set to 0 for newRectButton() instead of rounded
-    })
-
-    mui.newRoundedRectButton({
-        name = "goBack",
-        text = "Go Back",
-        width = mui.getScaleVal(200),
-        height = mui.getScaleVal(60),
-        x = mui.getScaleVal(160),
-        y = mui.getScaleVal(120),
-        font = native.systemFont,
-        fillColor = { 0.31, 0.65, 0.03, 1 },
-        textColor = { 1, 1, 1 },
-        iconText = "arrow_back",
-        iconFont = mui.materialFont,
-        iconFontColor = { 1, 1, 1, 1 },
-        -- iconImage = "1484026171_02.png",
-        callBack = mui.actionSwitchScene,
-        callBackData = {
-            sceneDestination = "menu",
-            sceneTransitionColor = { 0, 0.73, 1 },
-            sceneTransitionAnimation = true
-        } -- scene menu.lua
-    })
-    --]]--
 end
 
 --

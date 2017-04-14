@@ -81,13 +81,18 @@ settings =
 		},
 		coronaWindowMovesWhenKeyboardAppears = true,
 	},
+	window =
+	{
+		minViewWidth = 960,
+		minViewHeight = 640
+	},
 	--[[
-    plugins =
-    {
-        ["plugin.utf8"] =
-        {
-            publisherId = "com.coronalabs"
-        },
-    },
-    --]]
+	plugins =
+	{
+		["plugin.utf8"] =
+		{
+			publisherId = "com.coronalabs"
+		},
+	},
+	--]]
 }

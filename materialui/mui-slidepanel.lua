@@ -740,16 +740,17 @@ function M.touchSlidePanelBarrier( event )
         options = event.target.muiOptions
     end
 
+    if event.phase == "moved" then
+        M.sliderScrollListener( event )
+    end
+
     if options ~= nil and options.name ~= nil and muiData.widgetDict[options.name]["scrollview"].moved_object == false then
         M.hideSlidePanel( options.name )
         muiData.slideBarrierTouched = true
     elseif event.phase == "ended" then
         -- finish scroll out if object was being moved out and ran over barrier
         if muiData.widgetDict[options.name]["scrollview"].moved_object == true then
-            transition.to( muiData.widgetDict[options.name]["scrollview"], { time=300, x=(muiData.widgetDict[options.name]["scrollview"].contentWidth * 0.5), transition=easing.linear } )
-            muiData.widgetDict[options.name]["scrollview"].moved_object = false
-            muiData.widgetDict[options.name]["scrollview"].prevEventX = nil
-            muiData.widgetDict[options.name]["scrollview"].origX = nil
+            M.sliderScrollListener( event )
         end
     end
     return true

@@ -771,10 +771,10 @@ function M.sliderScrollListener( event )
     M.updateEventHandler( event )
     local name = muiData.slidePanelName
 
-    muiData.widgetDict[name]["phase"] = phase
-
     if muiData.widgetDict[name] == nil then return end
     if muiData.widgetDict[name]["scrollview"] == nil then return end
+
+    muiData.widgetDict[name]["phase"] = phase
 
     if ( phase == "began" ) then
         -- skip it

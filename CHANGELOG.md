@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.93] - 2017-04-23
+### Fixes
+- newSlidePanel() - Slide panel would not always slide out fully. This is fixed now.
+
 ## [0.1.92] - 2017-04-13
 ### Changes
 - newSelect() displays correctly now using a scrollView. It resides within the scrollView. The drop down shows below or just above the select input area depending on visible scroll area.

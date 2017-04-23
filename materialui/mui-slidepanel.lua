@@ -743,6 +743,14 @@ function M.touchSlidePanelBarrier( event )
     if options ~= nil and options.name ~= nil and muiData.widgetDict[options.name]["scrollview"].moved_object == false then
         M.hideSlidePanel( options.name )
         muiData.slideBarrierTouched = true
+    elseif event.phase == "ended" then
+        -- finish scroll out if object was being moved out and ran over barrier
+        if muiData.widgetDict[options.name]["scrollview"].moved_object == true then
+            transition.to( muiData.widgetDict[options.name]["scrollview"], { time=300, x=(muiData.widgetDict[options.name]["scrollview"].contentWidth * 0.5), transition=easing.linear } )
+            muiData.widgetDict[options.name]["scrollview"].moved_object = false
+            muiData.widgetDict[options.name]["scrollview"].prevEventX = nil
+            muiData.widgetDict[options.name]["scrollview"].origX = nil
+        end
     end
     return true
 end
@@ -756,10 +764,13 @@ end
 function M.sliderScrollListener( event )
 
     local phase = event.phase
+
     if event.phase == nil then return end
 
     M.updateEventHandler( event )
     local name = muiData.slidePanelName
+
+    muiData.widgetDict[name]["phase"] = phase
 
     if muiData.widgetDict[name] == nil then return end
     if muiData.widgetDict[name]["scrollview"] == nil then return end
@@ -806,7 +817,8 @@ function M.sliderScrollListener( event )
             end
         end
         muiData.widgetDict[name]["scrollview"].moved_object = true
-    elseif ( phase == "ended" ) then
+    elseif ( phase == "ended" or phase == "cancelled") then
+        local hide = false
         if muiData.widgetDict[name]["scrollview"].muiMoved ~= nil then
             muiData.widgetDict[name]["scrollview"].muiMoved = nil
             local newX = 0
@@ -817,10 +829,10 @@ function M.sliderScrollListener( event )
             end
             if muiData.widgetDict[name]["scrollview"].muiMove == "left" and muiData.widgetDict[name]["scrollview"].origX ~= nil and (muiData.widgetDict[name]["scrollview"].x+(muiData.widgetDict[name]["scrollview"].contentWidth * 0.5)) <= newX and muiData.widgetDict[name]["scrollview"].moved_object then
                 M.hideSlidePanel(name)
+                hide = true
             elseif muiData.widgetDict[name]["scrollview"].muiMove == "right" and muiData.widgetDict[name]["scrollview"].origX ~= nil and (muiData.widgetDict[name]["scrollview"].x + muiData.widgetDict[name]["scrollview"].contentWidth * .5) <= newXRight and muiData.widgetDict[name]["scrollview"].moved_object then
                 M.hideSlidePanel(name)
-            else
-                transition.to( muiData.widgetDict[name]["scrollview"], { time=300, x=(muiData.widgetDict[name]["scrollview"].contentWidth * 0.5), transition=easing.linear } )
+                hide = true
             end
             muiData.widgetDict[name]["scrollview"]:setIsLocked(false, "vertical")
             muiData.widgetDict[name]["scrollview"].prevEventX = nil
@@ -828,6 +840,10 @@ function M.sliderScrollListener( event )
         elseif muiData.widgetDict[name]["scrollview"].origX == nil then
             -- did not move, so hide it
             M.hideSlidePanel(name)
+            hide = true
+        end
+        if hide == false then
+            transition.to( muiData.widgetDict[name]["scrollview"], { time=300, x=(muiData.widgetDict[name]["scrollview"].contentWidth * 0.5), transition=easing.linear } )
         end
         muiData.widgetDict[name]["scrollview"].moved_object = false
         -- M.debug( "Scroll view was released" )

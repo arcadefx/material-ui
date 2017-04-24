@@ -774,6 +774,11 @@ function M.sliderScrollListener( event )
     if muiData.widgetDict[name] == nil then return end
     if muiData.widgetDict[name]["scrollview"] == nil then return end
 
+    if muiData.widgetDict[name]["move_horizontal"] == nil then
+        muiData.widgetDict[name]["move_horizontal"] = false
+        muiData.widgetDict[name]["move_vertical"] = false
+    end
+
     muiData.widgetDict[name]["phase"] = phase
 
     if ( phase == "began" ) then
@@ -783,6 +788,7 @@ function M.sliderScrollListener( event )
         if muiData.widgetDict[name]["scrollview"].origX == nil then
             muiData.widgetDict[name]["scrollview"].origX = muiData.widgetDict[name]["scrollview"].contentWidth * .5
             muiData.widgetDict[name]["scrollview"].prevEventX = event.x
+            muiData.widgetDict[name]["scrollview"].prevEventY = event.y
             if muiData.widgetDict[name]["scrollview"].x <= 0 then
                 muiData.widgetDict[name]["rectclick"].isVisible = true
                 muiData.widgetDict[name]["rectbackdrop"].isVisible = true
@@ -791,8 +797,8 @@ function M.sliderScrollListener( event )
             end
         end
         if muiData.widgetDict[name]["scrollview"].prevEventX ~= nil then
-
-            if event.x < muiData.widgetDict[name]["scrollview"].prevEventX then
+            if event.x < muiData.widgetDict[name]["scrollview"].prevEventX and muiData.widgetDict[name]["move_vertical"] == false then
+                muiData.widgetDict[name]["move_horizontal"] = true
                 local diff = muiData.widgetDict[name]["scrollview"].prevEventX - event.x
                 if math.abs(diff) > 2 then
                     muiData.widgetDict[name]["scrollview"].x = muiData.widgetDict[name]["scrollview"].x - diff
@@ -802,6 +808,7 @@ function M.sliderScrollListener( event )
                 end
                 muiData.widgetDict[name]["scrollview"].muiMove = "left"
             elseif event.x > muiData.widgetDict[name]["scrollview"].prevEventX then
+                muiData.widgetDict[name]["move_horizontal"] = true
                 local diff = event.x - muiData.widgetDict[name]["scrollview"].prevEventX
                 if math.abs(diff) > 0 and (muiData.widgetDict[name]["scrollview"].x + diff) <= (muiData.widgetDict[name]["scrollview"].contentWidth * 0.5) then
                     if (muiData.widgetDict[name]["scrollview"].x + diff) >= (muiData.widgetDict[name]["scrollview"].contentWidth) then
@@ -815,10 +822,14 @@ function M.sliderScrollListener( event )
                     muiData.widgetDict[name]["scrollview"]:setIsLocked(true, "vertical")
                 end
                 muiData.widgetDict[name]["scrollview"].muiMove = "right"
+            elseif muiData.widgetDict[name]["move_horizontal"] == false and muiData.widgetDict[name]["scrollview"].prevEventY ~= event.y then
+                muiData.widgetDict[name]["move_vertical"] = true
             end
         end
         muiData.widgetDict[name]["scrollview"].moved_object = true
     elseif ( phase == "ended" or phase == "cancelled") then
+        muiData.widgetDict[name]["move_horizontal"] = false
+        muiData.widgetDict[name]["move_vertical"] = false
         local hide = false
         if muiData.widgetDict[name]["scrollview"].muiMoved ~= nil then
             muiData.widgetDict[name]["scrollview"].muiMoved = nil
@@ -837,6 +848,7 @@ function M.sliderScrollListener( event )
             end
             muiData.widgetDict[name]["scrollview"]:setIsLocked(false, "vertical")
             muiData.widgetDict[name]["scrollview"].prevEventX = nil
+            muiData.widgetDict[name]["scrollview"].prevEventY = nil
             muiData.widgetDict[name]["scrollview"].origX = nil
         elseif muiData.widgetDict[name]["scrollview"].origX == nil then
             -- did not move, so hide it

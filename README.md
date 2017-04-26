@@ -1,4 +1,5 @@
-# material-ui
+![Alt text](https://www.anedix.com/images/github/mui-logo-2017-small.png "Material-UI")
+
 Material Design UI for Corona Labs SDK
 
 This README is just an overview document. You can find more detailed documentation within the repo in future updates.

@@ -278,6 +278,28 @@ function M.onRowRenderDemo( event )
     local rowHeight = row.contentHeight
     local rowWidth = row.contentWidth
 
+    --[[-- demo attaching checkbox to table (a checklist)
+    M.newCheckBox({
+        name = "check"..row.index,
+        text = "check_box_outline_blank",
+        width = M.getScaleVal(50),
+        height = M.getScaleVal(50),
+        isFontIcon = true,
+        font = M.materialFont,
+        textColor = { 0.3, 0.3, 0.3 },
+        textAlign = "center",
+        value = 500,
+        callBack = M.actionForCheckbox
+    })
+    M.attachToRow( row, {
+        widgetName = "check"..row.index,
+        widgetType = "IconButton",
+        align = "left",  -- left | right supported
+        skipRowAppend = true,
+        params = row.params
+    })
+    --]]--
+
     --[[-- demo attaching widget to a row
     M.newIconButton({
         name = "plus"..row.index,
@@ -369,6 +391,7 @@ function M.attachToRow(row, options )
     local padding = options.params.padding
     local nh = row.contentHeight
     local nw = row.contentWidth
+    local skipRowAppend = options.skipRowAppend or false
 
     local isTypeSupported = false
     for i, widgetType in ipairs(muiData.navbarSupportedTypes) do
@@ -387,6 +410,7 @@ function M.attachToRow(row, options )
     widget = M.getWidgetBaseObject(widgetName)
     newY = (nh - widget.contentHeight) * 0.5
 
+
     -- keep tabs on the toolbar objects
     if muiData.widgetDict[basename]["list"] == nil then muiData.widgetDict[basename]["list"] = {} end
     if muiData.widgetDict[basename]["list"][rowName] == nil then
@@ -394,6 +418,12 @@ function M.attachToRow(row, options )
         muiData.widgetDict[basename]["list"][rowName]["lastWidgetLeftX"] = 0
         muiData.widgetDict[basename]["list"][rowName]["lastWidgetRightY"] = 0
     end
+
+    -- skipRowAppend if true: don't keep adding/move to right or left.!!!!
+    if skipRowAppend == true then
+        muiData.widgetDict[basename]["list"][rowName]["lastWidgetLeftX"] = 0
+    end
+
     muiData.widgetDict[basename]["list"][rowName][widgetName] = options.widgetType
 
     if options.align == nil then

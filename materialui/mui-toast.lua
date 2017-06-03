@@ -63,7 +63,9 @@ function M.removeToastNow( event )
             M.setEventParameter(event, "muiTargetValue", options.value)
             M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["rrect"])
 
-            assert( options.callBack )(event)
+            if options.callBack ~= nil then
+                assert( options.callBack )(event)
+            end
         end
     end
 end
@@ -209,7 +211,9 @@ function M.newToast( options )
                     M.setEventParameter(event, "muiTargetValue", options.value)
                     M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["rrect"])
 
-                    assert( options.callBack )(event)
+                    if options.callBack ~= nil then
+                        assert( options.callBack )(event)
+                    end
                 end
             end
             muiData.interceptEventHandler = nil

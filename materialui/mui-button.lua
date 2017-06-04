@@ -75,7 +75,7 @@ end
     text: text for button
     textColor: {r, g, b}
     font: font to use
-    fontSize: 
+    fontSize:
     textMargin: used to pad around button and determine font size,
     circleColor: {r, g, b} (optional, defaults to textColor)
     touchpoint: boolean, if true circle touch point is user based else centered
@@ -409,7 +409,7 @@ end
     text: text for button
     textColor: {r, g, b}
     font: font to use
-    fontSize: 
+    fontSize:
     textMargin: used to pad around button and determine font size,
     circleColor: {r, g, b} (optional, defaults to textColor)
     touchpoint: boolean, if true circle touch point is user based else centered
@@ -502,6 +502,10 @@ function M.newRectButton(options)
     M.createButtonsFromList(options, rrect, "container")
 
     local fontSize = 10
+    if options.fontSize ~= nil then
+        fontSize = options.fontSize
+    end
+
     local textMargin = options.height * 0.4
     if options.textMargin ~= nil and options.textMargin > 0 then
         textMargin = options.textMargin
@@ -523,11 +527,13 @@ function M.newRectButton(options)
 
     -- scale font
     -- Calculate a font size that will best fit the given text field's height
-    local textToMeasure = display.newText( options.text, 0, 0, font, fontSize )
-    fontSize = fontSize * ( ( rrect.contentHeight - textMargin ) / textToMeasure.contentHeight )
-    fontSize = mathFloor(tonumber(fontSize))
-    textToMeasure:removeSelf()
-    textToMeasure = nil
+    if options.fontSize == nil then
+        local textToMeasure = display.newText( options.text, 0, 0, font, fontSize )
+        fontSize = fontSize * ( ( rrect.contentHeight - textMargin ) / textToMeasure.contentHeight )
+        fontSize = mathFloor(tonumber(fontSize))
+        textToMeasure:removeSelf()
+        textToMeasure = nil
+    end
 
     if options.iconText ~= nil and options.iconFont ~= nil and options.iconImage == nil then
         if M.isMaterialFont(options.iconFont) == true then
@@ -616,7 +622,7 @@ end
     text: text for button
     textColor: {r, g, b}
     font: font to use
-    fontSize: 
+    fontSize:
     textMargin: used to pad around button and determine font size,
     circleColor: {r, g, b} (optional, defaults to textColor)
     touchpoint: boolean, if true circle touch point is user based else centered
@@ -1089,7 +1095,7 @@ end
     text: text for button
     textColor: {r, g, b}
     font: font to use
-    fontSize: 
+    fontSize:
     textMargin: used to pad around button and determine font size,
     circleColor: {r, g, b} (optional, defaults to textColor)
     touchpoint: boolean, if true circle touch point is user based else centered
@@ -1236,9 +1242,9 @@ function M.newRadioButton(options)
     local labelX = radioButton["mygroup"].x
     -- x,y of both myText and label is centered so divide by half
     local labelSpacing = fontSize * 0.1
-    labelX = radioButton["myText"].x + (fontSize * 0.5) + labelSpacing    
+    labelX = radioButton["myText"].x + (fontSize * 0.5) + labelSpacing
     labelX = labelX + (labelWidth * 0.5)
-    local options3 = 
+    local options3 =
     {
         --parent = muiData.widgetDict[options.name]["mygroup"],
         text = options.label,
@@ -1423,7 +1429,7 @@ function M.newRadioGroup(options)
         muiData.widgetDict[options.name] = {}
         muiData.widgetDict[options.name]["radio"] = {}
         muiData.widgetDict[options.name]["type"] = "RadioGroup"
-        for i, v in ipairs(options.list) do            
+        for i, v in ipairs(options.list) do
             M.newRadioButton({
                 parent = options.parent,
                 name = options.name .. "_" .. i,

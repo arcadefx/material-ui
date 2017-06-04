@@ -192,11 +192,17 @@ function M.newDialog(options)
         if options.buttons["okayButton"].text == nil then
             options.buttons["okayButton"].text = "Okay"
         end
+        if options.buttons["okayButton"].width == nil then
+            options.buttons["okayButton"].width = M.getScaleVal(100)
+        end
+        if options.buttons["okayButton"].height == nil then
+            options.buttons["okayButton"].height = M.getScaleVal(50)
+        end
         M.newRectButton({
             name = "okay_dialog_button",
             text = options.buttons["okayButton"].text,
-            width = M.getScaleVal(100),
-            height = M.getScaleVal(50),
+            width = options.buttons["okayButton"].width,
+            height = options.buttons["okayButton"].height,
             x = bx,
             y = by,
             font = native.systemFont,
@@ -225,14 +231,20 @@ function M.newDialog(options)
         if options.buttons["cancelButton"].text == nil then
             options.buttons["cancelButton"].text = "Okay"
         end
+        if options.buttons["cancelButton"].width == nil then
+            options.buttons["cancelButton"].width = M.getScaleVal(100)
+        end
+        if options.buttons["cancelButton"].height == nil then
+            options.buttons["cancelButton"].height = M.getScaleVal(50)
+        end
         if bx > 0 then
             bx = (bx - (bx * 0.1)) - M.getScaleVal(100)
         end
         M.newRectButton({
             name = "cancel_dialog_button",
             text = options.buttons["cancelButton"].text,
-            width = M.getScaleVal(100),
-            height = M.getScaleVal(50),
+            width = options.buttons["cancelButton"].width,
+            height = options.buttons["cancelButton"].height,
             x = bx,
             y = by,
             font = native.systemFont,

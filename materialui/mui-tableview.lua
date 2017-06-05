@@ -458,7 +458,7 @@ end
 function M.onRowTouch( event )
     local phase = event.phase
     local row = event.row
- 
+
     if muiData.dialogInUse == true then
         if muiData.dialogName == nil then return end
         if string.find(row.params.name, muiData.dialogName) == nil then
@@ -466,7 +466,7 @@ function M.onRowTouch( event )
         end
     end
 
-    if "press" == phase and muiData.touching == false then
+    if (phase == "tap" or "press" == phase) and muiData.touching == false then
         muiData.touching = true
         local skipNameToRemove = nil
         if string.find(string.lower(row.params.basename), "-list") then
@@ -475,7 +475,9 @@ function M.onRowTouch( event )
         M.updateUI(event, skipNameToRemove)
         --M.debug( "Touched row:", event.target.id )
         --M.debug( "Touched row:", event.target.index )
-    elseif "release" == phase then
+    end
+
+    if ("release" == phase or "tap" == phase) then
         local row = event.row
 
         local rowAnimation = true

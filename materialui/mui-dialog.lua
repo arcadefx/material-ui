@@ -172,13 +172,7 @@ function M.newDialog(options)
 
     ---[[--
     local bx = 0
-    local by = (muiData.widgetDict[options.name]["container"]["rrect"].contentHeight * 0.5) - M.getScaleVal(50)
-    if options.buttons ~= nil and options.buttons.okayButton ~= nil and options.buttons.cancelButton ~= nil then
-        bx = (muiData.widgetDict[options.name]["container"]["rrect"].contentWidth * 0.5) - M.getScaleVal(100)
-    else
-        bx = 0
-    end
-
+    local by = 0
     if options.buttons ~= nil and options.buttons["okayButton"] ~= nil then
         if options.buttons["okayButton"].callBackOkay ~= nil then
             muiData.widgetDict[options.name]["callBackOkay"] = options.buttons["okayButton"].callBackOkay
@@ -192,11 +186,24 @@ function M.newDialog(options)
         if options.buttons["okayButton"].text == nil then
             options.buttons["okayButton"].text = "Okay"
         end
+        if options.buttons["okayButton"].width == nil then
+            options.buttons["okayButton"].width = M.getScaleVal(100)
+        end
+        if options.buttons["okayButton"].height == nil then
+            options.buttons["okayButton"].height = M.getScaleVal(50)
+        end
+
+        by = (muiData.widgetDict[options.name]["container"]["rrect"].contentHeight * 0.5) - options.buttons["okayButton"].height
+        if options.buttons ~= nil and options.buttons.okayButton ~= nil and options.buttons.cancelButton ~= nil then
+            bx = (muiData.widgetDict[options.name]["container"]["rrect"].contentWidth - options.buttons["okayButton"].width) * .5 - 15
+        else
+            bx = 0
+        end
         M.newRectButton({
             name = "okay_dialog_button",
             text = options.buttons["okayButton"].text,
-            width = M.getScaleVal(100),
-            height = M.getScaleVal(50),
+            width = options.buttons["okayButton"].width,
+            height = options.buttons["okayButton"].height,
             x = bx,
             y = by,
             font = native.systemFont,
@@ -225,14 +232,20 @@ function M.newDialog(options)
         if options.buttons["cancelButton"].text == nil then
             options.buttons["cancelButton"].text = "Okay"
         end
+        if options.buttons["cancelButton"].width == nil then
+            options.buttons["cancelButton"].width = M.getScaleVal(100)
+        end
+        if options.buttons["cancelButton"].height == nil then
+            options.buttons["cancelButton"].height = M.getScaleVal(50)
+        end
         if bx > 0 then
-            bx = (bx - (bx * 0.1)) - M.getScaleVal(100)
+            bx = (bx - options.buttons["cancelButton"].width) * .5 - 20
         end
         M.newRectButton({
             name = "cancel_dialog_button",
             text = options.buttons["cancelButton"].text,
-            width = M.getScaleVal(100),
-            height = M.getScaleVal(50),
+            width = options.buttons["cancelButton"].width,
+            height = options.buttons["cancelButton"].height,
             x = bx,
             y = by,
             font = native.systemFont,

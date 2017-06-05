@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.96] - 2017-05-05
+### Fixes
+- newTableView() - Tapping repeatly did not register an event. This is fixed now. Which was an issue on all devices and simulator.
+
 ## [0.1.93] - 2017-04-23
 ### Fixes
 - newSlidePanel() - Slide panel would not always slide out fully. This is fixed now.

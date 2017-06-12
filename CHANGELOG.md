@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.97] - 2017-06-12
+### Fixes
+- newSelect() - Fixed issue where value was being used in the 'selected' text instead of the text for the button.  Now after choosing a drop down item the 'text' for the item is shown.
+
 ## [0.1.96] - 2017-05-05
 ### Fixes
 - newTableView() - Tapping repeatly did not register an event. This is fixed now. Which was an issue on all devices and simulator.

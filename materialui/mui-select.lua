@@ -374,7 +374,9 @@ function M.onRowTouchSelector(event)
     if event.row.miscEvent ~= nil and event.row.miscEvent.name ~= nil then
         local parentName = string.gsub(event.row.miscEvent.name, "-List", "")
 
-        muiData.widgetDict[parentName]["selectorfieldfake"].text = muiTargetValue
+        if muiTargetIndex ~= nil then
+            muiData.widgetDict[parentName]["selectorfieldfake"].text =  muiData.widgetDict[parentName].list[muiTargetIndex].text -- was muiTargetValue
+        end
         muiData.widgetDict[parentName]["value"] = muiTargetValue
         timer.performWithDelay(500, function() M.finishSelector(parentName) end, 1)
     else

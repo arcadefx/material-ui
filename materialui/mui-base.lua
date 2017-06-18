@@ -538,7 +538,14 @@ function M.createButtonsFromList(options, rect, container)
         else
           myImage = display.newImage( image.src )
         end
-        M.fitImage(myImage, rect.contentWidth, rect.contentHeight, true)
+        local hPadding, vPadding = 0, 0
+        if image.hPadding ~= nil then
+            hPadding = image.hPadding
+        end
+        if image.vPadding ~= nil then
+            vPadding = image.vPadding
+        end
+        M.fitImage(myImage, rect.contentWidth - hPadding, rect.contentHeight - vPadding, true)
         if muiData.widgetDict[options.name] == nil then
           muiData.widgetDict[options.name] = {}
         end

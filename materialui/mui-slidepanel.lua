@@ -663,8 +663,10 @@ function M.showSlidePanel( widgetName, slideOut )
             transition.fadeIn(muiData.widgetDict[widgetName]["rectbackdrop"],{time=300})
             muiData.widgetDict[widgetName]["rectclick"].isVisible = true
             muiData.widgetDict[widgetName]["rectbackdrop"].isVisible = true
+			muiData.widgetDict[widgetName]["scrollview"]:toFront()
         else
             muiData.widgetDict[widgetName].isVisible = true
+			muiData.widgetDict[widgetName]["scrollview"]:toFront()
             --transition.fadeIn(muiData.widgetDict[widgetName]["rectclick"],{time=0})
             --transition.fadeIn(muiData.widgetDict[widgetName]["rectbackdrop"],{time=0})
         end

@@ -99,6 +99,16 @@ Contributing
 * Please follow the licensing terms for any software included.
 * See materialui/mui-example.lua for creating additional modules or review any mui-[name].lua module to see the format.
 
+Contributors (by code, testing, helping, etc):
+-------------
+    willcastillo
+    bluetardis
+    StevenWarren
+    bodily11
+    taigak
+    lmy46
+
+
 Change Log
 -------------
 * Please see "CHANGELOG.md" in this repo for information on latest changes.

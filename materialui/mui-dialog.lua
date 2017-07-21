@@ -97,7 +97,7 @@ function M.newDialog(options)
 
     -- place on main display
     muiData.widgetDict[options.name] = {}
-    muiData.widgetDict[options.name]["rectbackdrop"] = display.newRect( muiData.contentWidth * 0.5, muiData.contentHeight * 0.5, muiData.contentWidth, muiData.contentHeight)
+    muiData.widgetDict[options.name]["rectbackdrop"] = display.newRect( display.contentWidth * .5, display.contentHeight * .5, display.contentWidth, display.contentHeight )
     muiData.widgetDict[options.name]["rectbackdrop"].strokeWidth = 0
     muiData.widgetDict[options.name]["rectbackdrop"]:setFillColor( unpack( {0.4, 0.4, 0.4, 0.3} ) )
     muiData.widgetDict[options.name]["rectbackdrop"].isVisible = true

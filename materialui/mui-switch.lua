@@ -217,6 +217,7 @@ function M.toggleSwitchTouch (event)
             muiData.touching = false
         end
     end
+    muiData.touched = true
     return true -- prevent propagation to other controls
 end
 

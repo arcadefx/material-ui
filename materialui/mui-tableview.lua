@@ -111,6 +111,7 @@ function M.newTableView( options )
             onRowTouch = M.onRowTouch,
             listener = options.scrollListener,
             isLocked = options.isLocked or false,
+            hideBackground = options.hideBackground or false
         }
     )
     tableView.isVisible = false
@@ -150,6 +151,7 @@ function M.newTableView( options )
         else
             v.fillColor = v.fillColor or rowColor.default
         end
+
         local optionList = {
             isCategory = isCategory,
             rowHeight = rowHeight,
@@ -172,6 +174,7 @@ function M.newTableView( options )
                 rowColor = v.fillColor,
                 textColor = options.textColor,
                 rowAnimation = options.rowAnimation,
+                backgroundImage = v.backgroundImage,
                 callBackData = options.callBackData,
                 callBackTouch = options.callBackTouch,
                 callBackRender = options.callBackRender
@@ -266,6 +269,10 @@ function M.onRowRender( event )
     row:addEventListener( "touch", row )
 
     if row.params ~= nil and row.params.callBackRender ~= nil then
+        -- If a background image was specified then add it before any controls
+        M.attachBackgroundToRow(row, {
+            image = row.params.backgroundImage
+        })
         assert( row.params.callBackRender )(event)
     end
 end
@@ -295,7 +302,6 @@ function M.onRowRenderDemo( event )
         widgetName = "check"..row.index,
         widgetType = "IconButton",
         align = "left",  -- left | right supported
-        skipRowAppend = true,
         params = row.params
     })
     --]]--
@@ -380,6 +386,31 @@ function M.onRowRenderDemo( event )
     end
 end
 
+function M.attachBackgroundToRow(row, options)
+    if row == nil or options == nil or options.image == nil then return end
+
+    local rowHeight = row.contentHeight
+    local rowWidth = row.contentWidth
+    local name = "background-"..row.index
+
+    M.newImageRect({
+        image = options.image,
+        name = name,
+        width = M.getScaleVal( rowWidth ),
+        height = M.getScaleVal( rowHeight ),
+        x = 0,
+        y = 0
+    })
+    if muiData.widgetDict[name]["image_rect"] == nil then
+        print("cannot find image "..options.image)
+        return
+    end
+    local backImage = M.getWidgetBaseObject( name )
+    backImage.anchorX = 0
+    backImage.anchorY = 0
+    row:insert( backImage )
+end
+
 function M.attachToRow(row, options )
     if row == nil or options == nil or options.widgetName == nil then return end
     local newX = 0
@@ -391,7 +422,6 @@ function M.attachToRow(row, options )
     local padding = options.params.padding
     local nh = row.contentHeight
     local nw = row.contentWidth
-    local skipRowAppend = options.skipRowAppend or false
 
     local isTypeSupported = false
     for i, widgetType in ipairs(muiData.navbarSupportedTypes) do
@@ -416,12 +446,7 @@ function M.attachToRow(row, options )
     if muiData.widgetDict[basename]["list"][rowName] == nil then
         muiData.widgetDict[basename]["list"][rowName] = {}
         muiData.widgetDict[basename]["list"][rowName]["lastWidgetLeftX"] = 0
-        muiData.widgetDict[basename]["list"][rowName]["lastWidgetRightY"] = 0
-    end
-
-    -- skipRowAppend if true: don't keep adding/move to right or left.!!!!
-    if skipRowAppend == true then
-        muiData.widgetDict[basename]["list"][rowName]["lastWidgetLeftX"] = 0
+        muiData.widgetDict[basename]["list"][rowName]["lastWidgetRightX"] = 0
     end
 
     muiData.widgetDict[basename]["list"][rowName][widgetName] = options.widgetType
@@ -440,24 +465,32 @@ function M.attachToRow(row, options )
         end
         newX = newX + muiData.widgetDict[basename]["list"][rowName]["lastWidgetLeftX"]
         widget.x = widget.contentWidth * 0.5 + newX
-        widget.y = widget.contentHeight * 0.5 + newY
         muiData.widgetDict[basename]["list"][rowName]["lastWidgetLeftX"] = widget.x + widget.contentWidth * 0.5
     else
-        newX = nw
+        newX = nw * 0.88 -- general rule
         if muiData.widgetDict[basename]["list"][rowName]["lastWidgetRightX"] > 0 then
             newX = newX - padding
         end
         newX = newX - muiData.widgetDict[basename]["list"][rowName]["lastWidgetRightX"]
         widget.x = newX - widget.contentWidth * 0.5
-        widget.y = widget.contentHeight * 0.5 + newY
         muiData.widgetDict[basename]["list"][rowName]["lastWidgetRightX"] = padding + muiData.widgetDict[basename]["list"][rowName]["lastWidgetRightX"] + widget.contentWidth * 0.5
     end
+    widget.y = widget.contentHeight * 0.5 + newY
     row:insert( widget, false )
+    if options.finish == true then
+        muiData.widgetDict[basename]["list"][rowName]["lastWidgetLeftX"] = 0
+        muiData.widgetDict[basename]["list"][rowName]["lastWidgetRightX"] = 0
+    end
 end
 
 function M.onRowTouch( event )
     local phase = event.phase
     local row = event.row
+
+    if muiData.touched ~= nil and muiData.touched == true then
+            muiData.touched = false
+            return true
+    end
 
     if muiData.dialogInUse == true then
         if muiData.dialogName == nil then return end

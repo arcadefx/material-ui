@@ -386,6 +386,7 @@ function M.onRowTouchSelector(event)
         muiData.widgetDict[parentName]["value"] = muiTargetValue
         timer.performWithDelay(500, function() M.finishSelector(parentName) end, 1)
     end
+    muiData.touched = true
     return true -- prevent propagation to other controls
 end
 

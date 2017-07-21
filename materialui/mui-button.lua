@@ -393,6 +393,7 @@ function M.touchRRectButton (event)
         muiData.interceptMoved = false
         muiData.touching = false
     end
+    muiData.touched = true
     return true
 end
 
@@ -839,6 +840,7 @@ function M.touchIconButton (event)
             M.deactivateImageTouch( options )
         end
     end
+    muiData.touched = true
     return true
 end
 
@@ -1079,6 +1081,7 @@ function M.touchCircleButton (event)
             M.deactivateImageTouch( options )
         end
     end
+    muiData.touched = true
     return true
 end
 
@@ -1348,6 +1351,8 @@ function M.touchCheckboxHandler(event)
         muiData.interceptMoved = false
         muiData.touching = false
     end
+    muiData.touched = true
+    return true
 end
 
 function M.touchCheckboxLabel (event)
@@ -1376,6 +1381,7 @@ function M.touchCheckboxLabel (event)
           M.touchCheckboxHandler( event )
         end
     end
+    muiData.touched = true
     return true
 end
 
@@ -1405,6 +1411,7 @@ function M.touchCheckbox (event)
           M.touchCheckboxHandler( event )
         end
     end
+    muiData.touched = true
     return true
 end
 
@@ -1481,6 +1488,7 @@ function M.actionForPlus( e )
             end
         end
     end
+    return true
 end
 
 function M.actionForCheckbox( e )
@@ -1499,6 +1507,7 @@ function M.actionForCheckbox( e )
             end
         end
     end
+    return true
 end
 
 function M.actionForRadioButton( e )
@@ -1528,10 +1537,12 @@ function M.actionForRadioButton( e )
             M.debug("radio button value = "..muiTargetValue)
         end
     end
+    return true
 end
 
 function M.actionForButton( e )
     M.debug("button action!")
+    return true
 end
 
 function M.removeWidgetRRectButton(widgetName)

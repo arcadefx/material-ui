@@ -240,6 +240,7 @@ function M.sliderTouch (event)
         event.target.isFocus = false
         M.sliderPercentComplete(event, options)
     end
+    muiData.touched = true
     return true -- prevent propagation to other controls
 end
 

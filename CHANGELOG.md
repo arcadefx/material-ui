@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.98] - 2017-07-21
+### Changes
+- newTableView() - Added internal method attachBackgroundToRow(..). if the newTableView() options in attribute list now supports 'backgroundImage' which you specify the image to use for the row's background.  Each row has to be set and if not it will use the normal color scheme.
+
+### Fixes
+- Adding controls to left / right align on a row didn't work correctly.
+- Added return "true" to avoid propagation to other controls for buttons. Added a special case for "newTableView()" which avoids the row's callback being used if a button event occurs on top.
+
 ## [0.1.97] - 2017-06-12
 ### Fixes
 - newSelect() - Fixed issue where value was being used in the 'selected' text instead of the text for the button.  Now after choosing a drop down item the 'text' for the item is shown.

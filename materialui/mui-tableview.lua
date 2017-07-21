@@ -396,8 +396,8 @@ function M.attachBackgroundToRow(row, options)
     M.newImageRect({
         image = options.image,
         name = name,
-        width = M.getScaleVal( rowWidth ),
-        height = M.getScaleVal( rowHeight ),
+        width = rowWidth,
+        height = rowHeight,
         x = 0,
         y = 0
     })
@@ -467,7 +467,7 @@ function M.attachToRow(row, options )
         widget.x = widget.contentWidth * 0.5 + newX
         muiData.widgetDict[basename]["list"][rowName]["lastWidgetLeftX"] = widget.x + widget.contentWidth * 0.5
     else
-        newX = nw * 0.88 -- general rule
+        newX = nw
         if muiData.widgetDict[basename]["list"][rowName]["lastWidgetRightX"] > 0 then
             newX = newX - padding
         end

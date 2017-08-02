@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.99] - 2017-08-02
+### Changes
+- newTableView() - Added parameter "valign" to attachToRow(). Allows you to vertically align the object.
+- newTableView() - Added parameter "valign" to 'list' and 'columns' which allows you to vertically align the text.
+- newTableView() - Documentation updated for the "valign" addition.
+- newTableView() - Added parameter "align" to documentation.
+
 ## [0.1.98] - 2017-07-21
 ### Changes
 - newTableView() - Added internal method attachBackgroundToRow(..). if the newTableView() options in attribute list now supports 'backgroundImage' which you specify the image to use for the row's background.  Each row has to be set and if not it will use the normal color scheme.

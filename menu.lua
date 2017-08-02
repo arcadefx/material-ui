@@ -555,7 +555,7 @@ function scene:create( event )
         fontSize = mui.getScaleVal(24),
         textColor = { 0, 0, 0, 1 },
         lineColor = { 1, 1, 1, 1 },
-        lineHeight = mui.getScaleVal(4),
+        lineHeight = mui.getScaleVal(20),
         rowColor = {1, 1, 1, 1}, --{ default={1,1,1}, over={1,0.5,0,0.2} },
         rowHeight = mui.getScaleVal(60),
         -- rowAnimation = false, -- turn on rowAnimation
@@ -564,14 +564,14 @@ function scene:create( event )
         callBackRender = mui.onRowRenderDemo,
         scrollListener = mui.scrollListener,  -- needed if using buttons, etc within the row!
         list = { -- if 'key' use it for 'id' in the table row
-            { key = "Row1", text = "Row 1", value = "1", isCategory = false },
-            { key = "Row2", text = "Row 2", value = "2", isCategory = false },
-            { key = "Row3", text = "Row 3", value = "3", isCategory = false },
+            { key = "Row1", text = "Row 1", value = "1", isCategory = false, valign = "middle" },
+            { key = "Row2", text = "Row 2", value = "2", isCategory = false, valign = "middle" },
+            { key = "Row3", text = "Row 3", value = "3", isCategory = false, valign = "middle" },
             { key = "Row4", text = "Row 4", value = "4", isCategory = false },
             { key = "Row5", text = "Row 5", value = "5", fontSize = mui.getScaleVal(18), isCategory = false, columns = {
-                    { text = "Row 5 Column 1", value = "5A", align = "left" },
-                    { text = "Row 5 Column 2", value = "5B", align = "left" },
-                    { text = "Row 5 Column 3", value = "5C", align = "left" },
+                    { text = "Row 5C1", value = "5A", align = "left", valign = "top" },
+                    { text = "Row 5C2", value = "5B", align = "left", valign = "middle" },
+                    { text = "Row 5C3", value = "5C", align = "left", valign = "bottom" },
                 },
             },
             { key = "Row6", text = "Row 6", value = "6", fontSize = mui.getScaleVal(18), isCategory = false, columns = {
@@ -586,7 +586,7 @@ function scene:create( event )
                     { text = "Row 7 Column 3", value = "7C", align = "right" },
                 },
             },
-            { key = "Row8", text = "Row 8", value = "8", isCategory = false, fillColor = { 0, 0, 1, 0.2 }  },
+            { key = "Row8", text = "Row 8", value = "8", isCategory = false, fillColor = { 0, 0, 1, 0.2 }, valign = "top" },
             -- below are rows with different colors
             -- set "noLines" to true above to omit line border
             -- { key = "Row5", text = "Row 5", value = "5", isCategory = false, fillColor = { 0.67, 0.98, 0.65, 0.2 } },

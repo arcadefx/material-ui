@@ -164,6 +164,7 @@ function M.newTableView( options )
                 font = v.font or options.font,
                 fontSize = v.fontSize or options.fontSize,
                 align = v.align or "left",
+                valign = v.valign or "middle",
                 value = v.value,
                 width = options.width,
                 columns = v.columns,
@@ -211,7 +212,7 @@ function M.onRowRender( event )
 
     -- need to use the colors passed in as params here.
     noLines = false
-    lineHeight = M.getScaleVal(4)
+    lineHeight = M.getScaleVal(1)
     lineColor = { 0.9, 0.9, 0.9 }
     rowColor = { 1, 1, 1, 1 }
     textColor = { 0, 0, 0, 1 }
@@ -222,7 +223,6 @@ function M.onRowRender( event )
 
         if row.params.lineHeight ~= nil then
             lineHeight = row.params.lineHeight
-            if lineHeight == 1 then lineHeight = 2 end
         end
 
         if row.params.lineColor ~= nil then lineColor = row.params.lineColor end
@@ -236,19 +236,25 @@ function M.onRowRender( event )
     end
 
     if noLines == false and lineHeight > 0 then
-        -- line underneath label
-        row.bg1 = display.newRect( 0, 0, row.contentWidth, row.contentHeight - M.getScaleVal(1) )
-        row.bg1.anchorX = 0
-        row.bg1.anchorY = 0
-        row.bg1:setFillColor( unpack( lineColor ) ) -- transparent
-        row:insert( row.bg1 )
 
         -- the block above line
-        row.bg2 = display.newRect( 0, 0, row.contentWidth, row.contentHeight - M.getScaleVal(lineHeight) )
-        row.bg2.anchorX = 0
-        row.bg2.anchorY = 0
-        row.bg2:setFillColor( unpack( rowColor ) ) -- transparent
+        row.bg1 = display.newRect( 0, 0, row.contentWidth, row.contentHeight) -- - M.getScaleVal(lineHeight) )
+        --row.bg1.anchorX = 0
+        --row.bg1.anchorY = 0
+        row.bg1.x = row.contentWidth * 0.5
+        row.bg1.y = row.contentHeight * 0.5
+        row.bg1:setFillColor( unpack( rowColor ) ) -- transparent
+        row:insert( row.bg1 )
+
+        -- line underneath label
+        row.bg2 = display.newRect( 0, 0, row.contentWidth, lineHeight) -- M.getScaleVal(1) )
+        -- row.bg2.anchorX = 0
+        -- row.bg1.anchorY = 0
+        row.bg2.x = row.contentWidth * 0.5
+        row.bg2.y = row.contentHeight - (lineHeight * 0.5)
+        row.bg2:setFillColor( unpack( lineColor ) ) -- transparent
         row:insert( row.bg2 )
+
     else
         row.bg1 = display.newRect( 0, 0, row.contentWidth, row.contentHeight)
         row.bg1.anchorX = 0
@@ -343,7 +349,7 @@ function M.onRowRenderDemo( event )
                     end
                 end
             end
-            local container = display.newContainer( row, colWidth, rowHeight-10 )
+            local container = display.newContainer( row, colWidth, rowHeight )
             local textOptions =
             {
                 parent = container,
@@ -365,6 +371,19 @@ function M.onRowRenderDemo( event )
             if i < 2 then x1 = x1 * 0.5 end
             container.x = x1
             container.y = rowHeight * 0.5
+
+            v.valign = v.valign or "middle"
+
+            -- Pass in Font height too
+            if v.valign ~= nil then
+                M.setRowObjectVerticalAlign({
+                    obj = container,
+                    valign = v.valign,
+                    rowHeight = rowHeight,
+                    lineHeight = row.params.lineHeight,
+                    heightOfFont = rowTitle.contentHeight
+                })
+            end
         end
     else
         local textOptions =
@@ -383,6 +402,37 @@ function M.onRowRenderDemo( event )
 
         -- Align the label left and vertically centered
         rowTitle.anchorX = 0
+
+        row.params.valign = row.params.valign or "middle"
+        M.setRowObjectVerticalAlign({
+            obj = rowTitle,
+            valign = row.params.valign,
+            rowHeight = rowHeight,
+            lineHeight = row.params.lineHeight
+        })
+    end
+end
+
+function M.setRowObjectVerticalAlign(options)
+    objectHeight = options.obj.contentHeight
+    heightOffset = options.heightOfFont or 0
+
+    if heightOffset > 0 and options.valign == "bottom" then
+        heightDiff = mathABS(objectHeight - heightOffset)
+        objectHeight = objectHeight - heightDiff
+    elseif heightOffset > 0 and options.valign == "top" then
+        objectHeight = options.heightOfFont
+    end
+
+    if options.valign == "top" then
+        options.obj.y = objectHeight * 0.5
+    elseif options.valign == "middle" then
+        options.obj.y = (options.rowHeight / 2) - (options.lineHeight / 2 or 0)
+    elseif options.valign == "bottom" then
+        newY = options.rowHeight - (( objectHeight / 2) + (options.lineHeight))
+        options.obj.y = newY
+    else
+        M.debug("M.setRowObjectVerticalAlign : unsupported valign parameter: "..options.valign)
     end
 end
 
@@ -402,7 +452,7 @@ function M.attachBackgroundToRow(row, options)
         y = 0
     })
     if muiData.widgetDict[name]["image_rect"] == nil then
-        print("cannot find image "..options.image)
+        M.debug("M.attachBackgroundToRow : cannot find image "..options.image)
         return
     end
     local backImage = M.getWidgetBaseObject( name )
@@ -433,13 +483,21 @@ function M.attachToRow(row, options )
 
     if isTypeSupported == false then
         if options.widgetType == nil then options.widgetType = "unknown widget" end
-        M.debug("Warning: attachToRow does not support type of "..options.widgetType)
+        M.debug("M.attachToRow : does not support type of "..options.widgetType)
         return
     end
 
     widget = M.getWidgetBaseObject(widgetName)
     newY = (nh - widget.contentHeight) * 0.5
 
+    if options.valign ~= nil then
+        M.setRowObjectVerticalAlign({
+            row = row,
+            obj = widget,
+            valign = options.valign,
+            lineHeight = options.lineHeight or 0
+        })
+    end
 
     -- keep tabs on the toolbar objects
     if muiData.widgetDict[basename]["list"] == nil then muiData.widgetDict[basename]["list"] = {} end
@@ -591,11 +649,11 @@ function M.onRowTouchDemo(event)
     --]]--
 
     if muiTargetValue ~= nil then
-        M.debug("row value: "..muiTargetValue)
+        M.debug("M.onRowTouchDemo : row value: "..muiTargetValue)
     end
     -- access the columns of data
     if muiTargetRowParams ~= nil and muiTargetRowParams.columns ~= nil then
-        M.debug("columns of data are:")
+        M.debug("M.onRowTouchDemo : columns of data are:")
         for i, v in ipairs(muiTargetRowParams.columns) do
             M.debug("\tcolumn "..i.." text "..v.text)
             M.debug("\tcolumn "..i.." value "..v.value)

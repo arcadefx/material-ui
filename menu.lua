@@ -555,7 +555,7 @@ function scene:create( event )
         fontSize = mui.getScaleVal(24),
         textColor = { 0, 0, 0, 1 },
         lineColor = { 1, 1, 1, 1 },
-        lineHeight = mui.getScaleVal(20),
+        lineHeight = mui.getScaleVal(4),
         rowColor = {1, 1, 1, 1}, --{ default={1,1,1}, over={1,0.5,0,0.2} },
         rowHeight = mui.getScaleVal(60),
         -- rowAnimation = false, -- turn on rowAnimation

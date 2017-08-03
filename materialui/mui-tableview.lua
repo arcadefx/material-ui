@@ -171,7 +171,7 @@ function M.newTableView( options )
                 columnOptions = options.columnOptions,
                 padding = options.padding,
                 noLines = options.noLines,
-                lineHeight = options.lineHeight,
+                lineHeight = options.lineHeight or 0,
                 rowColor = v.fillColor,
                 textColor = options.textColor,
                 rowAnimation = options.rowAnimation,
@@ -416,6 +416,7 @@ end
 function M.setRowObjectVerticalAlign(options)
     objectHeight = options.obj.contentHeight
     heightOffset = options.heightOfFont or 0
+    lineHeight = options.lineHeight or 0
 
     if heightOffset > 0 and options.valign == "bottom" then
         heightDiff = mathABS(objectHeight - heightOffset)
@@ -427,9 +428,9 @@ function M.setRowObjectVerticalAlign(options)
     if options.valign == "top" then
         options.obj.y = objectHeight * 0.5
     elseif options.valign == "middle" then
-        options.obj.y = (options.rowHeight / 2) - (options.lineHeight / 2 or 0)
+        options.obj.y = (options.rowHeight / 2) - (lineHeight / 2)
     elseif options.valign == "bottom" then
-        newY = options.rowHeight - (( objectHeight / 2) + (options.lineHeight))
+        newY = options.rowHeight - (( objectHeight / 2) + (lineHeight))
         options.obj.y = newY
     else
         M.debug("M.setRowObjectVerticalAlign : unsupported valign parameter: "..options.valign)
@@ -528,7 +529,6 @@ function M.attachToRow(row, options )
 
     if options.valign ~= nil then
         M.setRowObjectVerticalAlign({
-            row = row,
             rowHeight = row.contentHeight,
             obj = widget,
             valign = options.valign,

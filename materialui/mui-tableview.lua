@@ -490,15 +490,6 @@ function M.attachToRow(row, options )
     widget = M.getWidgetBaseObject(widgetName)
     newY = (nh - widget.contentHeight) * 0.5
 
-    if options.valign ~= nil then
-        M.setRowObjectVerticalAlign({
-            row = row,
-            obj = widget,
-            valign = options.valign,
-            lineHeight = options.lineHeight or 0
-        })
-    end
-
     -- keep tabs on the toolbar objects
     if muiData.widgetDict[basename]["list"] == nil then muiData.widgetDict[basename]["list"] = {} end
     if muiData.widgetDict[basename]["list"][rowName] == nil then
@@ -534,6 +525,17 @@ function M.attachToRow(row, options )
         muiData.widgetDict[basename]["list"][rowName]["lastWidgetRightX"] = padding + muiData.widgetDict[basename]["list"][rowName]["lastWidgetRightX"] + widget.contentWidth * 0.5
     end
     widget.y = widget.contentHeight * 0.5 + newY
+
+    if options.valign ~= nil then
+        M.setRowObjectVerticalAlign({
+            row = row,
+            rowHeight = row.contentHeight,
+            obj = widget,
+            valign = options.valign,
+            lineHeight = options.lineHeight or 0
+        })
+    end
+
     row:insert( widget, false )
     if options.finish == true then
         muiData.widgetDict[basename]["list"][rowName]["lastWidgetLeftX"] = 0

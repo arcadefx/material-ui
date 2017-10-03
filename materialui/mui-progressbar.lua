@@ -78,12 +78,14 @@ function M.newProgressBar(options)
         y = options.y
     end
 
+    x, y = M.getSafeXY(options, x, y)
+
     if options.width == nil then
         options.width = muiData.contentWidth * 0.70
     end
 
     if options.height == nil then
-        options.height = M.getScaleVal(8)
+        options.height = M.getScaleY(8)
     end
 
     if options.foregroundColor == nil then

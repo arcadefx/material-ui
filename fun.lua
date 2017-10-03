@@ -12,6 +12,9 @@ local mui = require( "materialui.mui" )
 
 local scene = composer.newScene()
 
+-- mui
+local muiData = require( "materialui.mui-data" )
+
 --------------------------------------------
 
 -- forward declarations and other locals
@@ -37,23 +40,29 @@ function scene:create( event )
 
 	local sceneGroup = self.view
 
-	-- create a grey rectangle as the backdrop
-	background = display.newRect( 0, 0, screenW, screenH )
-	local colorFill = { 1, 1, 1 }
-	background.anchorX = 0
-	background.anchorY = 0
-	background:setFillColor( unpack(colorFill) )
-    sceneGroup:insert( background )
-
     mui.init()
+
+    -- Gather insets (function returns these in the order of top, left, bottom, right)
+    local topInset, leftInset, bottomInset, rightInset = mui.getSafeAreaInsets()
+
+    -- Create a vector rectangle sized exactly to the "safe area"
+    local background = display.newRect(
+        display.screenOriginX + leftInset, 
+        display.screenOriginY + topInset, 
+        display.contentWidth - ( leftInset + rightInset ), 
+        display.contentHeight - ( topInset + bottomInset )
+    )
+    background:setFillColor( 1 )
+    background:translate( background.width*0.5, background.height*0.5 )
+    sceneGroup:insert( background )
 
     mui.newRoundedRectButton({
         name = "goBack",
         text = "Go Back",
-        width = mui.getScaleVal(200),
-        height = mui.getScaleVal(60),
-        x = mui.getScaleVal(160),
-        y = mui.getScaleVal(120),
+        width = mui.getScaleX(200),
+        height = mui.getScaleY(60),
+        x = mui.getScaleX(160),
+        y = mui.getScaleY(120),
         font = native.systemFont,
         fillColor = { 0.31, 0.65, 0.03, 1 },
         textColor = { 1, 1, 1 },
@@ -76,13 +85,13 @@ function scene:create( event )
             name = "toast_demo",
             text = "New Messages!",
             radius = 20,
-            width = mui.getScaleVal(220),
-            height = mui.getScaleVal(50),
+            width = mui.getScaleX(220),
+            height = mui.getScaleY(50),
             font = native.systemFont,
-            fontSize = mui.getScaleVal(24),
+            fontSize = mui.getScaleY(24),
             fillColor = { 0, 0, 0, 1 },
             textColor = { 1, 1, 1, 1 },
-            top = mui.getScaleVal(80),
+            top = mui.getScaleY(80),
             easingIn = 500,
             easingOut = 500,
             callBack = mui.actionForButton
@@ -92,10 +101,10 @@ function scene:create( event )
     mui.newRoundedRectButton({
         name = "newToast",
         text = "Show Toast",
-        width = mui.getScaleVal(200),
-        height = mui.getScaleVal(60),
-        x = mui.getScaleVal(160),
-        y = mui.getScaleVal(210),
+        width = mui.getScaleX(200),
+        height = mui.getScaleY(60),
+        x = mui.getScaleX(160),
+        y = mui.getScaleY(210),
         font = native.systemFont,
         textColor = { 1, 1, 1, 1 },
         fillColor = { 0.63, 0.81, 0.181 },
@@ -108,10 +117,10 @@ function scene:create( event )
         labelText = "My Topic",
         text = "Hello, World!",
         font = native.systemFont,
-        width = mui.getScaleVal(400),
-        height = mui.getScaleVal(46),
-        x = mui.getScaleVal(240),
-        y = mui.getScaleVal(350),
+        width = mui.getScaleX(400),
+        height = mui.getScaleY(46),
+        x = mui.getScaleX(240),
+        y = mui.getScaleY(350),
         activeColor = { 0.12, 0.67, 0.27, 1 },
         inactiveColor = { 0.4, 0.4, 0.4, 1 },
         callBack = mui.textfieldCallBack
@@ -121,11 +130,11 @@ function scene:create( event )
     ---[[--
     mui.newSlider({
         name = "slider_demo",
-        width = mui.getScaleVal(200),
-        height = mui.getScaleVal(4),
-        x = mui.getScaleVal(160),
-        y = mui.getScaleVal(440),
-        radius = mui.getScaleVal(12),
+        width = mui.getScaleX(200),
+        height = mui.getScaleY(4),
+        x = mui.getScaleX(160),
+        y = mui.getScaleY(440),
+        radius = mui.getScaleX(12),
         colorOff = { 1, 1, 1, 1 },
         color = { 0.63, 0.81, 0.181 },
         startPercent = 30,
@@ -134,11 +143,11 @@ function scene:create( event )
     })
     mui.newSlider({
         name = "slider_demo2",
-        width = mui.getScaleVal(200),
-        height = mui.getScaleVal(4),
-        x = mui.getScaleVal(160),
-        y = mui.getScaleVal(490),
-        radius = mui.getScaleVal(12),
+        width = mui.getScaleX(200),
+        height = mui.getScaleY(4),
+        x = mui.getScaleX(160),
+        y = mui.getScaleY(490),
+        radius = mui.getScaleX(12),
         colorOff = { 1, 1, 1, 1 },
         color = { 0.31, 0.65, 0.03, 1 },
         startPercent = 60,
@@ -149,15 +158,15 @@ function scene:create( event )
 
     -- Create the widget
     ---[[--
-    local scrollWidth = display.contentWidth * 0.5
+    local scrollWidth = muiData.safeAreaWidth * 0.5
     scrollView = widget.newScrollView(
         {
-            top = mui.getScaleVal(30),
-            left = (display.contentWidth - scrollWidth),
+            top = mui.getScaleY(30),
+            left = (muiData.safeAreaWidth - scrollWidth),
             width = scrollWidth,
             height = mui.getScaleVal(450),
             scrollWidth = scrollWidth,
-            scrollHeight = (display.contentHeight * 2),
+            scrollHeight = (muiData.safeAreaHeight * 2),
             listener = scrollAListener
         }
     )
@@ -167,8 +176,8 @@ function scene:create( event )
         labelText = "Subject",
         text = "Hello, world!",
         font = native.systemFont,
-        width = mui.getScaleVal(400),
-        height = mui.getScaleVal(46),
+        width = mui.getScaleX(400),
+        height = mui.getScaleY(46),
         x = mui.getScaleVal(240),
         y = mui.getScaleVal(100),
         activeColor = { 0.12, 0.67, 0.27, 1 },
@@ -182,10 +191,10 @@ function scene:create( event )
         labelText = "Tweet",
         text = "Scroll away",
         font = native.systemFont,
-        width = mui.getScaleVal(400),
-        height = mui.getScaleVal(46),
-        x = mui.getScaleVal(240),
-        y = mui.getScaleVal(230),
+        width = mui.getScaleX(400),
+        height = mui.getScaleY(46),
+        x = mui.getScaleX(240),
+        y = mui.getScaleY(230),
         activeColor = { 0.12, 0.67, 0.27, 1 },
         inactiveColor = { 0.4, 0.4, 0.4, 1 },
         callBack = mui.textfieldCallBack,
@@ -209,11 +218,11 @@ function scene:create( event )
         inactiveColor = { 0.4, 0.4, 0.4, 1 },
         strokeColor = { 0.4, 0.4, 0.4, 1 },
         strokeWidth = 2,
-        width = mui.getScaleVal(400),
-        height = mui.getScaleVal(46),
-        listHeight = mui.getScaleVal(46) * numOfRowsToShow,
-        x = mui.getScaleVal(240),
-        y = mui.getScaleVal(350), -- 350
+        width = mui.getScaleX(400),
+        height = mui.getScaleY(46),
+        listHeight = mui.getScaleY(46) * numOfRowsToShow,
+        x = mui.getScaleX(240),
+        y = mui.getScaleY(350), -- 350
         callBackTouch = mui.onRowTouchSelector,
         scrollListener = nil,
         list = { -- if 'key' use it for 'id' in the table row
@@ -245,31 +254,31 @@ function scene:create( event )
         labelText = "Secret Text Box",
         text = "I am hidden in view\nYes, me too!\nFood\nDrink\nDesert\n1\n2\n3\n4\n5",
         font = native.systemFont,
-        fontSize = mui.getScaleVal(26),
-        textBoxFontSize = mui.getScaleVal(26),
-        width = mui.getScaleVal(400),
-        height = mui.getScaleVal(200),
-        x = mui.getScaleVal(240),
-        y = mui.getScaleVal(550), -- 550
+        fontSize = mui.getScaleY(26),
+        textBoxFontSize = mui.getScaleY(26),
+        width = mui.getScaleX(400),
+        height = mui.getScaleY(200),
+        x = mui.getScaleX(240),
+        y = mui.getScaleY(550), -- 550
         trimFakeTextAt = 80, -- trim at 1..79 characters.
         activeColor = { 0.12, 0.67, 0.27, 1 },
         inactiveColor = { 0.4, 0.4, 0.4, 1 },
         callBack = mui.textfieldCallBack,
         isEditable = true,
         doneButton = {
-            width = mui.getScaleVal(140),
-            height = mui.getScaleVal(60),
+            width = mui.getScaleX(140),
+            height = mui.getScaleY(60),
             fillColor = { 0.25, 0.75, 1, 1 },
             textColor = { 1, 1, 1 },
             text = "done",
             iconText = "done",
             iconFont = mui.materialFont,
             iconFontColor = { 1, 1, 1, 1 },
-            radius = mui.getScaleVal(8), -- set to 0 for newRectButton() instead of rounded
+            radius = mui.getScaleX(8), -- set to 0 for newRectButton() instead of rounded
         },
         overlayBackgroundColor = { 1, 1, 1, 1 },
         overlayTextBoxBackgroundColor = { .9, .9, .9, 1 },
-        overlayTextBoxHeight = mui.getScaleVal(200),
+        overlayTextBoxHeight = mui.getScaleY(200),
         scrollView = scrollView
     })
 
@@ -298,15 +307,15 @@ function scene:create( event )
     {
         --parent = textGroup,
         text = "Scroll the above",
-        x = display.contentWidth * 0.75,
-        y = display.contentHeight * 0.95,
-        width = mui.getScaleVal(400),
+        width = mui.getScaleX(400),
         font = native.systemFont,
-        fontSize = mui.getScaleVal(26),
+        fontSize = mui.getScaleY(18),
         align = "left"  --new alignment parameter
     }
     infoText = display.newText( textOptions )
     infoText:setFillColor( 0.4, 0.4, 0.4 )
+    infoText.x = scrollView.x + (scrollView.contentWidth * .4)
+    infoText.y = muiData.safeAreaHeight - infoText.contentHeight * .5
 
     -- slide panel example
     local hideSlidePanel = function(event)
@@ -323,12 +332,12 @@ function scene:create( event )
             title = "MUI Demo", -- leave blank for no panel title text
             titleAlign = "center",
             font = native.systemFont,
-            width = mui.getScaleVal(400),
-            titleFontSize = mui.getScaleVal(30),
+            width = mui.getScaleX(400),
+            titleFontSize = mui.getScaleY(30),
             titleFontColor = { 1, 1, 1, 1 },
             titleFont = native.systemFont,
             titleBackgroundColor = { 0.63, 0.81, 0.181 },
-            fontSize = mui.getScaleVal(20),
+            fontSize = mui.getScaleY(20),
             fillColor = { 1, 1, 1, 1 }, -- background color
             buttonToAnimate = "menu",
             callBack = nil,
@@ -352,20 +361,20 @@ function scene:create( event )
     mui.newNavbar({
         name = "navbar_demo",
         --width = mui.getScaleVal(500), -- defaults to display.contentWidth
-        height = mui.getScaleVal(70),
+        height = mui.getScaleY(70),
         left = 0,
         top = 0,
         fillColor = { 0.63, 0.81, 0.181 },
         activeTextColor = { 1, 1, 1, 1 },
-        padding = mui.getScaleVal(10),
+        padding = mui.getScaleX(10),
     })
     mui.newIconButton({
         name = "menu",
         text = "menu",
-        width = mui.getScaleVal(50),
-        height = mui.getScaleVal(50),
-        x = mui.getScaleVal(0),
-        y = mui.getScaleVal(0),
+        width = mui.getScaleX(50),
+        height = mui.getScaleY(50),
+        x = mui.getScaleX(0),
+        y = mui.getScaleY(0),
         font = mui.materialFont,
         textColor = { 1, 1, 1 },
         textAlign = "center",
@@ -379,10 +388,10 @@ function scene:create( event )
     mui.newIconButton({
         name = "refresh",
         text = "refresh",
-        width = mui.getScaleVal(50),
-        height = mui.getScaleVal(50),
-        x = mui.getScaleVal(0),
-        y = mui.getScaleVal(0),
+        width = mui.getScaleX(50),
+        height = mui.getScaleY(50),
+        x = mui.getScaleX(0),
+        y = mui.getScaleY(0),
         font = mui.materialFont,
         textColor = { 1, 1, 1 },
         textAlign = "center",
@@ -398,10 +407,10 @@ function scene:create( event )
         text = "",
         placeholder = "Search",
         font = native.systemFont,
-        width = mui.getScaleVal(400),
-        height = mui.getScaleVal(46),
-        x = mui.getScaleVal(0),
-        y = mui.getScaleVal(0),
+        width = mui.getScaleX(400),
+        height = mui.getScaleY(46),
+        x = mui.getScaleX(0),
+        y = mui.getScaleY(0),
         activeColor = { 1, 1, 1, 1 },
         inactiveColor = { 1, 1, 1, 0.8 },
         fillColor = { 0.63, 0.81, 0.181 },
@@ -415,10 +424,10 @@ function scene:create( event )
     mui.newIconButton({
         name = "help",
         text = "help",
-        width = mui.getScaleVal(50),
-        height = mui.getScaleVal(50),
-        x = mui.getScaleVal(0),
-        y = mui.getScaleVal(0),
+        width = mui.getScaleX(50),
+        height = mui.getScaleY(50),
+        x = mui.getScaleX(0),
+        y = mui.getScaleY(0),
         font = mui.materialFont,
         textColor = { 1, 1, 1 },
         textAlign = "center",
@@ -440,7 +449,7 @@ function scene:create( event )
         x = 0,
         y = 0,
         font = native.systemFont,
-        fontSize = mui.getScaleVal(40) * 0.55,
+        fontSize = mui.getScaleX(40) * 0.55,
         align = "left"  --new alignment parameter
     }
     local demoText = display.newText( textOptions )
@@ -450,7 +459,7 @@ function scene:create( event )
         widgetType = "Generic",
         widgetObject = demoText,
         destroyCallBack = destroyDemoText, -- user supplied method, must be defined otherwise it will not free memory
-        padding = mui.getScaleVal(20),
+        padding = mui.getScaleY(24),
         align = "right",  -- left | right supported
     })
 
@@ -542,6 +551,11 @@ function scene:destroy( event )
     if background ~= nil then
         background:removeSelf()
         background = nil
+    end
+
+    if infoText ~= nil then
+        infoText:removeSelf()
+        infoText = nil
     end
 
 	sceneGroup:removeSelf()

@@ -96,6 +96,8 @@ function M.newRoundedRectButton(options)
         y = options.y
     end
 
+    x, y = M.getSafeXY(options, x, y)
+
     local nw = options.width + M.getScaleVal(20) --(options.width * 0.05)
     local nh = options.height + M.getScaleVal(20) -- (options.height * 0.05)
 
@@ -223,13 +225,14 @@ function M.newRoundedRectButton(options)
     textToMeasure = nil
 
     if options.iconText ~= nil and options.iconFont ~= nil and options.iconImage == nil then
+
         if M.isMaterialFont(options.iconFont) == true then
             options.iconText = M.getMaterialFontCodePointByName(options.iconText)
         end
         muiData.widgetDict[options.name]["myIconText"] = display.newText( options.iconText, 0, 0, options.iconFont, fontSize )
         muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myIconText"], false )
     elseif options.iconImage ~= nil then
-        muiData.widgetDict[options.name]["myIconText"] = display.newImageRect( options.iconImage, fontSize, fontSize )
+        muiData.widgetDict[options.name]["myIconText"] = display.newImageRect( options.iconImage, options.width, options.height )
         if muiData.widgetDict[options.name]["myIconText"] ~= nil then
             muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myIconText"], false )
         end
@@ -430,6 +433,8 @@ function M.newRectButton(options)
     if options.y ~= nil then
         y = options.y
     end
+
+    x, y = M.getSafeXY(options, x, y)
 
     local padding = M.getScaleVal(4)
     if options.useShadow == true then padding = M.getScaleVal(50) end
@@ -643,6 +648,8 @@ function M.newIconButton(options)
     if options.y ~= nil then
         y = options.y
     end
+
+    x, y = M.getSafeXY(options, x, y)
 
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "IconButton"
@@ -865,6 +872,8 @@ function M.newCircleButton(options)
     if options.y ~= nil then
         y = options.y
     end
+
+    x, y = M.getSafeXY(options, x, y)
 
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "CircleButton"
@@ -1118,6 +1127,8 @@ function M.newRadioButton(options)
     if options.y ~= nil then
         y = options.y
     end
+
+    x, y = M.getSafeXY(options, x, y)
 
     muiData.widgetDict[options.basename]["radio"][options.name] = {}
     muiData.widgetDict[options.basename]["type"] = "RadioButton"
@@ -1431,6 +1442,8 @@ function M.newRadioGroup(options)
         options.spacing = 10
     end
 
+    x, y = M.getSafeXY(options, x, y)
+
     if options.list ~= nil then
         local count = 0
         muiData.widgetDict[options.name] = {}
@@ -1447,6 +1460,7 @@ function M.newRadioGroup(options)
                 textOn = "radio_button_checked",
                 width = options.width,
                 height = options.height,
+                ignoreInsets = true,
                 x = x,
                 y = y,
                 isChecked = v.isChecked,

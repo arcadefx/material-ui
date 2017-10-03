@@ -56,6 +56,8 @@ function M.newTextField(options)
         y = options.y
     end
 
+    x, y = M.getSafeXY(options, x, y)
+
     if options.text == nil then
         options.text = ""
     end
@@ -374,6 +376,8 @@ function M.newTextBox(options)
     if options.y ~= nil then
         y = options.y
     end
+
+    x, y = M.getSafeXY(options, x, y)
 
     if options.text == nil then
         options.text = ""

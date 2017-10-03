@@ -80,6 +80,8 @@ function M.newProgressCircle(options)
         y = options.y
     end
 
+    x, y = M.getSafeXY(options, x, y)
+
     if options.foregroundColor == nil then
         options.foregroundColor = { 0, 0, 1, 0, 1 }
     end

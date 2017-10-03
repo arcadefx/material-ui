@@ -56,6 +56,8 @@ function M.newSelect(options)
         y = options.y
     end
 
+    x, y = M.getSafeXY(options, x, y)
+
     if options.text == nil then
         options.text = ""
     end
@@ -236,6 +238,9 @@ function M.revealTableViewForSelector(name, options)
 
     local x = options.x
     local y = options.y
+
+    x, y = M.getSafeXY(options, x, y)
+
     if muiData.widgetDict[options.name]["calculated"] ~= nil and muiData.widgetDict[options.name]["calculated"].y ~= nil then
         x = muiData.widgetDict[options.name]["calculated"].x
         y = muiData.widgetDict[options.name]["calculated"].y
@@ -249,8 +254,9 @@ function M.revealTableViewForSelector(name, options)
         width = options.width - M.getScaleVal(5),
         height = options.listHeight,
         font = options.font,
-        top = M.getScaleVal(40),
+        top = M.getScaleY(40),
         left = 0,
+        ignoreInsets = true,
         textColor = options.textColor,
         strokeColor = options.inactiveColor,
         strokeWidth = 1,

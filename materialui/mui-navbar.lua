@@ -60,14 +60,14 @@ function M.newNavBar( options )
     if muiData.widgetDict[options.name] ~= nil then return end
 
     if options.width == nil then
-        options.width = muiData.contentWidth
+        options.width = muiData.contentWidth - (muiData.safeAreaInsets.leftInset + muiData.safeAreaInsets.rightInset)
     end
 
     if options.height == nil then
         options.height = M.getScaleVal(4)
     end
 
-    local left,top = (muiData.contentWidth-options.width) * 0.5, muiData.contentHeight * 0.5
+    local left,top = (muiData.contentWidth-options.width) * 0.5, 0
     if options.left ~= nil then
         left = options.left
     end
@@ -88,6 +88,8 @@ function M.newNavBar( options )
         muiData.navbarHeight = options.height
     end
 
+    left, top = M.getSafeXY(options, left, top)
+
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "NavBar"
     muiData.widgetDict[options.name]["list"] = {}
@@ -97,8 +99,8 @@ function M.newNavBar( options )
 
     muiData.widgetDict[options.name]["container"] = widget.newScrollView(
         {
-            top = options.top,
-            left = 0,
+            top = top,
+            left = left,
             width = options.width,
             height = options.height,
             scrollWidth = options.width,

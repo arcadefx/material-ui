@@ -153,8 +153,13 @@ function M.init_base(options)
   muiData.currentSlide = 0
   muiData.minPixelScaleWidthForPortrait = options.minPixelScaleWidthForPortrait or 640
   muiData.minPixelScaleWidthForLandscape = options.minPixelScaleWidthForLandscape or 960
+  muiData.minPixelScaleHeightForPortrait = options.minPixelScaleHeightForPortrait or 960
+  muiData.minPixelScaleHeightForLandscape = options.minPixelScaleHeightForLandscape or 640
+
   options.useActualDimensions = options.useActualDimensions or true
   M.setDisplayToActualDimensions( {useActualDimensions = options.useActualDimensions} )
+
+  M.setSafeAreaInsets() -- handle overscan areas and areas like the iPhone X notch
 
   muiData.focus = nil
   muiData.focusCallBack = nil
@@ -163,6 +168,27 @@ function M.init_base(options)
   muiData.scene.name = composer.getSceneName("current")
   Runtime:addEventListener( "touch", M.eventSuperListner )
   Runtime:addEventListener( "system", onSystemEvent )
+
+  -- below only in Landscape w/ insets , if portrait hand topInset and bottomInset for slidePanel Menu
+
+  local defaultBackgroundColor = display.getDefault("background")
+  muiPriv = "muiPriv"
+  if muiData.widgetDict[muiPriv] == nil then
+    muiData.widgetDict[muiPriv] = {}
+  end
+  if muiData.safeAreaInsets.leftInset > 0 then
+      muiData.widgetDict[muiPriv]["areaLeftInset"] = display.newRect( muiData.safeAreaInsets.leftInset * .5, display.contentHeight * .5, muiData.safeAreaInsets.leftInset, display.contentHeight )
+      muiData.widgetDict[muiPriv]["areaLeftInset"].strokeWidth = 0
+      muiData.widgetDict[muiPriv]["areaLeftInset"]:setFillColor( defaultBackgroundColor )
+      muiData.widgetDict[muiPriv]["areaLeftInset"]:toFront()
+  end
+  if muiData.safeAreaInsets.rightInset > 0 then
+      muiData.widgetDict[muiPriv]["areaRightInset"] = display.newRect( display.contentWidth - (muiData.safeAreaInsets.leftInset * .5), display.contentHeight * .5, muiData.safeAreaInsets.leftInset, display.contentHeight )
+      muiData.widgetDict[muiPriv]["areaRightInset"].strokeWidth = 0
+      muiData.widgetDict[muiPriv]["areaRightInset"]:setFillColor( defaultBackgroundColor )
+      muiData.widgetDict[muiPriv]["areaRightInset"]:toFront()
+  end
+
 end
 
 function M.init_calls()
@@ -487,6 +513,84 @@ function M.getWidgetValue(widgetName)
     return muiData.widgetDict[widget]["value"]
 end
 
+function M.toFrontSafeArea()
+   muiPriv = "muiPriv"
+   if muiData.widgetDict[muiPriv] ~= nil then
+      if muiData.widgetDict[muiPriv]["areaLeftInset"] ~= nil then
+         muiData.widgetDict[muiPriv]["areaLeftInset"]:toFront()
+      end
+      if muiData.widgetDict[muiPriv]["areaRightInset"] ~= nil then
+         muiData.widgetDict[muiPriv]["areaRightInset"]:toFront()
+      end
+   end
+end
+
+function M.getSafeAreaInsets()
+  -- Gather insets (function returns these in the order of top, left, bottom, right)
+  local topInset, leftInset, bottomInset, rightInset = 0, 0, 0, 0
+  if display.getSafeAreaInsets ~= nil then
+    topInset, leftInset, bottomInset, rightInset = display.getSafeAreaInsets()
+  end
+
+  topInset = topInset * 2.16
+  bottomInset = bottomInset * 2.16
+  leftInset = leftInset * 2.16
+  rightInset = rightInset * 2.16
+
+  return topInset, leftInset, bottomInset, rightInset
+end
+
+function M.setSafeAreaInsets()
+  local topInset, leftInset, bottomInset, rightInset = M.getSafeAreaInsets()
+  muiData.safeAreaInsets = {
+    topInset = topInset,
+    bottomInset = bottomInset,
+    leftInset = leftInset,
+    rightInset = rightInset
+  }
+  muiData.safeAreaWidth = muiData.contentWidth - ( leftInset + rightInset )
+  muiData.safeAreaHeight = muiData.contentHeight - ( topInset + bottomInset )
+  if muiData.safeAreaWidth ~= muiData.contentWidth and true then
+    local divisor = 1
+    if M.getOrientation() == "portrait" then
+      divisor = muiData.minPixelScaleWidthForPortrait
+    else
+      divisor = muiData.minPixelScaleWidthForLandscape
+    end
+    muiData.masterRatio = (muiData.safeAreaWidth / divisor)
+    ratioDiff = mathABS((muiData.contentWidth / divisor) - muiData.masterRatio)
+    muiData.masterRatio = muiData.masterRatio - ratioDiff
+    muiData.masterRemainder = mathMod(muiData.safeAreaWidth, divisor)
+
+    divisor = 1
+    if M.getOrientation() == "portrait" then
+      divisor = muiData.minPixelScaleHeightForPortrait
+    else
+      divisor = muiData.minPixelScaleHeightForLandscape
+    end
+    muiData.masterRatioY = (muiData.safeAreaHeight / divisor)
+    ratioDiff = mathABS((muiData.contentHeight / divisor) - muiData.masterRatioY)
+    muiData.masterRatioY = muiData.masterRatioY - ratioDiff
+  end
+end
+
+
+function M.getSafeXY(options, x, y)
+   if options.ignoreInsets == nil then
+     options.ignoreInsets = false
+   end
+
+   if options.ignoreInsets == true then
+      return x, y
+   end
+
+   if options ~= nil and x ~= nil and y ~= nil then
+        x = x + muiData.safeAreaInsets.leftInset
+        y = y + muiData.safeAreaInsets.topInset
+   end
+   return x, y
+end
+
 function M.getOrientation()
   local orientation
    if display.contentWidth < display.contentHeight then
@@ -496,6 +600,16 @@ function M.getOrientation()
    end
    return orientation
 end
+
+function M.getScaleY(n)
+    if n == nil then n = 1 end
+    return mathFloor(M.getSizeRatioY() * n)
+end
+
+function M.getScaleX(n)
+    return M.getScaleVal(n)
+end
+
 
 function M.getScaleVal(n)
     if n == nil then n = 1 end
@@ -516,6 +630,22 @@ function M.getSizeRatio()
   muiData.masterRatio = muiData.contentWidth / divisor
   muiData.masterRemainder = mathMod(muiData.contentWidth, divisor)
   return muiData.masterRatio
+end
+
+function M.getSizeRatioY()
+  if muiData.masterRatioY ~= nil then
+    return muiData.masterRatioY
+  end
+  local divisor = 1
+  if M.getOrientation() == "portrait" then
+    divisor = muiData.minPixelScaleHeightForPortrait
+  else
+    divisor = muiData.minPixelScaleHeightForLandscape
+  end
+
+  muiData.masterRatioY = muiData.contentHeight / divisor
+  muiData.masterRemainder = mathMod(muiData.contentHeight, divisor)
+  return muiData.masterRatioY
 end
 
 function M.createButtonsFromList(options, rect, container)
@@ -604,6 +734,7 @@ function M.transitionCircleSwitch(params)
   end
 
   Runtime:addEventListener("enterFrame", muiData.sceneData[MySceneName].circleSceneSwitch.runFunc)
+  M.toFrontSafeArea()
 end
 
 function M.transitionColor(displayObj, params)
@@ -1202,6 +1333,20 @@ function M.destroy()
 
   -- avoid transition issues and cancel any transitions in progress
   transition.cancel()
+
+  -- remove the insets
+  muiPriv = "muiPriv"
+  if muiData.widgetDict[muiPriv]["areaLeftInset"] ~= nil then
+      muiData.widgetDict[muiPriv]["areaLeftInset"]:removeSelf()
+      muiData.widgetDict[muiPriv]["areaLeftInset"] = nil
+  end
+  if muiData.widgetDict[muiPriv]["areaRightInset"] ~= nil then
+      muiData.widgetDict[muiPriv]["areaRightInset"]:removeSelf()
+      muiData.widgetDict[muiPriv]["areaRightInset"] = nil
+  end
+  if muiData.widgetDict[muiPriv] ~= nil then
+    muiData.widgetDict[muiPriv] = nil
+  end
 
   for widget in pairs(muiData.widgetDict) do
       local widgetType = muiData.widgetDict[widget]["type"]

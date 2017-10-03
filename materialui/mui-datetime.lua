@@ -480,8 +480,23 @@ function M.newPickerWheel( x, y, options )
     muiData.widgetDict[options.name]["rect"]:setStrokeColor( unpack(options.strokeColor) )
     muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["rect"] )
 
-    muiData.widgetDict[options.name]["mygroup"].x = display.contentCenterX
-    muiData.widgetDict[options.name]["mygroup"].y = display.contentCenterY
+    if options.ignoreInsets == nil then
+        options.ignoreInsets = false
+    end
+
+    local centerX, centerY
+    if options.ignoreInsets == false then
+        local offsetY = muiData.safeAreaInsets.topInset + muiData.safeAreaInsets.bottomInset
+        -- adjust picker
+        centerX = display.contentCenterX
+        centerY = display.contentCenterY - offsetY
+        -- adjust buttons
+        newX = newX - muiData.safeAreaInsets.leftInset
+        newY = newY - offsetY
+    end
+
+    muiData.widgetDict[options.name]["mygroup"].x = centerX
+    muiData.widgetDict[options.name]["mygroup"].y = centerY
 
     -- Insert the row data
     local textToMeasure = display.newText( "XX", 0, 0, options.font, options.fontSize )

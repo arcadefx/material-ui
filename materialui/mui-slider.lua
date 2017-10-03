@@ -54,6 +54,8 @@ function M.newSlider(options)
         y = options.y
     end
 
+    x, y = M.getSafeXY(options, x, y)
+
     if options.width == nil then
         options.width = M.getScaleVal(200)
     end

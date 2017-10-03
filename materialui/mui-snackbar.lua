@@ -148,9 +148,10 @@ function M.newSnackBar( options )
         end
     end
 
+    insetOffset = muiData.contentHeight - muiData.safeAreaHeight
     muiData.widgetDict[options.name]["container"] = widget.newScrollView(
         {
-            top = muiData.contentHeight - yOffset,
+            top = muiData.safeAreaHeight - yOffset,
             left = left,
             width = options.width + (options.width * 0.10),
             height = options.height + (options.height * 0.10),

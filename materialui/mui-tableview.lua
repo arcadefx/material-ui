@@ -87,6 +87,8 @@ function M.newTableView( options )
         options.rowAnimation = true
     end
 
+    options.left, options.top = M.getSafeXY(options, options.left, options.top)
+
     MySceneName = M.getCurrentScene()
     muiData.sceneData[MySceneName].tableCircle = display.newCircle( 0, 0, M.getScaleVal(20 * 2.5) )
     muiData.sceneData[MySceneName].tableCircle:setFillColor( unpack(options.circleColor) )
@@ -333,7 +335,6 @@ function M.onRowRenderDemo( event )
     })
     --]]--
 
-    local row = event.row
     local colWidth = 0
     local x1 = 0
     if row.params.columns ~= nil then
@@ -414,26 +415,29 @@ function M.onRowRenderDemo( event )
 end
 
 function M.setRowObjectVerticalAlign(options)
+    obj = options.obj
     objectHeight = options.obj.contentHeight
     heightOffset = options.heightOfFont or 0
     lineHeight = options.lineHeight or 0
+    valign = options.valign or "middle"
+    rowHeight = options.rowHeight
 
-    if heightOffset > 0 and options.valign == "bottom" then
+    if heightOffset > 0 and valign == "bottom" then
         heightDiff = mathABS(objectHeight - heightOffset)
         objectHeight = objectHeight - heightDiff
-    elseif heightOffset > 0 and options.valign == "top" then
+    elseif heightOffset > 0 and valign == "top" then
         objectHeight = options.heightOfFont
     end
 
-    if options.valign == "top" then
-        options.obj.y = objectHeight * 0.5
-    elseif options.valign == "middle" then
-        options.obj.y = (options.rowHeight / 2) - (lineHeight / 2)
-    elseif options.valign == "bottom" then
-        newY = options.rowHeight - (( objectHeight / 2) + (lineHeight))
-        options.obj.y = newY
+    if valign == "top" then
+        obj.y = objectHeight * 0.5
+    elseif valign == "middle" then
+        obj.y = (rowHeight / 2) - (lineHeight / 2)
+    elseif valign == "bottom" then
+        newY = rowHeight - (( objectHeight / 2) + (lineHeight))
+        obj.y = newY
     else
-        M.debug("M.setRowObjectVerticalAlign : unsupported valign parameter: "..options.valign)
+        M.debug("M.setRowObjectVerticalAlign : unsupported valign parameter: "..valign)
     end
 end
 

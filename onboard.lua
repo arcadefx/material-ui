@@ -15,6 +15,9 @@ local scene = composer.newScene()
 
 --------------------------------------------
 
+-- mui
+local muiData = require( "materialui.mui-data" )
+
 -- forward declarations and other locals
 local screenW, screenH, halfW = display.contentWidth, display.contentHeight, display.contentWidth*0.5
 
@@ -28,6 +31,24 @@ function scene:create( event )
 	local sceneGroup = self.view
 
     mui.init()
+
+    -- Gather insets (function returns these in the order of top, left, bottom, right)
+    local topInset, leftInset, bottomInset, rightInset = mui.getSafeAreaInsets()
+
+    screenW, screenH, halfW = muiData.safeAreaWidth, muiData.safeAreaHeight, muiData.safeAreaWidth*0.5
+
+    --[[--
+    -- Create a vector rectangle sized exactly to the "safe area"
+    local background = display.newRect(
+        display.screenOriginX + leftInset, 
+        display.screenOriginY + topInset, 
+        display.contentWidth - ( leftInset + rightInset ), 
+        display.contentHeight - ( topInset + bottomInset )
+    )
+    background:setFillColor( 1 )
+    background:translate( background.width*0.5, background.height*0.5 )
+    sceneGroup:insert( background )
+    --]]--
 
     --[[--
     Instructions..
@@ -53,7 +74,11 @@ function scene:create( event )
     local background = mui.addChildOnBoard({
         parent = "group1",
         name = "background",
-        object = display.newRect( 0, 0, screenW, screenH )
+        object = display.newRect(
+        display.screenOriginX + leftInset, 
+        display.screenOriginY + topInset, 
+        display.contentWidth - ( leftInset + rightInset ), 
+        display.contentHeight - ( topInset + bottomInset ))
     })
 	local colorFill = { 0.08, 0.9, 0.31 }
     background.anchorX = 0
@@ -61,7 +86,7 @@ function scene:create( event )
     background:setFillColor( unpack( colorFill ) )
     group1:insert( background )
 
-    local textWidth = display.contentWidth
+    local textWidth = muiData.safeAreaWidth
     local options =
     {
         --parent = textGroup,
@@ -96,7 +121,11 @@ function scene:create( event )
     local background2 = mui.addChildOnBoard({
         parent = "group2",
         name = "background2",
-        object = display.newRect( 0, 0, screenW, screenH )
+        object = display.newRect(
+        display.screenOriginX + leftInset, 
+        display.screenOriginY + topInset, 
+        display.contentWidth - ( leftInset + rightInset ), 
+        display.contentHeight - ( topInset + bottomInset ))
     })
     colorFill = { 0, 0.46, 1 }
     background2.anchorX = 0
@@ -159,7 +188,7 @@ function scene:create( event )
     local backgroundBottom = mui.addChildOnBoard({
         parent = "groupBottom",
         name = "backgroundBottom",
-        object = display.newRect( 0, screenH, screenW, screenH * 0.4)
+        object = display.newRect( display.screenOriginX + leftInset, screenH, screenW, screenH * 0.4)
     })
     colorFill = { 1, 1, 1 }
     backgroundBottom.anchorX = 0
@@ -168,6 +197,7 @@ function scene:create( event )
     groupBottom:insert( backgroundBottom )
 
     function forwardHandler( event )
+        mui.toFrontSafeArea()
         if event.phase == "ended" or event.phase == "onTarget" then
             mui.switchSlideForOnBoard( { callBackData = slideConfig } )
         end

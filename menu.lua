@@ -15,6 +15,9 @@ local screenW, screenH, halfW = display.contentWidth, display.contentHeight, dis
 local background = nil
 local widget = require( "widget" )
 
+-- mui
+local muiData = require( "materialui.mui-data" )
+
 -- -----------------------------------------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE unless "composer.removeScene()" is called
 -- -----------------------------------------------------------------------------------------------------------------
@@ -34,17 +37,24 @@ function scene:create( event )
     --Hide status bar from the beginning
     display.setStatusBar( display.HiddenStatusBar )
 
-    display.setDefault("background", 1, 1, 1)
-
-    background = display.newRect( 0, 0, display.contentWidth, display.contentHeight)
-    background.anchorX = 0
-    background.anchorY = 0
-    background.x, background.y = 0, 0
-    background:setFillColor( 1 )
-
-    sceneGroup:insert( background )
+    display.setDefault("background", 0, 0, 0)
+    -- display.setDefault("background", 1, 1, 1)
 
     mui.init(nil, { parent=self.view })
+
+    -- Gather insets (function returns these in the order of top, left, bottom, right)
+    local topInset, leftInset, bottomInset, rightInset = mui.getSafeAreaInsets()
+     
+    -- Create a vector rectangle sized exactly to the "safe area"
+    local background = display.newRect(
+        display.screenOriginX + leftInset, 
+        display.screenOriginY + topInset, 
+        display.contentWidth - ( leftInset + rightInset ), 
+        display.contentHeight - ( topInset + bottomInset )
+    )
+    background:setFillColor( 1 )
+    background:translate( background.width*0.5, background.height*0.5 )
+    sceneGroup:insert( background )
 
     -- dialog box example
     -- use mui.getWidgetBaseObject("dialog_demo") to get surface to add more content
@@ -121,10 +131,10 @@ function scene:create( event )
         parent = mui.getParent(),
         name = "newDialog",
         text = "Open Dialog",
-        width = mui.getScaleVal(300),
-        height = mui.getScaleVal(80),
-        x = mui.getScaleVal(160),
-        y = mui.getScaleVal(220),
+        width = mui.getScaleX(150),
+        height = mui.getScaleY(80),
+        x = mui.getScaleX(160),
+        y = mui.getScaleY(220),
         font = native.systemFont,
         gradientShadowColor1 = { 0.9, 0.9, 0.9, 255 },
         gradientShadowColor2 = { 0.9, 0.9, 0.9, 0 },
@@ -161,11 +171,12 @@ function scene:create( event )
         parent = mui.getParent(),
         name = "switchSceneButton",
         text = "Go Scene",
-        width = mui.getScaleVal(250),
-        height = mui.getScaleVal(60),
-        x = mui.getScaleVal(160),
-        y = mui.getScaleVal(120),
+        width = mui.getScaleX(150),
+        height = mui.getScaleY(60),
+        x = mui.getScaleX(160),
+        y = mui.getScaleY(120),
         font = native.systemFont,
+        fontSize = mui.getScaleX(24),
         fillColor = { 0.25, 0.75, 1, 1 },
         textColor = { 1, 1, 1 },
         iconText = "picture_in_picture",
@@ -192,14 +203,15 @@ function scene:create( event )
         widgetData:setFillColor( 0.25, 0.75, 1, 1 )
     end
 
+
     mui.newIconButton({
         parent = mui.getParent(),
         name = "plus",
         text = "help",
-        width = mui.getScaleVal(50),
-        height = mui.getScaleVal(50),
-        x = mui.getScaleVal(60),
-        y = mui.getScaleVal(40),
+        width = mui.getScaleX(50),
+        height = mui.getScaleY(50),
+        x = mui.getScaleX(60),
+        y = mui.getScaleY(40),
         isFontIcon = true,
         font = mui.materialFont,
         textColor = { 0.25, 0.75, 1, 1 },
@@ -217,10 +229,9 @@ function scene:create( event )
             parent = mui.getParent(),
             name = "datepicker-demo",
             font = native.systemFont,
-            fontSize = mui.getScaleVal(26),
-            width = mui.getScaleVal(500),
-            height = mui.getScaleVal(300),
-            fontSize = mui.getScaleVal(30),
+            fontSize = mui.getScaleX(26),
+            width = mui.getScaleX(500),
+            height = mui.getScaleY(300),
             fontColor = { 0.7, 0.7, 0.7, 1 }, -- non-select items
             fontColorSelected = { 0, 0, 0, 1 }, -- selected items
             columnColor = { 1, 1, 1, 1 }, -- background color for columns
@@ -245,9 +256,9 @@ function scene:create( event )
         parent = mui.getParent(),
         name = "alice-button",
         text = "date_range",
-        radius = mui.getScaleVal(46),
-        x = mui.getScaleVal(500),
-        y = mui.getScaleVal(120),
+        radius = mui.getScaleX(46),
+        x = mui.getScaleX(500),
+        y = mui.getScaleY(120),
         isFontIcon = true,
         font = mui.materialFont,
         textColor = { 1, 1, 1, 1 },
@@ -261,9 +272,9 @@ function scene:create( event )
             parent = mui.getParent(),
             name = "timepicker-demo",
             font = native.systemFont,
-            width = mui.getScaleVal(400),
-            height = mui.getScaleVal(300),
-            fontSize = mui.getScaleVal(30),
+            width = mui.getScaleX(400),
+            height = mui.getScaleY(300),
+            fontSize = mui.getScaleX(30),
             fontColor = { 0.7, 0.7, 0.7, 1 }, -- non-select items
             fontColorSelected = { 0, 0, 0, 1 }, -- selected items
             columnColor = { 1, 1, 1, 1 }, -- background color for columns
@@ -286,9 +297,9 @@ function scene:create( event )
         parent = mui.getParent(),
         name = "bueler-button",
         text = "access_time",
-        radius = mui.getScaleVal(46),
-        x = mui.getScaleVal(500),
-        y = mui.getScaleVal(220),
+        radius = mui.getScaleX(46),
+        x = mui.getScaleX(500),
+        y = mui.getScaleY(220),
         isFontIcon = true,
         font = mui.materialFont,
         textColor = { 1, 1, 1, 1 },
@@ -323,12 +334,12 @@ function scene:create( event )
                 title = "MUI Demo", -- leave blank for no panel title text
                 titleAlign = "center",
                 font = native.systemFont,
-                width = mui.getScaleVal(400),
-                titleFontSize = mui.getScaleVal(30),
+                width = mui.getScaleX(400),
+                titleFontSize = mui.getScaleX(30),
                 titleFontColor = { 1, 1, 1, 1 },
                 titleFont = native.systemFont,
                 titleBackgroundColor = { 0.25, 0.75, 1, 1 },
-                fontSize = mui.getScaleVal(20),
+                fontSize = mui.getScaleX(20),
                 fillColor = { 1, 1, 1, 1 }, -- background color
                 headerImage = "creative-blue-abstract-background-header-4803_0.jpg",
                 buttonToAnimate = "slidepanel-button",
@@ -338,7 +349,7 @@ function scene:create( event )
                 },
                 labelColor = { 0.3, 0.3, 0.3, 1 }, -- active
                 labelColorOff = { 0.5, 0.5, 0.5, 1 }, -- non-active
-                buttonHeight = mui.getScaleVal(60),
+                buttonHeight = mui.getScaleY(60),
                 buttonHighlightColor = { 0.5, 0.5, 0.5 },
                 buttonHighlightColorAlpha = 0.5,
                 lineSeparatorHeight = mui.getScaleVal(1),
@@ -373,9 +384,9 @@ function scene:create( event )
         parent = mui.getParent(),
         name = "slidepanel-button",
         text = "menu",
-        radius = mui.getScaleVal(46),
-        x = mui.getScaleVal(500),
-        y = mui.getScaleVal(320),
+        radius = mui.getScaleX(46),
+        x = mui.getScaleX(500),
+        y = mui.getScaleY(320),
         isFontIcon = true,
         font = mui.materialFont,
         textColor = { 1, 1, 1, 1 },
@@ -399,11 +410,11 @@ function scene:create( event )
             inactiveColor = { 0.8, 0.8, 0.8, 1 },
             strokeColor = { 0.8, 0.8, 0.8, 1 },
             strokeWidth = 0,
-            leftMargin = mui.getScaleVal(20),
-            width = mui.getScaleVal(400),
-            height = mui.getScaleVal(46),
-            listHeight = mui.getScaleVal(46) * 4,
-            x = button.x - ((mui.getScaleVal(400) * 0.55)),
+            leftMargin = mui.getScaleX(20),
+            width = mui.getScaleX(400),
+            height = mui.getScaleY(46),
+            listHeight = mui.getScaleY(46) * 4,
+            x = button.x - ((mui.getScaleX(400) * 0.55)),
             y = button.y - button.contentHeight,
             callBackTouch = mui.onRowTouchPopover,
             list = { -- if 'key' use it for 'id' in the table row
@@ -419,10 +430,10 @@ function scene:create( event )
         parent = mui.getParent(),
         name = "vertical-menu-button",
         text = "more_vert",
-        width = mui.getScaleVal(46),
-        height = mui.getScaleVal(46),
-        x = mui.getScaleVal(570),
-        y = mui.getScaleVal(320),
+        width = mui.getScaleX(46),
+        height = mui.getScaleY(46),
+        x = mui.getScaleX(570),
+        y = mui.getScaleY(320),
         isFontIcon = true,
         font = mui.materialFont,
         textColor = { 0, 0, 0, 1 },
@@ -437,14 +448,14 @@ function scene:create( event )
             parent = mui.getParent(),
             name = "snackbar_demo1",
             text = "Updated Demo",
-            radius = mui.getScaleVal(10),
-            width = mui.getScaleVal(220),
-            height = mui.getScaleVal(50),
+            radius = mui.getScaleX(10),
+            width = mui.getScaleX(220),
+            height = mui.getScaleY(50),
             font = native.systemFont,
-            fontSize = mui.getScaleVal(20),
+            fontSize = mui.getScaleX(20),
             fillColor = { 0, 0, 0, 1 },
             textColor = { 1, 1, 1, 1 },
-            bottom = mui.getScaleVal(80),
+            bottom = mui.getScaleX(80),
             easingIn = 1000,
             easingOut = 1000,
             timeOut = 3000,
@@ -459,10 +470,10 @@ function scene:create( event )
         parent = mui.getParent(),
         name = "snackbar_button",
         text = "local_cafe",
-        width = mui.getScaleVal(46),
-        height = mui.getScaleVal(46),
-        x = mui.getScaleVal(570),
-        y = mui.getScaleVal(420),
+        width = mui.getScaleX(46),
+        height = mui.getScaleY(46),
+        x = mui.getScaleX(570),
+        y = mui.getScaleY(420),
         isFontIcon = true,
         font = mui.materialFont,
         textColor = { 0, 0, 0, 1 },
@@ -476,9 +487,9 @@ function scene:create( event )
         parent = mui.getParent(),
         name = "tile-button",
         text = "view_list",
-        radius = mui.getScaleVal(46),
-        x = mui.getScaleVal(500),
-        y = mui.getScaleVal(420),
+        radius = mui.getScaleX(46),
+        x = mui.getScaleX(500),
+        y = mui.getScaleY(420),
         isFontIcon = true,
         font = mui.materialFont,
         textColor = { 1, 1, 1, 1 },
@@ -495,10 +506,10 @@ function scene:create( event )
         parent = mui.getParent(),
         name = "check",
         text = "check_box_outline_blank",
-        width = mui.getScaleVal(50),
-        height = mui.getScaleVal(50),
-        x = mui.getScaleVal(360),
-        y = mui.getScaleVal(120),
+        width = mui.getScaleX(50),
+        height = mui.getScaleY(50),
+        x = mui.getScaleX(360),
+        y = mui.getScaleY(120),
         isFontIcon = true,
         font = mui.materialFont,
         textColor = { 0.3, 0.3, 0.3 },
@@ -511,9 +522,9 @@ function scene:create( event )
     mui.newToggleSwitch({
         parent = mui.getParent(),
         name = "switch_demo",
-        size = mui.getScaleVal(55),
-        x = mui.getScaleVal(360),
-        y = mui.getScaleVal(220),
+        size = mui.getScaleX(55),
+        x = mui.getScaleX(360),
+        y = mui.getScaleY(220),
         textColorOff = { 0.57, 0.85, 1, 1 },
         textColor = { 0.25, 0.75, 1, 1 },
         backgroundColor = { 0.74, 0.88, 0.99, 1 },
@@ -527,10 +538,10 @@ function scene:create( event )
     mui.newRadioGroup({
         parent = mui.getParent(),
         name = "radio_demo",
-        width = mui.getScaleVal(30),
-        height = mui.getScaleVal(30),
-        x = mui.getScaleVal(120),
-        y = mui.getScaleVal(40),
+        width = mui.getScaleX(30),
+        height = mui.getScaleY(30),
+        x = mui.getScaleX(120),
+        y = mui.getScaleY(40),
         layout = "horizontal",
         labelFont = native.systemFont,
         textColor = { 0, 0, 0 },
@@ -547,17 +558,17 @@ function scene:create( event )
     mui.newTableView({
         parent = mui.getParent(),
         name = "tableview_demo",
-        width = mui.getScaleVal(300),
-        height = mui.getScaleVal(300),
-        top = mui.getScaleVal(40),
-        left = display.contentWidth - mui.getScaleVal(315),
+        width = mui.getScaleX(300),
+        height = mui.getScaleY(300),
+        top = mui.getScaleY(40),
+        left = muiData.safeAreaWidth - mui.getScaleX(315),
         font = native.systemFont,
-        fontSize = mui.getScaleVal(24),
+        fontSize = mui.getScaleX(24),
         textColor = { 0, 0, 0, 1 },
         lineColor = { 1, 1, 1, 1 },
-        lineHeight = mui.getScaleVal(4),
+        lineHeight = mui.getScaleY(4),
         rowColor = {1, 1, 1, 1}, --{ default={1,1,1}, over={1,0.5,0,0.2} },
-        rowHeight = mui.getScaleVal(60),
+        rowHeight = mui.getScaleY(60),
         -- rowAnimation = false, -- turn on rowAnimation
         noLines = false,
         callBackTouch = mui.onRowTouchDemo,
@@ -607,10 +618,10 @@ function scene:create( event )
         labelText = "Subject",
         text = "Hello, world!",
         font = native.systemFont,
-        width = mui.getScaleVal(400),
-        height = mui.getScaleVal(46),
-        x = mui.getScaleVal(240),
-        y = mui.getScaleVal(330),
+        width = mui.getScaleX(400),
+        height = mui.getScaleY(46),
+        x = mui.getScaleX(240),
+        y = mui.getScaleY(330),
         trimAtLength = 30,
         activeColor = { 0, 0, 0, 1 },
         inactiveColor = { 0.5, 0.5, 0.5, 1 },
@@ -624,10 +635,10 @@ function scene:create( event )
         placeholder = "You see me when text is empty",
         text = "",
         font = native.systemFont,
-        width = mui.getScaleVal(400),
-        height = mui.getScaleVal(46),
-        x = mui.getScaleVal(240),
-        y = mui.getScaleVal(420),
+        width = mui.getScaleX(400),
+        height = mui.getScaleY(46),
+        x = mui.getScaleX(240),
+        y = mui.getScaleY(420),
         activeColor = { 0, 0, 0, 1 },
         inactiveColor = { 0.5, 0.5, 0.5, 1 },
         callBack = mui.textfieldCallBack
@@ -637,10 +648,10 @@ function scene:create( event )
     mui.newProgressBar({
         parent = mui.getParent(),
         name = "progressbar_demo",
-        width = mui.getScaleVal(290),
-        height = mui.getScaleVal(8),
-        x = mui.getScaleVal(650),
-        y = mui.getScaleVal(400),
+        width = mui.getScaleX(290),
+        height = mui.getScaleY(8),
+        x = muiData.safeAreaWidth - mui.getScaleX(315),
+        y = mui.getScaleY(400),
         foregroundColor = { 0, 0.78, 1, 1 },
         backgroundColor = { 0.82, 0.95, 0.98, 0.8 },
         startPercent = 20,
@@ -648,7 +659,7 @@ function scene:create( event )
         iterations = 1,
         labelText = "Determinate progress",
         labelFont = native.systemFont,
-        labelFontSize = mui.getScaleVal(24),
+        labelFontSize = mui.getScaleX(24),
         labelColor = {  0.4, 0.4, 0.4, 1 },
         labelAlign = "left",
         callBack = mui.postProgressCallBack,
@@ -665,15 +676,16 @@ function scene:create( event )
     -- increaseMyProgressBar() -- will be queued if already processing an increase
 
     -- on bottom and stay on top of other widgets.
-    local buttonHeight = mui.getScaleVal(70)
+    ---[[--
+    local buttonHeight = mui.getScaleY(70)
     mui.newToolbar({
         parent = mui.getParent(),
         name = "toolbar_demo",
         --width = mui.getScaleVal(500), -- defaults to display.contentWidth
-        height = mui.getScaleVal(70),
+        height = mui.getScaleY(70),
         buttonHeight = buttonHeight,
         x = 0,
-        y = (display.contentHeight - (buttonHeight * 0.5)),
+        y = (muiData.safeAreaHeight - (buttonHeight * 0.5)),
         layout = "horizontal",
         labelFont = native.systemFont,
         color = { 0, 0.46, 1 },
@@ -691,6 +703,7 @@ function scene:create( event )
             -- { key = "Viewer", value = "4", labelText="View", isActive = false } -- uncomment to see View as text
         }
     })
+    --]]--
 
     showSlidePanel() -- create but do not show panel demo
 

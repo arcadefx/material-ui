@@ -55,6 +55,8 @@ function M.newCard(options)
     x = options.x or centerX
     y = options.y or centerY
 
+    x, y = M.getSafeXY(options, x, y)
+
     options.width = options.width or muiData.contentWidth
     options.height = options.height or muiData.contentHeight
     options.strokeWidth = options.strokeWidth or 0

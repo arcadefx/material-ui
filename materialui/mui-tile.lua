@@ -58,10 +58,13 @@ function M.newTileGrid(options)
         y = options.y
     end
 
-    options.width = options.width or muiData.contentWidth
-    options.height = options.height or muiData.contentHeight
-    options.tileWidth = options.tileWidth or options.width * 0.5
-    options.tileHeight = options.tileHeight or options.width * 0.5
+    x, y = M.getSafeXY(options, x, y)
+    x = options.x
+
+    options.width = options.width or muiData.safeAreaWidth
+    options.height = options.height or muiData.safeAreaHeight
+    options.tileWidth = options.tileWidth or muiData.safeAreaWidth * 0.5
+    options.tileHeight = options.tileHeight or muiData.safeAreaHeight * 0.5
     options.textColor = options.textColor or {1, 1, 1, 1}
     options.fillColor = options.fillColor or {1, 1, 1, 1}
 
@@ -84,14 +87,15 @@ function M.newTileGrid(options)
     local scrollWidth = muiData.contentWidth * 0.5
     scrollView = widget.newScrollView(
         {
-            top = 0,
-            left = 0,
+            top = muiData.safeAreaInsets.topInset,
+            left = muiData.safeAreaInsets.leftInset,
             width = options.width,
-            height = muiData.contentHeight,
+            height = options.height,
             scrollWidth = scrollWidth,
-            scrollHeight = muiData.contentHeight,
+            scrollHeight = options.height,
             hideBackground = false,
             isBounceEnabled = false,
+            verticalScrollDisabled = false,
             backgroundColor = options.fillColor,
             listener = M.tileScrollListener
         }

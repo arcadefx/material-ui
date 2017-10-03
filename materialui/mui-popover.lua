@@ -68,6 +68,8 @@ function M.newPopover(options)
         options.fieldBackgroundColor = { 1, 1, 1, 1 }
     end
 
+    x, y = M.getSafeXY(options, x, y)
+
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name].name = options.name
     muiData.widgetDict[options.name]["type"] = "Popover"
@@ -139,6 +141,8 @@ function M.revealTableViewForPopover(name, options)
         y = muiData.widgetDict[options.name]["calculated"].y
     end
 
+    x, y = M.getSafeXY(options, x, y)
+
     options.leftMargin = options.leftMargin or M.getScaleVal(20)
 
     muiData.widgetDict[options.name]["mygroup"].x = x
@@ -150,7 +154,7 @@ function M.revealTableViewForPopover(name, options)
         height = options.listHeight,
         font = options.font,
         top = M.getScaleVal(30),
-        left = options.leftMargin,
+        left = -(options.leftMargin),
         textColor = options.textColor,
         strokeColor = options.inactiveColor,
         strokeWidth = 1,
@@ -168,7 +172,7 @@ function M.revealTableViewForPopover(name, options)
         list = options.list
     })
 
-    muiData.widgetDict[options.name]["rect2"] = display.newRect( options.width * 0.5, (options.listHeight * 0.45) + options.height, options.width, options.listHeight + (options.height * 0.5))
+    muiData.widgetDict[options.name]["rect2"] = display.newRect( muiData.widgetDict[options.name.."-List"]["tableview"].x, muiData.widgetDict[options.name.."-List"]["tableview"].y, options.width - (options.leftMargin), options.listHeight + (options.height * 0.5))
     muiData.widgetDict[options.name]["rect2"].strokeWidth = options.strokeWidth
     muiData.widgetDict[options.name]["rect2"]:setStrokeColor( unpack( options.strokeColor ) )
     muiData.widgetDict[options.name]["rect2"]:setFillColor( unpack( options.backgroundColor ) )

@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2017-10-03
+### Changes
+- Requires Corona SDK build 2017.3135 and breaks some things for the better.
+- Supports safe zone insets and iPhone X displays.
+- Safe area/zone implemented.
+- mui-data must be included at the top of your scene file as it needs it for safeArea values.
+
+	-- mui, place below mui require
+	local muiData = require( "materialui.mui-data" )
+
+- getScaleVal() has been replaced with getScaleX() and getScaleY() and this addresses scaling issues.  getScaleVal() will be removed in an upcoming release.
+- To place a background in the safe zone be sure to look at the top of the menu.lua file.
+- See menu.lua and fun.lua for examples using the new methods.
+- Fixed newSelect() to render correctly.
+- Fixed some demo code.
+
 ## [0.1.99] - 2017-08-02
 ### Changes
 - newTableView() - Added parameter "valign" to attachToRow(). Allows you to vertically align the object.

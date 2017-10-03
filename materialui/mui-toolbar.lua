@@ -52,15 +52,15 @@ function M.newToolbarButton( options )
         y = options.y
     end
 
-    local barWidth = muiData.contentWidth
+    local barWidth = muiData.safeAreaWidth
     if options.width ~= nil then
-        barWidth = options.width
+        barWidth = options.width -- - (muiData.safeAreaInsets.leftInset + muiData.safeAreaInsets.rightInset)
     end
 
     if options.index ~= nil and options.index == 1 then
         local rectBak = display.newRect( 0, 0, barWidth, options.buttonHeight )
         rectBak:setFillColor( unpack( options.backgroundColor ) )
-        rectBak.x = options.x + barWidth * 0.5
+        rectBak.x = x + barWidth * 0.5
         rectBak.y = y
         muiData.widgetDict[options.basename]["toolbar"]["rectBak"] = rectBak
         --button["mygroup"]:insert( rectBak, true ) -- insert and center bkgd
@@ -170,7 +170,7 @@ function M.newToolbarButton( options )
     end
 
     local buttonWidth = barWidth / numberOfButtons
-    local rectangle = display.newRect( buttonWidth / 2, 0, buttonWidth, options.buttonHeight )
+    local rectangle = display.newRect( (buttonWidth / 2), 0, buttonWidth, options.buttonHeight )
     rectangle:setFillColor( unpack(options.backgroundColor) )
     button["rectangle"] = rectangle
     button["rectangle"].value = options.value
@@ -180,7 +180,7 @@ function M.newToolbarButton( options )
     button["mygroup"]:insert( rectangle, true ) -- insert and center bkgd
 
     if options.index ~= nil and options.index == 1 and x < button["buttonWidth"] then
-        button["mygroup"].x = rectangle.contentWidth / 2
+        button["mygroup"].x = (rectangle.contentWidth / 2) + muiData.safeAreaInsets.leftInset
     elseif options.index ~= nil and options.index > 1 then
         button["buttonOffset"] = 0
     end
@@ -399,6 +399,8 @@ function M.newToolbar( options )
         options.sliderColor = { 1, 1, 1 }
     end
 
+    x, y = M.getSafeXY(options, x, y)
+
     if options.list ~= nil then
         local count = #options.list
         muiData.widgetDict[options.name] = {}
@@ -457,7 +459,7 @@ function M.newToolbar( options )
 
         -- slider highlight
         local sliderHeight = options.buttonHeight * 0.05
-        muiData.widgetDict[options.name]["toolbar"]["slider"] = display.newRect( buttonOffset, muiData.contentHeight - (sliderHeight * 0.5), buttonWidth, sliderHeight )
+        muiData.widgetDict[options.name]["toolbar"]["slider"] = display.newRect( buttonOffset, muiData.safeAreaHeight - (sliderHeight * 0.5), buttonWidth, sliderHeight )
         muiData.widgetDict[options.name]["toolbar"]["slider"]:setFillColor( unpack( options.sliderColor ) )
         transition.to(muiData.widgetDict[options.name]["toolbar"]["slider"],{time=0, x=activeX, transition=easing.inOutCubic})
     end

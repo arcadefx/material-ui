@@ -45,7 +45,7 @@ local M = muiData.M -- {} -- for module array/table
 --[[
   params:
     name = <name of widget>
-    radius = mui.getScaleVal(200),
+    radius = <val>,
     x = display.contentCenterX,
     y = display.contentCenterY,
     foregroundColor = { 0, 0.78, 1, 1 },
@@ -55,7 +55,7 @@ local M = muiData.M -- {} -- for module array/table
     iterations = 1,
     labelText = "20%",
     labelFont = native.systemFont,
-    labelFontSize = mui.getScaleVal(24),
+    labelFontSize = 18,
     labelColor = {  0.4, 0.4, 0.4, 1 },
     labelAlign = "center",
     labelStyle = "basic", -- "basic" or "embossed"

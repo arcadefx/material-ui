@@ -97,7 +97,7 @@ function M.newSelect(options)
     end
 
     if options.strokeWidth == nil then
-        options.strokeWidth = M.getScaleVal(1)
+        options.strokeWidth = 1
     end
 
     if options.strokeColor == nil then
@@ -115,7 +115,7 @@ function M.newSelect(options)
 
     local rect = muiData.widgetDict[options.name]["rect"]
     muiData.widgetDict[options.name]["line"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
-    muiData.widgetDict[options.name]["line"].strokeWidth = M.getScaleVal(4)
+    muiData.widgetDict[options.name]["line"].strokeWidth = 2
     muiData.widgetDict[options.name]["line"]:setStrokeColor( unpack(options.inactiveColor) )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["line"] )
 
@@ -251,11 +251,11 @@ function M.revealTableViewForSelector(name, options)
 
     M.newTableView({
         name = options.name.."-List",
-        width = options.width - M.getScaleVal(5),
+        width = options.width * .9,
         height = options.listHeight,
         font = options.font,
-        top = M.getScaleY(40),
-        left = 0,
+        top = 25,
+        left = 10,
         ignoreInsets = true,
         textColor = options.textColor,
         strokeColor = options.inactiveColor,
@@ -355,7 +355,7 @@ function M.onRowRenderSelect( event )
     local rowHeight = row.contentHeight
     local rowWidth = row.contentWidth
 
-    local rowTitle = display.newText( row, row.params.text, 0, 0, font, M.getScaleVal(30) )
+    local rowTitle = display.newText( row, row.params.text, 0, 0, font, 18 )
     rowTitle:setFillColor( unpack( textColor ) )
 
     -- Align the label left and vertically centered

@@ -51,13 +51,13 @@ function scene:create( event )
         name = "grid_demo",
         width = muiData.safeAreaWidth,
         height = muiData.safeAreaHeight,
-        tileHeight = mui.getScaleY(200),
+        tileHeight = 100,
         tilesPerRow = 4,
         x = 0,
         y = 0,
         fontIsScaled = false, -- default is true for scaling font to fit tile size width or false to not scale.
         iconFont = mui.materialFont, -- use pre-defined font
-        fontSize = mui.getScaleY(100),
+        fontSize = 40,
         labelFont = native.systemFont,
         textColor = { 1, 1, 1 },
         labelColor = { 1, 1, 1 },

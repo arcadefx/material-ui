@@ -2,21 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.2.0] - 2017-10-03
+## [0.3.0] - 2017-10-05
 ### Changes
-- Requires Corona SDK build 2017.3135 and breaks some things for the better.
-- Supports safe zone insets and iPhone X displays.
+- WARNING: getScaleVal() has been depreciated. Scaling is now fixed and works with config.lua.  See config.lua for more information in demo.  Any existing code based on it needs updated to adjust sizes and placement (x, y). Sorry, it was for the better.
+- With scaling fixed, the material design font letters show up and such on various devices now. There was an issue where these did not show correctly.
+- Requires Corona SDK build 2017.3135.
+- Supports safe zone insets and iPhone X display area.
 - Safe area/zone implemented.
-- mui-data must be included at the top of your scene file as it needs it for safeArea values.
+- mui-data must be included at the top of your scene file as it needs it for safeArea values. See menu.lua for example.
 
 	-- mui, place below mui require
 	local muiData = require( "materialui.mui-data" )
-
-- getScaleVal() has been replaced with getScaleX() and getScaleY() and this addresses scaling issues.  getScaleVal() will be removed in an upcoming release.
+- For iOS devices, please add to you "plist": UILaunchStoryboardName = "LaunchScreen",
+- For iOS devices, copy the folder "LaunchScreen.storyboardc" to your project ONLY if it doesn't already exist. If it exist skip this step!
 - To place a background in the safe zone be sure to look at the top of the menu.lua file.
 - See menu.lua and fun.lua for examples using the new methods.
 - Fixed newSelect() to render correctly.
 - Fixed some demo code.
+- All instances of getScaleVal() have been removed.
 
 ## [0.1.99] - 2017-08-02
 ### Changes

@@ -96,7 +96,7 @@ function scene:create( event )
         y = (background.contentHeight - (screenH * 0.4))  * 0.5,
         width = textWidth,     --required for multi-line and alignment
         font = native.systemFont,
-        fontSize = mui.getScaleVal(55) * 0.55,
+        fontSize = 18,
         fillColor = { 1, 1, 1, 1 },
         align = "left"  --new alignment parameter
     }
@@ -143,7 +143,7 @@ function scene:create( event )
         y = (background2.contentHeight - (screenH * 0.4))  * 0.5,
         width = textWidth,     --required for multi-line and alignment
         font = native.systemFont,
-        fontSize = mui.getScaleVal(55) * 0.55,
+        fontSize = 18,
         fillColor = { 1, 1, 1, 1 },
         align = "left"  --new alignment parameter
     }
@@ -205,10 +205,10 @@ function scene:create( event )
     mui.newIconButton({
         name = "continue-button",
         text = "arrow_forward",
-        width = mui.getScaleVal(50),
-        height = mui.getScaleVal(50),
+        width = 25,
+        height = 25,
         x = backgroundBottom.contentWidth * 0.5,
-        y = screenH + mui.getScaleVal(150),
+        y = screenH + 100,
         isFontIcon = true,
         font = mui.materialFont,
         textColor = { 0, 0, 0 },
@@ -230,9 +230,9 @@ function scene:create( event )
         group = groupBottom,
         slides = 2, -- number of slides
         shape = "circle", -- rect or circle
-        size = mui.getScaleVal(25),
+        size = 18,
         fillColor = { 0, 0, 0 },
-        y = screenH + mui.getScaleVal(60)
+        y = screenH + 30
     })
 
     transition.to( groupBottom, { time=800, y=-(screenH * 0.4), transition=easing.outExpo } )

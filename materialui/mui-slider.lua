@@ -57,11 +57,11 @@ function M.newSlider(options)
     x, y = M.getSafeXY(options, x, y)
 
     if options.width == nil then
-        options.width = M.getScaleVal(200)
+        options.width = 100
     end
 
     if options.height == nil then
-        options.height = M.getScaleVal(4)
+        options.height = 2
     end
 
     if options.position == nil then
@@ -69,7 +69,7 @@ function M.newSlider(options)
     end
 
     if options.radius == nil then
-        options.radius = M.getScaleVal(15)
+        options.radius = 8
     end
 
     if options.color == nil then

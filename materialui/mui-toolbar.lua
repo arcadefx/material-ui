@@ -270,7 +270,7 @@ function M.newToolbarButton( options )
         circleColor = options.circleColor
     end
 
-    button["myCircle"] = display.newCircle( options.height, options.height, maxWidth + M.getScaleVal(5) )
+    button["myCircle"] = display.newCircle( options.height, options.height, maxWidth + 5 )
     button["myCircle"]:setFillColor( unpack(circleColor) )
     button["myCircle"].isVisible = false
     button["myCircle"].x = 0

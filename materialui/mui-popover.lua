@@ -97,7 +97,7 @@ function M.newPopover(options)
     end
 
     if options.strokeWidth == nil then
-        options.strokeWidth = M.getScaleVal(1)
+        options.strokeWidth = 1
     end
 
     if options.strokeColor == nil then
@@ -143,7 +143,7 @@ function M.revealTableViewForPopover(name, options)
 
     x, y = M.getSafeXY(options, x, y)
 
-    options.leftMargin = options.leftMargin or M.getScaleVal(20)
+    options.leftMargin = options.leftMargin or 10
 
     muiData.widgetDict[options.name]["mygroup"].x = x
     muiData.widgetDict[options.name]["mygroup"].y = y
@@ -153,7 +153,7 @@ function M.revealTableViewForPopover(name, options)
         width = options.width - (options.leftMargin * 2),
         height = options.listHeight,
         font = options.font,
-        top = M.getScaleVal(30),
+        top = 30,
         left = -(options.leftMargin),
         textColor = options.textColor,
         strokeColor = options.inactiveColor,
@@ -222,8 +222,9 @@ function M.onRowRenderPopover( event )
 
     local rowHeight = row.contentHeight
     local rowWidth = row.contentWidth
+    local fontSize = row.contentHeight
 
-    local rowTitle = display.newText( row, row.params.text, 0, 0, font, M.getScaleVal(30) )
+    local rowTitle = display.newText( row, row.params.text, 0, 0, font, fontSize )
     rowTitle:setFillColor( unpack( textColor ) )
 
     -- Align the label left and vertically centered

@@ -64,7 +64,7 @@ function M.newNavBar( options )
     end
 
     if options.height == nil then
-        options.height = M.getScaleVal(4)
+        options.height = 4
     end
 
     local left,top = (muiData.contentWidth-options.width) * 0.5, 0
@@ -77,11 +77,11 @@ function M.newNavBar( options )
     end
 
     if options.top == nil then
-        options.top = M.getScaleVal(80)
+        options.top = 80
     end
 
     if options.padding == nil then
-        options.padding = M.getScaleVal(10)
+        options.padding = 10
     end
 
     if options.top > muiData.contentHeight * 0.5 then

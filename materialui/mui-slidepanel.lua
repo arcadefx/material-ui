@@ -76,10 +76,19 @@ function M.newSlidePanel(options)
     end
 
     -- place on main display
-    muiData.widgetDict[options.name]["rectbackdrop"] = display.newRect( muiData.contentWidth * 0.5, muiData.contentHeight * 0.5, muiData.contentWidth, muiData.contentHeight)
+    muiData.widgetDict[options.name]["rectbackdrop"] = display.newRect(
+        display.screenOriginX + muiData.safeAreaInsets.leftInset, 
+        display.screenOriginY + muiData.safeAreaInsets.topInset, 
+        display.viewableContentWidth - ( muiData.safeAreaInsets.leftInset + muiData.safeAreaInsets.rightInset ), 
+        display.viewableContentHeight - ( muiData.safeAreaInsets.topInset + muiData.safeAreaInsets.bottomInset )
+    )
     muiData.widgetDict[options.name]["rectbackdrop"].strokeWidth = 0
     muiData.widgetDict[options.name]["rectbackdrop"]:setFillColor( unpack( {0.4, 0.4, 0.4, 0.3} ) )
     muiData.widgetDict[options.name]["rectbackdrop"].isVisible = true
+    muiData.widgetDict[options.name]["rectbackdrop"]:translate( 
+            muiData.widgetDict[options.name]["rectbackdrop"].contentWidth * .5,
+            muiData.widgetDict[options.name]["rectbackdrop"].contentHeight * .5
+    )
 
     muiData.widgetDict[options.name]["mygroup"] = display.newGroup()
     muiData.widgetDict[options.name]["mygroup"].x = 0
@@ -122,14 +131,22 @@ function M.newSlidePanel(options)
     muiData.widgetDict[options.name]["scrollview"] = scrollView
 
     local rectclickWidth = muiData.contentWidth - options.width
-    muiData.widgetDict[options.name]["rectclick"] = display.newRect( 0, 0, rectclickWidth, muiData.contentHeight)
+    muiData.widgetDict[options.name]["rectclick"] = display.newRect(
+        display.screenOriginX + muiData.safeAreaInsets.leftInset, 
+        display.screenOriginY + muiData.safeAreaInsets.topInset, 
+        display.viewableContentWidth, 
+        display.viewableContentHeight - ( muiData.safeAreaInsets.topInset + muiData.safeAreaInsets.bottomInset )
+    )
+
+    -- display.newRect( display.cen, 0, rectclickWidth, muiData.contentHeight)
+    
     muiData.widgetDict[options.name]["rectclick"].strokeWidth = 0
     muiData.widgetDict[options.name]["rectclick"]:setFillColor( unpack( { 1, 1, 1, 0.01 } ) )
     muiData.widgetDict[options.name]["rectclick"].isVisible = true
     muiData.widgetDict[options.name]["rectclick"]:addEventListener( "touch", M.touchSlidePanelBarrier )
     muiData.widgetDict[options.name]["rectclick"].muiOptions = options
-    muiData.widgetDict[options.name]["rectclick"].x = options.width + (rectclickWidth * 0.5)
-    muiData.widgetDict[options.name]["rectclick"].y = muiData.contentHeight * 0.5
+    muiData.widgetDict[options.name]["rectclick"].x = (scrollView.x + scrollView.contentWidth) + (muiData.contentWidth - scrollView.contentWidth)
+    muiData.widgetDict[options.name]["rectclick"].y = (muiData.contentHeight * 0.5) - (muiData.safeAreaInsets.bottomInset * .5)
 
 
     -- put in title text and background if specified
@@ -163,7 +180,7 @@ function M.newSlidePanel(options)
         align = (options.titleAlign or "center"),
         width = options.width,
         font = (options.titleFont or native.systemFontBold),
-        fontSize = (options.titleFontSize or M.getScaleVal(30)),
+        fontSize = (options.titleFontSize or 15),
         fillColor = (options.titleFontColor or { 1, 1, 1, 1 }),
     }
     M.newText(textOptions)
@@ -293,7 +310,7 @@ function M.newSlidePanelLineSeparator( options )
     end
     barWidth = muiData.widgetDict[options.basename]["scrollview"].contentWidth
 
-    local lineSeparatorHeight = options.lineSeparatorHeight or M.getScaleVal(1)
+    local lineSeparatorHeight = options.lineSeparatorHeight or 1
 
     muiData.widgetDict[options.basename]["slidebar"][options.name] = {}
     muiData.widgetDict[options.basename]["slidebar"]["type"] = "slidebarLineSeparator"
@@ -307,7 +324,7 @@ function M.newSlidePanelLineSeparator( options )
         options.labelColorOff = { 0, 0, 0 }
     end
 
-    local lineSeparator = display.newRect( 0, 0, barWidth * 2, M.getScaleVal(lineSeparatorHeight) )
+    local lineSeparator = display.newRect( 0, 0, barWidth * 2, lineSeparatorHeight )
     lineSeparator:setFillColor( unpack(options.labelColorOff) )
     button["lineSeparator"] = lineSeparator
     button["buttonWidth"] = lineSeparator.contentWidth
@@ -427,7 +444,7 @@ function M.newSlidePanelButton( options )
     button["buttonOffset"] = rectangle.contentHeight * 0.5
     button["mygroup"]:insert( rectangle, true ) -- insert and center bkgd
 
-    button["buttonOffset"] = options.buttonSpacing or M.getScaleVal(10)
+    button["buttonOffset"] = options.buttonSpacing or 5
 
     local textY = 0
     local textSize = fontSize
@@ -452,9 +469,9 @@ function M.newSlidePanelButton( options )
         x = muiData.safeAreaOffsetMenu,
         y = textY,
         font = font,
-        width = textSize,
+        width = textSize * 1.5,
         fontSize = textSize,
-        align = "left"
+        align = "center"
     }
 
     button["myButton"] = display.newRect( ((options.width * 0.5) - textHeight * 0.5) + muiData.safeAreaOffsetMenu, textY, options.width, textHeight )

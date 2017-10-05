@@ -80,15 +80,15 @@ function M.newToast( options )
     if muiData.widgetDict[options.name] ~= nil then return end
 
     if options.width == nil then
-        options.width = M.getScaleVal(200)
+        options.width = 200
     end
 
     if options.height == nil then
-        options.height = M.getScaleVal(4)
+        options.height = 4
     end
 
     if options.radius == nil then
-        options.radius = M.getScaleVal(15)
+        options.radius = 15
     end
 
     local left,top = (muiData.contentWidth-options.width) * 0.5, muiData.contentHeight * 0.5
@@ -109,7 +109,7 @@ function M.newToast( options )
     end
 
     if options.top == nil then
-        options.top = M.getScaleVal(80)
+        options.top = 80
     end
 
     if options.useTimeOut == nil then

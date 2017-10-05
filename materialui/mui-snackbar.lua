@@ -80,15 +80,15 @@ function M.newSnackBar( options )
     if muiData.widgetDict[options.name] ~= nil then return end
 
     if options.width == nil then
-        options.width = M.getScaleVal(200)
+        options.width = 100
     end
 
     if options.height == nil then
-        options.height = M.getScaleVal(4)
+        options.height = 2
     end
 
     if options.radius == nil then
-        options.radius = M.getScaleVal(15)
+        options.radius = 15
     end
 
     local left,bottom = (muiData.contentWidth-options.width) * 0.5, muiData.contentHeight * 0.5
@@ -109,7 +109,7 @@ function M.newSnackBar( options )
     end
 
     if options.bottom == nil then
-        options.bottom = M.getScaleVal(80)
+        options.bottom = 80
     end
 
     if options.useTimeOut == nil then
@@ -208,7 +208,7 @@ function M.newSnackBar( options )
         fontSize = fontSize
     }
     muiData.widgetDict[options.name]["myText"] = display.newText( options_for_text )
-    local newTextX = (muiData.widgetDict[options.name]["myText"].contentWidth * 0.5) + M.getScaleVal(20)
+    local newTextX = (muiData.widgetDict[options.name]["myText"].contentWidth * 0.5) + 20
     muiData.widgetDict[options.name]["myText"].x = newTextX
     muiData.widgetDict[options.name]["myText"]:setFillColor( unpack(options.textColor) )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myText"], true )
@@ -291,9 +291,11 @@ function M.moveSnackBarParentView(widgetName, position)
     local newY = 0
     if position == "up" then
         newY = muiData.widgetDict[widgetName]["parent"].y - muiData.widgetDict[widgetName]["container"].contentHeight
+        newY = newY - (muiData.safeAreaInsets.bottomInset * 2)
         transition.moveTo(muiData.widgetDict[widgetName]["parent"], {y=newY,time=500})
     else
         newY = muiData.widgetDict[widgetName]["parent"].y + muiData.widgetDict[widgetName]["container"].contentHeight
+        newY = newY + (muiData.safeAreaInsets.bottomInset * 2)
         muiData.widgetDict[widgetName]["parent"].name = widgetName
         transition.moveTo(muiData.widgetDict[widgetName]["parent"], {y=newY,time=500,onComplete=M.removeMySnackBar})
     end

@@ -98,15 +98,15 @@ function M.newRoundedRectButton(options)
 
     x, y = M.getSafeXY(options, x, y)
 
-    local nw = options.width + M.getScaleVal(20) --(options.width * 0.05)
-    local nh = options.height + M.getScaleVal(20) -- (options.height * 0.05)
+    local nw = options.width + 20 --(options.width * 0.05)
+    local nh = options.height + 20 -- (options.height * 0.05)
 
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "RRectButton"
     -- muiData.widgetDict[options.name]["container"] = display.newGroup() --display.newContainer( nw, nh )
 
     local padding = 0
-    if options.useShadow == true then padding = M.getScaleVal(50) end
+    if options.useShadow == true then padding = 50 end
 
     muiData.widgetDict[options.name]["container"] = display.newContainer( nw+padding, nh+padding )
 
@@ -129,7 +129,7 @@ function M.newRoundedRectButton(options)
     end
 
     if options.useShadow == true then
-        local size = options.shadowSize or M.getScaleVal(20)
+        local size = options.shadowSize or 20
         local opacity = options.shadowOpacity or 0.3
         local shadow = M.newShadowShape("rounded_rect", {
             name = options.name,
@@ -143,7 +143,7 @@ function M.newRoundedRectButton(options)
         muiData.widgetDict[options.name]["container"]:insert( shadow )
     end
 
-    local nr = radius + M.getScaleVal(8) -- (options.height+M.getScaleVal(8)) * 0.2
+    local nr = radius + 8 -- (options.height+M.getScaleVal(8)) * 0.2
 
     -- paint normal or use gradient?
     local paint = nil
@@ -159,7 +159,7 @@ function M.newRoundedRectButton(options)
         }
     end
 
-    muiData.widgetDict[options.name]["rrect2"] = display.newRoundedRect( 0, 1, options.width+M.getScaleVal(8), options.height+M.getScaleVal(8), nr )
+    muiData.widgetDict[options.name]["rrect2"] = display.newRoundedRect( 0, 1, options.width+8, options.height+8, nr )
     if paint ~= nil then
         muiData.widgetDict[options.name]["rrect2"].fill = paint
     else
@@ -436,8 +436,8 @@ function M.newRectButton(options)
 
     x, y = M.getSafeXY(options, x, y)
 
-    local padding = M.getScaleVal(4)
-    if options.useShadow == true then padding = M.getScaleVal(50) end
+    local padding = 4
+    if options.useShadow == true then padding = 50 end
 
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "RectButton"
@@ -478,7 +478,7 @@ function M.newRectButton(options)
     if paint ~= nil then strokeWidth = 1 end
 
     if options.useShadow == true then
-        local size = options.shadowSize or M.getScaleVal(20)
+        local size = options.shadowSize or 20
         local opacity = options.shadowOpacity or 0.3
         local shadow = M.newShadowShape("rect", {
             name = options.name,
@@ -668,7 +668,7 @@ function M.newIconButton(options)
         muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["mygroup"] )
     end
 
-    local radius = options.height * (0.2 * M.getSizeRatio())
+    local radius = options.height -- * (0.2 * M.getSizeRatio())
     if options.radius ~= nil and options.radius < options.height and options.radius > 1 then
         radius = options.radius
     end
@@ -733,7 +733,7 @@ function M.newIconButton(options)
         x = 0,
         y = 0,
         font = font,
-        width = tw,
+        width = tw * 1.5,
         fontSize = fontSize,
         align = "center"
     }
@@ -759,7 +759,7 @@ function M.newIconButton(options)
         circleColor = options.circleColor
     end
 
-    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( 0, 0, maxWidth + M.getScaleVal(5))
+    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( 0, 0, maxWidth + 5)
     muiData.widgetDict[options.name]["myCircle"]:setFillColor( unpack(circleColor) )
 
     muiData.widgetDict[options.name]["myCircle"].isVisible = false
@@ -893,7 +893,7 @@ function M.newCircleButton(options)
     end
 
     if options.radius == nil then
-        radius = M.getScaleVal(46) * 0.60
+        radius = 46 * 0.60
     else
         radius = options.radius * 0.60
     end
@@ -932,7 +932,7 @@ function M.newCircleButton(options)
     muiData.widgetDict[options.name]["textMargin"] = textMargin
 
     if options.useShadow == true then
-        local size = options.shadowSize or M.getScaleVal(options.radius * 0.55)
+        local size = options.shadowSize or options.radius * 0.55
         local opacity = options.shadowOpacity or 0.4
         local shadow = M.newShadowShape("circle", {
             name = options.name,
@@ -949,7 +949,9 @@ function M.newCircleButton(options)
     -- Calculate a font size that will best fit the given text field's height
     local tempSize = {contentHeight=options.radius, contentWidth=options.radius}
     local textToMeasure = display.newText( options.text, 0, 0, font, fontSize )
-    local fontSize = mathFloor(fontSize * ( ( tempSize.contentHeight ) / textToMeasure.contentHeight ))
+    fontSize = mathFloor(fontSize * ( tempSize.contentHeight / textToMeasure.contentHeight ))
+    fontSize = mathFloor(tonumber(fontSize))
+
     local tw = textToMeasure.contentWidth
     local th = textToMeasure.contentHeight
 
@@ -972,7 +974,7 @@ function M.newCircleButton(options)
         x = 0,
         y = 0,
         font = font,
-        width = tw,
+        width = tw * 1.5,
         fontSize = fontSize,
         align = "center"
     }
@@ -985,6 +987,7 @@ function M.newCircleButton(options)
     muiData.widgetDict[options.name]["myText"] = display.newText( options2 )
     muiData.widgetDict[options.name]["myText"]:setFillColor( unpack(textColor) )
     muiData.widgetDict[options.name]["myText"].isVisible = true
+
     muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myText"], false )
 
     local circle = muiData.widgetDict[options.name]["circlemain"]
@@ -998,7 +1001,7 @@ function M.newCircleButton(options)
         circleColor = options.circleColor
     end
 
-    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( 0, 0, maxWidth + M.getScaleVal(5))
+    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( 0, 0, maxWidth + 5)
     muiData.widgetDict[options.name]["myCircle"]:setFillColor( unpack(circleColor) )
 
     muiData.widgetDict[options.name]["myCircle"].isVisible = false
@@ -1206,7 +1209,7 @@ function M.newRadioButton(options)
     -- Calculate a font size that will best fit the given text field's height
     local checkbox = {contentHeight=options.height, contentWidth=options.width}
     local textToMeasure = display.newText( options.text, 0, 0, font, fontSize )
-    local fontSize = fontSize * ( ( checkbox.contentHeight ) / textToMeasure.contentHeight )
+    fontSize = fontSize * ( ( checkbox.contentHeight ) / textToMeasure.contentHeight )
     fontSize = mathFloor(tonumber(fontSize))
     local textWidth = textToMeasure.contentWidth
     local textHeight = textToMeasure.contentHeight
@@ -1229,7 +1232,7 @@ function M.newRadioButton(options)
         x = 0,
         y = 0,
         font = font,
-        width = fontSize,
+        width = tw,
         fontSize = fontSize,
         align = "center"
     }
@@ -1266,7 +1269,7 @@ function M.newRadioButton(options)
         y = 0,
         width = labelWidth,
         font = labelFont,
-        fontSize = fontSize
+        fontSize = fontSize *.75
     }
 
     radioButton["myLabel"] = display.newText( options3 )
@@ -1278,7 +1281,7 @@ function M.newRadioButton(options)
     radioButton["myLabel"].options = options
     radioButton["mygroup"]:insert( radioButton["myLabel"], false )
 
-    local maxWidth = checkbox.contentWidth - (radius * 2.5)
+    local maxWidth = checkbox.contentWidth - (radius * 2)
 
     -- add the animated circle
 
@@ -1287,7 +1290,7 @@ function M.newRadioButton(options)
         circleColor = options.circleColor
     end
 
-    radioButton["myCircle"] = display.newCircle( options.height, options.height, maxWidth + M.getScaleVal(5) )
+    radioButton["myCircle"] = display.newCircle( options.height, options.height, maxWidth + 5 )
     radioButton["myCircle"]:setFillColor( unpack(circleColor) )
     radioButton["myCircle"].isVisible = false
     radioButton["myCircle"].x = 0
@@ -1475,7 +1478,7 @@ function M.newRadioGroup(options)
             local radioButton = muiData.widgetDict[options.name]["radio"][options.name.."_"..i]
             if options.layout ~= nil and options.layout == "horizontal" then
                 width = radioButton["myText"].contentWidth + radioButton["myLabel"].contentWidth + options.spacing
-                x = x + width + (radioButton["myText"].contentWidth * 0.2)
+                x = x + width * .8 -- + (radioButton["myText"].contentWidth *.25)
             else
                 y = y + radioButton["myText"].contentHeight + options.spacing
             end

@@ -151,14 +151,9 @@ function M.init_base(options)
   muiData.onBoardData = nil
   muiData.slideData = nil
   muiData.currentSlide = 0
-  muiData.minPixelScaleWidthForPortrait = options.minPixelScaleWidthForPortrait or 640
-  muiData.minPixelScaleWidthForLandscape = options.minPixelScaleWidthForLandscape or 960
-  muiData.minPixelScaleHeightForPortrait = options.minPixelScaleHeightForPortrait or 960
-  muiData.minPixelScaleHeightForLandscape = options.minPixelScaleHeightForLandscape or 640
+  muiData.aspectRatio = display.pixelHeight / display.pixelWidth
 
-  options.useActualDimensions = options.useActualDimensions or true
-  M.setDisplayToActualDimensions( {useActualDimensions = options.useActualDimensions} )
-
+  M.setDisplayDimensions()
   M.setSafeAreaInsets() -- handle overscan areas and areas like the iPhone X notch
 
   muiData.focus = nil
@@ -188,6 +183,13 @@ function M.init_base(options)
       muiData.widgetDict[muiPriv]["areaRightInset"]:setFillColor( defaultBackgroundColor )
       muiData.widgetDict[muiPriv]["areaRightInset"]:toFront()
   end
+  if muiData.safeAreaInsets.bottomInset > 0 then
+      local y = muiData.safeAreaHeight + muiData.safeAreaInsets.topInset
+      muiData.widgetDict[muiPriv]["areaBottomInset"] = display.newRect( muiData.safeAreaWidth * .5 + (muiData.safeAreaInsets.leftInset), y, muiData.safeAreaWidth, muiData.safeAreaInsets.bottomInset * 2 )
+      muiData.widgetDict[muiPriv]["areaBottomInset"].strokeWidth = 0
+      muiData.widgetDict[muiPriv]["areaBottomInset"]:setFillColor( defaultBackgroundColor )
+      muiData.widgetDict[muiPriv]["areaBottomInset"]:toFront()
+  end
 
 end
 
@@ -216,21 +218,9 @@ function M.removeEventListenerForSlidePanel(parent)
   end
 end
 
-function M.setDisplayToActualDimensions(options)
-  if options.useActualDimensions == true then
-    if M.getOrientation() == "portrait" then
-      muiData.contentWidth = display.actualContentWidth -- these are always from holding device in portrait
-      muiData.contentHeight = display.actualContentHeight
-    else
-      muiData.contentWidth = display.actualContentHeight -- these are always from holding device in portrait
-      muiData.contentHeight = display.actualContentWidth
-    end
-    muiData.useActualDimensions = options.useActualDimensions
-  else
-    muiData.contentWidth = display.contentWidth
+function M.setDisplayDimensions(options)
+   muiData.contentWidth = display.contentWidth
     muiData.contentHeight = display.contentHeight
-    muiData.useActualDimensions = false
-  end
 end
 
 function M.eventSuperListner(event)
@@ -532,10 +522,10 @@ function M.getSafeAreaInsets()
     topInset, leftInset, bottomInset, rightInset = display.getSafeAreaInsets()
   end
 
-  topInset = topInset * 2.16
-  bottomInset = bottomInset * 2.16
-  leftInset = leftInset * 2.16
-  rightInset = rightInset * 2.16
+  topInset = topInset -- * 2.16
+  bottomInset = bottomInset -- * 2.16
+  leftInset = leftInset -- * 2.16
+  rightInset = rightInset -- * 2.16
 
   return topInset, leftInset, bottomInset, rightInset
 end
@@ -550,28 +540,7 @@ function M.setSafeAreaInsets()
   }
   muiData.safeAreaWidth = muiData.contentWidth - ( leftInset + rightInset )
   muiData.safeAreaHeight = muiData.contentHeight - ( topInset + bottomInset )
-  if muiData.safeAreaWidth ~= muiData.contentWidth and true then
-    local divisor = 1
-    if M.getOrientation() == "portrait" then
-      divisor = muiData.minPixelScaleWidthForPortrait
-    else
-      divisor = muiData.minPixelScaleWidthForLandscape
-    end
-    muiData.masterRatio = (muiData.safeAreaWidth / divisor)
-    ratioDiff = mathABS((muiData.contentWidth / divisor) - muiData.masterRatio)
-    muiData.masterRatio = muiData.masterRatio - ratioDiff
-    muiData.masterRemainder = mathMod(muiData.safeAreaWidth, divisor)
-
-    divisor = 1
-    if M.getOrientation() == "portrait" then
-      divisor = muiData.minPixelScaleHeightForPortrait
-    else
-      divisor = muiData.minPixelScaleHeightForLandscape
-    end
-    muiData.masterRatioY = (muiData.safeAreaHeight / divisor)
-    ratioDiff = mathABS((muiData.contentHeight / divisor) - muiData.masterRatioY)
-    muiData.masterRatioY = muiData.masterRatioY - ratioDiff
-  end
+  muiData.masterRatio = muiData.aspectRatio
 end
 
 
@@ -621,6 +590,7 @@ function M.getSizeRatio()
     return muiData.masterRatio
   end
   local divisor = 1
+
   if M.getOrientation() == "portrait" then
     divisor = muiData.minPixelScaleWidthForPortrait
   else
@@ -629,7 +599,7 @@ function M.getSizeRatio()
 
   muiData.masterRatio = muiData.contentWidth / divisor
   muiData.masterRemainder = mathMod(muiData.contentWidth, divisor)
-  return muiData.masterRatio
+  return 1 -- muiData.masterRatio
 end
 
 function M.getSizeRatioY()
@@ -646,6 +616,18 @@ function M.getSizeRatioY()
   muiData.masterRatioY = muiData.contentHeight / divisor
   muiData.masterRemainder = mathMod(muiData.contentHeight, divisor)
   return muiData.masterRatioY
+end
+
+-- imageSuffix in config
+function M.getImageBySuffix()
+local sf = display.pixelWidth / display.contentWidth
+   if sf > 3.0 then
+       -- use @4x
+   elseif sf > 1.5 then
+       -- use @2x
+   else
+      -- use 1x
+   end
 end
 
 function M.createButtonsFromList(options, rect, container)
@@ -1343,6 +1325,10 @@ function M.destroy()
   if muiData.widgetDict[muiPriv]["areaRightInset"] ~= nil then
       muiData.widgetDict[muiPriv]["areaRightInset"]:removeSelf()
       muiData.widgetDict[muiPriv]["areaRightInset"] = nil
+  end
+  if muiData.widgetDict[muiPriv]["areaBottomInset"] ~= nil then
+      muiData.widgetDict[muiPriv]["areaBottomInset"]:removeSelf()
+      muiData.widgetDict[muiPriv]["areaBottomInset"] = nil
   end
   if muiData.widgetDict[muiPriv] ~= nil then
     muiData.widgetDict[muiPriv] = nil

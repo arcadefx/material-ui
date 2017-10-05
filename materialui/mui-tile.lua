@@ -78,7 +78,7 @@ function M.newTileGrid(options)
 
     -- place on scrollview???
     muiData.widgetDict[options.name] = {}
-    muiData.widgetDict[options.name]["rectbackdrop"] = display.newRect( muiData.contentWidth * 0.5, muiData.contentHeight * 0.5, muiData.contentWidth, muiData.contentHeight)
+    muiData.widgetDict[options.name]["rectbackdrop"] = display.newRect( muiData.contentWidth * 0.5, (muiData.contentHeight * 0.5) - muiData.safeAreaInsets.bottomInset, muiData.contentWidth, muiData.contentHeight)
     muiData.widgetDict[options.name]["rectbackdrop"].strokeWidth = 0
     muiData.widgetDict[options.name]["rectbackdrop"]:setFillColor( unpack( options.fillColor ) )
     muiData.widgetDict[options.name]["rectbackdrop"].isVisible = true
@@ -151,10 +151,10 @@ function M.newTileGrid(options)
             textColor = options.textColor,
             labelText = v.labelText,
             align = v.align,
-            padding = v.padding or M.getScaleVal(10),
+            padding = v.padding or 10,
             image = v.image,
             fontIsScaled = v.fontIsScaled or options.fontIsScaled,
-            fontSize = options.fontSize or M.getScaleVal(24),
+            fontSize = options.fontSize or 18,
             iconImage = v.iconImage,
             icon = v.icon,
             isFontIcon = true,
@@ -190,7 +190,7 @@ function M.newTileGrid(options)
         circleColor = options.circleColor
     end
 
-    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( options.height, options.height, maxWidth + M.getScaleVal(5) )
+    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( options.height, options.height, maxWidth + 5 )
     muiData.widgetDict[options.name]["myCircle"]:setFillColor( unpack(circleColor) )
     muiData.widgetDict[options.name]["myCircle"].isVisible = false
     muiData.widgetDict[options.name]["myCircle"].x = 0
@@ -235,10 +235,10 @@ function M.newTile(options)
     local fontSize = options.fontSize
 
     iconFont = options.iconFont
-    iconFontSize = mathFloor(tonumber(options.iconFontSize or M.getScaleVal(24)))
+    iconFontSize = mathFloor(tonumber(options.iconFontSize or 18))
 
     labelFont = options.labelFont
-    labelFontSize = mathFloor(tonumber(options.labelFontSize or M.getScaleVal(24)))
+    labelFontSize = mathFloor(tonumber(options.labelFontSize or 18))
 
     -- Calculate a font size that will best fit the given field's height
     local field = nil

@@ -68,6 +68,8 @@ function M.newPopover(options)
         options.fieldBackgroundColor = { 1, 1, 1, 1 }
     end
 
+    x, y = M.getSafeXY(options, x, y)
+
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name].name = options.name
     muiData.widgetDict[options.name]["type"] = "Popover"
@@ -95,7 +97,7 @@ function M.newPopover(options)
     end
 
     if options.strokeWidth == nil then
-        options.strokeWidth = M.getScaleVal(1)
+        options.strokeWidth = 1
     end
 
     if options.strokeColor == nil then
@@ -139,7 +141,9 @@ function M.revealTableViewForPopover(name, options)
         y = muiData.widgetDict[options.name]["calculated"].y
     end
 
-    options.leftMargin = options.leftMargin or M.getScaleVal(20)
+    x, y = M.getSafeXY(options, x, y)
+
+    options.leftMargin = options.leftMargin or 10
 
     muiData.widgetDict[options.name]["mygroup"].x = x
     muiData.widgetDict[options.name]["mygroup"].y = y
@@ -149,8 +153,8 @@ function M.revealTableViewForPopover(name, options)
         width = options.width - (options.leftMargin * 2),
         height = options.listHeight,
         font = options.font,
-        top = M.getScaleVal(30),
-        left = options.leftMargin,
+        top = 30,
+        left = -(options.leftMargin),
         textColor = options.textColor,
         strokeColor = options.inactiveColor,
         strokeWidth = 1,
@@ -168,7 +172,7 @@ function M.revealTableViewForPopover(name, options)
         list = options.list
     })
 
-    muiData.widgetDict[options.name]["rect2"] = display.newRect( options.width * 0.5, (options.listHeight * 0.45) + options.height, options.width, options.listHeight + (options.height * 0.5))
+    muiData.widgetDict[options.name]["rect2"] = display.newRect( muiData.widgetDict[options.name.."-List"]["tableview"].x, muiData.widgetDict[options.name.."-List"]["tableview"].y, options.width - (options.leftMargin), options.listHeight + (options.height * 0.5))
     muiData.widgetDict[options.name]["rect2"].strokeWidth = options.strokeWidth
     muiData.widgetDict[options.name]["rect2"]:setStrokeColor( unpack( options.strokeColor ) )
     muiData.widgetDict[options.name]["rect2"]:setFillColor( unpack( options.backgroundColor ) )
@@ -218,8 +222,9 @@ function M.onRowRenderPopover( event )
 
     local rowHeight = row.contentHeight
     local rowWidth = row.contentWidth
+    local fontSize = row.contentHeight
 
-    local rowTitle = display.newText( row, row.params.text, 0, 0, font, M.getScaleVal(30) )
+    local rowTitle = display.newText( row, row.params.text, 0, 0, font, fontSize )
     rowTitle:setFillColor( unpack( textColor ) )
 
     -- Align the label left and vertically centered

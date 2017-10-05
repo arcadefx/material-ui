@@ -56,6 +56,8 @@ function M.newTextField(options)
         y = options.y
     end
 
+    x, y = M.getSafeXY(options, x, y)
+
     if options.text == nil then
         options.text = ""
     end
@@ -115,12 +117,12 @@ function M.newTextField(options)
 
     local rect = muiData.widgetDict[options.name]["rect"]
     muiData.widgetDict[options.name]["line"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
-    muiData.widgetDict[options.name]["line"].strokeWidth = M.getScaleVal(4)
+    muiData.widgetDict[options.name]["line"].strokeWidth = 2
     muiData.widgetDict[options.name]["line"]:setStrokeColor( unpack(options.inactiveColor) )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["line"] )
 
     muiData.widgetDict[options.name]["lineanim"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
-    muiData.widgetDict[options.name]["lineanim"].strokeWidth = M.getScaleVal(4)
+    muiData.widgetDict[options.name]["lineanim"].strokeWidth = 2
     muiData.widgetDict[options.name]["lineanim"]:setStrokeColor( unpack(options.inactiveColor) )
     muiData.widgetDict[options.name]["lineanim"].isVisible = false
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["lineanim"] )
@@ -375,6 +377,8 @@ function M.newTextBox(options)
         y = options.y
     end
 
+    x, y = M.getSafeXY(options, x, y)
+
     if options.text == nil then
         options.text = ""
     end
@@ -427,12 +431,12 @@ function M.newTextBox(options)
 
     local rect = muiData.widgetDict[options.name]["rect"]
     muiData.widgetDict[options.name]["line"] = display.newLine( -(rect.contentWidth * 0.5), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
-    muiData.widgetDict[options.name]["line"].strokeWidth = M.getScaleVal(4)
+    muiData.widgetDict[options.name]["line"].strokeWidth = 2
     muiData.widgetDict[options.name]["line"]:setStrokeColor( unpack(options.inactiveColor) )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["line"] )
 
     muiData.widgetDict[options.name]["lineanim"] = display.newLine( -(rect.contentWidth * 0.5), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
-    muiData.widgetDict[options.name]["lineanim"].strokeWidth = M.getScaleVal(4)
+    muiData.widgetDict[options.name]["lineanim"].strokeWidth = 2
     muiData.widgetDict[options.name]["lineanim"]:setStrokeColor( unpack(options.inactiveColor) )
     muiData.widgetDict[options.name]["lineanim"].isVisible = false
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["lineanim"] )
@@ -441,9 +445,9 @@ function M.newTextBox(options)
     {
         --parent = textGroup,
         text = options.labelText,
-        x = -(rect.contentWidth * 0.25),
+        x = 0,
         y = -(rect.contentHeight * 0.6),
-        width = rect.contentWidth * 0.5,     --required for multi-line and alignment
+        width = rect.contentWidth,     --required for multi-line and alignment
         font = options.font,
         fontSize = options.fontSize,
         align = "left"  --new alignment parameter
@@ -571,15 +575,15 @@ function M.addTextBoxDoneButton( widgetName, options )
     if doneOptions.enabled == nil then doneOptions.enabled = true end
     if doneOptions.enabled == false then return end
 
-    doneOptions.width = doneOptions.width or M.getScaleVal(140)
-    doneOptions.height = doneOptions.height or M.getScaleVal(60)
+    doneOptions.width = doneOptions.width or 100
+    doneOptions.height = doneOptions.height or 30
     doneOptions.text = doneOptions.text or "done"
     doneOptions.iconText = doneOptions.iconText or "done"
     doneOptions.fillColor = doneOptions.fillColor or { 0.25, 0.75, 1, 1 }
     doneOptions.textColor = doneOptions.textColor or { 1, 1, 1, 1 }
     doneOptions.iconText = doneOptions.iconText or "done"
     doneOptions.iconFont = doneOptions.iconFont or M.materialFont
-    doneOptions.radius = doneOptions.radius or M.getScaleVal(8)
+    doneOptions.radius = doneOptions.radius or 4
 
     local x = muiData.widgetDict[widgetName]["textfield"].x
     local y = 0
@@ -591,7 +595,7 @@ function M.addTextBoxDoneButton( widgetName, options )
             text = doneOptions.text,
             width = doneOptions.width,
             height = doneOptions.height,
-            x = x + (muiData.widgetDict[widgetName]["textfield"].contentWidth * .5),
+            x = (muiData.widgetDict[widgetName]["textfield"].contentWidth * .5),
             y = y,
             font = native.systemFont,
             fillColor = doneOptions.fillColor,
@@ -610,7 +614,7 @@ function M.addTextBoxDoneButton( widgetName, options )
             text = doneOptions.text,
             width = doneOptions.width,
             height = doneOptions.height,
-            x = x + (muiData.widgetDict[widgetName]["textfield"].contentWidth * .5),
+            x = (muiData.widgetDict[widgetName]["textfield"].contentWidth * .5),
             y = y,
             font = native.systemFont,
             fillColor = doneOptions.fillColor,

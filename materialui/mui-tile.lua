@@ -58,10 +58,13 @@ function M.newTileGrid(options)
         y = options.y
     end
 
-    options.width = options.width or muiData.contentWidth
-    options.height = options.height or muiData.contentHeight
-    options.tileWidth = options.tileWidth or options.width * 0.5
-    options.tileHeight = options.tileHeight or options.width * 0.5
+    x, y = M.getSafeXY(options, x, y)
+    x = options.x
+
+    options.width = options.width or muiData.safeAreaWidth
+    options.height = options.height or muiData.safeAreaHeight
+    options.tileWidth = options.tileWidth or muiData.safeAreaWidth * 0.5
+    options.tileHeight = options.tileHeight or muiData.safeAreaHeight * 0.5
     options.textColor = options.textColor or {1, 1, 1, 1}
     options.fillColor = options.fillColor or {1, 1, 1, 1}
 
@@ -75,7 +78,7 @@ function M.newTileGrid(options)
 
     -- place on scrollview???
     muiData.widgetDict[options.name] = {}
-    muiData.widgetDict[options.name]["rectbackdrop"] = display.newRect( muiData.contentWidth * 0.5, muiData.contentHeight * 0.5, muiData.contentWidth, muiData.contentHeight)
+    muiData.widgetDict[options.name]["rectbackdrop"] = display.newRect( muiData.contentWidth * 0.5, (muiData.contentHeight * 0.5) - muiData.safeAreaInsets.bottomInset, muiData.contentWidth, muiData.contentHeight)
     muiData.widgetDict[options.name]["rectbackdrop"].strokeWidth = 0
     muiData.widgetDict[options.name]["rectbackdrop"]:setFillColor( unpack( options.fillColor ) )
     muiData.widgetDict[options.name]["rectbackdrop"].isVisible = true
@@ -84,14 +87,15 @@ function M.newTileGrid(options)
     local scrollWidth = muiData.contentWidth * 0.5
     scrollView = widget.newScrollView(
         {
-            top = 0,
-            left = 0,
+            top = muiData.safeAreaInsets.topInset,
+            left = muiData.safeAreaInsets.leftInset,
             width = options.width,
-            height = muiData.contentHeight,
+            height = options.height,
             scrollWidth = scrollWidth,
-            scrollHeight = muiData.contentHeight,
+            scrollHeight = options.height,
             hideBackground = false,
             isBounceEnabled = false,
+            verticalScrollDisabled = false,
             backgroundColor = options.fillColor,
             listener = M.tileScrollListener
         }
@@ -147,10 +151,10 @@ function M.newTileGrid(options)
             textColor = options.textColor,
             labelText = v.labelText,
             align = v.align,
-            padding = v.padding or M.getScaleVal(10),
+            padding = v.padding or 10,
             image = v.image,
             fontIsScaled = v.fontIsScaled or options.fontIsScaled,
-            fontSize = options.fontSize or M.getScaleVal(24),
+            fontSize = options.fontSize or 18,
             iconImage = v.iconImage,
             icon = v.icon,
             isFontIcon = true,
@@ -186,7 +190,7 @@ function M.newTileGrid(options)
         circleColor = options.circleColor
     end
 
-    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( options.height, options.height, maxWidth + M.getScaleVal(5) )
+    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( options.height, options.height, maxWidth + 5 )
     muiData.widgetDict[options.name]["myCircle"]:setFillColor( unpack(circleColor) )
     muiData.widgetDict[options.name]["myCircle"].isVisible = false
     muiData.widgetDict[options.name]["myCircle"].x = 0
@@ -231,10 +235,10 @@ function M.newTile(options)
     local fontSize = options.fontSize
 
     iconFont = options.iconFont
-    iconFontSize = mathFloor(tonumber(options.iconFontSize or M.getScaleVal(24)))
+    iconFontSize = mathFloor(tonumber(options.iconFontSize or 18))
 
     labelFont = options.labelFont
-    labelFontSize = mathFloor(tonumber(options.labelFontSize or M.getScaleVal(24)))
+    labelFontSize = mathFloor(tonumber(options.labelFontSize or 18))
 
     -- Calculate a font size that will best fit the given field's height
     local field = nil

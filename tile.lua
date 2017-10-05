@@ -11,6 +11,9 @@ local scene = composer.newScene()
 local background = nil
 local widget = require( "widget" )
 
+-- mui
+local muiData = require( "materialui.mui-data" )
+
 -- -----------------------------------------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE unless "composer.removeScene()" is called
 -- -----------------------------------------------------------------------------------------------------------------
@@ -46,15 +49,15 @@ function scene:create( event )
     mui.newTileGrid({
         parent = mui.getParent(),
         name = "grid_demo",
-        width = mui.contentWidth,
-        height = mui.contentHeight,
-        tileHeight = mui.getScaleVal(200),
+        width = muiData.safeAreaWidth,
+        height = muiData.safeAreaHeight,
+        tileHeight = 100,
         tilesPerRow = 4,
         x = 0,
         y = 0,
         fontIsScaled = false, -- default is true for scaling font to fit tile size width or false to not scale.
         iconFont = mui.materialFont, -- use pre-defined font
-        fontSize = mui.getScaleVal(100),
+        fontSize = 40,
         labelFont = native.systemFont,
         textColor = { 1, 1, 1 },
         labelColor = { 1, 1, 1 },

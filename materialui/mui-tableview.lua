@@ -48,7 +48,6 @@ function M.createTableView( options )
 end
 
 function M.newTableView( options )
-    local screenRatio = M.getSizeRatio()
     -- The "onRowRender" function may go here (see example under "Inserting Rows", above)
 
     if options.noLines == nil then
@@ -68,7 +67,7 @@ function M.newTableView( options )
     end
 
     if options.fontSize == nil then
-        options.fontSize = M.getScaleVal(20)
+        options.fontSize = 18
     end
 
     if options.strokeWidth == nil then
@@ -80,15 +79,17 @@ function M.newTableView( options )
     end
 
     if options.padding == nil then
-        options.padding = M.getScaleVal(15)
+        options.padding = 15
     end
 
     if options.rowAnimation == nil then
         options.rowAnimation = true
     end
 
+    options.left, options.top = M.getSafeXY(options, options.left, options.top)
+
     MySceneName = M.getCurrentScene()
-    muiData.sceneData[MySceneName].tableCircle = display.newCircle( 0, 0, M.getScaleVal(20 * 2.5) )
+    muiData.sceneData[MySceneName].tableCircle = display.newCircle( 0, 0, (20 * 2.5) )
     muiData.sceneData[MySceneName].tableCircle:setFillColor( unpack(options.circleColor) )
     muiData.sceneData[MySceneName].tableCircle.isVisible = false
     muiData.sceneData[MySceneName].tableCircle.alpha = 0.55
@@ -133,7 +134,7 @@ function M.newTableView( options )
         -- use categories
         if v.isCategory ~= nil and v.isCategory == true then
             isCategory = true
-            rowHeight = M.getScaleVal(rowHeight + (rowHeight * 0.1))
+            rowHeight = (rowHeight + (rowHeight * 0.1))
             if options.categoryColor == nil then
                 options.categoryColor = { default={0.8,0.8,0.8,0.8} }
             end
@@ -212,7 +213,7 @@ function M.onRowRender( event )
 
     -- need to use the colors passed in as params here.
     noLines = false
-    lineHeight = M.getScaleVal(1)
+    lineHeight = 1
     lineColor = { 0.9, 0.9, 0.9 }
     rowColor = { 1, 1, 1, 1 }
     textColor = { 0, 0, 0, 1 }
@@ -238,7 +239,7 @@ function M.onRowRender( event )
     if noLines == false and lineHeight > 0 then
 
         -- the block above line
-        row.bg1 = display.newRect( 0, 0, row.contentWidth, row.contentHeight) -- - M.getScaleVal(lineHeight) )
+        row.bg1 = display.newRect( 0, 0, row.contentWidth, row.contentHeight)
         --row.bg1.anchorX = 0
         --row.bg1.anchorY = 0
         row.bg1.x = row.contentWidth * 0.5
@@ -247,7 +248,7 @@ function M.onRowRender( event )
         row:insert( row.bg1 )
 
         -- line underneath label
-        row.bg2 = display.newRect( 0, 0, row.contentWidth, lineHeight) -- M.getScaleVal(1) )
+        row.bg2 = display.newRect( 0, 0, row.contentWidth, lineHeight)
         -- row.bg2.anchorX = 0
         -- row.bg1.anchorY = 0
         row.bg2.x = row.contentWidth * 0.5
@@ -269,7 +270,7 @@ function M.onRowRender( event )
             row.miscEvent.name = row.params.name
             row.miscEvent.x = event.x
             row.miscEvent.y = event.y
-            row.miscEvent.minRadius = M.getScaleVal(60) * 0.25
+            row.miscEvent.minRadius = 30 * 0.25
         end
     end
     row:addEventListener( "touch", row )
@@ -295,8 +296,8 @@ function M.onRowRenderDemo( event )
     M.newCheckBox({
         name = "check"..row.index,
         text = "check_box_outline_blank",
-        width = M.getScaleVal(50),
-        height = M.getScaleVal(50),
+        width = 25,
+        height = 25,
         isFontIcon = true,
         font = M.materialFont,
         textColor = { 0.3, 0.3, 0.3 },
@@ -316,8 +317,8 @@ function M.onRowRenderDemo( event )
     M.newIconButton({
         name = "plus"..row.index,
         text = "add_circle",
-        width = M.getScaleVal(40),
-        height = M.getScaleVal(40),
+        width = 25,
+        height = 25,
         x = 0,
         y = 0,
         font = muiData.materialFont,
@@ -333,7 +334,6 @@ function M.onRowRenderDemo( event )
     })
     --]]--
 
-    local row = event.row
     local colWidth = 0
     local x1 = 0
     if row.params.columns ~= nil then
@@ -414,26 +414,29 @@ function M.onRowRenderDemo( event )
 end
 
 function M.setRowObjectVerticalAlign(options)
+    obj = options.obj
     objectHeight = options.obj.contentHeight
     heightOffset = options.heightOfFont or 0
     lineHeight = options.lineHeight or 0
+    valign = options.valign or "middle"
+    rowHeight = options.rowHeight
 
-    if heightOffset > 0 and options.valign == "bottom" then
+    if heightOffset > 0 and valign == "bottom" then
         heightDiff = mathABS(objectHeight - heightOffset)
         objectHeight = objectHeight - heightDiff
-    elseif heightOffset > 0 and options.valign == "top" then
+    elseif heightOffset > 0 and valign == "top" then
         objectHeight = options.heightOfFont
     end
 
-    if options.valign == "top" then
-        options.obj.y = objectHeight * 0.5
-    elseif options.valign == "middle" then
-        options.obj.y = (options.rowHeight / 2) - (lineHeight / 2)
-    elseif options.valign == "bottom" then
-        newY = options.rowHeight - (( objectHeight / 2) + (lineHeight))
-        options.obj.y = newY
+    if valign == "top" then
+        obj.y = objectHeight * 0.5
+    elseif valign == "middle" then
+        obj.y = (rowHeight / 2) - (lineHeight / 2)
+    elseif valign == "bottom" then
+        newY = rowHeight - (( objectHeight / 2) + (lineHeight))
+        obj.y = newY
     else
-        M.debug("M.setRowObjectVerticalAlign : unsupported valign parameter: "..options.valign)
+        M.debug("M.setRowObjectVerticalAlign : unsupported valign parameter: "..valign)
     end
 end
 
@@ -506,7 +509,7 @@ function M.attachToRow(row, options )
     end
 
     if options.padding == nil then
-        padding = M.getScaleVal(10)
+        padding = 10
     end
 
     if options.align == "left" then

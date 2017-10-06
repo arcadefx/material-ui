@@ -55,12 +55,14 @@ function M.newCard(options)
     x = options.x or centerX
     y = options.y or centerY
 
+    x, y = M.getSafeXY(options, x, y)
+
     options.width = options.width or muiData.contentWidth
     options.height = options.height or muiData.contentHeight
     options.strokeWidth = options.strokeWidth or 0
     options.useShadow = options.useShadow or false
     options.useContainer = options.useContainer or false
-    options.shadowSize = options.shadowSize or M.getScaleVal(20)
+    options.shadowSize = options.shadowSize or 20
     options.shadowOpacity = options.shadowOpacity or 0.3
 
 
@@ -91,7 +93,7 @@ function M.newCard(options)
     end
 
     local radius = options.height * 0.2
-    local nr = radius + M.getScaleVal(8)
+    local nr = radius + 4
     if options.radius ~= nil and options.radius < options.height and options.radius > 1 then
         radius = options.radius
         nr = radius

@@ -54,6 +54,8 @@ function M.newToggleSwitch(options)
         y = options.y
     end
 
+    x, y = M.getSafeXY(options, x, y)
+
     if options.width == nil then
         options.width = options.size
     end

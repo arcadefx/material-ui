@@ -141,7 +141,7 @@ function M.newElipsesForProgress( options )
 
 	if options.shape == nil then options.shape = "rect" end
 
-	local size = options.size or M.getScaleVal(20)
+	local size = options.size or 10
 	local spacing = 0
 	local width = 0
 	if options.shape == "rect" then
@@ -182,7 +182,7 @@ function M.newElipsesForProgress( options )
 	    })
 	    block.anchorX = 0
 	    block.anchorY = 0
-	    block.strokeWidth = M.getScaleVal(4)
+	    block.strokeWidth = 2
 	    block:setStrokeColor( unpack( options.fillColor ) )
 		if i == 1 then
             block:setFillColor( unpack( {1,0,0,0} ) )

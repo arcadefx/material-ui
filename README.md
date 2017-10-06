@@ -9,21 +9,9 @@ What is material-ui?
 
 A loosely based Material UI library for Corona Labs SDK. It is written in Lua using the free edition of the SDK. The library will help build a UI based on Material Design.
 
+* Requires Corona SDK build 2017.3135 or greater.
+
 * Supports: iOS 8+, Android 4.x to 7.x+ and other Corona SDK supported platforms.
-
-Installing material-ui as a Plugin from Corona Marketplace
---------------
-
-* To use the plugin, add it to the plugins section of build.settings as follows:
-```
-settings =
-{
-    plugins =
-    {
-        ["plugin.materialui"] = { publisherId = "com.anedix" },
-    },
-}
-```
 
 Installing material-ui from the repo on GitHub
 --------------
@@ -41,14 +29,10 @@ icon-font (folder)
 Using material-ui
 --------------
 
-* If using as a plugin from Corona Marketplace, edit your scene file and be sure to include at the top:
-```
-local mui = require( "plugin.materialui" )
-```
-
 * If using the GitHub repo, edit your scene file and be sure to include at the top:
 ```
 local mui = require( "materialui.mui" )
+local muiData = require( "materialui.mui-data" )
 ```
 
 * In the scene create function add in the initializer and any user-interface elements
@@ -57,10 +41,10 @@ local mui = require( "materialui.mui" )
     mui.newRoundedRectButton({
         name = "newGame",
         text = "New Game",
-        width = mui.getScaleVal(200),
-        height = mui.getScaleVal(60),
-        x = mui.getScaleVal(160),
-        y = mui.getScaleVal(220),
+        width = 150,
+        height = 30,
+        x = 100,
+        y = 100,
         font = native.systemFont,
         fillColor = { 0, 0.82, 1 },
         textColor = { 1, 1, 1 },
@@ -76,7 +60,10 @@ Building for Device
 -------------
 Due to device keyboard possibly covering up input fields, be sure to include "coronaWindowMovesWhenKeyboardAppears=true" into iOS settings->iphone->plist table and Android settings.
 
-For an example, see [build.settings](https://github.com/arcadefx/material-ui/blob/master/build.settings) file.
+For an example, see [build.settings](https://github.com/arcadefx/material-ui/blob/0.3.0/build.settings) file.
+
+- For iOS devices, please add to you "plist": UILaunchStoryboardName = "LaunchScreen",
+- For iOS devices, copy the folder "LaunchScreen.storyboardc" to your project ONLY if it doesn't
 
 Try a Demo
 -------------

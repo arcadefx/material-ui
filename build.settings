@@ -29,6 +29,7 @@ settings =
 	{
 		plist =
 		{
+			UILaunchStoryboardName = "LaunchScreen",
 			CoronaWindowMovesWhenKeyboardAppears = true,
 			UIStatusBarHidden = false,
 			UIPrerenderedIcon = true, -- set to false for "shine" overlay

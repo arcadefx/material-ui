@@ -45,10 +45,10 @@ local M = muiData.M -- {} -- for module array/table
 --[[
   params:
     name = <name of widget>
-    width = mui.getScaleVal(250),
-    height = mui.getScaleVal(8),
-    x = mui.getScaleVal(650),
-    y = mui.getScaleVal(400),
+    width = <val>,
+    height = <val>,
+    x = <val>,
+    y = <val>,
     foregroundColor = { 0, 0.78, 1, 1 },
     backgroundColor = { 0.82, 0.95, 0.98, 0.8 },
     startPercent = 20,
@@ -56,7 +56,7 @@ local M = muiData.M -- {} -- for module array/table
     iterations = 1,
     labelText = "Determinate: progress bar",
     labelFont = native.systemFont,
-    labelFontSize = mui.getScaleVal(24),
+    labelFontSize = 16,
     labelColor = {  0.4, 0.4, 0.4, 1 },
     labelAlign = "center",
     callBack = mui.postProgressCallBack,
@@ -78,12 +78,14 @@ function M.newProgressBar(options)
         y = options.y
     end
 
+    x, y = M.getSafeXY(options, x, y)
+
     if options.width == nil then
         options.width = muiData.contentWidth * 0.70
     end
 
     if options.height == nil then
-        options.height = M.getScaleVal(8)
+        options.height = 4
     end
 
     if options.foregroundColor == nil then

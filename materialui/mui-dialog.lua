@@ -113,7 +113,9 @@ function M.newDialog(options)
     muiData.widgetDict[options.name]["container"] = display.newContainer( options.width+20, options.height+20 )
     muiData.widgetDict[options.name]["container"]:translate( centerX, centerY ) -- center the container
     muiData.widgetDict[options.name]["touching"] = false
-    muiData.widgetDict[options.name]["container"].y = muiData.contentHeight * 2
+    local half = muiData.widgetDict[options.name]["container"].contentWidth * .5
+    muiData.widgetDict[options.name]["container"].x = centerX
+    muiData.widgetDict[options.name]["container"].y = muiData.contentHeight
 
     muiData.dialogInUse = true
 
@@ -158,12 +160,12 @@ function M.newDialog(options)
             options.font = systemFont
         end
         if options.fontSize == nil then
-            options.fontSize = M.getScaleVal(24)
+            options.fontSize = 18
         end
         local outerWidth = muiData.widgetDict[options.name]["container"]["rrect"].contentWidth
         local outerHeight = muiData.widgetDict[options.name]["container"]["rrect"].contentHeight
-        muiData.widgetDict[options.name]["container2"] = display.newContainer( outerWidth, outerHeight - M.getScaleVal(90) )
-        muiData.widgetDict[options.name]["container2"]:translate( 0, M.getScaleVal(-30) ) -- center the container
+        muiData.widgetDict[options.name]["container2"] = display.newContainer( outerWidth, outerHeight - 90 )
+        muiData.widgetDict[options.name]["container2"]:translate( 0, -30 ) -- center the container
         muiData.widgetDict[options.name]["myText"] = display.newText( options.text, options.textX, options.textY, options.font, options.fontSize)
         muiData.widgetDict[options.name]["myText"]:setFillColor( unpack( options.textColor ) )
         muiData.widgetDict[options.name]["container2"]:insert( muiData.widgetDict[options.name]["myText"] )
@@ -187,10 +189,10 @@ function M.newDialog(options)
             options.buttons["okayButton"].text = "Okay"
         end
         if options.buttons["okayButton"].width == nil then
-            options.buttons["okayButton"].width = M.getScaleVal(100)
+            options.buttons["okayButton"].width = 100
         end
         if options.buttons["okayButton"].height == nil then
-            options.buttons["okayButton"].height = M.getScaleVal(50)
+            options.buttons["okayButton"].height = 50
         end
 
         by = (muiData.widgetDict[options.name]["container"]["rrect"].contentHeight * 0.5) - options.buttons["okayButton"].height
@@ -204,6 +206,7 @@ function M.newDialog(options)
             text = options.buttons["okayButton"].text,
             width = options.buttons["okayButton"].width,
             height = options.buttons["okayButton"].height,
+            ignoreInsets = true,
             x = bx,
             y = by,
             font = native.systemFont,
@@ -233,10 +236,10 @@ function M.newDialog(options)
             options.buttons["cancelButton"].text = "Okay"
         end
         if options.buttons["cancelButton"].width == nil then
-            options.buttons["cancelButton"].width = M.getScaleVal(100)
+            options.buttons["cancelButton"].width = 100
         end
         if options.buttons["cancelButton"].height == nil then
-            options.buttons["cancelButton"].height = M.getScaleVal(50)
+            options.buttons["cancelButton"].height = 50
         end
         if bx > 0 then
             bx = (bx - options.buttons["cancelButton"].width) * .5 - 20
@@ -246,6 +249,7 @@ function M.newDialog(options)
             text = options.buttons["cancelButton"].text,
             width = options.buttons["cancelButton"].width,
             height = options.buttons["cancelButton"].height,
+            ignoreInsets = true,
             x = bx,
             y = by,
             font = native.systemFont,
@@ -262,6 +266,7 @@ function M.newDialog(options)
     --]]--
     muiData.widgetDict[options.name]["rectbackdrop"].isVisible = true
     transition.fadeIn( muiData.widgetDict[options.name]["rectbackdrop"], { time=1500 } )
+    centerY = (display.contentHeight * .5) - muiData.safeAreaInsets.bottomInset
     transition.to( muiData.widgetDict[options.name]["container"], { time=800, y = centerY, transition=options.easing } )
 end
 

@@ -1,39 +1,23 @@
+local topInset, leftInset, bottomInset, rightInset = display.getSafeAreaInsets()
+local aspectRatio = display.pixelHeight / display.pixelWidth
+local portraitWidth, portraitHeight = 320, 480
+if topInset > 0 or leftInset > 0 or bottomInset > 0 or rightInset > 0 then
+	if aspectRatio > 2.1 then
+		portraitWidth, portraitHeight = 360, 693
+	end
+end
+
 application =
 {
 
 	content =
 	{
-		--[[--
-		width = 750,
-		height = 1334,
-		--]]-- 
-
-		--[[-- iphone 4s
-		width = 640,
-		height = 960, 
-		--]]--
-
-		--[[-- ipad 2
-		width = 768,
-		height = 1024, 
-		--]]--
-
-		--[[-- iphone 6s
-		width = 750,
-		height = 1334, 
-		--]]--
-
-		--[[-- nvidia shield k1
-		width = 1200,
-		height = 1920, 
-		--]]--
-
-		-- scale = "letterBox",
-		fps = 30,
+		width = aspectRatio > 1.5 and portraitWidth or math.ceil( portraitHeight / aspectRatio ),
+		height = aspectRatio < 1.5 and portraitHeight or math.ceil( portraitWidth * aspectRatio ),
+		scale = "letterbox",
+		fps = 60,
 		
 		--[[
-		width = 320,
-		height = 480, 
 
 		imageSuffix =
 		{

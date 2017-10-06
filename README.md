@@ -13,8 +13,6 @@ A loosely based Material UI library for Corona Labs SDK. It is written in Lua us
 
 * Supports: iOS 8+, Android 4.x to 7.x+ and other Corona SDK supported platforms.
 
-```
-
 Installing material-ui from the repo on GitHub
 --------------
 

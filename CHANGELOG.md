@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2017-10-13
+### Changes
+- Added insertRowsTableView() appends rows to an existing table view. Arguments are name of tableView and a list of entries. See documentation for newTableView with Helpers.
+- Added removeAllRowsFromTableView() remove all rows from an existing table view.  Argument is the name of the tableView. See documentation for newTableView with Helpers.
+- Created a Pagination demo of sqlite database entries using the above methods. See http://www.anedix.com/fileshare/table-paginator.zip and look at file table-paginator.lua.  Note it includes a small database abstraction layer I created. Feel free to use it for other things and it will be improved with caching, etc.
+- Updated demo for showing how to attach things to a tableView too. See http://www.anedix.com/fileshare/checklist.zip
+
 ## [0.3.0] - 2017-10-05
 ### Changes
 - WARNING: getScaleVal() has been depreciated. Scaling is now fixed and works with config.lua.  See config.lua for more information in demo.  Any existing code based on it needs updated to adjust sizes and placement (x, y). Sorry, it was for the better.
@@ -15,7 +22,7 @@ All notable changes to this project will be documented in this file.
 	local muiData = require( "materialui.mui-data" )
 - For iOS devices, please add to you "plist": UILaunchStoryboardName = "LaunchScreen",
 - For iOS devices, copy the folder "LaunchScreen.storyboardc" to your project ONLY if it doesn't already exist. If it exist skip this step!
-- To place a background in the safe zone be sure to look at the top of the menu.lua file.
+- To place a background in the safe zone be sure to look at the top of the menu.lua file for an example.
 - See menu.lua and fun.lua for examples using the new methods.
 - Fixed newSelect() to render correctly.
 - Fixed some demo code.

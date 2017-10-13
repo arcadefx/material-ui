@@ -1010,7 +1010,7 @@ function M.newCircleButton(options)
     muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
     muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
 
-    circle.muiOptions = options
+    muiData.widgetDict[options.name]["circlemain"].muiOptions = options
     muiData.widgetDict[options.name]["circlemain"]:addEventListener( "touch", M.touchCircleButton )
 end
 
@@ -1062,7 +1062,7 @@ function M.touchCircleButton (event)
                 muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["mygroup"].y
             end
             muiData.widgetDict[options.name]["myCircle"].isVisible = true
-            local scaleFactor = 0.1
+            local scaleFactor = 4.1
             muiData.widgetDict[options.name].myCircleTrans = transition.from( muiData.widgetDict[options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
             transition.to(event.target,{time=500, xScale=1.1, yScale=1.1, transition=easing.continuousLoop})
         end

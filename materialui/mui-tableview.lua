@@ -100,6 +100,7 @@ function M.newTableView( options )
     muiData.widgetDict[options.name]["tableview"] = {}
     muiData.widgetDict[options.name]["type"] = "TableView"
     muiData.widgetDict[options.name]["tableRow"] = nil
+    muiData.widgetDict[options.name]["options"] = options
 
     local tableView = widget.newTableView(
         {
@@ -188,7 +189,6 @@ function M.newTableView( options )
         tableView:insertRow( optionList )
     end
     tableView.isVisible = true
-
 end
 
 function M.getTableViewProperty(widgetName, propertyName)
@@ -666,6 +666,80 @@ function M.onRowTouchDemo(event)
         end
     end
 
+end
+
+function M.insertRowsTableView(widgetName, list)
+    if widgetName == nil or rows == nil then return end
+    tableView = muiData.widgetDict[widgetName]["tableview"]
+    options = muiData.widgetDict[widgetName]["options"]
+    for i, v in ipairs(list) do
+
+        local isCategory = false
+        local rowHeight = options.rowHeight
+        local rowColor = options.rowColor
+        local lineColor = options.lineColor
+
+        -- use categories
+        if v.isCategory ~= nil and v.isCategory == true then
+            isCategory = true
+            rowHeight = (rowHeight + (rowHeight * 0.1))
+            if options.categoryColor == nil then
+                options.categoryColor = { default={0.8,0.8,0.8,0.8} }
+            end
+            if options.lineColor == nil then
+                options.categoryLineColor = { 1, 1, 1, 0 }
+            end
+
+            rowColor = options.categoryColor
+            lineColor = options.categoryLineColor
+        end
+
+        -- Insert a row into the tableView
+        if v.backgroundColor ~= nil then
+            v.fillColor = v.fillColor or v.backgroundColor
+        else
+            v.fillColor = v.fillColor or rowColor.default
+        end
+
+        local optionList = {
+            isCategory = isCategory,
+            rowHeight = rowHeight,
+            rowColor = rowColor,
+            lineColor = lineColor,
+            params = {
+                basename = options.name,
+                name = options.name,
+                text = v.text,
+                font = v.font or options.font,
+                fontSize = v.fontSize or options.fontSize,
+                align = v.align or "left",
+                valign = v.valign or "middle",
+                value = v.value,
+                width = options.width,
+                columns = v.columns,
+                columnOptions = options.columnOptions,
+                padding = options.padding,
+                noLines = options.noLines,
+                lineHeight = options.lineHeight or 0,
+                rowColor = v.fillColor,
+                textColor = options.textColor,
+                rowAnimation = options.rowAnimation,
+                backgroundImage = v.backgroundImage,
+                callBackData = options.callBackData,
+                callBackTouch = options.callBackTouch,
+                callBackRender = options.callBackRender
+            }
+        }
+        if v.key ~= nil then
+            optionList["id"] = v.key
+        end
+        tableView:insertRow( optionList )
+    end
+end
+
+function M.removeAllRowsFromTableView(widgetName)
+    if muiData.widgetDict[widgetName]["tableview"] == nil then return end
+    muiData.widgetDict[widgetName]["tableview"]:deleteAllRows()
 end
 
 function M.removeWidgetTableView(widgetName)

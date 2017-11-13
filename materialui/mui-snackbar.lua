@@ -274,6 +274,8 @@ function M.newSnackBar( options )
     end
     muiData.widgetDict[options.name]["rrect"]:addEventListener( "touch", muiData.widgetDict[options.name]["rrect"] )
 
+    M.showInsetOverlay()
+
     if options.easingIn == nil then
         options.easingIn = 500
     end
@@ -320,6 +322,7 @@ function M.removeMySnackBar(event)
     local muiName = event.name
     if muiName ~= nil then
         M.removeSnackBar(muiName)
+        M.hideInsetOverlay()
     end
 end
 

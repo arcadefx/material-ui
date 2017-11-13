@@ -207,6 +207,8 @@ function M.newRoundedRectButton(options)
 
     end
 
+    options.ignoreTap = options.ignoreTap or false
+
     -- create image buttons if exist
     M.createButtonsFromList(options, rrect, "container")
 
@@ -274,6 +276,9 @@ function M.newRoundedRectButton(options)
 
     rrect.muiOptions = options
     muiData.widgetDict[options.name]["rrect"]:addEventListener( "touch", M.touchRRectButton )
+    if options.ignoreTap then
+        muiData.widgetDict[options.name]["rrect"]:addEventListener("tap", function() return true end)
+    end
 end
 
 function M.getRoundedRectButtonProperty(widgetName, propertyName)
@@ -588,8 +593,13 @@ function M.newRectButton(options)
     muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
 
+
     rrect.muiOptions = options
     muiData.widgetDict[options.name]["rrect"]:addEventListener( "touch", M.touchRRectButton )
+    options.ignoreTap = options.ignoreTap or false
+    if options.ignoreTap then
+        muiData.widgetDict[options.name]["rrect"]:addEventListener("tap", function() return true end)
+    end
 end
 
 function M.getRectButtonProperty(widgetName, propertyName)
@@ -770,6 +780,10 @@ function M.newIconButton(options)
 
     checkbox.muiOptions = options
     muiData.widgetDict[options.name]["myText"]:addEventListener( "touch", M.touchIconButton )
+    options.ignoreTap = options.ignoreTap or false
+    if options.ignoreTap then
+        muiData.widgetDict[options.name]["myText"]:addEventListener("tap", function() return true end)
+    end
 end
 
 function M.getIconButtonProperty(widgetName, propertyName)
@@ -1012,6 +1026,10 @@ function M.newCircleButton(options)
 
     muiData.widgetDict[options.name]["circlemain"].muiOptions = options
     muiData.widgetDict[options.name]["circlemain"]:addEventListener( "touch", M.touchCircleButton )
+    options.ignoreTap = options.ignoreTap or false
+    if options.ignoreTap then
+        muiData.widgetDict[options.name]["circlemain"]:addEventListener("tap", function() return true end)
+    end
 end
 
 function M.getCircleButtonProperty(widgetName, propertyName)
@@ -1304,7 +1322,11 @@ function M.newRadioButton(options)
     label.muiOptions = options
     muiData.widgetDict[options.basename]["radio"][options.name]["myText"]:addEventListener( "touch", M.touchCheckbox )
     muiData.widgetDict[options.basename]["radio"][options.name]["myLabel"]:addEventListener( "touch", M.touchCheckboxLabel )
-
+    options.ignoreTap = options.ignoreTap or false
+    if options.ignoreTap then
+        muiData.widgetDict[options.name]["radio"][options.name]["myText"]:addEventListener("tap", function() return true end)
+        muiData.widgetDict[options.name]["radio"][options.name]["myLabel"]:addEventListener("tap", function() return true end)
+    end
 end
 
 function M.getRadioButtonProperty(parentWidgetName, propertyName, index)
@@ -1574,6 +1596,7 @@ function M.removeRoundedRectButton(widgetName)
     if muiData.widgetDict[widgetName] == nil then return end
 
     muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", M.touchRRectButton)
+    muiData.widgetDict[widgetName]["rrect"]:removeEventListener("tap", M.touchRRectButton)
     muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
     muiData.widgetDict[widgetName]["myCircle"] = nil
     muiData.widgetDict[widgetName]["myText"]:removeSelf()
@@ -1629,6 +1652,7 @@ function M.removeRectButton(widgetName)
     if muiData.widgetDict[widgetName] == nil then return end
 
     muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", M.touchRRectButton)
+    muiData.widgetDict[widgetName]["rrect"]:removeEventListener("tap", M.touchRRectButton)
     muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
     muiData.widgetDict[widgetName]["myCircle"] = nil
     if muiData.widgetDict[widgetName]["myIconText"] ~= nil then
@@ -1767,6 +1791,8 @@ function M.removeRadioButton(widgetName)
     for name in pairs(muiData.widgetDict[widgetName]["radio"]) do
         muiData.widgetDict[widgetName]["radio"][name]["myText"]:removeEventListener( "touch", M.touchCheckbox )
         muiData.widgetDict[widgetName]["radio"][name]["myLabel"]:removeEventListener( "touch", M.touchCheckbox )
+        muiData.widgetDict[widgetName]["radio"][name]["myText"]:removeEventListener( "tap", M.touchCheckbox )
+        muiData.widgetDict[widgetName]["radio"][name]["myLabel"]:removeEventListener( "tap", M.touchCheckbox )
         muiData.widgetDict[widgetName]["radio"][name]["myCircle"]:removeSelf()
         muiData.widgetDict[widgetName]["radio"][name]["myCircle"] = nil
         muiData.widgetDict[widgetName]["radio"][name]["myText"]:removeSelf()

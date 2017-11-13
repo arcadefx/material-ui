@@ -25,6 +25,7 @@ git clone git://github.com/arcadefx/material-ui.git
 materialui (folder)
 icon-font (folder)
 ```
+* Read config.lua to copy to your config.lua the "MUI SET UP" section and also follow the 'content' section for specifying width and height.
 
 Using material-ui
 --------------

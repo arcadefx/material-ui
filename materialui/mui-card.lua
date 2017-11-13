@@ -49,16 +49,13 @@ function M.newCard(options)
 
     if options == nil then return end
 
-    local centerX = (muiData.contentWidth * 0.5)
-    local centerY = (muiData.contentHeight * 0.5)
-
-    x = options.x or centerX
-    y = options.y or centerY
+    x = options.x or 0
+    y = options.y or 0
 
     x, y = M.getSafeXY(options, x, y)
 
-    options.width = options.width or muiData.contentWidth
-    options.height = options.height or muiData.contentHeight
+    options.width = options.width or muiData.contentWidth * .5
+    options.height = options.height or muiData.contentHeight * .5
     options.strokeWidth = options.strokeWidth or 0
     options.useShadow = options.useShadow or false
     options.useContainer = options.useContainer or false
@@ -78,7 +75,8 @@ function M.newCard(options)
         if options.useShadow == true then
             sizeOffset = options.shadowSize
         end
-        muiData.widgetDict[options.name]["mygroup"] = display.newContainer(options.width + sizeOffset, options.height + sizeOffset)
+        muiData.widgetDict[options.name]["mygroup"] = display.newGroup() -- display.newContainer(options.width + sizeOffset, options.height + sizeOffset)        
+        muiData.widgetDict[options.name]["mycontainer"] = display.newContainer(options.width - (options.strokeWidth + 1), options.height - (options.strokeWidth + 1))
     end
     muiData.widgetDict[options.name]["mygroup"]:translate( x, y )
 
@@ -104,70 +102,62 @@ function M.newCard(options)
         if options.useShadow == true then
             local shadow = M.newShadowShape("rect", {
                 name = options.name,
-                width = options.width,
-                height = options.height,
+                width = options.width + options.shadowSize * .2,
+                height = options.height + options.shadowSize * .2,
                 size = options.shadowSize,
-                opacity = options.shadowOpacity,
+                opacity = options.shadowOpacity
             })
             muiData.widgetDict[options.name]["shadow"] = shadow
             muiData.widgetDict[options.name]["mygroup"]:insert( shadow )
         end
     else
-        muiData.widgetDict[options.name]["rect"] = display.newRoundedRect( 0, 0, options.width, options.height - nr, nr)
+        muiData.widgetDict[options.name]["rect"] = display.newRoundedRect( 0, 0, options.width, options.height, nr)
         if options.useShadow == true then
             local shadow = M.newShadowShape("rounded_rect", {
                 name = options.name,
-                width = options.width,
-                height = options.height,
+                width = options.width, -- + options.shadowSize,
+                height = options.height, -- + options.shadowSize,
                 size = options.shadowSize,
                 opacity = options.shadowOpacity,
-                cornerRadius = radius,
+                cornerRadius = nr,
             })
             muiData.widgetDict[options.name]["shadow"] = shadow
             muiData.widgetDict[options.name]["mygroup"]:insert( shadow )
+            print("shadow???")
         end
     end
+
     if options.strokeWidth ~= nil and options.strokeWidth > 0 then
         muiData.widgetDict[options.name]["rect"].strokeWidth = options.strokeWidth or 0
     end
     if options.strokeColor ~= nil then
         muiData.widgetDict[options.name]["rect"]:setStrokeColor( unpack( options.strokeColor ) )
     end
-    if options.fillColorBottom ~= nil then
-        muiData.widgetDict[options.name]["rect"]:setFillColor( unpack( options.fillColorBottom ) )
-    end
-    muiData.widgetDict[options.name]["rect"].isVisible = true
-    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["rect"] )
-    muiData.widgetDict[options.name]["touching"] = false
 
-    if options.radius == nil then
-        muiData.widgetDict[options.name]["rectTop"] = display.newRect( 0, 0, options.width - (options.strokeWidth * 0.5), options.topHeight)
-        muiData.widgetDict[options.name]["rectTop"].y = (muiData.widgetDict[options.name]["rect"].y - ((options.height * 0.5) - (options.topHeight * 0.5) ))
+    if options.fillColor ~= nil then
+        muiData.widgetDict[options.name]["rect"]:setFillColor( unpack( options.fillColor ) )
+    end
+
+    muiData.widgetDict[options.name]["rect"].isVisible = true
+    if muiData.widgetDict[options.name]["mycontainer"] ~= nil then
+        muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["rect"] )
     else
-        muiData.widgetDict[options.name]["rectTopRound"] = display.newRoundedRect( 0, 0, options.width, options.topHeight, nr)
-        if options.strokeWidth ~= nil and options.strokeWidth > 0 then
-            muiData.widgetDict[options.name]["rectTopRound"].strokeWidth = options.strokeWidth or 0
-        end
-        if options.strokeColor ~= nil then
-            muiData.widgetDict[options.name]["rectTopRound"]:setStrokeColor( unpack( options.strokeColor ) )
-        end
-        muiData.widgetDict[options.name]["rectTopRound"].y = (muiData.widgetDict[options.name]["rect"].y - (options.height * 0.5)) + ((options.topHeight+nr) * 0.5)
-        muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["rectTopRound"] )
-        muiData.widgetDict[options.name]["rectTop"] = display.newRect( 0, 0, options.width - (options.strokeWidth), nr * 2)
-        muiData.widgetDict[options.name]["rectTop"].y = (muiData.widgetDict[options.name]["rectTopRound"].y + (options.topHeight * 0.5)) - ((nr * 1.5)*0.5)
+        muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["rect"] )
     end
-    if options.fillColorTop ~= nil and muiData.widgetDict[options.name]["rectTopRound"] ~= nil then
-        muiData.widgetDict[options.name]["rectTopRound"]:setFillColor( unpack( options.fillColorTop ) )
+
+    if muiData.widgetDict[options.name]["mycontainer"] ~= nil then
+        muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["mycontainer"] )
     end
-    if options.fillColorTop ~= nil and muiData.widgetDict[options.name]["rectTop"] ~= nil then
-        muiData.widgetDict[options.name]["rectTop"]:setFillColor(unpack(options.fillColorTop))
-    end
-    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["rectTop"] )
+
+    muiData.widgetDict[options.name]["touching"] = false
 
 end
 
 function M.newCardObject(options)
 	if options == nil then return end
+
+    local topInset, leftInset, bottomInset, rightInset = display.getSafeAreaInsets()
+
     if options.muiObject == nil then options.muiObject = true end
 
 	if muiData.widgetDict[options.cardname]["objects"] == nil then
@@ -183,6 +173,12 @@ function M.newCardObject(options)
         local sourceObj = M.getWidgetBaseObject( options.cardname )
         local destObj = M.getWidgetBaseObject( options.name )
         if sourceObj ~= nil and destObj ~= nil then
+            if leftInset > 0 then
+                destObj.x = destObj.x - leftInset
+            end
+            if topInset > 0 then
+                destObj.y = destObj.y - topInset
+            end
             sourceObj:insert( destObj )
         end
     else
@@ -213,10 +209,6 @@ function M.getCardProperty( widgetName, propertyName )
         data = muiData.widgetDict[widgetName]["rectTop"] -- the background layer
     elseif propertyName == "layer_4" then
         data = muiData.widgetDict[widgetName]["rectTopRound"] -- the background layer
-    elseif propertyName == "topHeight" then
-        data = muiData.widgetDict[widgetName]["options"].topHeight -- the top height layer
-    elseif propertyName == "bottomHeight" then
-        data = muiData.widgetDict[widgetName]["options"].height - muiData.widgetDict[widgetName]["options"].topHeight -- the top height layer
     elseif propertyName == "objects" then
         data = muiData.widgetDict[widgetName]["objects"] -- mui card objects
     elseif propertyName == "objects_ext" then

@@ -103,7 +103,27 @@ function M.init_base(options)
   muiData.sceneData[MySceneName] = {}
   muiData.environment = system.getInfo("environment")
   muiData.androidApiLevel = system.getInfo("androidApiLevel")
-  muiData.platform = system.getInfo("platform")
+  muiData.platform = string.lower(system.getInfo("platform"))
+  muiData.aspectRatio = display.pixelHeight / display.pixelWidth
+
+  muiData.isPhone = true
+  if muiData.platform == "android" then
+    wInch = system.getInfo( "androidDisplayWidthInInches" )
+    wHeight = system.getInfo( "androidDisplayHeightInInches" )
+    if wInch ~= nil and wHeight ~= nil and (wInch > 6 or wHeight > 6) then
+      muiData.isPhone = false
+    elseif muiData.aspectRatio < 1.7 then
+      -- assuming these are tablets
+      muiData.isPhone = false
+    end
+  elseif muiData.platform == "ios" then
+    model = system.getInfo("model")
+    if string.find(string.lower(model), "iphone") == nil then
+      muiData.isPhone = false
+    end
+  else
+    muiData.isPhone = false
+  end
 
   local fontPath = ""
   if _muiPlugin == true then
@@ -151,7 +171,6 @@ function M.init_base(options)
   muiData.onBoardData = nil
   muiData.slideData = nil
   muiData.currentSlide = 0
-  muiData.aspectRatio = display.pixelHeight / display.pixelWidth
 
   M.setDisplayDimensions()
   M.setSafeAreaInsets() -- handle overscan areas and areas like the iPhone X notch
@@ -183,12 +202,21 @@ function M.init_base(options)
       muiData.widgetDict[muiPriv]["areaRightInset"]:setFillColor( defaultBackgroundColor )
       muiData.widgetDict[muiPriv]["areaRightInset"]:toFront()
   end
+  if muiData.safeAreaInsets.topInset > 0 then
+      local y = 0
+      muiData.widgetDict[muiPriv]["areaTopInset"] = display.newRect( muiData.safeAreaWidth * .5 + (muiData.safeAreaInsets.leftInset), y, muiData.safeAreaWidth, muiData.safeAreaInsets.topInset * 2 )
+      muiData.widgetDict[muiPriv]["areaTopInset"].strokeWidth = 0
+      muiData.widgetDict[muiPriv]["areaTopInset"]:setFillColor( defaultBackgroundColor )
+      muiData.widgetDict[muiPriv]["areaTopInset"]:toFront()
+      muiData.widgetDict[muiPriv]["areaTopInset"].isVisible = false
+  end
   if muiData.safeAreaInsets.bottomInset > 0 then
-      local y = muiData.safeAreaHeight + muiData.safeAreaInsets.topInset
+      local y = muiData.safeAreaHeight + muiData.safeAreaInsets.topInset + muiData.safeAreaInsets.bottomInset
       muiData.widgetDict[muiPriv]["areaBottomInset"] = display.newRect( muiData.safeAreaWidth * .5 + (muiData.safeAreaInsets.leftInset), y, muiData.safeAreaWidth, muiData.safeAreaInsets.bottomInset * 2 )
       muiData.widgetDict[muiPriv]["areaBottomInset"].strokeWidth = 0
       muiData.widgetDict[muiPriv]["areaBottomInset"]:setFillColor( defaultBackgroundColor )
       muiData.widgetDict[muiPriv]["areaBottomInset"]:toFront()
+      muiData.widgetDict[muiPriv]["areaBottomInset"].isVisible = false
   end
 
 end
@@ -196,6 +224,10 @@ end
 function M.init_calls()
   -- perform additional calls
   M.addEventListenerForSlidePanel(M.getParent())
+end
+
+function M.isPhone()
+  return muiData.isPhone
 end
 
 function M.getCurrentScene()
@@ -220,7 +252,7 @@ end
 
 function M.setDisplayDimensions(options)
    muiData.contentWidth = display.contentWidth
-    muiData.contentHeight = display.contentHeight
+   muiData.contentHeight = display.contentHeight
 end
 
 function M.eventSuperListner(event)
@@ -503,6 +535,28 @@ function M.getWidgetValue(widgetName)
     return muiData.widgetDict[widget]["value"]
 end
 
+function M.showInsetOverlay()
+  local muiPriv = "muiPriv"
+  if muiData.safeAreaInsets.topInset > 0 then
+      muiData.widgetDict[muiPriv]["areaTopInset"].isVisible = true
+      muiData.widgetDict[muiPriv]["areaTopInset"]:toFront()
+  end
+  if muiData.safeAreaInsets.bottomInset > 0 then
+      muiData.widgetDict[muiPriv]["areaBottomInset"].isVisible = true
+      muiData.widgetDict[muiPriv]["areaBottomInset"]:toFront()
+  end
+end
+
+function M.hideInsetOverlay()
+  local muiPriv = "muiPriv"
+  if muiData.safeAreaInsets.topInset > 0 then
+      muiData.widgetDict[muiPriv]["areaTopInset"].isVisible = false
+  end
+  if muiData.safeAreaInsets.bottomInset > 0 then
+      muiData.widgetDict[muiPriv]["areaBottomInset"].isVisible = false
+  end
+end
+
 function M.toFrontSafeArea()
    muiPriv = "muiPriv"
    if muiData.widgetDict[muiPriv] ~= nil then
@@ -687,6 +741,7 @@ function M.transitionCircleSwitch(params)
 
   local circleColor = params.circleColor
   local callBackData = params.callBackData
+
   muiData.sceneData[MySceneName].circleSceneSwitch = display.newCircle( 0, 0, muiData.contentWidth + (muiData.contentWidth * 0.25))
   muiData.sceneData[MySceneName].circleSceneSwitch:setFillColor( unpack(circleColor) )
   muiData.sceneData[MySceneName].circleSceneSwitch.alpha = 1
@@ -715,8 +770,10 @@ function M.transitionCircleSwitch(params)
       end
   end
 
-  Runtime:addEventListener("enterFrame", muiData.sceneData[MySceneName].circleSceneSwitch.runFunc)
+  M.showInsetOverlay()
   M.toFrontSafeArea()
+
+  Runtime:addEventListener("enterFrame", muiData.sceneData[MySceneName].circleSceneSwitch.runFunc)
 end
 
 function M.transitionColor(displayObj, params)
@@ -1048,6 +1105,9 @@ function M.finalActionForSwitchScene(e)
     muiData.sceneData[MySceneName].circleSceneSwitch:removeSelf()
     muiData.sceneData[MySceneName].circleSceneSwitch = nil
     --]]--
+
+    M.hideInsetOverlay()
+
     muiData.sceneData[MySceneName].circleSceneSwitchStarted = false
     if e.callBackData ~= nil and e.callBackData.sceneDestination ~= nil then
         M.setSceneToSwitchToAfterDestroy( e.callBackData.sceneDestination )
@@ -1325,6 +1385,10 @@ function M.destroy()
   if muiData.widgetDict[muiPriv]["areaRightInset"] ~= nil then
       muiData.widgetDict[muiPriv]["areaRightInset"]:removeSelf()
       muiData.widgetDict[muiPriv]["areaRightInset"] = nil
+  end
+  if muiData.widgetDict[muiPriv]["areaTopInset"] ~= nil then
+      muiData.widgetDict[muiPriv]["areaTopInset"]:removeSelf()
+      muiData.widgetDict[muiPriv]["areaTopInset"] = nil
   end
   if muiData.widgetDict[muiPriv]["areaBottomInset"] ~= nil then
       muiData.widgetDict[muiPriv]["areaBottomInset"]:removeSelf()

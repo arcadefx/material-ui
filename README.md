@@ -61,7 +61,7 @@ Building for Device
 -------------
 Due to device keyboard possibly covering up input fields, be sure to include "coronaWindowMovesWhenKeyboardAppears=true" into iOS settings->iphone->plist table and Android settings.
 
-For an example, see [build.settings](https://github.com/arcadefx/material-ui/blob/0.3.0/build.settings) file.
+For an example, see [build.settings](https://github.com/arcadefx/material-ui/blob/master/build.settings) file.
 
 - For iOS devices, please add to you "plist": UILaunchStoryboardName = "LaunchScreen",
 - For iOS devices, copy the folder "LaunchScreen.storyboardc" to your project ONLY if it doesn't

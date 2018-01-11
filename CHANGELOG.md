@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.3] - 2018-01-11
+### Changes
+- Added SVG graphic support module. It's being integrated into the widgets. This will allow the developer
+to support SVG images for Icons. Material font codepoints will remain as-is and SVG will be an option per widget. Currently only newIconButton() uses it.
+- Fixed newTextBox() issue when less text is put into the box when prior text existed. It would push the text down on the screen.
+- Turn on Svg support, activate the 'nanosvg' plugin from CoronaLabs Marketplace. Supply the flag 'useSvg' set to true in the initialization call. Example: mui.init(nil, {parent=self.view, useSvg = true})
+
+## [0.3.2] - 2017-11-13
+### Changes
+- Added 'ignoreTap' to all buttons to 'ignore' tap event.
+- Improved support for inset settings for display (iPhone X)
+- Detecting if Phone or Tablet using mui.isPhone() returns boolean true/false.
+- Fixed Cards
+
 ## [0.3.1] - 2017-10-13
 ### Changes
 - Added insertRowsTableView() appends rows to an existing table view. Arguments are name of tableView and a list of entries. See documentation for newTableView with Helpers.

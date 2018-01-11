@@ -66,6 +66,7 @@ local modules = {
   "mui-slider",
   "mui-slidepanel",
   "mui-snackbar",
+  "mui-svg",
   "mui-switch",
   "mui-tableview",
   "mui-textinput",

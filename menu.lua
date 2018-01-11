@@ -39,7 +39,7 @@ function scene:create( event )
 
     display.setDefault("background", 1, 1, 1)
 
-    mui.init(nil, { parent=self.view, useActualDimensions=false })
+    mui.init(nil, { parent=self.view })
 
     -- Gather insets (function returns these in the order of top, left, bottom, right)
     local topInset, leftInset, bottomInset, rightInset = mui.getSafeAreaInsets()

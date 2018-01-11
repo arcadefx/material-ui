@@ -135,6 +135,8 @@ function M.init_base(options)
   muiData.materialFontCodePoints = materialFontCodePoints
   M.materialFont = muiData.materialFont
 
+  muiData.useSvg = options.useSvg or false
+
   -- utf8 support required for Android API < 23 (to be safe)
   muiData.utf8 = utf8v1
   muiData.utf8Assist = false
@@ -167,7 +169,7 @@ function M.init_base(options)
   muiData.dialogInUse = false
   muiData.dialogName = nil
   muiData.navbarHeight = 0
-  muiData.navbarSupportedTypes = { "Text", "EmbossedText", "Image", "ImageRect", "CircleButton", "RRectButton", "RectButton", "IconButton", "Slider", "TextField", "Generic" }
+  muiData.navbarSupportedTypes = { "Text", "EmbossedText", "Image", "ImageRect", "ImageSvg", "ImageSvgStyle", "CircleButton", "RRectButton", "RectButton", "IconButton", "Slider", "TextField", "Generic" }
   muiData.onBoardData = nil
   muiData.slideData = nil
   muiData.currentSlide = 0
@@ -228,6 +230,21 @@ end
 
 function M.isPhone()
   return muiData.isPhone
+end
+
+function M.isModuleAvailable(name)
+  if package.loaded[name] then
+    return true
+  else
+    for _, searcher in ipairs(package.searchers or package.loaders) do
+      local loader = searcher(name)
+      if type(loader) == 'function' then
+        package.preload[name] = loader
+        return true
+      end
+    end
+    return false
+  end
 end
 
 function M.getCurrentScene()
@@ -392,6 +409,10 @@ function M.getWidgetBaseObject(name)
                widgetData = muiData.widgetDict[widget]["image"]
             elseif widgetType == "ImageRect" then
                widgetData = muiData.widgetDict[widget]["image_rect"]
+            elseif widgetType == "ImageSvg" then
+               widgetData = muiData.widgetDict[widget]["image_svg"]
+            elseif widgetType == "ImageSvgStyle" then
+               widgetData = muiData.widgetDict[widget]["image_svg"]
             elseif widgetType == "DatePicker" then
                widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "EmbossedText" then
@@ -466,6 +487,8 @@ function M.getWidgetProperty( widgetName, propertyName )
     widgetData = M.getImageRectProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "Navbar" or muiData.widgetDict[widgetName]["type"] == "NavBar" then
     widgetData = M.getNavBarProperty( widgetName, propertyName )
+  elseif muiData.widgetDict[widgetName]["type"] == "ImageSvg" or muiData.widgetDict[widgetName]["type"] == "ImageSvgStyle" then
+    widgetData = M.getImageSvgProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "Popover" then
     widgetData = M.getPopoverProperty( widgetName, propertyName )
   elseif muiData.widgetDict[widgetName]["type"] == "ProgressArc" then
@@ -913,6 +936,35 @@ function M.newShadowShape( shape, options, restoreGroup )
   return g
 end
 
+-- credit to Lostgallifreyan
+--
+function M.decToHex(IN)
+    local B,K,OUT,I,D=16,"0123456789ABCDEF","",0
+    while IN>0 do
+        I=I+1
+        IN,D=math.floor(IN/B),math.mod(IN,B)+1
+        OUT=string.sub(K,D,D)..OUT
+    end
+    return OUT
+end
+
+function M.colorToHex(color)
+  local rgbHexColor = ""
+  if color == nil then return rgbHexColor end
+  local rgbHex = {}
+  if color ~= nil and type(color) == "table" and next(color) ~= nil then
+      rgbHex[1] = M.decToHex(color[1]*255) 
+      rgbHex[2] = M.decToHex(color[2]*255) 
+      rgbHex[3] = M.decToHex(color[3]*255)
+      rgbHexColor = "#"..rgbHex[1]..rgbHex[2]..rgbHex[3]
+  end
+  return rgbHexColor
+end
+
+function M.stringEnds(String,End)
+   return End=='' or string.sub(String,-string.len(End))==End
+end
+
 function M.split(str, sep)
    local result = {}
    local regex = ("([^%s]+)"):format(sep)
@@ -1273,6 +1325,8 @@ function M.hideWidget(widgetName, showWidget)
             muiData.widgetDict[widget]["image"].isVisible = showWidget
         elseif widgetType == "ImageRect" then
             muiData.widgetDict[widget]["image_rect"].isVisible = showWidget
+        elseif widgetType == "ImageSvg" or widgetType == "ImageSvgStyle" then
+            muiData.widgetDict[widget]["image_svg"].isVisible = showWidget
         elseif widgetType == "RRectButton" or widgetType == "RectButton" then
             muiData.widgetDict[widget]["container"].isVisible = showWidget
         elseif widgetType == "IconButton" or widgetType == "RadioButton" then
@@ -1322,6 +1376,10 @@ function M.removeWidgetByName(widgetName)
         M.removeImage(widgetName)
     elseif widgetType == "ImageRect" then
         M.removeImageRect(widgetName)
+    elseif widgetType == "ImageSvg" then
+        M.removeImageSvg(widgetName)
+    elseif widgetType == "ImageSvgStyle" then
+        M.removeImageSvgStyle(widgetName)
     elseif widgetType == "EmbossedText" then
         M.removeEmbossedText(widgetName)
     elseif widgetType == "RRectButton" then
@@ -1413,6 +1471,10 @@ function M.destroy()
             M.removeImage(widget)
         elseif widgetType == "ImageRect" then
             M.removeImageRect(widget)
+        elseif widgetType == "ImageSvg" then
+            M.removeImageSvg(widget)
+        elseif widgetType == "ImageSvgStyle" then
+            M.removeImageSvgStyle(widget)
         elseif widgetType == "EmbossedText" then
             M.removeEmbossedText(widget)
         elseif widgetType == "RRectButton" then

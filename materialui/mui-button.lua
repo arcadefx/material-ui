@@ -661,6 +661,8 @@ function M.newIconButton(options)
 
     x, y = M.getSafeXY(options, x, y)
 
+    isSvgIcon = options.isSvgIcon or false
+
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "IconButton"
     muiData.widgetDict[options.name]["mygroup"] = display.newGroup()
@@ -733,24 +735,44 @@ function M.newIconButton(options)
         tw = fontSize
     end
 
+    if isSvgIcon then
+        tw = textToMeasure.contentWidth
+        th = textToMeasure.contentHeight
+    end
+
     textToMeasure:removeSelf()
     textToMeasure = nil
 
-    local options2 =
-    {
-        --parent = textGroup,
-        text = options.text,
-        x = 0,
-        y = 0,
-        font = font,
-        width = tw * 1.5,
-        fontSize = fontSize,
-        align = "center"
-    }
+    if not isSvgIcon then
+        local options2 =
+        {
+            --parent = textGroup,
+            text = options.text,
+            x = 0,
+            y = 0,
+            font = font,
+            width = tw * 1.5,
+            fontSize = fontSize,
+            align = "center"
+        }
 
-    muiData.widgetDict[options.name]["myText"] = display.newText( options2 )
-    muiData.widgetDict[options.name]["myText"]:setFillColor( unpack(textColor) )
+        muiData.widgetDict[options.name]["myText"] = display.newText( options2 )
+        muiData.widgetDict[options.name]["myText"]:setFillColor( unpack(textColor) )
+    else
+        muiData.widgetDict[options.name]["myText"] = M.newSvgImageWithStyle({
+            name = options.name,
+            path = options.svgPath,
+            width = tw,
+            height = th,
+            fillColor = options.fillColor,
+            strokeWidth = options.strokeWidth,
+            strokeColor = options.strokeColor,
+            x = 0,
+            y = 0,
+        })
+    end
     muiData.widgetDict[options.name]["myText"].isVisible = true
+
     if isChecked then
         muiData.widgetDict[options.name]["myText"].isChecked = isChecked
     end
@@ -784,6 +806,12 @@ function M.newIconButton(options)
     if options.ignoreTap then
         muiData.widgetDict[options.name]["myText"]:addEventListener("tap", function() return true end)
     end
+end
+
+function M.resizeIconButton(options)
+    if options == nil then return end
+    local obj = muiData.widgetDict[options.name]["myText"]
+    obj.size = options.size
 end
 
 function M.getIconButtonProperty(widgetName, propertyName)
@@ -846,6 +874,7 @@ function M.touchIconButton (event)
                 event.myTargetName = options.name
 
                 muiData.widgetDict[options.name]["value"] = options.value
+                M.setEventParameter(event, "muiTargetName", options.name)
                 M.setEventParameter(event, "muiTargetValue", options.value)
                 M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["myText"])
                 M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)

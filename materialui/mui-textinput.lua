@@ -656,10 +656,8 @@ function M.adjustFakeTextBox(widgetName)
     if muiData.widgetDict[widgetName]["containerfake"] ~= nil then
         local hContainer = muiData.widgetDict[widgetName]["containerfake"].contentHeight
         local hText = muiData.widgetDict[widgetName]["textfieldfake"].contentHeight
-        if hText > hContainer then
-            local newY = (hText - hContainer) * .5
-            muiData.widgetDict[widgetName]["textfieldfake"].y = newY
-        end
+        local newY = (hText - hContainer) * .5
+        muiData.widgetDict[widgetName]["textfieldfake"].y = newY
     end
 end
 
@@ -723,6 +721,7 @@ function M.removeTextField(widgetName)
         muiData.widgetDict[widgetName]["containerfake"]:removeSelf()
     end
     if muiData.widgetDict[widgetName]["textfield"] ~= nil then
+        muiData.widgetDict[widgetName]["textfield"]:removeEventListener("userInput", M.textListener)
         muiData.widgetDict[widgetName]["textfield"].isVisible = false
         muiData.widgetDict[widgetName]["textfield"]:removeSelf()
         muiData.widgetDict[widgetName]["textfield"] = nil

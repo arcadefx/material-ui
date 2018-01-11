@@ -96,4 +96,13 @@ settings =
 		},
 	},
 	--]]
+	--[[
+    plugins =
+    {
+        ["plugin.nanosvg"] =
+        {
+            publisherId = "com.coronalabs"
+        },
+    },
+	--]]
 }

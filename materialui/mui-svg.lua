@@ -156,6 +156,7 @@ function M.removeImageSvgStyle(widgetName)
 	end
     if muiData.widgetDict[widgetName]["image_svg"] ~= nil then
         muiData.widgetDict[widgetName]["image_svg"]:removeSelf()
+        muiData.widgetDict[widgetName]["image_svg"] = nil
     end
     muiData.widgetDict[widgetName] = nil
 end

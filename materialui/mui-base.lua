@@ -404,7 +404,7 @@ function M.getWidgetBaseObject(name)
             elseif widgetType == "CircleButton" then
                widgetData = muiData.widgetDict[widget]["mygroup"]
             elseif widgetType == "Card" then
-               widgetData = muiData.widgetDict[widget]["mygroup"]
+               widgetData = muiData.widgetDict[widget]["group"]
             elseif widgetType == "Image" then
                widgetData = muiData.widgetDict[widget]["image"]
             elseif widgetType == "ImageRect" then

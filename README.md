@@ -78,7 +78,7 @@ Sample Screenshot
 
 Available Methods and Documentation
 -------------
-* See Documentation. [View Documentation](http://www.anedix.com/docs/mui/) for more information on methods, examples and properties.
+* See Documentation. [View Documentation](https://corona-material-ui.sourceforge.io/) for more information on methods, examples and properties.
 
 Contributing
 -------------

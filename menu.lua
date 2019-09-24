@@ -15,7 +15,7 @@ local screenW, screenH, halfW = display.contentWidth, display.contentHeight, dis
 local background = nil
 local widget = require( "widget" )
 
--- mui
+-- mui x
 local muiData = require( "materialui.mui-data" )
 
 -- -----------------------------------------------------------------------------------------------------------------

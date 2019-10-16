@@ -214,6 +214,7 @@ function scene:create( event )
             -- The 'sheetOptions' is directly from Corona sheets
             sheetIndex = 1, -- which frame to show for image from sheet
             touchIndex = 2, -- which frame to show for touch event
+            disabledIndex = -1, -- which frame to show when disabled
             touchFadeAnimation = true, -- helpful with shadows
             touchFadeAnimationSpeedOut = 500,
             sheetOptions = {

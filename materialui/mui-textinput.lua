@@ -1,32 +1,32 @@
 --[[
-    A loosely based Material UI module
+A loosely based Material UI module
 
-    mui-textinput.lua : This is for creating text input widgets.
+mui-textinput.lua : This is for creating text input widgets.
 
-    The MIT License (MIT)
+The MIT License (MIT)
 
-    Copyright (C) 2016 Anedix Technologies, Inc.  All Rights Reserved.
+Copyright (C) 2016 Anedix Technologies, Inc. All Rights Reserved.
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-    For other software and binaries included in this module see their licenses.
-    The license and the software must remain in full when copying or distributing.
+For other software and binaries included in this module see their licenses.
+The license and the software must remain in full when copying or distributing.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 --]]--
 
@@ -108,6 +108,9 @@ function M.newTextField(options)
         options.textFieldFontSize = options.fontSize or options.height
     end
 
+    if options.state == nil then options.state = {} end
+    options.state.value = options.state.value or "off"
+
     muiData.widgetDict[options.name]["options"] = options
 
     muiData.widgetDict[options.name]["rect"] = display.newRect( 0, 0, options.width, options.height )
@@ -116,27 +119,107 @@ function M.newTextField(options)
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["rect"] )
 
     local rect = muiData.widgetDict[options.name]["rect"]
-    muiData.widgetDict[options.name]["line"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
-    muiData.widgetDict[options.name]["line"].strokeWidth = 2
-    muiData.widgetDict[options.name]["line"]:setStrokeColor( unpack(options.inactiveColor) )
-    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["line"] )
 
-    muiData.widgetDict[options.name]["lineanim"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
-    muiData.widgetDict[options.name]["lineanim"].strokeWidth = 2
-    muiData.widgetDict[options.name]["lineanim"]:setStrokeColor( unpack(options.inactiveColor) )
-    muiData.widgetDict[options.name]["lineanim"].isVisible = false
-    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["lineanim"] )
+    if options.backgroundFake ~= nil and options.backgroundFake.off.image == nil and options.backgroundFake.off.svg == nil then
+        muiData.widgetDict[options.name]["line"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
+        muiData.widgetDict[options.name]["line"].strokeWidth = 2
+        muiData.widgetDict[options.name]["line"]:setStrokeColor( unpack(options.inactiveColor) )
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["line"] )
+
+        muiData.widgetDict[options.name]["lineanim"] = display.newLine( -(rect.contentWidth * 0.9), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
+        muiData.widgetDict[options.name]["lineanim"].strokeWidth = 2
+        muiData.widgetDict[options.name]["lineanim"]:setStrokeColor( unpack(options.inactiveColor) )
+        muiData.widgetDict[options.name]["lineanim"].isVisible = false
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["lineanim"] )
+    elseif options.backgroundFake ~= nil and options.backgroundFake.off ~= nil and options.backgroundFake.off.svg ~= nil then
+        muiData.widgetDict[options.name]["backgroundFake"] = M.newSvgImageWithStyle({
+                name = options.name.."backgroundFakeSvgOff",
+                path = options.backgroundFake.off.svg.path,
+                width = options.width+5,
+                height = options.height,
+                fillColor = options.backgroundFake.off.svg.fillColor or options.backgroundFake.off.color,
+                strokeWidth = options.backgroundFake.off.svg.strokeWidth or 1,
+                strokeColor = options.backgroundFake.off.svg.strokeColor or options.backgroundFake.off.color,
+                x = 0,
+                y = 0,
+            })
+        if options.state.value == "disabled" then
+            muiData.widgetDict[options.name]["backgroundFake"].isVisible = false
+        end
+    else
+        --[[
+        muiData.widgetDict[options.name]["backgroundFake"] = display.newImageRect(options.backgroundFake.off.image, options.width+5, options.height)
+        muiData.widgetDict[options.name]["backgroundFake"].x = 0
+        muiData.widgetDict[options.name]["backgroundFake"].y = 0
+        if options.state.value == "disabled" then
+            muiData.widgetDict[options.name]["backgroundFake"].isVisible = false
+        end
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["backgroundFake"] )
+        --]]--
+    end
+
+    if options.backgroundFake ~= nil and options.backgroundFake.disabled.image ~= nil then
+        muiData.widgetDict[options.name]["backgroundFakeDisabled"] = display.newImageRect(options.backgroundFake.disabled.image, options.width+5, options.height)
+        muiData.widgetDict[options.name]["backgroundFakeDisabled"].x = 0
+        muiData.widgetDict[options.name]["backgroundFakeDisabled"].y = 0
+        if options.state.value == "off" then
+            muiData.widgetDict[options.name]["backgroundFakeDisabled"].isVisible = false
+        end
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["backgroundFakeDisabled"] )
+    elseif options.backgroundFake ~= nil and options.backgroundFake.disabled ~= nil and options.backgroundFake.disabled.svg ~= nil then
+        muiData.widgetDict[options.name]["backgroundFakeDisabled"] = M.newSvgImageWithStyle({
+                name = options.name.."backgroundFakeDisabledSvgOff",
+                path = options.backgroundFake.disabled.svg.path,
+                width = options.width+5,
+                height = options.height,
+                fillColor = options.backgroundFake.disabled.svg.fillColor or options.backgroundFake.disabled.color,
+                strokeWidth = options.backgroundFake.disabled.svg.strokeWidth or 1,
+                strokeColor = options.backgroundFake.disabled.svg.strokeColor or options.backgroundFake.disabled.color,
+                x = 0,
+                y = 0,
+            })
+        if options.state.value == "off" then
+            muiData.widgetDict[options.name]["backgroundFakeDisabled"].isVisible = false
+        end
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["backgroundFakeDisabled"] )
+    end
+
+    if options.backgroundFake ~= nil and options.backgroundFake.disabled.image ~= nil then
+        muiData.widgetDict[options.name]["backgroundFakeDisabled"] = display.newImageRect(options.backgroundFake.disabled.image, options.width+5, options.height)
+        muiData.widgetDict[options.name]["backgroundFakeDisabled"].x = 0
+        muiData.widgetDict[options.name]["backgroundFakeDisabled"].y = 0
+        if options.state.value == "off" then
+            muiData.widgetDict[options.name]["backgroundFakeDisabled"].isVisible = false
+        end
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["backgroundFakeDisabled"] )
+    elseif options.backgroundFake ~= nil and options.backgroundFake.disabled ~= nil and options.backgroundFake.disabled.svg ~= nil then
+        muiData.widgetDict[options.name]["backgroundFakeDisabled"] = M.newSvgImageWithStyle({
+                name = options.name.."backgroundFakeDisabledSvgOff",
+                path = options.backgroundFake.disabled.svg.path,
+                width = options.width+5,
+                height = options.height,
+                fillColor = options.backgroundFake.disabled.svg.fillColor or options.backgroundFake.disabled.color,
+                strokeWidth = options.backgroundFake.disabled.svg.strokeWidth or 1,
+                strokeColor = options.backgroundFake.disabled.svg.strokeColor or options.backgroundFake.disabled.color,
+                x = 0,
+                y = 0,
+            })
+        if options.state.value == "off" then
+            muiData.widgetDict[options.name]["backgroundFakeDisabled"].isVisible = false
+        end
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["backgroundFakeDisabled"] )
+    end
 
     local labelOptions =
     {
         --parent = textGroup,
-        text = options.labelText,
+        text = options.labelText or "",
         x = -(rect.contentWidth * 0.25),
         y = -(rect.contentHeight * 0.95),
-        width = rect.contentWidth * 0.5,     --required for multi-line and alignment
+        width = rect.contentWidth * 0.5, --required for multi-line and alignment
         font = options.font,
         fontSize = options.fontSize or options.height * 0.55,
-        align = "left"  --new alignment parameter
+        align = "left" --new alignment parameter
     }
     if options.labelText ~= nil then
         muiData.widgetDict[options.name]["textlabel"] = display.newText( labelOptions )
@@ -154,7 +237,7 @@ function M.newTextField(options)
     muiData.widgetDict[options.name]["textfield"] = native.newTextField( 0, 0, options.width, options.height * scaleFontSize )
     muiData.widgetDict[options.name]["textfield"].name = options.name
     if options.placeholder ~= nil then
-       muiData.widgetDict[options.name]["textfield"].placeholder = options.placeholder 
+        muiData.widgetDict[options.name]["textfield"].placeholder = options.placeholder
     end
     muiData.widgetDict[options.name]["textfield"].hasBackground = false
     muiData.widgetDict[options.name]["textfield"].isVisible = false
@@ -166,18 +249,18 @@ function M.newTextField(options)
 
     local fadeText = options.text
     if options.placeholder ~= nil and options.text ~= nil and string.len(options.text) < 1 then
-       fadeText = options.placeholder
+        fadeText = options.placeholder
     else
-       if muiData.widgetDict[options.name]["isSecure"] == true then
-           local length = string.len(fadeText)
-           text = ""
-           for i=1, length do
-               text = text .. "*"
-           end
-           fadeText = text
-       end
+        if muiData.widgetDict[options.name]["isSecure"] == true then
+            local length = string.len(fadeText)
+            text = ""
+            for i=1, length do
+                text = text .. "*"
+            end
+            fadeText = text
+        end
     end
-    
+
     if options.trimFakeTextAt ~= nil then
         local lenOfText = string.len(fadeText)
         fadeText = string.sub(fadeText, 1, options.trimFakeTextAt)
@@ -194,18 +277,20 @@ function M.newTextField(options)
         width = options.width,
         font = options.font,
         fontSize = options.height * 0.55,
-        align = "left"  --new alignment parameter
+        align = "left" --new alignment parameter
     }
     muiData.widgetDict[options.name]["textfieldfake"] = display.newText( textOptions )
     muiData.widgetDict[options.name]["textfieldfake"]:setFillColor( unpack(options.inactiveColor) )
     muiData.widgetDict[options.name]["textfieldfake"]:addEventListener("touch", M.showNativeInput)
     muiData.widgetDict[options.name]["textfieldfake"].name = options.name
     muiData.widgetDict[options.name]["textfieldfake"].dialogName = options.dialogName
+    muiData.widgetDict[options.name]["textfieldfake"].muiOptions = options
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["textfieldfake"] )
 
     -- muiData.widgetDict[options.name]["textfield"].placeholder = "Subject"
     muiData.widgetDict[options.name]["textfield"].callBack = options.callBack
     muiData.widgetDict[options.name]["textfield"]:addEventListener( "userInput", M.textListener )
+    muiData.widgetDict[options.name]["textfield"].muiOptions = options
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["textfield"] )
 end
 
@@ -261,21 +346,28 @@ function M.highlightTextField(widgetName, active)
         end
         widget["textfield"]:setTextColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
 
-        widget["lineanim"]:setStrokeColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
-        transition.to(widget["lineanim"],{time=0, alpha=0.01})
-        widget["lineanim"].isVisible = true
-        transition.from(widget["lineanim"],{time=800, alpha=0.01})
+        if widget["lineanim"] ~= nil then
+            widget["lineanim"]:setStrokeColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
+            transition.to(widget["lineanim"],{time=0, alpha=0.01})
+            widget["lineanim"].isVisible = true
+            transition.from(widget["lineanim"],{time=800, alpha=0.01})
+        end
+
         if M.isMobile() and muiData.widgetDict[widgetName .. "-Button"] ~= nil then
             muiData.widgetDict[widgetName .. "-Button"]["container"].isVisible = true
         end
     else
-        muiData.widgetDict[options.name]["lineanim"].isVisible = false
+        if muiData.widgetDict[options.name]["lineanim"] ~= nil then
+            muiData.widgetDict[options.name]["lineanim"].isVisible = false
+        end
         color = options.inactiveColor
         if widget["textlabel"] ~= nil then
             widget["textlabel"]:setFillColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
         end
         widget["textfield"]:setTextColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
-        widget["line"]:setStrokeColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
+        if widget["line"] ~= nil then
+            widget["line"]:setStrokeColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
+        end
         if widget["textfieldfake"] ~= nil then
             widget["textfieldfake"]:setFillColor( M.getColor(color, 1), M.getColor(color, 2), M.getColor(color, 3), M.getColor(color, 4) )
         end
@@ -288,6 +380,15 @@ end
 
 function M.textListener(event)
     local name = event.target.name
+    local options = event.target.muiOptions
+
+    if options ~= nil and options.state ~= nil and options.state.value == "disabled" then
+        if options.state.disabled ~= nil and options.state.disabled.callBackData ~= nil then
+            M.setEventParameter(event, "muiTargetCallBackData", options.state.disabled.callBackData)
+            assert( options.state.disabled.callBack )(event)
+        end
+        return
+    end 
 
     M.addBaseEventParameters(event, options)
 
@@ -350,7 +451,7 @@ function M.textListener(event)
 
     elseif ( event.phase == "editing" ) then
         M.highlightTextField(name, true)
-        -- muiData.widgetDict[name]["textfield"].y =  muiData.widgetDict[name]["textfield"].y - 50
+        -- muiData.widgetDict[name]["textfield"].y = muiData.widgetDict[name]["textfield"].y - 50
 
         -- M.debug( event.newCharacters )
         -- M.debug( event.oldText )
@@ -358,6 +459,31 @@ function M.textListener(event)
         -- M.debug( event.text )
     end
     return true -- prevent propagation to other controls
+end
+
+function M.turnInputBoxOff(widgetName)
+    options.state.value = "off"
+    if muiData.widgetDict[options.name]["backgroundFake"] ~= nil then
+        muiData.widgetDict[options.name]["backgroundFake"].isVisible = true
+        muiData.widgetDict[options.name]["backgroundFakeDisabled"].isVisible = false
+    else
+        muiData.widgetDict[options.name]["rect"]:setFillColor( unpack( options.fieldBackgroundColor ) )
+    end
+end
+
+function M.turnInputBoxDisabled(widgetName)
+    options.state.value = "disabled"
+    if muiData.widgetDict[options.name]["backgroundFake"] ~= nil then
+        muiData.widgetDict[options.name]["backgroundFake"].isVisible = false
+        muiData.widgetDict[options.name]["backgroundFakeDisabled"].isVisible = true
+    else
+        local color = options.fieldBackgroundColor
+        if color == nil then color = {1,1,1,1} end
+        if options.state.disabled ~= nil and options.state.disabled.fieldBackgroundColor ~= nil then
+            color = options.state.disabled.fieldBackgroundColor
+        end
+        muiData.widgetDict[options.name]["rect"]:setFillColor( unpack( color ) )
+    end
 end
 
 --
@@ -386,6 +512,9 @@ function M.newTextBox(options)
     if options.font == nil then
         options.font = native.systemFont
     end
+
+    if options.state == nil then options.state = {} end
+    options.state.value = options.state.value or "off"
 
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "TextBox"
@@ -430,27 +559,79 @@ function M.newTextBox(options)
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["rect"] )
 
     local rect = muiData.widgetDict[options.name]["rect"]
-    muiData.widgetDict[options.name]["line"] = display.newLine( -(rect.contentWidth * 0.5), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
-    muiData.widgetDict[options.name]["line"].strokeWidth = 2
-    muiData.widgetDict[options.name]["line"]:setStrokeColor( unpack(options.inactiveColor) )
-    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["line"] )
 
-    muiData.widgetDict[options.name]["lineanim"] = display.newLine( -(rect.contentWidth * 0.5), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
-    muiData.widgetDict[options.name]["lineanim"].strokeWidth = 2
-    muiData.widgetDict[options.name]["lineanim"]:setStrokeColor( unpack(options.inactiveColor) )
-    muiData.widgetDict[options.name]["lineanim"].isVisible = false
-    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["lineanim"] )
+    if options.backgroundFake ~= nil and options.backgroundFake.off.image == nil and options.backgroundFake.off.svg == nil then
+        muiData.widgetDict[options.name]["line"] = display.newLine( -(rect.contentWidth * 0.5), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
+        muiData.widgetDict[options.name]["line"].strokeWidth = 2
+        muiData.widgetDict[options.name]["line"]:setStrokeColor( unpack(options.inactiveColor) )
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["line"] )
+
+        muiData.widgetDict[options.name]["lineanim"] = display.newLine( -(rect.contentWidth * 0.5), rect.contentHeight / 2, (rect.contentWidth * 0.5), rect.contentHeight / 2)
+        muiData.widgetDict[options.name]["lineanim"].strokeWidth = 2
+        muiData.widgetDict[options.name]["lineanim"]:setStrokeColor( unpack(options.inactiveColor) )
+        muiData.widgetDict[options.name]["lineanim"].isVisible = false
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["lineanim"] )
+    elseif options.backgroundFake ~= nil and options.backgroundFake.off ~= nil and options.backgroundFake.off.svg ~= nil then
+        muiData.widgetDict[options.name]["backgroundFake"] = M.newSvgImageWithStyle({
+                name = options.name.."backgroundFakeSvgOff",
+                path = options.backgroundFake.off.svg.path,
+                width = options.width+5,
+                height = options.height,
+                fillColor = options.backgroundFake.off.svg.fillColor or options.backgroundFake.off.color,
+                strokeWidth = options.backgroundFake.off.svg.strokeWidth or 1,
+                strokeColor = options.backgroundFake.off.svg.strokeColor or options.backgroundFake.off.color,
+                x = 0,
+                y = 0,
+            })
+        if options.state.value == "disabled" then
+            muiData.widgetDict[options.name]["backgroundFake"].isVisible = false
+        end
+    else
+        muiData.widgetDict[options.name]["backgroundFake"] = display.newImageRect(options.backgroundFake.off.image, options.width+5, options.height)
+        muiData.widgetDict[options.name]["backgroundFake"].x = 0
+        muiData.widgetDict[options.name]["backgroundFake"].y = 0
+        if options.state.value == "disabled" then
+            muiData.widgetDict[options.name]["backgroundFake"].isVisible = false
+        end
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["backgroundFake"] )
+    end
+
+    if options.backgroundFake ~= nil and options.backgroundFake.disabled.image ~= nil then
+        muiData.widgetDict[options.name]["backgroundFakeDisabled"] = display.newImageRect(options.backgroundFake.disabled.image, options.width+5, options.height)
+        muiData.widgetDict[options.name]["backgroundFakeDisabled"].x = 0
+        muiData.widgetDict[options.name]["backgroundFakeDisabled"].y = 0
+        if options.state.value == "off" then
+            muiData.widgetDict[options.name]["backgroundFakeDisabled"].isVisible = false
+        end
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["backgroundFakeDisabled"] )
+    elseif options.backgroundFake ~= nil and options.backgroundFake.disabled ~= nil and options.backgroundFake.disabled.svg ~= nil then
+        muiData.widgetDict[options.name]["backgroundFakeDisabled"] = M.newSvgImageWithStyle({
+                name = options.name.."backgroundFakeDisabledSvgOff",
+                path = options.backgroundFake.disabled.svg.path,
+                width = options.width+5,
+                height = options.height,
+                fillColor = options.backgroundFake.disabled.svg.fillColor or options.backgroundFake.disabled.color,
+                strokeWidth = options.backgroundFake.disabled.svg.strokeWidth or 1,
+                strokeColor = options.backgroundFake.disabled.svg.strokeColor or options.backgroundFake.disabled.color,
+                x = 0,
+                y = 0,
+            })
+        if options.state.value == "off" then
+            muiData.widgetDict[options.name]["backgroundFakeDisabled"].isVisible = false
+        end
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["backgroundFakeDisabled"] )
+    end
 
     local labelOptions =
     {
         --parent = textGroup,
-        text = options.labelText,
+        text = options.labelText or "",
         x = 0,
         y = -(rect.contentHeight * 0.6),
-        width = rect.contentWidth,     --required for multi-line and alignment
+        width = rect.contentWidth, --required for multi-line and alignment
         font = options.font,
         fontSize = options.fontSize,
-        align = "left"  --new alignment parameter
+        align = "left" --new alignment parameter
     }
     muiData.widgetDict[options.name]["textlabel"] = display.newText( labelOptions )
     muiData.widgetDict[options.name]["textlabel"]:setFillColor( unpack(options.inactiveColor) )
@@ -464,12 +645,12 @@ function M.newTextBox(options)
         muiData.widgetDict[options.name]["textfield"].hasBackground = true
         muiData.widgetDict[options.name]["textfield"].isEditable = options.isEditable
         muiData.widgetDict[options.name]["textfield"].isVisible = false
-        muiData.widgetDict[options.name]["textfield"].font = native.newFont( options.font, options.textBoxFontSize) --  * 0.55 
+        muiData.widgetDict[options.name]["textfield"].font = native.newFont( options.font, options.textBoxFontSize) -- * 0.55
         muiData.widgetDict[options.name]["textfield"].text = options.text
         muiData.widgetDict[options.name]["textfield"]:setTextColor( unpack(muiData.widgetDict[options.name]["textlabel"].inactiveColor) )
 
         -- set cursor position
-        muiData.widgetDict[options.name]["textfield"]:setSelection( 1, 1 ) 
+        muiData.widgetDict[options.name]["textfield"]:setSelection( 1, 1 )
 
         muiData.widgetDict[options.name]["textfield"].callBack = options.callBack
         muiData.widgetDict[options.name]["textfield"]:addEventListener( "userInput", M.textListener )
@@ -498,7 +679,7 @@ function M.newTextBox(options)
         width = options.width,
         font = options.font,
         fontSize = options.fontSize, -- * 0.55
-        align = "left"  --new alignment parameter
+        align = "left" --new alignment parameter
     }
     muiData.widgetDict[options.name]["containerfake"] = display.newContainer( options.width + 4, options.height*.95)
     muiData.widgetDict[options.name]["textfieldfake"] = display.newText( textOptions )
@@ -509,6 +690,7 @@ function M.newTextBox(options)
     muiData.widgetDict[options.name]["rect"].textbox = 1
     muiData.widgetDict[options.name]["rect"].dialogName = options.dialogName
     muiData.widgetDict[options.name]["rect"].options = options
+    muiData.widgetDict[options.name]["rect"].muiOptions = options
     muiData.widgetDict[options.name]["textfieldfake"].name = options.name
     muiData.widgetDict[options.name]["textfieldfake"].dialogName = options.dialogName
     muiData.widgetDict[options.name]["containerfake"]:insert( muiData.widgetDict[options.name]["textfieldfake"] )
@@ -531,7 +713,6 @@ function M.createTextBoxOverlay( widget )
 
         muiData.widgetDict[options.name]["overlayrect"] = display.newRect( display.contentWidth / 2, display.contentHeight / 2, display.contentWidth, display.contentHeight )
         muiData.widgetDict[options.name]["overlayrect"]:setFillColor( unpack( options.overlayBackgroundColor ) )
-
         muiData.widgetDict[options.name]["overlay"] = display.newGroup()
         muiData.widgetDict[options.name]["overlay"]:translate( 0, 0 ) -- center the container
 
@@ -540,7 +721,7 @@ function M.createTextBoxOverlay( widget )
         muiData.widgetDict[options.name]["textfield"].hasBackground = false
         muiData.widgetDict[options.name]["textfield"].isEditable = options.isEditable
         muiData.widgetDict[options.name]["textfield"].isVisible = false
-        muiData.widgetDict[options.name]["textfield"].font = native.newFont( options.font, options.textBoxFontSize ) -- * 0.55 
+        muiData.widgetDict[options.name]["textfield"].font = native.newFont( options.font, options.textBoxFontSize ) -- * 0.55
         muiData.widgetDict[options.name]["textfield"].text = options.text
         muiData.widgetDict[options.name]["textfield"]:setTextColor( unpack(muiData.widgetDict[options.name]["textlabel"].inactiveColor) )
 
@@ -549,7 +730,7 @@ function M.createTextBoxOverlay( widget )
         muiData.widgetDict[options.name]["overlay"]:insert( muiData.widgetDict[options.name]["textfield"] )
 
         -- set cursor position
-        muiData.widgetDict[options.name]["textfield"]:setSelection( 1, 1 ) 
+        muiData.widgetDict[options.name]["textfield"]:setSelection( 1, 1 )
 
         local cH = muiData.widgetDict[options.name]["overlay"].contentHeight * .5
         muiData.widgetDict[options.name]["overlay"].x = display.contentWidth * .5
@@ -557,8 +738,14 @@ function M.createTextBoxOverlay( widget )
 
         local tWidth = muiData.widgetDict[options.name]["textfield"].contentWidth
         local tHeight = muiData.widgetDict[options.name]["textfield"].contentHeight
-        muiData.widgetDict[options.name]["textboxrect"] = display.newRect( 0, 0, tWidth, tHeight )
-        muiData.widgetDict[options.name]["textboxrect"]:setFillColor( unpack( options.overlayTextBoxBackgroundColor ) )
+        if options.background == nil then
+            muiData.widgetDict[options.name]["textboxrect"] = display.newRect( 0, 0, tWidth, tHeight )
+            muiData.widgetDict[options.name]["textboxrect"]:setFillColor( unpack( options.overlayTextBoxBackgroundColor ) )
+        else
+            muiData.widgetDict[options.name]["textboxrect"] = display.newImageRect(options.background.image, options.width+5, options.height)
+            muiData.widgetDict[options.name]["textboxrect"].x = 0
+            muiData.widgetDict[options.name]["textboxrect"].y = 0
+        end
         muiData.widgetDict[options.name]["overlay"]:insert( muiData.widgetDict[options.name]["textboxrect"] )
 
         M.addTextBoxDoneButton(options.name, options)
@@ -590,41 +777,41 @@ function M.addTextBoxDoneButton( widgetName, options )
 
     if doneOptions.radius > 0 then
         M.newRoundedRectButton({
-            parent = muiData.widgetDict[widgetName]["overlay"],
-            name = widgetName .. "-Button",
-            text = doneOptions.text,
-            width = doneOptions.width,
-            height = doneOptions.height,
-            x = (muiData.widgetDict[widgetName]["textfield"].contentWidth * .5),
-            y = y,
-            font = native.systemFont,
-            fillColor = doneOptions.fillColor,
-            textColor = doneOptions.textColor,
-            iconText = doneOptions.iconText,
-            iconFont = M.materialFont,
-            iconFontColor = doneOptions.textColor,
-            touchpoint = true,
-            callBack = M.textDoneHandler,
-            radius = doneOptions.radius,
-        })
+                parent = muiData.widgetDict[widgetName]["overlay"],
+                name = widgetName .. "-Button",
+                text = doneOptions.text,
+                width = doneOptions.width,
+                height = doneOptions.height,
+                x = (muiData.widgetDict[widgetName]["textfield"].contentWidth * .5),
+                y = y,
+                font = native.systemFont,
+                fillColor = doneOptions.fillColor,
+                textColor = doneOptions.textColor,
+                iconText = doneOptions.iconText,
+                iconFont = M.materialFont,
+                iconFontColor = doneOptions.textColor,
+                touchpoint = true,
+                callBack = M.textDoneHandler,
+                radius = doneOptions.radius,
+            })
     else
         M.newRectButton({
-            parent = muiData.widgetDict[widgetName]["overlay"],
-            name = widgetName .. "-Button",
-            text = doneOptions.text,
-            width = doneOptions.width,
-            height = doneOptions.height,
-            x = (muiData.widgetDict[widgetName]["textfield"].contentWidth * .5),
-            y = y,
-            font = native.systemFont,
-            fillColor = doneOptions.fillColor,
-            textColor = doneOptions.textColor,
-            iconText = doneOptions.iconText,
-            iconFont = M.materialFont,
-            iconFontColor = doneOptions.textColor,
-            touchpoint = true,
-            callBack = M.textDoneHandler,
-        })
+                parent = muiData.widgetDict[widgetName]["overlay"],
+                name = widgetName .. "-Button",
+                text = doneOptions.text,
+                width = doneOptions.width,
+                height = doneOptions.height,
+                x = (muiData.widgetDict[widgetName]["textfield"].contentWidth * .5),
+                y = y,
+                font = native.systemFont,
+                fillColor = doneOptions.fillColor,
+                textColor = doneOptions.textColor,
+                iconText = doneOptions.iconText,
+                iconFont = M.materialFont,
+                iconFontColor = doneOptions.textColor,
+                touchpoint = true,
+                callBack = M.textDoneHandler,
+            })
     end
     muiData.widgetDict[widgetName .. "-Button"]["container"].isVisible = false
     x = muiData.widgetDict[widgetName .. "-Button"]["container"].x
@@ -730,10 +917,30 @@ function M.removeTextField(widgetName)
         muiData.widgetDict[widgetName]["textlabel"]:removeSelf()
         muiData.widgetDict[widgetName]["textlabel"] = nil
     end
-    muiData.widgetDict[widgetName]["lineanim"]:removeSelf()
-    muiData.widgetDict[widgetName]["lineanim"] = nil
-    muiData.widgetDict[widgetName]["line"]:removeSelf()
-    muiData.widgetDict[widgetName]["line"] = nil
+    if muiData.widgetDict[widgetName]["line"] ~= nil then
+        muiData.widgetDict[widgetName]["lineanim"]:removeSelf()
+        muiData.widgetDict[widgetName]["lineanim"] = nil
+        muiData.widgetDict[widgetName]["line"]:removeSelf()
+        muiData.widgetDict[widgetName]["line"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["background"] ~= nil then
+        muiData.widgetDict[widgetName]["background"]:removeSelf()
+        muiData.widgetDict[widgetName]["background"] = nil
+    end
+    if muiData.widgetDict[widgetName]["backgroundFake"] ~= nil then
+        muiData.widgetDict[widgetName]["backgroundFake"]:removeSelf()
+        muiData.widgetDict[widgetName]["backgroundFake"] = nil
+    end
+    if muiData.widgetDict[widgetName]["backgroundFakeSvgOff"] ~= nil then
+        muiData.widgetDict[widgetName]["backgroundFakeSvgOff"]:removeSelf()
+        muiData.widgetDict[widgetName]["backgroundFakeSvgOff"] = nil
+    end
+    if muiData.widgetDict[widgetName]["backgroundFakeDisabledSvgOff"] ~= nil then
+        muiData.widgetDict[widgetName]["backgroundFakeDisabledSvgOff"]:removeSelf()
+        muiData.widgetDict[widgetName]["backgroundFakeDisabledSvgOff"] = nil
+    end
+
     muiData.widgetDict[widgetName]["rect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["rect"])
     muiData.widgetDict[widgetName]["rect"]:removeSelf()
     muiData.widgetDict[widgetName]["rect"] = nil

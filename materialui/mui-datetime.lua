@@ -1,32 +1,32 @@
 --[[
-    A loosely based Material UI module
+A loosely based Material UI module
 
-    mui-datetime.lua : This is for creating date and time picker widgets.
+mui-datetime.lua : This is for creating date and time picker widgets.
 
-    The MIT License (MIT)
+The MIT License (MIT)
 
-    Copyright (C) 2016 Anedix Technologies, Inc.  All Rights Reserved.
+Copyright (C) 2016 Anedix Technologies, Inc. All Rights Reserved.
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-    For other software and binaries included in this module see their licenses.
-    The license and the software must remain in full when copying or distributing.
+For other software and binaries included in this module see their licenses.
+The license and the software must remain in full when copying or distributing.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 --]]--
 
@@ -49,7 +49,8 @@ function M.createDatePicker(options)
 end
 
 function M.newDatePicker(options)
-	if options == nil then return end
+    if options == nil then return end
+
     if muiData.widgetDict[options.name] ~= nil then return end
 
     options = M.pickerSetDefaultOptions( options )
@@ -57,7 +58,8 @@ function M.newDatePicker(options)
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "DatePicker"
     muiData.widgetDict[options.name]["options"] = options
-    muiData.widgetDict[options.name]["mygroup"] = display.newGroup()
+    muiData.widgetDict[options.name]["group"] = display.newGroup()
+    muiData.widgetDict[options.name]["group"]:toFront()
 
     if options.callBack ~= nil then
         muiData.widgetDict[options.name]["callBack"] = options.callBack
@@ -65,12 +67,12 @@ function M.newDatePicker(options)
 
     if options.scrollView ~= nil then
         muiData.widgetDict[options.name]["scrollView"] = options.scrollView
-        muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+        muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["group"] )
     end
 
-    if options.parent ~= nil then
+    if options.parent ~= nil and false then -- todo - address it
         muiData.widgetDict[options.name]["parent"] = options.parent
-        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["group"] )
     end
 
     if options.fromYear == nil then
@@ -163,7 +165,7 @@ function M.newDatePicker(options)
     if options.startDay < 1 or options.startDay > 31 then options.startDay = 1 end
     if options.startYear < options.fromYear or options.startYear > options.toYear then options.startYear = options.fromYear end
 
-    local columnData = { 
+    local columnData = {
         {
             align = "right",
             startIndex = options.startMonth,
@@ -205,6 +207,7 @@ function M.newDatePicker(options)
         strokeWidth = options.strokeWidth,
         gradientBorderShadowColor1 = options.gradientBorderShadowColor1,
         gradientBorderShadowColor2 = options.gradientBorderShadowColor2,
+        background = options.background,
         cancelButtonText = options.cancelButtonText,
         cancelButtonFillColor = options.cancelButtonFillColor,
         cancelButtonTextColor = options.cancelButtonTextColor,
@@ -285,6 +288,7 @@ end
 
 function M.newTimePicker(options)
     if options == nil then return end
+
     if muiData.widgetDict[options.name] ~= nil then return end
 
     options = M.pickerSetDefaultOptions( options )
@@ -314,7 +318,7 @@ function M.newTimePicker(options)
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "TimePicker"
     muiData.widgetDict[options.name]["options"] = options
-    muiData.widgetDict[options.name]["mygroup"] = display.newGroup()
+    muiData.widgetDict[options.name]["group"] = display.newGroup()
 
     if options.callBack ~= nil then
         muiData.widgetDict[options.name]["callBack"] = options.callBack
@@ -322,7 +326,7 @@ function M.newTimePicker(options)
 
     if options.scrollView ~= nil then
         muiData.widgetDict[options.name]["scrollView"] = options.scrollView
-        muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+        muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["group"] )
     end
 
     -- Set up the picker column data
@@ -409,12 +413,12 @@ function M.newTimePicker(options)
     }
     if useAMPM then
         table.insert(columnData, {
-            align = "center",
-            startIndex = 1,
-            labels = ampm,
-            labelCount = 2,
-            key = "ampm",
-        })
+                align = "center",
+                startIndex = 1,
+                labels = ampm,
+                labelCount = 2,
+                key = "ampm",
+            })
     end
 
     -- Create a new Picker Wheel
@@ -434,6 +438,7 @@ function M.newTimePicker(options)
         strokeWidth = options.strokeWidth,
         gradientBorderShadowColor1 = options.gradientBorderShadowColor1,
         gradientBorderShadowColor2 = options.gradientBorderShadowColor2,
+        background = options.background,
         cancelButtonText = options.cancelButtonText,
         cancelButtonFillColor = options.cancelButtonFillColor,
         cancelButtonTextColor = options.cancelButtonTextColor,
@@ -478,7 +483,15 @@ function M.newPickerWheel( x, y, options )
     muiData.widgetDict[options.name]["rect"] = display.newRect( 0, 0, nW, nH )
     muiData.widgetDict[options.name]["rect"].strokeWidth = options.strokeWidth
     muiData.widgetDict[options.name]["rect"]:setStrokeColor( unpack(options.strokeColor) )
-    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["rect"] )
+    muiData.widgetDict[options.name]["rect"]:setFillColor( unpack( {0.4, 0.4, 0.4, 0.3} ) )
+
+    muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name]["rect"] )
+    muiData.widgetDict[options.name]["group"].isVisible = true
+
+    if options.background ~= nil then
+        muiData.widgetDict[options.name]["background"] = display.newImageRect(options.background, nW, nH)
+        muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name]["background"] )
+    end
 
     if options.ignoreInsets == nil then
         options.ignoreInsets = false
@@ -495,8 +508,8 @@ function M.newPickerWheel( x, y, options )
         newY = newY - offsetY
     end
 
-    muiData.widgetDict[options.name]["mygroup"].x = centerX
-    muiData.widgetDict[options.name]["mygroup"].y = centerY
+    muiData.widgetDict[options.name]["group"].x = centerX
+    muiData.widgetDict[options.name]["group"].y = centerY
 
     -- Insert the row data
     local textToMeasure = display.newText( "XX", 0, 0, options.font, options.fontSize )
@@ -512,113 +525,119 @@ function M.newPickerWheel( x, y, options )
     if muiData.widgetDict[options.name]["type"] == "TimePicker" then
         local theWidth = ( nW / columnCount )
         M.pickerCreateColumn({
-            startIndex = options.columns[1].startIndex,
-            name = options.name,
-            pickerName = "hours",
-            rowTextColor = { 0, 0, 0, 1 },
-            nH = nH,
-            nW = nW,
-            left = -( theWidth + (theWidth * 0.5) ),
-            rowHeight = rowHeight,
-            rowWidth = ( nW / columnCount ),
-            column = options.columns[1],
-            font = options.font,
-            fontSize = options.fontSize,
-            callBackData = options.callBackData,
-            callBackTouch = options.callBackTouch,
-            callBackRender = options.callBackRender,
-        })
+                startIndex = options.columns[1].startIndex,
+                name = options.name,
+                pickerName = "hours",
+                rowTextColor = { 0, 0, 0, 1 },
+                nH = nH,
+                nW = nW,
+                left = -( theWidth + (theWidth * 0.5) ),
+                rowHeight = rowHeight,
+                rowWidth = ( nW / columnCount ),
+                column = options.columns[1],
+                font = options.font,
+                fontSize = options.fontSize,
+                background = options.background,
+                callBackData = options.callBackData,
+                callBackTouch = options.callBackTouch,
+                callBackRender = options.callBackRender,
+            })
 
         M.pickerCreateColumn({
-            startIndex = options.columns[2].startIndex,
-            name = options.name,
-            pickerName = "minutes",
-            rowTextColor = { 0, 0, 0, 1 },
-            nH = nH,
-            nW = nW,
-            left = -(theWidth * 0.5),
-            rowHeight = rowHeight,
-            rowWidth = ( nW / columnCount ),
-            column = options.columns[2],
-            font = options.font,
-            fontSize = options.fontSize,
-            callBackData = options.callBackData,
-            callBackTouch = options.callBackTouch,
-            callBackRender = options.callBackRender,
-        })
+                startIndex = options.columns[2].startIndex,
+                name = options.name,
+                pickerName = "minutes",
+                rowTextColor = { 0, 0, 0, 1 },
+                nH = nH,
+                nW = nW,
+                left = -(theWidth * 0.5),
+                rowHeight = rowHeight,
+                rowWidth = ( nW / columnCount ),
+                column = options.columns[2],
+                font = options.font,
+                fontSize = options.fontSize,
+                background = options.background,
+                callBackData = options.callBackData,
+                callBackTouch = options.callBackTouch,
+                callBackRender = options.callBackRender,
+            })
 
         M.pickerCreateColumn({
-            startIndex = options.columns[3].startIndex,
-            name = options.name,
-            pickerName = "ampm",
-            rowTextColor = { 0, 0, 0, 1 },
-            nH = nH,
-            nW = nW,
-            left = nW * 0.25,
-            rowHeight = rowHeight,
-            rowWidth = (theWidth * 0.5),
-            column = options.columns[3],
-            font = options.font,
-            fontSize = options.fontSize,
-            callBackData = options.callBackData,
-            callBackTouch = options.callBackTouch,
-            callBackRender = options.callBackRender,
-        })
+                startIndex = options.columns[3].startIndex,
+                name = options.name,
+                pickerName = "ampm",
+                rowTextColor = { 0, 0, 0, 1 },
+                nH = nH,
+                nW = nW,
+                left = nW * 0.25,
+                rowHeight = rowHeight,
+                rowWidth = (theWidth * 0.5),
+                column = options.columns[3],
+                font = options.font,
+                fontSize = options.fontSize,
+                background = options.background,
+                callBackData = options.callBackData,
+                callBackTouch = options.callBackTouch,
+                callBackRender = options.callBackRender,
+            })
     else
         local theWidth = ( nW / columnCount )
         M.pickerCreateColumn({
-            startIndex = options.columns[1].startIndex,
-            name = options.name,
-            pickerName = "months",
-            rowTextColor = { 0, 0, 0, 1 },
-            nH = nH,
-            nW = nW,
-            left = -( theWidth + (theWidth * 0.5) ),
-            rowHeight = rowHeight,
-            rowWidth = theWidth,
-            column = options.columns[1],
-            font = options.font,
-            fontSize = options.fontSize,
-            callBackData = options.callBackData,
-            callBackTouch = options.callBackTouch,
-            callBackRender = options.callBackRender,
-        })
+                startIndex = options.columns[1].startIndex,
+                name = options.name,
+                pickerName = "months",
+                rowTextColor = { 0, 0, 0, 1 },
+                nH = nH,
+                nW = nW,
+                left = -( theWidth + (theWidth * 0.5) ),
+                rowHeight = rowHeight,
+                rowWidth = theWidth,
+                column = options.columns[1],
+                font = options.font,
+                fontSize = options.fontSize,
+                background = options.background,
+                callBackData = options.callBackData,
+                callBackTouch = options.callBackTouch,
+                callBackRender = options.callBackRender,
+            })
 
         M.pickerCreateColumn({
-            startIndex = options.columns[2].startIndex,
-            name = options.name,
-            pickerName = "days",
-            rowTextColor = { 0, 0, 0, 1 },
-            nH = nH,
-            nW = nW,
-            left = -(theWidth * 0.5),
-            rowHeight = rowHeight,
-            rowWidth = theWidth,
-            column = options.columns[2],
-            font = options.font,
-            fontSize = options.fontSize,
-            callBackData = options.callBackData,
-            callBackTouch = options.callBackTouch,
-            callBackRender = options.callBackRender,
-        })
+                startIndex = options.columns[2].startIndex,
+                name = options.name,
+                pickerName = "days",
+                rowTextColor = { 0, 0, 0, 1 },
+                nH = nH,
+                nW = nW,
+                left = -(theWidth * 0.5),
+                rowHeight = rowHeight,
+                rowWidth = theWidth,
+                column = options.columns[2],
+                font = options.font,
+                fontSize = options.fontSize,
+                background = options.background,
+                callBackData = options.callBackData,
+                callBackTouch = options.callBackTouch,
+                callBackRender = options.callBackRender,
+            })
 
         M.pickerCreateColumn({
-            startIndex = options.columns[3].startIndex,
-            name = options.name,
-            pickerName = "years",
-            rowTextColor = { 0, 0, 0, 1 },
-            nH = nH,
-            nW = nW,
-            left = (theWidth * 0.5),
-            rowHeight = rowHeight,
-            rowWidth = theWidth,
-            column = options.columns[3],
-            font = options.font,
-            fontSize = options.fontSize,
-            callBackData = options.callBackData,
-            callBackTouch = options.callBackTouch,
-            callBackRender = options.callBackRender,
-        })
+                startIndex = options.columns[3].startIndex,
+                name = options.name,
+                pickerName = "years",
+                rowTextColor = { 0, 0, 0, 1 },
+                nH = nH,
+                nW = nW,
+                left = (theWidth * 0.5),
+                rowHeight = rowHeight,
+                rowWidth = theWidth,
+                column = options.columns[3],
+                font = options.font,
+                fontSize = options.fontSize,
+                background = options.background,
+                callBackData = options.callBackData,
+                callBackTouch = options.callBackTouch,
+                callBackRender = options.callBackRender,
+            })
     end
 
     local rect = muiData.widgetDict[options.name]["rect"]
@@ -629,11 +648,11 @@ function M.newPickerWheel( x, y, options )
     muiData.widgetDict[options.name]["line-top"] = display.newLine( -(rect.contentWidth * 0.5), -(rY), rect.contentWidth * 0.5, -(rY))
     muiData.widgetDict[options.name]["line-top"].strokeWidth = 2
     muiData.widgetDict[options.name]["line-top"]:setStrokeColor( unpack(options.strokeColor) )
-    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["line-top"] )
+    muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name]["line-top"] )
     muiData.widgetDict[options.name]["line-bot"] = display.newLine( -(rect.contentWidth * 0.5), (rY), rect.contentWidth * 0.5, (rY))
     muiData.widgetDict[options.name]["line-bot"].strokeWidth = 2
     muiData.widgetDict[options.name]["line-bot"]:setStrokeColor( unpack(options.strokeColor) )
-    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["line-bot"] )
+    muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name]["line-bot"] )
 
     -- paint normal or use gradient?
     local paint = nil
@@ -647,18 +666,18 @@ function M.newPickerWheel( x, y, options )
         }
     end
 
-    muiData.widgetDict[options.name]["mygroup"]["rect2"] = display.newRect( 0, -(rect.contentHeight * 0.25), rect.contentWidth, rect.contentHeight * 0.5)
+    muiData.widgetDict[options.name]["group"]["rect2"] = display.newRect( 0, -(rect.contentHeight * 0.25), rect.contentWidth, rect.contentHeight * 0.5)
     if paint ~= nil then
-        local object = muiData.widgetDict[options.name]["mygroup"]["rect2"]
-       object.fill = paint
+        local object = muiData.widgetDict[options.name]["group"]["rect2"]
+        object.fill = paint
 
         object.fill.effect = "filter.vignetteMask"
         object.fill.effect.innerRadius = 1
         object.fill.effect.outerRadius = 0.1
-        muiData.widgetDict[options.name]["mygroup"]:insert( object )
+        muiData.widgetDict[options.name]["group"]:insert( object )
     end
 
-    muiData.widgetDict[options.name]["mygroup"]["rect3"] = display.newRect( 0, (rect.contentHeight * 0.25), rect.contentWidth, rect.contentHeight * 0.5)
+    muiData.widgetDict[options.name]["group"]["rect3"] = display.newRect( 0, (rect.contentHeight * 0.25), rect.contentWidth, rect.contentHeight * 0.5)
     local paint2 = nil
     if options.gradientBorderShadowColor1 ~= nil and options.gradientBorderShadowColor2 ~= nil then
         options.gradientDirection = "down"
@@ -670,36 +689,51 @@ function M.newPickerWheel( x, y, options )
         }
     end
     if paint2 ~= nil then
-        local object = muiData.widgetDict[options.name]["mygroup"]["rect3"]
-       object.fill = paint2
+        local object = muiData.widgetDict[options.name]["group"]["rect3"]
+        object.fill = paint2
 
         object.fill.effect = "filter.vignetteMask"
         object.fill.effect.innerRadius = 1
         object.fill.effect.outerRadius = 0.1
-        muiData.widgetDict[options.name]["mygroup"]:insert( object )
+        muiData.widgetDict[options.name]["group"]:insert( object )
     end
 
     muiData.dialogInUse = true
 
     -- attach the cancel button
     M.newRectButton({
-        name = options.name .. "-datetime-button-cancel",
-        dialogName = options.name,
-        text = (options.cancelButtonText or "Cancel"),
-        width = (cw * 0.5),
-        height = 35,
-        x = newX,
-        y = newY,
-        font = native.systemFont,
-        fillColor = (options.cancelButtonFillColor or { 0, 0, 1, 1 }),
-        textColor = (options.cancelButtonTextColor or { 1, 1, 1 }),
-        touchpoint = true,
-        callBack = M.removeDateTimePicker,
-        callBackData = {
-            targetName = options.name,
-            buttonName = options.name .. "-datetime-button-cancel"
-        }
-    })
+            name = options.name .. "-datetime-button-cancel",
+            dialogName = options.name,
+            text = (options.cancelButtonText or "Cancel"),
+            width = (cw * 0.5),
+            height = 35,
+            x = newX,
+            y = newY,
+            font = native.systemFont,
+            fillColor = (options.cancelButtonFillColor or { 0, 0, 1, 1 }),
+            textColor = (options.cancelButtonTextColor or { 1, 1, 1 }),
+            touchpoint = true,
+            state = {
+                value = "off",
+                off = {
+                    textColor = (options.cancelButtonTextColor or { 1, 1, 1 }),
+                    fillColor = (options.cancelButtonFillColor or { 0, 0, 1, 1 }),
+                },
+                on = {
+                    textColor = (options.cancelButtonTextColor or { 1, 1, 1 }),
+                    fillColor = (options.cancelButtonFillColor or { 0, 0, 1, 1 }),
+                },
+                disabled = {
+                    textColor = {1,1,1,1},
+                    fillColor = {0.7, 0.7, 0.7, 1},
+                }
+            },
+            callBack = M.removeDateTimePicker,
+            callBackData = {
+                targetName = options.name,
+                buttonName = options.name .. "-datetime-button-cancel"
+            }
+        })
     local cancelWidget = M.getWidgetBaseObject( options.name .. "-datetime-button-cancel" )
     cancelWidget.x = (cancelWidget.x - ((cw - cancelWidget.contentWidth) * 0.5)) - (options.strokeWidth * 0.5)
     cancelWidget.y = cancelWidget.y + ((ch - cancelWidget.contentHeight) * 0.5)
@@ -707,23 +741,38 @@ function M.newPickerWheel( x, y, options )
 
     -- attach the set button
     M.newRectButton({
-        name = options.name .. "-datetime-button-set",
-        dialogName = options.name,
-        text = (options.submitButtonText or "Set"),
-        width = (cw * 0.5),
-        height = 35,
-        x = newX,
-        y = newY,
-        font = native.systemFont,
-        fillColor = (options.submitButtonFillColor or { 0, 0, 1, 1 }),
-        textColor = (options.submitButtonTextColor or { 1, 1, 1 }),
-        touchpoint = true,
-        callBack = options.callBack,
-        callBackData = {
-            targetName = options.name,
-            buttonName = options.name .. "-datetime-button-set"
-        }
-    })
+            name = options.name .. "-datetime-button-set",
+            dialogName = options.name,
+            text = (options.submitButtonText or "Set"),
+            width = (cw * 0.5),
+            height = 35,
+            x = newX,
+            y = newY,
+            font = native.systemFont,
+            fillColor = (options.submitButtonFillColor or { 0, 0, 1, 1 }),
+            textColor = (options.submitButtonTextColor or { 1, 1, 1 }),
+            state = {
+                value = "off",
+                off = {
+                    textColor = (options.submitButtonTextColor or { 1, 1, 1 }),
+                    fillColor = (options.submitButtonFillColor or { 0, 0, 1, 1 }),
+                },
+                on = {
+                    textColor = (options.submitButtonTextColor or { 1, 1, 1 }),
+                    fillColor = (options.submitButtonFillColor or { 0, 0, 1, 1 }),
+                },
+                disabled = {
+                    textColor = {1,1,1,1},
+                    fillColor = {0.7, 0.7, 0.7, 1},
+                },
+            },
+            touchpoint = true,
+            callBack = options.callBack,
+            callBackData = {
+                targetName = options.name,
+                buttonName = options.name .. "-datetime-button-set"
+            }
+        })
 
     local setWidget = M.getWidgetBaseObject( options.name .. "-datetime-button-set" )
     setWidget.x = (setWidget.x + ((cw - setWidget.contentWidth) * 0.5)) + (options.strokeWidth * 0.5)
@@ -749,6 +798,7 @@ function M.pickerCreateColumn(options)
             onRowRender = M.pickerOnRowRender,
             onRowTouch = M.pickerOnRowTouch,
             listener = M.pickerScrollListener,
+            hideBackground = true,
         }
     )
     tableView.isVisible = true
@@ -762,7 +812,10 @@ function M.pickerCreateColumn(options)
 
     local column = options.column
     local isCategory = false
-    local rowColor = { 1, 1, 1 , 1 }
+    local rowColor = { default={ 1, 1, 1 , 1 } }
+    if options.background ~= nil then
+        rowColor = { default={ 1, 1, 1 , 0.01 } }
+    end
     local lineColor = { 0.4, 0.4, 0.4, 1 }
     for j, label in ipairs(column.labels) do
         local optionList = {
@@ -795,24 +848,24 @@ function M.pickerCreateColumn(options)
     end
 
     local yOffset = M.pickerGetYOffset({
-        tableViewHeight = tableView.contentHeight,
-        rowHeight = rowHeight
-    })
+            tableViewHeight = tableView.contentHeight,
+            rowHeight = rowHeight
+        })
     muiData.widgetDict[options.name]["yOffset"] = yOffset
     muiData.widgetDict[options.name][tableView.pickerName.."RowCountOffset"] = M.pickerGetRowCountOffset({
-        name = options.name,
-        tm_name = tableView.pickerName,
-        tableViewHeight = tableView.contentHeight,
-        rowHeight = rowHeight
-    })
+            name = options.name,
+            tm_name = tableView.pickerName,
+            tableViewHeight = tableView.contentHeight,
+            rowHeight = rowHeight
+        })
     M.pickerGoToRow({
-        muiName = options.name,
-        listName = tableView.pickerName,
-        index = (options.startIndex or 1),
-        animate = false, 
-    })
+            muiName = options.name,
+            listName = tableView.pickerName,
+            index = (options.startIndex or 1),
+            animate = false,
+        })
 
-    muiData.widgetDict[options.name]["mygroup"]:insert( tableView )
+    muiData.widgetDict[options.name]["group"]:insert( tableView )
 end
 
 function M.pickerGoToRow(options)
@@ -847,13 +900,13 @@ function M.pickerGetCurrentValue(muiName)
     local value = {}
 
     if muiData.widgetDict[muiName]["type"] == 'DatePicker' then
-        value = { 
+        value = {
             month = muiData.widgetDict[muiName]["monthsCurrentRowData"],
             day = muiData.widgetDict[muiName]["daysCurrentRowData"],
             year = muiData.widgetDict[muiName]["yearsCurrentRowData"],
         }
     else
-        value = { 
+        value = {
             hour = muiData.widgetDict[muiName]["hoursCurrentRowData"],
             minute = muiData.widgetDict[muiName]["minutesCurrentRowData"],
             ampm = muiData.widgetDict[muiName]["ampmCurrentRowData"],
@@ -905,13 +958,13 @@ function M.pickerAdjustColumn( event )
         local extraRowOffset = muiData.widgetDict[muiName][pickerName.."ExtraRows"]
         local rowData = M.pickerGetColumnValue(muiName, pickerName, (mathABS(trow) + extraRowOffset))
         if rowData ~= nil then
-            muiData.widgetDict[muiName][pickerName.."CurrentRowData"] = rowData 
+            muiData.widgetDict[muiName][pickerName.."CurrentRowData"] = rowData
         end
         if row == 0 or row > -2 then
             tableView:scrollToY( { y=-(rowHeight-yOffset), time=300 } )
         else
             local destY = mathABS(row * rowHeight)
-            tableView:scrollToY( { y=-(destY-yOffset), time=300 } )            
+            tableView:scrollToY( { y=-(destY-yOffset), time=300 } )
         end
     end
 end
@@ -928,7 +981,7 @@ function M.pickerOnRowRender( event )
     row.pickerName = row.params.column
     row.pickerValue = row.params.text
 
-    local options = 
+    local options =
     {
         parent = row,
         --x = display.contentCenterX,
@@ -938,7 +991,7 @@ function M.pickerOnRowRender( event )
         fontSize = row.params.fontSize,
         width = rowWidth,
         height = 0,
-        align = "center"  -- alignment parameter
+        align = "center" -- alignment parameter
     }
 
     local y = muiData.widgetDict[row.muiName][row.params.column.."TableView"]:getContentPosition()
@@ -990,7 +1043,7 @@ function M.pickerScrollListener( event )
             if lastY < y then
                 muiData.movingDirection = "down"
             end
-            if lastY > y then 
+            if lastY > y then
                 muiData.movingDirection = "up"
             end
             muiData.widgetDict[event.target.muiName][event.target.pickerName.."LastMoveY"] = y
@@ -1018,7 +1071,7 @@ end
 
 function M.pickerOnRowTouch( event )
     local phase = event.phase
- 
+
     if muiData.dialogInUse == true then return end
     local row = event.row
 
@@ -1080,6 +1133,9 @@ function M.removeDateTimePicker( event )
         muiData.widgetDict[widgetName]["rect3"]:removeSelf()
         muiData.widgetDict[widgetName]["rect3"] = nil
     end
+    if muiData.widgetDict[widgetName]["background"] ~= nil then
+        muiData.widgetDict[widgetName]["background"]:removeSelf()
+    end
     muiData.widgetDict[widgetName]["rect"]:removeSelf()
     muiData.widgetDict[widgetName]["rect"] = nil
     local tableViewList = { "hours", "minutes", "seconds", "ampm", "month", "day", "year" }
@@ -1097,8 +1153,8 @@ function M.removeDateTimePicker( event )
         end
         muiData.widgetDict[widgetName][v] = nil
     end
-    muiData.widgetDict[widgetName]["mygroup"]:removeSelf()
-    muiData.widgetDict[widgetName]["mygroup"] = nil
+    muiData.widgetDict[widgetName]["group"]:removeSelf()
+    muiData.widgetDict[widgetName]["group"] = nil
     muiData.widgetDict[widgetName] = nil
     muiData.dialogName = nil
     muiData.dialogInUse = false

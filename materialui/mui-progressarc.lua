@@ -1,32 +1,32 @@
 --[[
-    A loosely based Material UI module
+A loosely based Material UI module
 
-    mui-progressarc.lua : This is for creating progress arcs. Percentage based (0..100%)
+mui-progressarc.lua : This is for creating progress arcs. Percentage based (0..100%)
 
-    The MIT License (MIT)
+The MIT License (MIT)
 
-    Copyright (C) 2016 Anedix Technologies, Inc.  All Rights Reserved.
+Copyright (C) 2016 Anedix Technologies, Inc. All Rights Reserved.
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-    For other software and binaries included in this module see their licenses.
-    The license and the software must remain in full when copying or distributing.
+For other software and binaries included in this module see their licenses.
+The license and the software must remain in full when copying or distributing.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 --]]--
 
@@ -99,7 +99,7 @@ function M.newProgressArc(options)
         options.labelEmbossedHighlight = options.labelEmbossedHighlight or { r=1, g=1, b=1 }
         options.labelEmbossedShadow = options.labelEmbossedShadow or { r=0.3, g=0.3, b=0.3 }
 
-        options.embossedColor = 
+        options.embossedColor =
         {
             highlight = options.labelEmbossedHighlight,
             shadow = options.labelEmbossedShadow
@@ -108,19 +108,19 @@ function M.newProgressArc(options)
 
     muiData.widgetDict[options.name] = {}
 
-    muiData.widgetDict[options.name]["mygroup"] = display.newGroup()
-    muiData.widgetDict[options.name]["mygroup"].x = 0
-    muiData.widgetDict[options.name]["mygroup"].y = 0
+    muiData.widgetDict[options.name]["group"] = display.newGroup()
+    muiData.widgetDict[options.name]["group"].x = 0
+    muiData.widgetDict[options.name]["group"].y = 0
     muiData.widgetDict[options.name]["touching"] = false
 
     if options.scrollView ~= nil then
         muiData.widgetDict[options.name]["scrollView"] = options.scrollView
-        muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+        muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["group"] )
     end
 
     if options.parent ~= nil then
         muiData.widgetDict[options.name]["parent"] = options.parent
-        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["group"] )
     end
 
     muiData.widgetDict[options.name]["busy"] = false
@@ -177,8 +177,8 @@ function M.newProgressArc(options)
     if options.repeatCallBack ~= nil then
         muiData.widgetDict[options.name]["progressarc"].repeatCallBack = options.repeatCallBack
     end
-    muiData.widgetDict[options.name]["mygroup"]:insert(muiData.widgetDict[options.name]["progressbackdrop"])
-    muiData.widgetDict[options.name]["mygroup"]:insert(muiData.widgetDict[options.name]["progressarc"])
+    muiData.widgetDict[options.name]["group"]:insert(muiData.widgetDict[options.name]["progressbackdrop"])
+    muiData.widgetDict[options.name]["group"]:insert(muiData.widgetDict[options.name]["progressarc"])
 
     if options.hideProgressText == false then
         if options.labelText ~= nil and options.labelFontSize ~= nil then
@@ -193,7 +193,7 @@ function M.newProgressArc(options)
                 width = options.width,
                 font = options.labelFont,
                 fontSize = options.labelFontSize,
-                align = options.labelAlign,  --new alignment parameter
+                align = options.labelAlign, --new alignment parameter
             }
             if options.embossedColor == nil then
                 muiData.widgetDict[options.name]["label"] = display.newText( textOptions )
@@ -204,7 +204,7 @@ function M.newProgressArc(options)
             if options.embossedColor ~= nil then
                 muiData.widgetDict[options.name]["label"]:setEmbossColor( options.embossedColor )
             end
-            muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["label"] )
+            muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name]["label"] )
         end
     end
     muiData.widgetDict[options.name]["progressarc"].percentComplete = 0
@@ -240,7 +240,7 @@ function M.getProgressArcProperty(widgetName, propertyName)
     if widgetName == nil or propertyName == nil then return data end
 
     if propertyName == "object" then
-        data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+        data = muiData.widgetDict[widgetName]["group"] -- x,y movement
     elseif propertyName == "label" then
         data = muiData.widgetDict[widgetName]["label"] -- the progress text
     elseif propertyName == "value" then
@@ -252,7 +252,6 @@ function M.getProgressArcProperty(widgetName, propertyName)
     end
     return data
 end
-
 
 --
 --
@@ -292,12 +291,12 @@ function M.increaseProgressArc( widgetName, percent, __forceprocess__ )
         -- find entry
         local idx = 0
         for i, v in ipairs(muiData.progressarcDict) do
-           if v.name == widgetName then
+            if v.name == widgetName then
                 idx = i
                 percent = v.value
                 percent = percent + muiData.widgetDict[widgetName]["progressarc"].percentComplete
                 break
-           end
+            end
         end
         if idx > 0 then table.remove(muiData.progressarcDict, idx) end
     end
@@ -363,8 +362,8 @@ function M.removeProgressArc(widgetName)
         muiData.widgetDict[widgetName]["label"]:removeSelf()
         muiData.widgetDict[widgetName]["label"] = nil
     end
-    muiData.widgetDict[widgetName]["mygroup"]:removeSelf()
-    muiData.widgetDict[widgetName]["mygroup"] = nil
+    muiData.widgetDict[widgetName]["group"]:removeSelf()
+    muiData.widgetDict[widgetName]["group"] = nil
     muiData.widgetDict[widgetName] = nil
 end
 

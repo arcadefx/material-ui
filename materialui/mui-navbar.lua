@@ -1,32 +1,32 @@
 --[[
-    A loosely based Material UI module
+A loosely based Material UI module
 
-    mui-navbar.lua : This is for creating navigation bars.
+mui-navbar.lua : This is for creating navigation bars.
 
-    The MIT License (MIT)
+The MIT License (MIT)
 
-    Copyright (C) 2016 Anedix Technologies, Inc.  All Rights Reserved.
+Copyright (C) 2016 Anedix Technologies, Inc. All Rights Reserved.
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-    For other software and binaries included in this module see their licenses.
-    The license and the software must remain in full when copying or distributing.
+For other software and binaries included in this module see their licenses.
+The license and the software must remain in full when copying or distributing.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 --]]--
 
@@ -101,9 +101,9 @@ function M.newNavBar( options )
         {
             top = top,
             left = left,
-            width = options.width,
+            width = options.width+1,
             height = options.height,
-            scrollWidth = options.width,
+            scrollWidth = options.width+1,
             scrollHeight = options.height,
             hideBackground = true,
             hideScrollBar = true,
@@ -114,13 +114,24 @@ function M.newNavBar( options )
     if options.parent ~= nil then
         muiData.widgetDict[options.name]["parent"] = options.parent
         muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["container"] )
-    end   
+    end
 
     local newX = muiData.widgetDict[options.name]["container"].contentWidth * 0.5
     local newY = muiData.widgetDict[options.name]["container"].contentHeight * 0.5
 
+    if options.background ~= nil then
+        muiData.widgetDict[options.name]["background"] = display.newImageRect(options.background, options.width, options.height)
+        muiData.widgetDict[options.name]["background"].x = newX
+        muiData.widgetDict[options.name]["background"].y = newY
+    end
+
     muiData.widgetDict[options.name]["rect"] = display.newRect( newX, newY, options.width, options.height )
-    muiData.widgetDict[options.name]["rect"]:setFillColor( unpack(options.fillColor) )
+    if options.background == nil then
+        muiData.widgetDict[options.name]["rect"]:setFillColor( unpack(options.fillColor) )
+    else
+        muiData.widgetDict[options.name]["rect"]:setFillColor( unpack({1,1,1,.01}) )
+    end
+    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["background"] )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["rect"] )
 
 end
@@ -141,7 +152,7 @@ end
 function M.attachToNavBar(navbar_name, options )
     if navbar_name == nil or options == nil or options.widgetName == nil then return end
     local newX = 0
-    local newY = 0 
+    local newY = 0
     local widget = nil
     local widgetName = options.widgetName
     local nh = muiData.widgetDict[navbar_name]["container"].contentHeight
@@ -175,7 +186,7 @@ function M.attachToNavBar(navbar_name, options )
         muiData.widgetDict[navbar_name]["destroy_object"] = {}
     end
     muiData.widgetDict[navbar_name]["destroy"][widgetName] = options.destroyCallBack
-    muiData.widgetDict[navbar_name]["destroy_object"][widgetName] = widget    
+    muiData.widgetDict[navbar_name]["destroy_object"][widgetName] = widget
 
     if options.align == nil then
         options.align = "left"
@@ -235,9 +246,9 @@ function M.removeNavBar(widgetName)
             elseif widgetType == "RectButton" then
                 M.removeTextField(name)
             elseif widgetType == "Generic" then
-              if muiData.widgetDict[widgetName]["destroy"] ~= nil and muiData.widgetDict[widgetName]["destroy"][name] ~= nil then
-                assert( muiData.widgetDict[widgetName]["destroy"][name] )( muiData.widgetDict[widgetName]["destroy_object"][name] )
-              end
+                if muiData.widgetDict[widgetName]["destroy"] ~= nil and muiData.widgetDict[widgetName]["destroy"][name] ~= nil then
+                    assert( muiData.widgetDict[widgetName]["destroy"][name] )( muiData.widgetDict[widgetName]["destroy_object"][name] )
+                end
             end
         end
     end
@@ -245,6 +256,10 @@ function M.removeNavBar(widgetName)
     if muiData.widgetDict[widgetName]["rect"] ~= nil then
         muiData.widgetDict[widgetName]["rect"]:removeSelf()
         muiData.widgetDict[widgetName]["rect"] = nil
+    end
+    if muiData.widgetDict[options.name]["background"] ~= nil then
+        muiData.widgetDict[options.name]["background"]:removeSelf()
+        muiData.widgetDict[options.name]["background"] = nil
     end
     if muiData.widgetDict[widgetName]["container"] ~= nil then
         muiData.widgetDict[widgetName]["container"]:removeSelf()

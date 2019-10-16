@@ -1,5 +1,3 @@
-![Alt text](https://www.anedix.com/images/github/mui-logo-2017-small.png "Material-UI")
-
 Material Design UI for Corona Labs SDK
 
 This README is just an overview document. You can find more detailed documentation within the repo in future updates.
@@ -11,7 +9,7 @@ A loosely based Material UI library for Corona Labs SDK. It is written in Lua us
 
 * Requires Corona SDK build 2017.3135 or greater.
 
-* Supports: iOS 8+, Android 4.x to 7.x+ and other Corona SDK supported platforms.
+* Supports: iOS 9+, Android 6.x+ and other Corona SDK supported platforms.
 
 Installing material-ui from the repo on GitHub
 --------------
@@ -29,6 +27,8 @@ icon-font (folder)
 
 Using material-ui
 --------------
+
+Warning: The latest update could break your code if you used an older copy. I have not updated the documentation yet. I will get it updated :).
 
 * If using the GitHub repo, edit your scene file and be sure to include at the top:
 ```

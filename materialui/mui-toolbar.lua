@@ -1,32 +1,32 @@
 --[[
-    A loosely based Material UI module
+A loosely based Material UI module
 
-    mui-toolbar.lua : This is for creating horizontal toolbars.
+mui-toolbar.lua : This is for creating horizontal toolbars.
 
-    The MIT License (MIT)
+The MIT License (MIT)
 
-    Copyright (C) 2016 Anedix Technologies, Inc.  All Rights Reserved.
+Copyright (C) 2016 Anedix Technologies, Inc. All Rights Reserved.
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-    For other software and binaries included in this module see their licenses.
-    The license and the software must remain in full when copying or distributing.
+For other software and binaries included in this module see their licenses.
+The license and the software must remain in full when copying or distributing.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 --]]--
 
@@ -63,23 +63,29 @@ function M.newToolbarButton( options )
         rectBak.x = x + barWidth * 0.5
         rectBak.y = y
         muiData.widgetDict[options.basename]["toolbar"]["rectBak"] = rectBak
-        --button["mygroup"]:insert( rectBak, true ) -- insert and center bkgd
+        --button["group"]:insert( rectBak, true ) -- insert and center bkgd
     end
+
+    options.state.value = options.state.value or "off"
 
     --muiData.widgetDict[options.name] = {}
     --muiData.widgetDict[options.name].basename = options.basename
     muiData.widgetDict[options.basename]["toolbar"][options.name] = {}
     muiData.widgetDict[options.basename]["toolbar"]["type"] = "ToolbarButton"
 
-    local button =  muiData.widgetDict[options.basename]["toolbar"][options.name]
-    button["mygroup"] = display.newGroup()
-    button["mygroup"].x = x
-    button["mygroup"].y = y
+    local button = muiData.widgetDict[options.basename]["toolbar"][options.name]
+    button["group"] = display.newGroup()
+    button["group"].x = x
+    button["group"].y = y
     button["touching"] = false
 
     if options.parent ~= nil and false then
         button["parent"] = options.parent
-        button["parent"]:insert( button["mygroup"] )
+        button["parent"]:insert( button["group"] )
+    end
+
+    if options.background ~= nil and options.index ~= nil and options.index == 1 then
+        muiData.widgetDict[options.basename]["background"] = display.newImageRect(button["group"], options.background, barWidth, options.buttonHeight)
     end
 
     -- label colors
@@ -89,10 +95,6 @@ function M.newToolbarButton( options )
     if options.labelColor == nil then
         options.labelColor = { 1, 1, 1 }
     end
-    muiData.widgetDict[options.basename]["toolbar"][options.name]["labelColorOff"] = options.labelColorOff
-    muiData.widgetDict[options.basename]["toolbar"][options.name]["labelColor"] = options.labelColor
-    muiData.widgetDict[options.basename]["toolbar"][options.name]["iconColorOff"] = options.iconColorOff or options.labelColorOff
-    muiData.widgetDict[options.basename]["toolbar"][options.name]["iconColor"] = options.iconColor or options.labelColor
 
     local radius = options.height * 0.2
     if options.radius ~= nil and options.radius < options.height and options.radius > 1 then
@@ -157,7 +159,9 @@ function M.newToolbarButton( options )
 
     -- scale font
     -- Calculate a font size that will best fit the given field's height
-    local field = {contentHeight=options.buttonHeight * 0.60, contentWidth=options.buttonHeight * 0.60}
+    local textPercent = .6
+    if useBothIconAndText == false then textPercent = .7 end
+    local field = {contentHeight=options.buttonHeight * textPercent, contentWidth=options.buttonHeight * textPercent}
     local textToMeasure = display.newText( options.text, 0, 0, font, fontSize )
     local fontSize = fontSize * ( ( field.contentHeight ) / textToMeasure.contentHeight )
     local textWidth = textToMeasure.contentWidth
@@ -170,24 +174,30 @@ function M.newToolbarButton( options )
     end
 
     local buttonWidth = barWidth / numberOfButtons
-    local rectangle = display.newRect( (buttonWidth / 2), 0, buttonWidth, options.buttonHeight )
-    rectangle:setFillColor( unpack(options.backgroundColor) )
+    local rectangle = display.newRect( (buttonWidth / 2), 0, buttonWidth + 1, options.buttonHeight )
+    -- rectangle:setFillColor( unpack(options.backgroundColor) )
+    rectangle:setFillColor( unpack({1,1,1,.01}) )
     button["rectangle"] = rectangle
     button["rectangle"].value = options.value
+
+    if muiData.widgetDict[options.basename]["background"] ~= nil then
+        muiData.widgetDict[options.basename]["background"].x = button["rectangle"].x + rectangle.contentWidth
+        muiData.widgetDict[options.basename]["background"].y = button["rectangle"].y        
+    end
     button["buttonWidth"] = rectangle.contentWidth
     button["buttonHeight"] = rectangle.contentHeight
     button["buttonOffset"] = rectangle.contentWidth / 2
-    button["mygroup"]:insert( rectangle, true ) -- insert and center bkgd
+    button["group"]:insert( rectangle, true ) -- insert and center bkgd
 
     if options.index ~= nil and options.index == 1 and x < button["buttonWidth"] then
-        button["mygroup"].x = (rectangle.contentWidth / 2) + muiData.safeAreaInsets.leftInset
+        button["group"].x = (rectangle.contentWidth / 2) + muiData.safeAreaInsets.leftInset
     elseif options.index ~= nil and options.index > 1 then
         button["buttonOffset"] = 0
     end
 
     local textY = 0
     local textSize = fontSize
-    if useBothIconAndText == true then
+    if useBothIconAndText == true and false then
         textY = -rectangle.contentHeight * 0.18
         textSize = fontSize * 0.9
     end
@@ -202,7 +212,7 @@ function M.newToolbarButton( options )
     end
 
     textSize = mathFloor(textSize)
-    local options2 = 
+    local options2 =
     {
         --parent = textGroup,
         text = options.text,
@@ -214,53 +224,88 @@ function M.newToolbarButton( options )
         align = "center"
     }
 
-    if options.iconImage ~= nil then
-        button["myText"] = display.newImageRect( options.iconImage, textSize, textSize )
-        button["myText"].y = textY
-        button["myText"].isImage = true
-    else
-        button["myText"] = display.newText( options2 )
-        --button["myText"]:setFillColor( unpack(options.iconColor) )
-        button["myText"].isImage = false
+    -- create image buttons if exist, TO-DO
+    M.createButtonsFromList({ name = options.basename..options.name, image=options.state.image }, button["rectangle"], button["group"])
+
+    if options.state.off.svg ~= nil and type(options.state.off.svg) == "table" and options.state.image == nil then
+       local params = {
+            {
+                name = "text",
+                svgName = options.basename..options.name.."SvgOff",
+                state = "off",
+                isVisible = true
+            },
+            {
+                name = "textOn",
+                svgName = options.basename..options.name.."SvgOn",
+                state = "on",
+                isVisible = false
+            },
+            {
+                name = "textDisabled",
+                svgName = options.basename..options.name.."SvgDisabled",
+                state = "disabled",
+                isVisible = false
+            }
+        }
+        for k, v in pairs(params) do
+            if options.state[v.state] ~= nil and options.state[v.state].svg ~= nil then
+                button[v.name] = M.newSvgImageWithStyle({
+                        name = v.svgName,
+                        path = options.state[v.state].svg.path,
+                        width = fontSize,
+                        height = fontSize,
+                        fillColor = options.state[v.state].textColor,
+                        strokeWidth = options.state[v.state].strokeWidth or 1,
+                        strokeColor = options.state[v.state].strokeColor or options.state[v.state].textColor,
+                        y = textY,
+                    })
+                button[v.name].isVisible = v.isVisible
+                button["group"]:insert( button[v.name], false )
+            end
+        end
+    elseif options.state.image == nil then
+        button["text"] = display.newText( options2 )
+        button["text"].isImage = false
+    elseif options.state.image ~= nil then
+        button["text"] = nil
     end
-    button["myText"].isVisible = true
+
+    if muiData.widgetDict[options.basename..options.name] ~= nil and muiData.widgetDict[options.basename..options.name]["image"] ~= nil then
+        button["text"] = muiData.widgetDict[options.basename..options.name]["image"]
+    end
+
     if isChecked then
-        if button["myText"].isImage == false then
-            button["myText"]:setFillColor( unpack(options.iconColor) )
-        end
-        button["myText"].isChecked = isChecked
+        button["text"].isChecked = isChecked
     else
-        if button["myText"].isImage == false then
-            button["myText"]:setFillColor( unpack(options.iconColorOff) )
-        end
-        button["myText"].isChecked = false
+        button["text"].isChecked = false
     end
-    button["mygroup"]:insert( button["myText"], false )
+    button["group"]:insert( button["text"], false )
 
     local maxWidth = field.contentWidth * 2.5 -- (radius * 2.5)
 
-    if useBothIconAndText == true then
+    if useBothIconAndText == true and false then
         local options3 =
         {
             --parent = textGroup,
             text = options.labelText,
             x = 0,
-            y = rectangle.contentHeight * 0.2,
+            y = rectangle.contentHeight * 0.25,
             font = options.labelFont,
             fontSize = fontSize * 0.45,
             align = "center"
         }
-        button["myText2"] = display.newText( options3 )
-        button["myText2"]:setFillColor( unpack(options.labelColor) )
-        button["myText2"].isVisible = true
+        button["text2"] = display.newText( options3 )
+        button["text2"]:setFillColor( unpack(options.state.off.labelColor) )
+        button["text2"].isVisible = true
         if isChecked then
-            button["myText2"]:setFillColor( unpack(options.labelColor) )
-            button["myText2"].isChecked = isChecked
+            button["text2"]:setFillColor( unpack(options.state.on.labelColor) )
+            button["text2"].isChecked = isChecked
         else
-            button["myText2"]:setFillColor( unpack(options.labelColorOff) )
-            button["myText2"].isChecked = false
+            button["text2"]:setFillColor( unpack(options.state.off.labelColor) )
+            button["text2"].isChecked = false
         end
-        button["mygroup"]:insert( button["myText2"], false )
+        button["group"]:insert( button["text2"], false )
     end
 
     -- add the animated circle
@@ -270,22 +315,31 @@ function M.newToolbarButton( options )
         circleColor = options.circleColor
     end
 
-    button["myCircle"] = display.newCircle( options.height, options.height, maxWidth + 5 )
-    button["myCircle"]:setFillColor( unpack(circleColor) )
-    button["myCircle"].isVisible = false
-    button["myCircle"].x = 0
-    button["myCircle"].y = 0
-    button["myCircle"].alpha = 0.3
-    button["mygroup"]:insert( button["myCircle"], true ) -- insert and center bkgd
+    button["circle"] = display.newCircle( options.height, options.height, maxWidth + 5 )
+    button["circle"]:setFillColor( unpack(circleColor) )
+    button["circle"].isVisible = false
+    button["circle"].x = 0
+    button["circle"].y = 0
+    button["circle"].alpha = 0.3
+    button["group"]:insert( button["circle"], true ) -- insert and center bkgd
 
     thebutton = button["rectangle"]
-    field = button["myText"]
+    field = button["text"]
     thebutton.name = options.name
     field.name = options.name
 
     thebutton.muiOptions = options
     thebutton.muiButton = button
     muiData.widgetDict[options.basename]["toolbar"][options.name]["rectangle"]:addEventListener( "touch", M.toolBarButton )
+
+    if options.state.value == "off" then
+        M.turnOffToolbarButton( options )
+    elseif options.state.value == "on" then
+        M.turnOnToolbarButton( options )
+    elseif options.state.value == "disabled" then
+        M.disableToolbarButton( options )
+    end
+
 end
 
 function M.getToolBarButtonProperty(widgetParentName, propertyName, index)
@@ -299,7 +353,7 @@ function M.getToolBarButtonProperty(widgetParentName, propertyName, index)
     if muiData.widgetDict[widgetParentName]["toolbar"][widgetName] == nil then return data end
 
     if propertyName == "object" then
-        data = muiData.widgetDict[widgetParentName]["toolbar"][widgetName]["mygroup"] -- x,y movement
+        data = muiData.widgetDict[widgetParentName]["toolbar"][widgetName]["group"] -- x,y movement
     elseif propertyName == "buttonHeight" then
         data = muiData.widgetDict[widgetParentName]["toolbar"][widgetName]["buttonHeight"]
     elseif propertyName == "buttonWidth" then
@@ -307,9 +361,9 @@ function M.getToolBarButtonProperty(widgetParentName, propertyName, index)
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetParentName]["toolbar"][widgetName]["rectangle"] -- button background
     elseif propertyName == "text" then
-        data = muiData.widgetDict[widgetParentName]["toolbar"][widgetName]["myText"] -- icon/text
+        data = muiData.widgetDict[widgetParentName]["toolbar"][widgetName]["text"] -- icon/text
     elseif propertyName == "label" then
-        data = muiData.widgetDict[widgetParentName]["toolbar"][widgetName]["myText2"] -- text for icon
+        data = muiData.widgetDict[widgetParentName]["toolbar"][widgetName]["text2"] -- text for icon
     end
     return data
 end
@@ -322,8 +376,33 @@ function M.toolBarButton (event)
         button = event.target.muiButton
     end
 
-    if muiData.widgetDict[options.basename]["toolbar"][options.name]["myText"].isChecked == true then
+    if muiData.widgetDict[options.basename]["toolbar"][options.name]["text"].isChecked == true then
         return
+    end
+
+    if muiData.dialogInUse == true and options.dialogName == nil then
+        return
+    end
+
+    if muiData.currentControl == nil then
+        muiData.currentControl = options.basename
+        muiData.currentControlSubName = options.name
+        muiData.currentControlType = "mui-toolbar"
+    end
+
+    if M.disableToolbarButton( options, event ) then
+        if options.state.disabled.callBackData ~= nil and event.phase == "ended" then
+            M.setEventParameter(event, "muiTargetCallBackData", options.state.disabled.callBackData)
+            assert( options.state.disabled.callBack )(event)
+        end
+        return
+    end
+
+    if muiData.currentControl ~= nil and muiData.currentControl ~= options.name then
+        if event.phase == "ended" then
+            M.turnOffControlHandler()
+        end
+        -- return , this is not needed for toolbar button
     end
 
     M.addBaseEventParameters(event, options)
@@ -334,15 +413,18 @@ function M.toolBarButton (event)
         if muiData.interceptOptions == nil then
             muiData.interceptOptions = options
         end
+
+        M.turnOnToolbarButton( options )
+
         M.updateUI(event)
         if muiData.touching == false then
             muiData.touching = true
             if options.touchpoint ~= nil and options.touchpoint == true then
-                muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].x = 0 --muiData.widgetDict[options.basename]["toolbar"][options.name]["mygroup"].x
-                muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].y = 0 --muiData.widgetDict[options.basename]["toolbar"][options.name]["mygroup"].y
-                muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"].isVisible = true
+                muiData.widgetDict[options.basename]["toolbar"][options.name]["circle"].x = 0 --muiData.widgetDict[options.basename]["toolbar"][options.name]["group"].x
+                muiData.widgetDict[options.basename]["toolbar"][options.name]["circle"].y = 0 --muiData.widgetDict[options.basename]["toolbar"][options.name]["group"].y
+                muiData.widgetDict[options.basename]["toolbar"][options.name]["circle"].isVisible = true
                 local scaleFactor = 0.1
-                muiData.widgetDict[options.basename]["toolbar"][options.name].myCircleTrans = transition.from( muiData.widgetDict[options.basename]["toolbar"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+                muiData.widgetDict[options.basename]["toolbar"][options.name].circleTrans = transition.from( muiData.widgetDict[options.basename]["toolbar"][options.name]["circle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
             end
             -- transition.to(event.target,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
         end
@@ -355,34 +437,45 @@ function M.toolBarButton (event)
             event.phase = "onTarget"
             if muiData.interceptMoved == false then
                 --event.target = muiData.widgetDict[options.name]["rrect"]
-                transition.to(muiData.widgetDict[options.basename]["toolbar"]["slider"],{time=350, x=button["mygroup"].x, transition=easing.inOutCubic})
+                transition.to(muiData.widgetDict[options.basename]["toolbar"]["slider"],{time=350, x=button["group"].x, transition=easing.inOutCubic})
 
                 event.myTargetName = options.name
                 event.myTargetBasename = options.basename
-                event.altTarget = muiData.widgetDict[options.basename]["toolbar"][options.name]["myText"]
-                event.altTarget2 = muiData.widgetDict[options.basename]["toolbar"][options.name]["myText2"]
+                event.altTarget = muiData.widgetDict[options.basename]["toolbar"][options.name]["text"]
+                event.altTarget2 = muiData.widgetDict[options.basename]["toolbar"][options.name]["text2"]
                 event.callBackData = options.callBackData
 
                 muiData.widgetDict[options.basename]["value"] = options.value
-                M.setEventParameter(event, "muiLabelColor", muiData.widgetDict[options.basename]["toolbar"][options.name]["labelColor"])
-                M.setEventParameter(event, "muiIconColor", muiData.widgetDict[options.basename]["toolbar"][options.name]["iconColor"])
+                --M.setEventParameter(event, "muiLabelColor", options.state.on.textColor)
+                --M.setEventParameter(event, "muiIconColor", options.state.on.fillColor)
                 M.setEventParameter(event, "muiTargetValue", options.value)
                 M.setEventParameter(event, "muiTargetValue", options.value)
-                M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.basename]["toolbar"][options.name]["myText"])
-                M.setEventParameter(event, "muiTarget2", muiData.widgetDict[options.basename]["toolbar"][options.name]["myText2"])
+                M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.basename]["toolbar"][options.name]["text"])
+                M.setEventParameter(event, "muiTarget2", muiData.widgetDict[options.basename]["toolbar"][options.name]["text2"])
                 M.actionForToolbar(options, event)
+                if event.target.isChecked ~= nil and event.target.isChecked == false then
+                    M.turnOffToolbarButton( options )
+                else
+                    M.turnOnToolbarButton( options )
+                end
             end
             muiData.interceptEventHandler = nil
             muiData.interceptOptions = nil
             muiData.interceptMoved = false
             muiData.touching = false
         end
+        if event.target.isChecked ~= nil and event.target.isChecked == false then
+            M.turnOffToolbarButton( options )
+        end
+        M.processEventQueue()
+    else
+        M.addToEventQueue( options )
     end
     return true -- prevent propagation to other controls
 end
 
 function M.createToolbar( options )
-  M.newToolbar( options )
+    M.newToolbar( options )
 end
 
 function M.newToolbar( options )
@@ -412,38 +505,40 @@ function M.newToolbar( options )
         end
         for i, v in ipairs(options.list) do
             M.newToolbarButton({
-                parent = options.parent,
-                index = i,
-                name = options.name .. "_" .. i,
-                basename = options.name,
-                label = v.key,
-                value = v.value,
-                text = v.icon,
-                textOn = v.icon,
-                width = options.width,
-                height = options.height,
-                buttonHeight = options.buttonHeight,
-                x = x,
-                y = y,
-                touchpoint = options.touchpoint,
-                isChecked = v.isChecked,
-                isActive = v.isActive,
-                isFontIcon = true,
-                font = muiData.materialFont,
-                labelText = v.labelText,
-                labelFont = options.labelFont,
-                labelFontSize = options.labelFontSize,
-                textAlign = "center",
-                labelColor = options.labelColor,
-                labelColorOff = options.labelColorOff,
-                iconColor = v.iconColor or options.labelColor,
-                iconColorOff = v.iconColorOff or options.labelColorOff,
-                backgroundColor = options.color or options.fillColor,
-                iconImage = v.iconImage,
-                numberOfButtons = count,
-                callBack = options.callBack,
-                callBackData = options.callBackData
-            })
+                    parent = options.parent,
+                    index = i,
+                    name = options.name .. "_" .. i,
+                    basename = options.name,
+                    label = v.key,
+                    value = v.value,
+                    text = v.icon,
+                    textOn = v.icon,
+                    width = options.width,
+                    height = options.height,
+                    buttonHeight = options.buttonHeight,
+                    x = x,
+                    y = y,
+                    touchpoint = options.touchpoint,
+                    isChecked = v.isChecked,
+                    isActive = v.isActive,
+                    isFontIcon = true,
+                    font = muiData.materialFont,
+                    labelText = v.labelText,
+                    labelFont = options.labelFont,
+                    labelFontSize = options.labelFontSize,
+                    textAlign = "center",
+                    labelColor = options.labelColor,
+                    labelColorOff = options.labelColorOff,
+                    iconColor = v.iconColor or options.labelColor,
+                    iconColorOff = v.iconColorOff or options.labelColorOff,
+                    backgroundColor = options.color or options.fillColor,
+                    background = options.background,
+                    iconImage = v.iconImage,
+                    state = v.state,
+                    numberOfButtons = count,
+                    callBack = options.callBack,
+                    callBackData = options.callBackData
+                })
             local button = muiData.widgetDict[options.name]["toolbar"][options.name.."_"..i]
             buttonWidth = button["buttonWidth"]
             if i == 1 then buttonOffset = button["buttonOffset"] end
@@ -453,7 +548,7 @@ function M.newToolbar( options )
                 y = y + button["buttonHeight"]
             end
             if v.isChecked == true or v.isActive == true then
-                activeX = button["mygroup"].x
+                activeX = button["group"].x
             end
         end
 
@@ -471,15 +566,26 @@ function M.getToolBarProperty(widgetName, propertyName)
     if widgetName == nil or propertyName == nil then return data end
 
     if propertyName == "object" then
-        data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+        data = muiData.widgetDict[widgetName]["group"] -- x,y movement
     elseif propertyName == "value" then
         data = muiData.widgetDict[widgetName]["value"] -- toolbar value
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["toolbar"]["rectBak"] -- toolbar background
     elseif propertyName == "layer_2" then
-        data = muiData.widgetDict[widgetName]["toolbar"]["slider"] -- bar slider 
+        data = muiData.widgetDict[widgetName]["toolbar"]["slider"] -- bar slider
     end
     return data
+end
+
+function M.getOptionsForToolbarButton( name, basename )
+    if name == nil then return end
+    local options = nil
+
+    if muiData.widgetDict[basename] ~= nil and muiData.widgetDict[basename]["toolbar"] ~= nil then
+        options = muiData.widgetDict[basename]["toolbar"][name]["rectangle"].muiOptions
+    end
+
+    return options
 end
 
 function M.actionForToolbar( options, e )
@@ -492,30 +598,37 @@ function M.actionForToolbar( options, e )
         local list = muiData.widgetDict[basename]["toolbar"]
 
         if target.isChecked == true then
-            return
+            -- return
         end
 
         for k, v in pairs(list) do
-            if v["myText"] ~= nil then
-                if v["myText"].isImage == false then
-                    v["myText"]:setFillColor( unpack(v["iconColorOff"]) )
+            if v["text"] ~= nil then
+                local subOpts = v["rectangle"].muiOptions
+                if v["text"].isImage == false and options.state.svg == nil and  subOpts.state.value ~= "disabled" then
+                    v["text"]:setFillColor( unpack(options.state.off.textColor) )
+                elseif subOpts.state.off.svg ~= nil and subOpts.state.value ~= "disabled" then
+                    M.turnOffToolbarButton( subOpts )
                 end
-                if v["myText2"] ~= nil then
-                    v["myText2"]:setFillColor( unpack(v["labelColorOff"]) )
+                if v["text2"] ~= nil and v["rectangle"].muiOptions ~= nil and v["rectangle"].muiOptions.state.value ~= "disabled" then
+                    v["text2"]:setFillColor( unpack(options.state.off.labelColor) )
                 end
-                v["myText"].isChecked = false
+                if muiData.widgetDict[subOpts.basename..subOpts.name] ~= nil and muiData.widgetDict[subOpts.basename..subOpts.name]["image"] ~= nil then
+                    M.turnOffToolbarButton( subOpts )
+                end
+                v["text"].isChecked = false
             end
         end
 
-       local muiLabelColor = M.getEventParameter(e, "muiLabelColor")
-       local muiIconColor = M.getEventParameter(e, "muiIconColor")
+        local muiIconColor = options.state.on.textColor
+        local muiLabelColor = options.state.on.labelColor
 
-        if target.isImage == false then
+        if target.isImage == false and options.state.svg == nil then
             target:setFillColor( unpack( muiIconColor ) )
         end
         if target2 ~= nil then
             target2:setFillColor( unpack( muiLabelColor ) )
         end
+
         target.isChecked = true
         assert( options.callBack )(e)
     end
@@ -536,6 +649,160 @@ function M.actionForToolbarDemo( event )
         M.debug("Toolbar button value: " .. muiTargetValue)
     end
 end
+
+function M.disableToolbarButton( options, event )
+    M.debug("M.disableToolbarButton()")
+    local val = false
+    if options == nil then return val end
+    if options.state.value ~= "disabled" then return val end
+
+    val = true
+
+    if muiData.widgetDict[options.basename] ~= nil and muiData.widgetDict[options.basename]["type"] == "Toolbar" then
+        -- change color
+        if options.state.image == nil and options.state.disabled.textColor ~= nil then
+            if options.state.svg == nil then
+                M.setGroupObjectFillColor(options.basename, "toolbar", options.name, "text", options.state.disabled.textColor)
+            end
+            M.setGroupObjectFillColor(options.basename, "toolbar", options.name, "text2", options.state.disabled.labelColor)
+        end
+
+        -- change icon
+        if options.state.disabled.svg ~= nil and muiData.widgetDict[options.basename]["toolbar"][options.name].textDisabled ~= nil then
+            M.setGroupObjectVisible(options.basename, "toolbar", options.name, "text", false)
+            M.setGroupObjectVisible(options.basename, "toolbar", options.name, "textOn", false)
+            M.setGroupObjectVisible(options.basename, "toolbar", options.name, "textDisabled", true)
+        end
+
+        -- change icon
+        if muiData.widgetDict[options.basename]["toolbar"][options.name].iconTextDisabled ~= nil then
+            M.setGroupObjectVisible(options.basename, "toolbar", options.name, "iconText", false)
+            M.setGroupObjectVisible(options.basename, "toolbar", options.name, "iconTextOn", false)
+            M.setGroupObjectVisible(options.basename, "toolbar", options.name, "iconTextDisabled", true)
+        end
+
+        -- change image
+        if muiData.widgetDict[options.basename..options.name] ~= nil and muiData.widgetDict[options.basename..options.name]["imageDisabled"] ~= nil then
+            M.setObjectVisible(options.basename..options.name, "image", false)
+            M.setObjectVisible(options.basename..options.name, "imageTouch", false)
+            M.setObjectVisible(options.basename..options.name, "imageDisabled", true)
+        end
+        muiData.widgetDict[options.basename].disabled = true
+        if muiData.currentControl == options.name then
+            M.resetCurrentControlVars()
+        end
+    end
+
+    if muiData.currentControl == options.name then
+        M.resetCurrentControlVars()
+    end
+
+    return val
+end
+
+-- params...
+-- name: name of button
+-- basename: only required if RadioButton or grouped element
+function M.turnOnToolbarButtonByName( name, basename )
+    if name == nil then return end
+    local options = M.getOptionsForToolbarButton(name, basename)
+
+    if options ~= nil then
+        M.turnOnToolbarButton( options )
+    end
+end
+
+function M.turnOnToolbarButton( options, event )
+    -- body
+    M.debug("M.turnOnToolbarButton()")
+
+    options.state.value = "on"
+    if event ~= nil then
+        if options.state.on.callBack ~= nil then
+            M.setEventParameter(event, "muiTargetCallBackData", options.state.on.callBackData)
+            assert( options.state.on.callBack )(event)
+        end
+    end
+
+    if muiData.widgetDict[options.basename] ~= nil and muiData.widgetDict[options.basename]["type"] == "Toolbar" then
+        -- change color
+        if options.state.image == nil and options.state.on.textColor ~= nil then
+
+            if options.state.svg == nil then
+                M.setGroupObjectFillColor(options.basename, "toolbar", options.name, "text", options.state.on.textColor)
+            end
+            M.setGroupObjectFillColor(options.basename, "toolbar", options.name, "text2", options.state.on.labelColor)
+        end
+
+        -- change icon
+        if options.state.on.svg ~= nil and muiData.widgetDict[options.basename]["toolbar"][options.name].textOn ~= nil then
+            M.setGroupObjectVisible(options.basename, "toolbar", options.name, "text", false)
+            M.setGroupObjectVisible(options.basename, "toolbar", options.name, "textOn", true)
+            M.setGroupObjectVisible(options.basename, "toolbar", options.name, "textDisabled", false)
+        end
+
+        -- change image
+        if muiData.widgetDict[options.basename..options.name] ~= nil and muiData.widgetDict[options.basename..options.name]["imageTouch"] ~= nil then
+            M.setObjectVisible(options.basename..options.name, "image", false)
+            M.setObjectVisible(options.basename..options.name, "imageDisabled", false)
+            M.setObjectVisible(options.basename..options.name, "imageTouch", true)
+        end
+    end
+end
+
+-- params...
+-- name: name of button
+-- basename: only required if RadioButton
+function M.turnOffToolbarButtonByName( name, basename )
+    if name == nil then return end
+    local options = M.getOptionsForToolbarButton(name, basename)
+
+    if options ~= nil then
+        M.turnOffToolbarButton( options )
+    end
+end
+
+function M.turnOffToolbarButton( options, event )
+    -- body
+    M.debug("M.turnOffToolbarButton()")
+
+    options.state.value = "off"
+    if event ~= nil then
+        if options.state.off.callBack ~= nil then
+            M.setEventParameter(event, "muiTargetCallBackData", options.state.off.callBackData)
+            assert( options.state.off.callBack )(event)
+        end
+    end
+
+    if muiData.widgetDict[options.basename] ~= nil and muiData.widgetDict[options.basename]["type"] == "Toolbar" then
+        -- change color
+        if options.state.image == nil and options.state.off.textColor ~= nil then
+            if options.state.svg == nil then
+                M.setGroupObjectFillColor(options.basename, "toolbar", options.name, "text", options.state.off.textColor)
+            end
+            M.setGroupObjectFillColor(options.basename, "toolbar", options.name, "text2", options.state.off.labelColor)
+        end
+
+        -- change icon
+        if options.state.off.svg ~= nil and muiData.widgetDict[options.basename]["toolbar"][options.name].text ~= nil then
+            M.setGroupObjectVisible(options.basename, "toolbar", options.name, "text", true)
+            M.setGroupObjectVisible(options.basename, "toolbar", options.name, "textOn", false)
+            M.setGroupObjectVisible(options.basename, "toolbar", options.name, "textDisabled", false)
+        end
+
+        -- change image
+        if muiData.widgetDict[options.basename..options.name] ~= nil and muiData.widgetDict[options.basename..options.name]["image"] ~= nil then
+            M.setObjectVisible(options.basename..options.name, "image", true)
+            M.setObjectVisible(options.basename..options.name, "imageDisabled", false)
+            M.setObjectVisible(options.basename..options.name, "imageTouch", false)
+        end
+
+        if muiData.currentControl == options.basename then
+            M.resetCurrentControlVars()
+        end
+    end
+end
+
 
 function M.removeWidgetToolbar(widgetName)
     M.removeToolbar(widgetName)
@@ -558,10 +825,15 @@ function M.removeToolbar(widgetName)
         muiData.widgetDict[widgetName]["toolbar"]["slider"]:removeSelf()
         muiData.widgetDict[widgetName]["toolbar"]["slider"] = nil
     end
+    if muiData.widgetDict[widgetName]["toolbar"]["background"] ~= nil then
+        muiData.widgetDict[widgetName]["toolbar"]["background"]:removeSelf()
+        muiData.widgetDict[widgetName]["toolbar"]["background"] = nil
+    end
     if muiData.widgetDict[widgetName]["toolbar"]["rectBak"] ~= nil then
         muiData.widgetDict[widgetName]["toolbar"]["rectBak"]:removeSelf()
         muiData.widgetDict[widgetName]["toolbar"]["rectBak"] = nil
     end
+    M.resetCurrentControlVars()
 end
 
 function M.removeWidgetToolbarButton(widgetDict, toolbarName, name)
@@ -583,19 +855,46 @@ function M.removeToolbarButton(widgetDict, toolbarName, name)
             widgetDict[toolbarName]["toolbar"][name]["rectangle"]:removeEventListener( "touch", M.toolBarButton )
             widgetDict[toolbarName]["toolbar"][name]["rectangle"]:removeSelf()
             widgetDict[toolbarName]["toolbar"][name]["rectangle"] = nil
-            widgetDict[toolbarName]["toolbar"][name]["myText"]:removeSelf()
-            widgetDict[toolbarName]["toolbar"][name]["myText"] = nil
-            if widgetDict[toolbarName]["toolbar"][name]["myText2"] ~= nil then
-                widgetDict[toolbarName]["toolbar"][name]["myText2"]:removeSelf()
-                widgetDict[toolbarName]["toolbar"][name]["myText2"] = nil
+            widgetDict[toolbarName]["toolbar"][name]["text"]:removeSelf()
+            widgetDict[toolbarName]["toolbar"][name]["text"] = nil
+            if widgetDict[toolbarName]["toolbar"][name]["text2"] ~= nil then
+                widgetDict[toolbarName]["toolbar"][name]["text2"]:removeSelf()
+                widgetDict[toolbarName]["toolbar"][name]["text2"] = nil
             end
-            widgetDict[toolbarName]["toolbar"][name]["myCircle"]:removeSelf()
-            widgetDict[toolbarName]["toolbar"][name]["myCircle"] = nil
-            widgetDict[toolbarName]["toolbar"][name]["mygroup"]:removeSelf()
-            widgetDict[toolbarName]["toolbar"][name]["mygroup"] = nil
+
+            if widgetDict[toolbarName]["toolbar"][toolbarName..name.."SvgOff"] ~= nil then
+                M.removeImageSvgStyle(toolbarName..name.."SvgOff")
+            end
+            if widgetDict[toolbarName]["toolbar"][toolbarName..name.."SvgOn"] ~= nil then
+                M.removeImageSvgStyle(toolbarName..name.."SvgOn")
+            end
+            if widgetDict[toolbarName]["toolbar"][toolbarName..name.."SvgDisabled"] ~= nil then
+                M.removeImageSvgStyle(toolbarName..name.."SvgDisabled")
+            end
+
+            if widgetDict[toolbarName]["toolbar"][toolbarName..name.."image"] ~= nil then
+                widgetDict[toolbarName]["toolbar"][toolbarName..name.."image"]:removeSelf()
+                widgetDict[toolbarName]["toolbar"][toolbarName..name.."image"] = nil
+            end
+
+            if widgetDict[toolbarName]["toolbar"][toolbarName..name.."imageTouch"] ~= nil then
+                widgetDict[toolbarName]["toolbar"][toolbarName..name.."imageTouch"]:removeSelf()
+                widgetDict[toolbarName]["toolbar"][toolbarName..name.."imageTouch"] = nil
+            end
+
+            if widgetDict[toolbarName]["toolbar"][toolbarName..name.."imageDisabled"] ~= nil then
+                widgetDict[toolbarName]["toolbar"][toolbarName..name.."imageDisabled"]:removeSelf()
+                widgetDict[toolbarName]["toolbar"][toolbarName..name.."imageDisabled"] = nil
+            end
+
+            widgetDict[toolbarName]["toolbar"][name]["circle"]:removeSelf()
+            widgetDict[toolbarName]["toolbar"][name]["circle"] = nil
+            widgetDict[toolbarName]["toolbar"][name]["group"]:removeSelf()
+            widgetDict[toolbarName]["toolbar"][name]["group"] = nil
             widgetDict[toolbarName]["toolbar"][name] = nil
         end
     end
+    M.resetCurrentControlVars()
 end
 
 return M

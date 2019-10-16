@@ -57,6 +57,8 @@ function M.newCard(options)
     options.useContainer = options.useContainer or false
     options.width = options.width or muiData.contentWidth
     options.height = options.height or muiData.contentHeight
+    options.topHeight = options.topHeight or options.height * .5
+    -- options.bottomHeight = This is based on topHeight, so not needed to be passed.
     options.textColor = options.textColor or {1, 1, 1, 1}
     options.fillColorTop = options.fillColorTop or {1, 1, 1, 1}
     options.fillColor = options.fillColor or options.fillColorTop

@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2019-10-16
+### Changes
+- SVG support and other additions. Will update this file soon.
+
+## [0.3.4] - 2018-01-18
+### Changes
+- Added SVG support to newCheckBox(), newCircleButton(), newIconButton(), newRadioButton(), newRadioGroup(), newRectButton() and newRoundedRectButton(). Includes 'off' and 'on' states for checkboxes and radio buttons. Demo coming soon with the changes. Documentation will need updated.
+- Improved implementation of SVG support.
+- To-do: Include 'off' and 'on' states for buttons in general. If you press and hold the button stays in the 'on' state until released. If checkbox or radio button the state remains until touched again.
+
 ## [0.3.3] - 2018-01-11
 ### Changes
 - Added SVG graphic support module. It's being integrated into the widgets. This will allow the developer

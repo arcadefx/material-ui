@@ -11,8 +11,8 @@ settings =
 		-- Supported values for orientation:
 		-- portrait, portraitUpsideDown, landscapeLeft, landscapeRight
 
-		default = "landscapeRight",
-		supported = { "landscapeRight", "landscapeLeft", }
+		default = "landscape",
+		supported = { "landscapeLeft", "landscapeRight", }
 	},
 	
 	excludeFiles =
@@ -96,7 +96,6 @@ settings =
 		},
 	},
 	--]]
-	--[[
     plugins =
     {
         ["plugin.nanosvg"] =
@@ -104,5 +103,4 @@ settings =
             publisherId = "com.coronalabs"
         },
     },
-	--]]
 }

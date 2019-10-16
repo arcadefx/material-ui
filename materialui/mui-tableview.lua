@@ -1,32 +1,32 @@
 --[[
-    A loosely based Material UI module
+A loosely based Material UI module
 
-    mui-button.lua : This is for creating a tableview.
+mui-button.lua : This is for creating a tableview.
 
-    The MIT License (MIT)
+The MIT License (MIT)
 
-    Copyright (C) 2016 Anedix Technologies, Inc.  All Rights Reserved.
+Copyright (C) 2016 Anedix Technologies, Inc. All Rights Reserved.
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-    For other software and binaries included in this module see their licenses.
-    The license and the software must remain in full when copying or distributing.
+For other software and binaries included in this module see their licenses.
+The license and the software must remain in full when copying or distributing.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 --]]--
 
@@ -151,7 +151,7 @@ function M.newTableView( options )
         if v.backgroundColor ~= nil then
             v.fillColor = v.fillColor or v.backgroundColor
         else
-            v.fillColor = v.fillColor or rowColor.default
+            v.fillColor = v.fillColor or (rowColor.default or {1,1,1,1})
         end
 
         local optionList = {
@@ -178,6 +178,7 @@ function M.newTableView( options )
                 textColor = options.textColor,
                 rowAnimation = options.rowAnimation,
                 backgroundImage = v.backgroundImage,
+                hideBackground = options.hideBackground or false,
                 callBackData = options.callBackData,
                 callBackTouch = options.callBackTouch,
                 callBackRender = options.callBackRender
@@ -215,7 +216,7 @@ function M.onRowRender( event )
     noLines = false
     lineHeight = 1
     lineColor = { 0.9, 0.9, 0.9 }
-    rowColor = { 1, 1, 1, 1 }
+    rowColor = { 1, 0, 0, 0.01 }
     textColor = { 0, 0, 0, 1 }
     font = native.systemFont
 
@@ -228,7 +229,7 @@ function M.onRowRender( event )
 
         if row.params.lineColor ~= nil then lineColor = row.params.lineColor end
 
-        if row.params.rowColor ~= nil then
+        if row.params.rowColor ~= nil and false then
             rowColor = row.params.rowColor
         end
 
@@ -237,7 +238,6 @@ function M.onRowRender( event )
     end
 
     if noLines == false and lineHeight > 0 then
-
         -- the block above line
         row.bg1 = display.newRect( 0, 0, row.contentWidth, row.contentHeight)
         --row.bg1.anchorX = 0
@@ -256,11 +256,11 @@ function M.onRowRender( event )
         row.bg2:setFillColor( unpack( lineColor ) ) -- transparent
         row:insert( row.bg2 )
 
-    else
+    elseif row.params.hideBackground == false then
         row.bg1 = display.newRect( 0, 0, row.contentWidth, row.contentHeight)
         row.bg1.anchorX = 0
         row.bg1.anchorY = 0
-        row.bg1:setFillColor( unpack( rowColor ) ) -- transparent
+        row.bg1:setFillColor( unpack( {1,1,1,.10} ) ) -- transparent
         row:insert( row.bg1 )
     end
 
@@ -278,8 +278,8 @@ function M.onRowRender( event )
     if row.params ~= nil and row.params.callBackRender ~= nil then
         -- If a background image was specified then add it before any controls
         M.attachBackgroundToRow(row, {
-            image = row.params.backgroundImage
-        })
+                image = row.params.backgroundImage
+            })
         assert( row.params.callBackRender )(event)
     end
 end
@@ -294,44 +294,44 @@ function M.onRowRenderDemo( event )
 
     --[[-- demo attaching checkbox to table (a checklist)
     M.newCheckBox({
-        name = "check"..row.index,
-        text = "check_box_outline_blank",
-        width = 25,
-        height = 25,
-        isFontIcon = true,
-        font = M.materialFont,
-        textColor = { 0.3, 0.3, 0.3 },
-        textAlign = "center",
-        value = 500,
-        callBack = M.actionForCheckbox
-    })
+            name = "check"..row.index,
+            text = "check_box_outline_blank",
+            width = 25,
+            height = 25,
+            isFontIcon = true,
+            font = M.materialFont,
+            textColor = { 0.3, 0.3, 0.3 },
+            textAlign = "center",
+            value = 500,
+            callBack = M.actionForCheckbox
+        })
     M.attachToRow( row, {
-        widgetName = "check"..row.index,
-        widgetType = "IconButton",
-        align = "left",  -- left | right supported
-        params = row.params
-    })
+            widgetName = "check"..row.index,
+            widgetType = "IconButton",
+            align = "left", -- left | right supported
+            params = row.params
+        })
     --]]--
 
     --[[-- demo attaching widget to a row
     M.newIconButton({
-        name = "plus"..row.index,
-        text = "add_circle",
-        width = 25,
-        height = 25,
-        x = 0,
-        y = 0,
-        font = muiData.materialFont,
-        textColor = { 1, 0, 0.4 },
-        textAlign = "center",
-        callBack = M.actionForButton
-    })
+            name = "plus"..row.index,
+            text = "add_circle",
+            width = 25,
+            height = 25,
+            x = 0,
+            y = 0,
+            font = muiData.materialFont,
+            textColor = { 1, 0, 0.4 },
+            textAlign = "center",
+            callBack = M.actionForButton
+        })
     M.attachToRow( row, {
-        widgetName = "plus"..row.index,
-        widgetType = "IconButton",
-        align = "left",  -- left | right supported
-        params = row.params
-    })
+            widgetName = "plus"..row.index,
+            widgetType = "IconButton",
+            align = "left", -- left | right supported
+            params = row.params
+        })
     --]]--
 
     local colWidth = 0
@@ -359,7 +359,7 @@ function M.onRowRenderDemo( event )
                 width = colWidth,
                 font = font,
                 fontSize = row.params.fontSize,
-                align = v.align or "left"  -- Alignment parameter
+                align = v.align or "left" -- Alignment parameter
             }
             local rowTitle = display.newText( textOptions )
             rowTitle:setFillColor( unpack( textColor ) )
@@ -377,12 +377,12 @@ function M.onRowRenderDemo( event )
             -- Pass in Font height too
             if v.valign ~= nil then
                 M.setRowObjectVerticalAlign({
-                    obj = container,
-                    valign = v.valign,
-                    rowHeight = rowHeight,
-                    lineHeight = row.params.lineHeight,
-                    heightOfFont = rowTitle.contentHeight
-                })
+                        obj = container,
+                        valign = v.valign,
+                        rowHeight = rowHeight,
+                        lineHeight = row.params.lineHeight,
+                        heightOfFont = rowTitle.contentHeight
+                    })
             end
         end
     else
@@ -395,7 +395,7 @@ function M.onRowRenderDemo( event )
             width = rowWidth,
             font = font,
             fontSize = row.params.fontSize,
-            align = row.params.align or "left"  -- Alignment parameter
+            align = row.params.align or "left" -- Alignment parameter
         }
         local rowTitle = display.newText( textOptions )
         rowTitle:setFillColor( unpack( textColor ) )
@@ -405,11 +405,11 @@ function M.onRowRenderDemo( event )
 
         row.params.valign = row.params.valign or "middle"
         M.setRowObjectVerticalAlign({
-            obj = rowTitle,
-            valign = row.params.valign,
-            rowHeight = rowHeight,
-            lineHeight = row.params.lineHeight
-        })
+                obj = rowTitle,
+                valign = row.params.valign,
+                rowHeight = rowHeight,
+                lineHeight = row.params.lineHeight
+            })
     end
 end
 
@@ -448,13 +448,13 @@ function M.attachBackgroundToRow(row, options)
     local name = "background-"..row.index
 
     M.newImageRect({
-        image = options.image,
-        name = name,
-        width = rowWidth,
-        height = rowHeight,
-        x = 0,
-        y = 0
-    })
+            image = options.image,
+            name = name,
+            width = rowWidth,
+            height = rowHeight,
+            x = 0,
+            y = 0
+        })
     if muiData.widgetDict[name]["image_rect"] == nil then
         M.debug("M.attachBackgroundToRow : cannot find image "..options.image)
         return
@@ -532,11 +532,11 @@ function M.attachToRow(row, options )
 
     if options.valign ~= nil then
         M.setRowObjectVerticalAlign({
-            rowHeight = row.contentHeight,
-            obj = widget,
-            valign = options.valign,
-            lineHeight = options.lineHeight or 0
-        })
+                rowHeight = row.contentHeight,
+                obj = widget,
+                valign = options.valign,
+                lineHeight = options.lineHeight or 0
+            })
     end
 
     row:insert( widget, false )
@@ -551,8 +551,8 @@ function M.onRowTouch( event )
     local row = event.row
 
     if muiData.touched ~= nil and muiData.touched == true then
-            muiData.touched = false
-            return true
+        muiData.touched = false
+        return true
     end
 
     if muiData.dialogInUse == true then

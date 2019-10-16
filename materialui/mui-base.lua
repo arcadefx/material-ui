@@ -487,68 +487,67 @@ function M.getWidgetBaseObject(name)
 
     if name ~= nil and string.len(name) > 1 then
         for widget in pairs(muiData.widgetDict) do
-            local widgetType = muiData.widgetDict[widget]["type"]
-            if widgetType ~= nil and widget == name then
-                if widgetType == "Text" then
-                    widgetData = muiData.widgetDict[widget]["text"]
-                elseif widgetType == "CircleButton" then
-                    widgetData = muiData.widgetDict[widget]["group"]
-                elseif widgetType == "Card" then
-                    widgetData = muiData.widgetDict[widget]["group"]
-                elseif widgetType == "Image" then
-                    widgetData = muiData.widgetDict[widget]["image"]
-                elseif widgetType == "ImageRect" then
-                    widgetData = muiData.widgetDict[widget]["image_rect"]
-                elseif widgetType == "ImageSvg" then
-                    widgetData = muiData.widgetDict[widget]["image_svg"]
-                elseif widgetType == "ImageSvgStyle" then
-                    widgetData = muiData.widgetDict[widget]["image_svg"]
-                elseif widgetType == "DatePicker" then
-                    widgetData = muiData.widgetDict[widget]["group"]
-                elseif widgetType == "EmbossedText" then
-                    widgetData = muiData.widgetDict[widget]["text"]
-                elseif widgetType == "RRectButton" then
-                    widgetData = muiData.widgetDict[widget]["container"]
-                elseif widgetType == "RectButton" then
-                    widgetData = muiData.widgetDict[widget]["container"]
-                elseif widgetType == "IconButton" then
-                    widgetData = muiData.widgetDict[widget]["group"]
-                elseif widgetType == "RadioButton" then
-                    widgetData = muiData.widgetDict[widget]["group"]
-                elseif widgetType == "Toolbar" then
-                    -- widgetData = muiData.widgetDict[widget]["container"]
-                    M.debug("getWidgetForInsert: Toolbar not supported at this time.")
-                elseif widgetType == "TableView" then
-                    widgetData = muiData.widgetDict[widget]["tableview"]
-                elseif widgetType == "TextField" then
-                    widgetData = muiData.widgetDict[widget]["container"]
-                elseif widgetType == "TextBox" then
-                    widgetData = muiData.widgetDict[widget]["container"]
-                elseif widgetType == "TileGrid" then
-                    widgetData = muiData.widgetDict[widget]["group"]
-                elseif widgetType == "TimePicker" then
-                    widgetData = muiData.widgetDict[widget]["group"]
-                elseif widgetType == "Navbar" or widgetType == "NavBar" then
-                    widgetData = muiData.widgetDict[widget]["container"]
-                elseif widgetType == "ProgressArc" then
-                    widgetData = muiData.widgetDict[widget]["group"]
-                elseif widgetType == "ProgressBar" then
-                    widgetData = muiData.widgetDict[widget]["group"]
-                elseif widgetType == "Popover" then
-                    widgetData = muiData.widgetDict[widget]["container"]
-                elseif widgetType == "ToggleSwitch" then
-                    widgetData = muiData.widgetDict[widget]["group"]
-                elseif widgetType == "Dialog" then
-                    widgetData = muiData.widgetDict[widget]["container"]
-                elseif widgetType == "SlidePanel" then
-                    widgetData = muiData.widgetDict[widget]["group"]
-                elseif widgetType == "Slider" then
-                    widgetData = muiData.widgetDict[widget]["container"]
-                elseif widgetType == "SnackBar" then
-                    widgetData = muiData.widgetDict[widget]["container"]
-                elseif widgetType == "Toast" then
-                    widgetData = muiData.widgetDict[widget]["container"]
-                end
+          local widgetType = muiData.widgetDict[widget]["type"]
+          if widgetType ~= nil and widget == name then
+            if widgetType == "Text" then
+               widgetData = muiData.widgetDict[widget]["text"]
+            elseif widgetType == "CircleButton" then
+               widgetData = muiData.widgetDict[widget]["mygroup"]
+            elseif widgetType == "Card" then
+               widgetData = muiData.widgetDict[widget]["group"]
+            elseif widgetType == "Image" then
+               widgetData = muiData.widgetDict[widget]["image"]
+            elseif widgetType == "ImageRect" then
+               widgetData = muiData.widgetDict[widget]["image_rect"]
+            elseif widgetType == "ImageSvg" then
+               widgetData = muiData.widgetDict[widget]["image_svg"]
+            elseif widgetType == "ImageSvgStyle" then
+               widgetData = muiData.widgetDict[widget]["image_svg"]
+            elseif widgetType == "DatePicker" then
+               widgetData = muiData.widgetDict[widget]["mygroup"]
+            elseif widgetType == "EmbossedText" then
+               widgetData = muiData.widgetDict[widget]["text"]
+            elseif widgetType == "RRectButton" then
+               widgetData = muiData.widgetDict[widget]["container"]
+            elseif widgetType == "RectButton" then
+               widgetData = muiData.widgetDict[widget]["container"]
+            elseif widgetType == "IconButton" then
+               widgetData = muiData.widgetDict[widget]["mygroup"]
+            elseif widgetType == "RadioButton" then
+               widgetData = muiData.widgetDict[widget]["mygroup"]
+            elseif widgetType == "Toolbar" then
+               -- widgetData = muiData.widgetDict[widget]["container"]
+               M.debug("getWidgetForInsert: Toolbar not supported at this time.")
+            elseif widgetType == "TableView" then
+               widgetData = muiData.widgetDict[widget]["tableview"]
+            elseif widgetType == "TextField" then
+               widgetData = muiData.widgetDict[widget]["container"]
+            elseif widgetType == "TextBox" then
+               widgetData = muiData.widgetDict[widget]["container"]
+            elseif widgetType == "TileGrid" then
+               widgetData = muiData.widgetDict[widget]["mygroup"]
+            elseif widgetType == "TimePicker" then
+               widgetData = muiData.widgetDict[widget]["mygroup"]
+            elseif widgetType == "Navbar" or widgetType == "NavBar" then
+               widgetData = muiData.widgetDict[widget]["container"]
+            elseif widgetType == "ProgressArc" then
+               widgetData = muiData.widgetDict[widget]["mygroup"]
+            elseif widgetType == "ProgressBar" then
+               widgetData = muiData.widgetDict[widget]["mygroup"]
+            elseif widgetType == "Popover" then
+               widgetData = muiData.widgetDict[widget]["container"]
+            elseif widgetType == "ToggleSwitch" then
+               widgetData = muiData.widgetDict[widget]["mygroup"]
+            elseif widgetType == "Dialog" then
+               widgetData = muiData.widgetDict[widget]["container"]
+            elseif widgetType == "SlidePanel" then
+               widgetData = muiData.widgetDict[widget]["mygroup"]
+            elseif widgetType == "Slider" then
+               widgetData = muiData.widgetDict[widget]["container"]
+            elseif widgetType == "SnackBar" then
+               widgetData = muiData.widgetDict[widget]["container"]
+            elseif widgetType == "Toast" then
+               widgetData = muiData.widgetDict[widget]["container"]
             end
         end
     end

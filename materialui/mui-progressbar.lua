@@ -1,32 +1,32 @@
 --[[
-    A loosely based Material UI module
+A loosely based Material UI module
 
-    mui-progresbar.lua : This is for creating progress bars. Percentage based (0..100%)
+mui-progresbar.lua : This is for creating progress bars. Percentage based (0..100%)
 
-    The MIT License (MIT)
+The MIT License (MIT)
 
-    Copyright (C) 2016 Anedix Technologies, Inc.  All Rights Reserved.
+Copyright (C) 2016 Anedix Technologies, Inc. All Rights Reserved.
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-    For other software and binaries included in this module see their licenses.
-    The license and the software must remain in full when copying or distributing.
+For other software and binaries included in this module see their licenses.
+The license and the software must remain in full when copying or distributing.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 --]]--
 
@@ -43,25 +43,25 @@ local M = muiData.M -- {} -- for module array/table
 -- createProgressBar
 --
 --[[
-  params:
-    name = <name of widget>
-    width = <val>,
-    height = <val>,
-    x = <val>,
-    y = <val>,
-    foregroundColor = { 0, 0.78, 1, 1 },
-    backgroundColor = { 0.82, 0.95, 0.98, 0.8 },
-    startPercent = 20,
-    barType = "determinate",
-    iterations = 1,
-    labelText = "Determinate: progress bar",
-    labelFont = native.systemFont,
-    labelFontSize = 16,
-    labelColor = {  0.4, 0.4, 0.4, 1 },
-    labelAlign = "center",
-    callBack = mui.postProgressCallBack,
-    --repeatCallBack = <your method here>,
-    hideBackdropWhenDone = false
+params:
+name = <name of widget>
+width = <val>,
+height = <val>,
+x = <val>,
+y = <val>,
+foregroundColor = { 0, 0.78, 1, 1 },
+backgroundColor = { 0.82, 0.95, 0.98, 0.8 },
+startPercent = 20,
+barType = "determinate",
+iterations = 1,
+labelText = "Determinate: progress bar",
+labelFont = native.systemFont,
+labelFontSize = 16,
+labelColor = { 0.4, 0.4, 0.4, 1 },
+labelAlign = "center",
+callBack = mui.postProgressCallBack,
+--repeatCallBack = <your method here>,
+hideBackdropWhenDone = false
 --]]--
 function M.createProgressBar(options)
     M.newProgressBar(options)
@@ -125,19 +125,19 @@ function M.newProgressBar(options)
 
     muiData.widgetDict[options.name] = {}
 
-    muiData.widgetDict[options.name]["mygroup"] = display.newGroup()
-    muiData.widgetDict[options.name]["mygroup"].x = x
-    muiData.widgetDict[options.name]["mygroup"].y = y
+    muiData.widgetDict[options.name]["group"] = display.newGroup()
+    muiData.widgetDict[options.name]["group"].x = x
+    muiData.widgetDict[options.name]["group"].y = y
     muiData.widgetDict[options.name]["touching"] = false
 
     if options.scrollView ~= nil then
         muiData.widgetDict[options.name]["scrollView"] = options.scrollView
-        muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+        muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["group"] )
     end
 
     if options.parent ~= nil then
         muiData.widgetDict[options.name]["parent"] = options.parent
-        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["group"] )
     end
 
     if options.labelText ~= nil and options.labelFontSize ~= nil then
@@ -152,11 +152,11 @@ function M.newProgressBar(options)
             width = options.width,
             font = options.labelFont,
             fontSize = options.labelFontSize,
-            align = options.labelAlign  --new alignment parameter
+            align = options.labelAlign --new alignment parameter
         }
         muiData.widgetDict[options.name]["label"] = display.newText( textOptions )
         muiData.widgetDict[options.name]["label"]:setFillColor( unpack(options.labelColor) )
-        muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["label"] )
+        muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name]["label"] )
     end
 
     muiData.widgetDict[options.name]["busy"] = false
@@ -180,8 +180,8 @@ function M.newProgressBar(options)
     if options.repeatCallBack ~= nil then
         muiData.widgetDict[options.name]["progressbar"].repeatCallBack = options.repeatCallBack
     end
-    muiData.widgetDict[options.name]["mygroup"]:insert(muiData.widgetDict[options.name]["progressbackdrop"])
-    muiData.widgetDict[options.name]["mygroup"]:insert(muiData.widgetDict[options.name]["progressbar"])
+    muiData.widgetDict[options.name]["group"]:insert(muiData.widgetDict[options.name]["progressbackdrop"])
+    muiData.widgetDict[options.name]["group"]:insert(muiData.widgetDict[options.name]["progressbar"])
 
     muiData.widgetDict[options.name]["progressbar"].percentComplete = 1
     M.increaseProgressBar( options.name, startPercent )
@@ -193,7 +193,7 @@ function M.getProgressBarProperty(widgetName, propertyName)
     if widgetName == nil or propertyName == nil then return data end
 
     if propertyName == "object" then
-        data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+        data = muiData.widgetDict[widgetName]["group"] -- x,y movement
     elseif propertyName == "label" then
         data = muiData.widgetDict[widgetName]["label"] -- the progress text
     elseif propertyName == "value" then
@@ -231,11 +231,11 @@ function M.increaseProgressBar( widgetName, percent, __forceprocess__ )
         -- find entry
         local idx = 0
         for i, v in ipairs(muiData.progressbarDict) do
-           if v.name == widgetName then
+            if v.name == widgetName then
                 idx = i
                 percent = v.value
                 break
-           end
+            end
         end
         if idx > 0 then table.remove(muiData.progressbarDict, idx) end
     end
@@ -245,13 +245,13 @@ function M.increaseProgressBar( widgetName, percent, __forceprocess__ )
     muiData.widgetDict[widgetName]["progressbar"].percentComplete = muiData.widgetDict[widgetName]["progressbar"].percentComplete + percent
 
     muiData.widgetDict[options.name]["transition"] = transition.to( muiData.widgetDict[options.name]["progressbar"], {
-        time = options.delay,
-        xScale = muiData.widgetDict[widgetName]["progressbar"].percentComplete,
-        transition = easing.linear,
-        iterations = options.iterations,
-        onComplete = M.completeProgressBarCallBack,
-        onRepeat = M.repeatProgressBarCallBack
-    } )
+            time = options.delay,
+            xScale = muiData.widgetDict[widgetName]["progressbar"].percentComplete,
+            transition = easing.linear,
+            iterations = options.iterations,
+            onComplete = M.completeProgressBarCallBack,
+            onRepeat = M.repeatProgressBarCallBack
+        } )
 
 end
 
@@ -271,19 +271,19 @@ function M.completeProgressBarCallBack( object )
 
     if object.noFinishAnimation == nil and object.percentComplete >= 99 then
         transition.to( muiData.widgetDict[object.name]["progressbar"], {
-            time = 300,
-            yScale = 0.01   ,
-            transition = easing.linear,
-            iterations = 1,
-            onComplete = M.completeProgressBarFinalCallBack,
-        } )
+                time = 300,
+                yScale = 0.01 ,
+                transition = easing.linear,
+                iterations = 1,
+                onComplete = M.completeProgressBarFinalCallBack,
+            } )
         if muiData.widgetDict[object.name]["progressbackdrop"].hideme ~= nil then
             transition.to( muiData.widgetDict[object.name]["progressbackdrop"], {
-                time = 300,
-                yScale = 0.01,
-                transition = easing.linear,
-                iterations = 1
-            } )
+                    time = 300,
+                    yScale = 0.01,
+                    transition = easing.linear,
+                    iterations = 1
+                } )
         end
     elseif #muiData.progressbarDict > 0 then
         M.increaseProgressBar( object.name, 1, "__forceprocess__")
@@ -334,8 +334,8 @@ function M.removeProgressBar(widgetName)
         muiData.widgetDict[widgetName]["label"]:removeSelf()
         muiData.widgetDict[widgetName]["label"] = nil
     end
-    muiData.widgetDict[widgetName]["mygroup"]:removeSelf()
-    muiData.widgetDict[widgetName]["mygroup"] = nil
+    muiData.widgetDict[widgetName]["group"]:removeSelf()
+    muiData.widgetDict[widgetName]["group"] = nil
     muiData.widgetDict[widgetName] = nil
 end
 

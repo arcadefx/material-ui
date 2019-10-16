@@ -1,32 +1,32 @@
 --[[
-    A loosely based Material UI module
+A loosely based Material UI module
 
-    mui-snackbar.lua : This is for creating "snackbar" notifications.
+mui-snackbar.lua : This is for creating "snackbar" notifications.
 
-    The MIT License (MIT)
+The MIT License (MIT)
 
-    Copyright (C) 2017 Anedix Technologies, Inc.  All Rights Reserved.
+Copyright (C) 2017 Anedix Technologies, Inc. All Rights Reserved.
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-    For other software and binaries included in this module see their licenses.
-    The license and the software must remain in full when copying or distributing.
+For other software and binaries included in this module see their licenses.
+The license and the software must remain in full when copying or distributing.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 --]]--
 
@@ -199,7 +199,7 @@ function M.newSnackBar( options )
     muiData.widgetDict[options.name]["font"] = font
     muiData.widgetDict[options.name]["fontSize"] = fontSize
 
-    local options_for_text = 
+    local options_for_text =
     {
         text = options.text,
         x = 0,
@@ -214,7 +214,7 @@ function M.newSnackBar( options )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myText"], true )
 
     options.buttonText = options.buttonText or "UNDO"
-    options_for_text = 
+    options_for_text =
     {
         text = options.buttonText,
         x = 0,
@@ -251,9 +251,9 @@ function M.newSnackBar( options )
         elseif ( event.phase == "ended" ) then
             if muiData.widgetDict[options.name]["removeInProgress"] == true then return end
             if M.isTouchPointOutOfRange( event ) then
-                  event.phase = "offTarget"
-                  -- M.debug("Its out of the button area")
-                  -- event.target:dispatchEvent(event)
+                event.phase = "offTarget"
+                -- M.debug("Its out of the button area")
+                -- event.target:dispatchEvent(event)
             else
                 event.phase = "onTarget"
                 if muiData.interceptMoved == false then
@@ -345,7 +345,7 @@ function M.removeSnackBar(widgetName)
 
     muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", muiData.widgetDict[widgetName]["sliderrect"])
     muiData.widgetDict[widgetName]["myTextButton"]:removeSelf()
-    muiData.widgetDict[widgetName]["myTextButton"] = nil    
+    muiData.widgetDict[widgetName]["myTextButton"] = nil
     muiData.widgetDict[widgetName]["myText"]:removeSelf()
     muiData.widgetDict[widgetName]["myText"] = nil
     muiData.widgetDict[widgetName]["rrect"]:removeSelf()

@@ -1,32 +1,32 @@
 --[[
-    A loosely based Material UI module
+A loosely based Material UI module
 
-    mui-popover.lua : This is for creating popover menus (pick lists)
+mui-popover.lua : This is for creating popover menus (pick lists)
 
-    The MIT License (MIT)
+The MIT License (MIT)
 
-    Copyright (C) 2016 Anedix Technologies, Inc.  All Rights Reserved.
+Copyright (C) 2016 Anedix Technologies, Inc. All Rights Reserved.
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-    For other software and binaries included in this module see their licenses.
-    The license and the software must remain in full when copying or distributing.
+For other software and binaries included in this module see their licenses.
+The license and the software must remain in full when copying or distributing.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 --]]--
 
@@ -132,7 +132,7 @@ function M.revealTableViewForPopover(name, options)
     muiData.widgetDict[options.name]["rectback"].muiName = options.name
     muiData.widgetDict[options.name]["rectback"]:addEventListener( "touch", M.touchPopoverBack )
 
-    muiData.widgetDict[options.name]["mygroup"] = display.newGroup() -- options.width+4, options.height + options.listHeight)
+    muiData.widgetDict[options.name]["group"] = display.newGroup() -- options.width+4, options.height + options.listHeight)
 
     local x = options.x
     local y = options.y
@@ -145,62 +145,62 @@ function M.revealTableViewForPopover(name, options)
 
     options.leftMargin = options.leftMargin or 10
 
-    muiData.widgetDict[options.name]["mygroup"].x = x
-    muiData.widgetDict[options.name]["mygroup"].y = y
+    muiData.widgetDict[options.name]["group"].x = x
+    muiData.widgetDict[options.name]["group"].y = y
 
     M.newTableView({
-        name = options.name.."-List",
-        width = options.width - (options.leftMargin * 2),
-        height = options.listHeight,
-        font = options.font,
-        top = 30,
-        left = -(options.leftMargin),
-        textColor = options.textColor,
-        strokeColor = options.inactiveColor,
-        strokeWidth = 1,
-        lineHeight = 0,
-        noLines = true,
-        isLocked = true,
-        rowColor = options.rowColor,
-        rowHeight = options.height,
-        callBackTouch = options.callBackTouch,
-        callBackRender = M.onRowRenderPopover,
-        scrollListener = options.listener,
-        categoryColor = options.categoryColor,
-        categoryLineColor = options.categoryLineColor,
-        touchpointColor = options.touchpointColor,
-        list = options.list
-    })
+            name = options.name.."-List",
+            width = options.width - (options.leftMargin * 2),
+            height = options.listHeight,
+            font = options.font,
+            top = 30,
+            left = -(options.leftMargin),
+            textColor = options.textColor,
+            strokeColor = options.inactiveColor,
+            strokeWidth = 1,
+            lineHeight = 0,
+            noLines = true,
+            isLocked = true,
+            rowColor = options.rowColor,
+            rowHeight = options.height,
+            callBackTouch = options.callBackTouch,
+            callBackRender = M.onRowRenderPopover,
+            scrollListener = options.listener,
+            categoryColor = options.categoryColor,
+            categoryLineColor = options.categoryLineColor,
+            touchpointColor = options.touchpointColor,
+            list = options.list
+        })
 
     muiData.widgetDict[options.name]["rect2"] = display.newRect( muiData.widgetDict[options.name.."-List"]["tableview"].x, muiData.widgetDict[options.name.."-List"]["tableview"].y, options.width - (options.leftMargin), options.listHeight + (options.height * 0.5))
     muiData.widgetDict[options.name]["rect2"].strokeWidth = options.strokeWidth
     muiData.widgetDict[options.name]["rect2"]:setStrokeColor( unpack( options.strokeColor ) )
     muiData.widgetDict[options.name]["rect2"]:setFillColor( unpack( options.backgroundColor ) )
-    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["rect2"] )
+    muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name]["rect2"] )
 
     if muiData.widgetDict[options.name]["calculated"] == nil then
         muiData.widgetDict[options.name]["calculated"] = {}
-        muiData.widgetDict[options.name]["mygroup"].x = muiData.widgetDict[options.name]["mygroup"].x - options.width * 0.5
+        muiData.widgetDict[options.name]["group"].x = muiData.widgetDict[options.name]["group"].x - options.width * 0.5
 
-        local dy = mathABS(muiData.widgetDict[options.name.."-List"]["tableview"].contentHeight - muiData.widgetDict[options.name]["mygroup"].y)
-        local h = muiData.widgetDict[options.name.."-List"]["tableview"].contentHeight + muiData.widgetDict[options.name]["mygroup"].y
-        local maxHeight =  muiData.contentHeight - muiData.navbarHeight
+        local dy = mathABS(muiData.widgetDict[options.name.."-List"]["tableview"].contentHeight - muiData.widgetDict[options.name]["group"].y)
+        local h = muiData.widgetDict[options.name.."-List"]["tableview"].contentHeight + muiData.widgetDict[options.name]["group"].y
+        local maxHeight = muiData.contentHeight - muiData.navbarHeight
         if h > maxHeight then
             local hd = mathABS(maxHeight - h)
             if options.scrollView ~= nil then
-                maxHeight =  muiData.contentHeight - muiData.navbarHeight
+                maxHeight = muiData.contentHeight - muiData.navbarHeight
                 hd = mathABS(maxHeight - h)
             end
-            dy = muiData.widgetDict[options.name]["mygroup"].y - (hd + options.height)
-            muiData.widgetDict[options.name]["mygroup"].y = dy
+            dy = muiData.widgetDict[options.name]["group"].y - (hd + options.height)
+            muiData.widgetDict[options.name]["group"].y = dy
         else
-            dy = muiData.widgetDict[options.name]["mygroup"].y - options.height
+            dy = muiData.widgetDict[options.name]["group"].y - options.height
         end
-        muiData.widgetDict[options.name]["mygroup"].y = dy
-        muiData.widgetDict[options.name]["calculated"].x = muiData.widgetDict[options.name]["mygroup"].x
-        muiData.widgetDict[options.name]["calculated"].y = muiData.widgetDict[options.name]["mygroup"].y
+        muiData.widgetDict[options.name]["group"].y = dy
+        muiData.widgetDict[options.name]["calculated"].x = muiData.widgetDict[options.name]["group"].x
+        muiData.widgetDict[options.name]["calculated"].y = muiData.widgetDict[options.name]["group"].y
     end
-    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name.."-List"]["tableview"] )
+    muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name.."-List"]["tableview"] )
 end
 
 function M.touchPopoverBack( event )
@@ -306,9 +306,9 @@ function M.removePopoverGroup(widgetName)
         muiData.widgetDict[widgetName]["rectback"] = nil
     end
 
-    if muiData.widgetDict[widgetName]["mygroup"] ~= nil then
-        muiData.widgetDict[widgetName]["mygroup"]:removeSelf()
-        muiData.widgetDict[widgetName]["mygroup"] = nil
+    if muiData.widgetDict[widgetName]["group"] ~= nil then
+        muiData.widgetDict[widgetName]["group"]:removeSelf()
+        muiData.widgetDict[widgetName]["group"] = nil
     end
 end
 

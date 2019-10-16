@@ -1,32 +1,32 @@
 --[[
-    A loosely based Material UI module
+A loosely based Material UI module
 
-    mui-tile.lua : This is for creating grid based touch tiles.
+mui-tile.lua : This is for creating grid based touch tiles.
 
-    The MIT License (MIT)
+The MIT License (MIT)
 
-    Copyright (C) 2016 Anedix Technologies, Inc.  All Rights Reserved.
+Copyright (C) 2016 Anedix Technologies, Inc. All Rights Reserved.
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-    For other software and binaries included in this module see their licenses.
-    The license and the software must remain in full when copying or distributing.
+For other software and binaries included in this module see their licenses.
+The license and the software must remain in full when copying or distributing.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 --]]--
 
@@ -117,18 +117,18 @@ function M.newTileGrid(options)
     muiData.widgetDict[options.name]["options"] = options
     muiData.widgetDict[options.name].name = options.name
     muiData.widgetDict[options.name]["type"] = "TileGrid"
-    muiData.widgetDict[options.name]["mygroup"] = display.newGroup()
-    muiData.widgetDict[options.name]["mygroup"]:translate( 0, 0 )
-    muiData.widgetDict[options.name]["scrollview"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+    muiData.widgetDict[options.name]["group"] = display.newGroup()
+    muiData.widgetDict[options.name]["group"]:translate( 0, 0 )
+    muiData.widgetDict[options.name]["scrollview"]:insert( muiData.widgetDict[options.name]["group"] )
     muiData.widgetDict[options.name]["touching"] = false
 
     local highlightColor = { 0, 0, 0.3, 1}
     local highlightColorAlpha = 0.5
     local animTime = 200
     if options.clickAnimation ~= nil then
-    	highlightColor = options.clickAnimation.highlightColor
-    	highlightColorAlpha = options.clickAnimation.highlightColorAlpha
-    	animTime = mathFloor(options.clickAnimation.time / 2)
+        highlightColor = options.clickAnimation.highlightColor
+        highlightColorAlpha = options.clickAnimation.highlightColorAlpha
+        animTime = mathFloor(options.clickAnimation.time / 2)
     end
 
     options.tilesPerRow = options.tilesPerRow or 4
@@ -140,47 +140,47 @@ function M.newTileGrid(options)
         if v.size ~= nil and v.size == "2x" then
             tileWidth = tileWidth * 2
         end
-    	M.newTile({
-    		name = options.name .. "-tile-" .. i,
-    		basename = options.name,
-    		width = tileWidth,
-    		height = options.tileHeight,
-    		x = x,
-    		y = y,
-    		value = v.value,
-            textColor = options.textColor,
-            labelText = v.labelText,
-            align = v.align,
-            padding = v.padding or 10,
-            image = v.image,
-            fontIsScaled = v.fontIsScaled or options.fontIsScaled,
-            fontSize = options.fontSize or 18,
-            iconImage = v.iconImage,
-            icon = v.icon,
-            isFontIcon = true,
-            iconFont = options.iconFont,
-            iconFontSize = v.iconFontSize or options.fontSize,
-            labelFont = options.labelFont,
-            labelFontSize = v.labelFontSize or options.fontSize,
-    		tileFillColor = v.tileFillColor or options.tileFillColor,
-    		highlightColor = v.tileHighlightColor or highlightColor,
-    		highlightColorAlpha = v.tileHighlightColorAlpha or highlightColorAlpha,
-    		animTime = animTime,
-            touchpoint = options.touchpoint,
-    		callBack = options.callBack,
-    		callBackData = options.callBackData,
-    	})
-    	x = x + options.tileWidth
-    	count = count + 1
+        M.newTile({
+                name = options.name .. "-tile-" .. i,
+                basename = options.name,
+                width = tileWidth,
+                height = options.tileHeight,
+                x = x,
+                y = y,
+                value = v.value,
+                textColor = options.textColor,
+                labelText = v.labelText,
+                align = v.align,
+                padding = v.padding or 10,
+                image = v.image,
+                fontIsScaled = v.fontIsScaled or options.fontIsScaled,
+                fontSize = options.fontSize or 18,
+                iconImage = v.iconImage,
+                icon = v.icon,
+                isFontIcon = true,
+                iconFont = options.iconFont,
+                iconFontSize = v.iconFontSize or options.fontSize,
+                labelFont = options.labelFont,
+                labelFontSize = v.labelFontSize or options.fontSize,
+                tileFillColor = v.tileFillColor or options.tileFillColor,
+                highlightColor = v.tileHighlightColor or highlightColor,
+                highlightColorAlpha = v.tileHighlightColorAlpha or highlightColorAlpha,
+                animTime = animTime,
+                touchpoint = options.touchpoint,
+                callBack = options.callBack,
+                callBackData = options.callBackData,
+            })
+        x = x + options.tileWidth
+        count = count + 1
         if v.size ~= nil and v.size == "2x" then
             x = x + options.tileWidth
             count = count + 1
         end
-    	if (count >= perRow) then
-    		x = 0
-    		count = 0
-	    	y = y + options.tileHeight
-	    end
+        if (count >= perRow) then
+            x = 0
+            count = 0
+            y = y + options.tileHeight
+        end
     end
 
     -- add the animated circle
@@ -196,21 +196,21 @@ function M.newTileGrid(options)
     muiData.widgetDict[options.name]["myCircle"].x = 0
     muiData.widgetDict[options.name]["myCircle"].y = 0
     muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
-    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
+    muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
 
 end
 
 function M.newTile(options)
-	if options == nil then return end
+    if options == nil then return end
 
-	if muiData.widgetDict[options.basename]["tile"] == nil then
-		muiData.widgetDict[options.basename]["tile"] = {}
-    muiData.widgetDict[options.basename]["tile"]["type"] = "TileGridButton"
-	end
-	muiData.widgetDict[options.basename]["tile"][options.name] = {}
-	local tile = muiData.widgetDict[options.basename]["tile"][options.name]
-    tile["mygroup"] = display.newGroup()
-    tile["mygroup"]:translate( options.x, options.y ) -- set x,y
+    if muiData.widgetDict[options.basename]["tile"] == nil then
+        muiData.widgetDict[options.basename]["tile"] = {}
+        muiData.widgetDict[options.basename]["tile"]["type"] = "TileGridButton"
+    end
+    muiData.widgetDict[options.basename]["tile"][options.name] = {}
+    local tile = muiData.widgetDict[options.basename]["tile"][options.name]
+    tile["group"] = display.newGroup()
+    tile["group"]:translate( options.x, options.y ) -- set x,y
 
     options.padding = options.padding or 0
     tile["rect"] = display.newRect( options.width * 0.5, options.height * 0.5, options.width, options.height)
@@ -218,16 +218,16 @@ function M.newTile(options)
     tile["rect"]:setFillColor( unpack( options.tileFillColor ) )
     tile["rect"]:addEventListener( "touch", M.tileTouchEventHandler )
     tile["rect"].muiOptions = options
-    tile["mygroup"]:insert( tile["rect"] )
-    muiData.widgetDict[options.basename]["mygroup"]:insert( tile["mygroup"] )
+    tile["group"]:insert( tile["rect"] )
+    muiData.widgetDict[options.basename]["group"]:insert( tile["group"] )
 
     -- place image if present
     if options.image ~= nil then
-        local myImage = display.newImage( options.image )
-        M.fitImage(myImage, tile["rect"].contentWidth, tile["rect"].contentHeight, true)
-        myImage:translate(tile["rect"].contentWidth * 0.5, tile["rect"].contentHeight * 0.5)
-        tile["myImage"] = myImage
-        tile["mygroup"]:insert( tile["myImage"] )
+        local image = display.newImage( options.image )
+        M.fitImage(image, tile["rect"].contentWidth, tile["rect"].contentHeight, true)
+        image:translate(tile["rect"].contentWidth * 0.5, tile["rect"].contentHeight * 0.5)
+        tile["image"] = image
+        tile["group"]:insert( tile["image"] )
         tile["rect"].alpha = 1
     end
     -- place the icon and text (could be an updatable widget?)
@@ -279,7 +279,7 @@ function M.newTile(options)
     end
 
     if options.icon ~= nil and options.iconImage == nil then
-        local options2 = 
+        local options2 =
         {
             --parent = textGroup,
             text = M.getMaterialFontCodePointByName(options.icon),
@@ -292,14 +292,14 @@ function M.newTile(options)
         }
         tile["icon"] = display.newText( options2 )
         tile["icon"]:setFillColor( unpack(options.textColor) )
-        tile["mygroup"]:insert( tile["icon"] )
+        tile["group"]:insert( tile["icon"] )
     elseif options.iconImage ~= nil then
         local x = options.width * 0.5
         local y = options.height * iconOffset
         tile["icon"] = display.newImageRect( options.iconImage, textSize, textSize )
         tile["icon"].x = x
         tile["icon"].y = y
-        tile["mygroup"]:insert( tile["icon"] )
+        tile["group"]:insert( tile["icon"] )
         if options.align == "left" then
             tile["icon"].x = 0
             tile["icon"].x = (tile["icon"].contentWidth * .5) + options.padding
@@ -328,7 +328,7 @@ function M.newTile(options)
         }
         tile["text"] = display.newText( options3 )
         tile["text"]:setFillColor( unpack(options.textColor) )
-        tile["mygroup"]:insert( tile["text"], false )
+        tile["group"]:insert( tile["text"], false )
     end
 end
 
@@ -337,7 +337,7 @@ function M.getTileProperty( widgetName, propertyName )
     if widgetName == nil or propertyName == nil then return data end
 
     if propertyName == "object" then
-        data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+        data = muiData.widgetDict[widgetName]["group"] -- x,y movement
     elseif propertyName == "value" then
         data = muiData.widgetDict[widgetName]["value"] -- value
     elseif propertyName == "layer_1" then
@@ -359,7 +359,7 @@ function M.getTileButtonProperty( widgetParentName, propertyName, index )
     if muiData.widgetDict[widgetParentName]["tile"][widgetName] == nil then return data end
 
     if propertyName == "object" then
-        data = muiData.widgetDict[widgetParentName]["tile"][widgetName]["mygroup"] -- x,y movement
+        data = muiData.widgetDict[widgetParentName]["tile"][widgetName]["group"] -- x,y movement
     elseif propertyName == "icon" then
         data = muiData.widgetDict[widgetParentName]["tile"][widgetName]["icon"] -- button
     elseif propertyName == "text" then
@@ -367,7 +367,7 @@ function M.getTileButtonProperty( widgetParentName, propertyName, index )
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetParentName]["tile"][widgetName]["rect"] -- the base
     elseif propertyName == "layer_2" then
-        data = muiData.widgetDict[widgetParentName]["tile"][widgetName]["myImage"] -- the base
+        data = muiData.widgetDict[widgetParentName]["tile"][widgetName]["image"] -- the base
     end
 
     return data
@@ -392,8 +392,8 @@ function M.tileTouchEventHandler( event )
         if muiData.touching == false then
             muiData.touching = true
             if options.touchpoint ~= nil and options.touchpoint == true then
-                local x = muiData.widgetDict[options.basename]["tile"][options.name]["mygroup"].x
-                local y = muiData.widgetDict[options.basename]["tile"][options.name]["mygroup"].y                
+                local x = muiData.widgetDict[options.basename]["tile"][options.name]["group"].x
+                local y = muiData.widgetDict[options.basename]["tile"][options.name]["group"].y
                 muiData.widgetDict[options.basename]["myCircle"].x = x + muiData.widgetDict[options.basename]["tile"][options.name]["rect"].contentWidth * 0.5
                 muiData.widgetDict[options.basename]["myCircle"].y = y + muiData.widgetDict[options.basename]["tile"][options.name]["rect"].contentHeight * 0.5
                 muiData.widgetDict[options.basename]["myCircle"].isVisible = true
@@ -466,7 +466,7 @@ function M.tileCallBack( options, e )
         muiData.widgetDict[options.basename]["value"] = muiTargetValue
         local w = M.getTileButtonProperty("grid_demo", "layer_1", 1)
         if w ~= nil then
-            -- w.x = w.x + 50  -- demo getting the tile layer_1 only and moving it.
+            -- w.x = w.x + 50 -- demo getting the tile layer_1 only and moving it.
         end
     end
     if muiTargetCallBackData ~= nil then
@@ -502,7 +502,7 @@ function M.tileScrollListener( event )
 end
 
 function M.removeTileGrid(widgetName)
-	if widgetName == nil then return end
+    if widgetName == nil then return end
 
     -- remove the list of tiles
     for name in pairs(muiData.widgetDict[widgetName]["tile"]) do
@@ -519,8 +519,8 @@ function M.removeTileGrid(widgetName)
 
     muiData.widgetDict[widgetName]["rectbackdrop"]:removeSelf()
     muiData.widgetDict[widgetName]["rectbackdrop"] = nil
-    muiData.widgetDict[widgetName]["mygroup"]:removeSelf()
-    muiData.widgetDict[widgetName]["mygroup"] = nil
+    muiData.widgetDict[widgetName]["group"]:removeSelf()
+    muiData.widgetDict[widgetName]["group"] = nil
     if muiData.widgetDict[widgetName]["scrollview"] ~= nil then
         muiData.widgetDict[widgetName]["scrollview"]:removeSelf()
         muiData.widgetDict[widgetName]["scrollview"] = nil
@@ -530,7 +530,7 @@ function M.removeTileGrid(widgetName)
 end
 
 function M.removeTile(basename, name)
-	if basename == nil or name == nil then return end
+    if basename == nil or name == nil then return end
 
     if muiData.widgetDict[basename]["tile"][name] == nil then
         return
@@ -547,12 +547,12 @@ function M.removeTile(basename, name)
             muiData.widgetDict[basename]["tile"][name]["text"]:removeSelf()
             muiData.widgetDict[basename]["tile"][name]["text"] = nil
         end
-        if muiData.widgetDict[basename]["tile"][name]["myImage"] ~= nil then
-            muiData.widgetDict[basename]["tile"][name]["myImage"]:removeSelf()
-            muiData.widgetDict[basename]["tile"][name]["myImage"] = nil
+        if muiData.widgetDict[basename]["tile"][name]["image"] ~= nil then
+            muiData.widgetDict[basename]["tile"][name]["image"]:removeSelf()
+            muiData.widgetDict[basename]["tile"][name]["image"] = nil
         end
-        muiData.widgetDict[basename]["tile"][name]["mygroup"]:removeSelf()
-        muiData.widgetDict[basename]["tile"][name]["mygroup"] = nil
+        muiData.widgetDict[basename]["tile"][name]["group"]:removeSelf()
+        muiData.widgetDict[basename]["tile"][name]["group"] = nil
     end
 
 end

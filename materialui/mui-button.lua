@@ -1,32 +1,32 @@
 --[[
-    A loosely based Material UI module
+A loosely based Material UI module
 
-    mui-button.lua : This is for creating buttons.
+mui-button.lua : This is for creating buttons.
 
-    The MIT License (MIT)
+The MIT License (MIT)
 
-    Copyright (C) 2016 Anedix Technologies, Inc.  All Rights Reserved.
+Copyright (C) 2016 Anedix Technologies, Inc. All Rights Reserved.
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-    For other software and binaries included in this module see their licenses.
-    The license and the software must remain in full when copying or distributing.
+For other software and binaries included in this module see their licenses.
+The license and the software must remain in full when copying or distributing.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 --]]--
 
@@ -41,45 +41,51 @@ local M = muiData.M -- {} -- for module array/table
 
 function M.activateImageTouch(options)
     if muiData.widgetDict[options.name] == nil then return end
-    if muiData.widgetDict[options.name]["myImageTouch"] ~= nil and muiData.widgetDict[options.name]["myImageTouchIndex"] ~= nil then
-        muiData.widgetDict[options.name]["myImageTouch"].alpha = 1
-        muiData.widgetDict[options.name]["myImageTouch"].isVisible = true
-        muiData.widgetDict[options.name]["myImage"].isVisible = false
+    if options.state.image ~= nil and options.state.image.touchFadeAnimation ~= nil and options.state.image.touchFadeAnimation == false then
+        return
+    end
+    if muiData.widgetDict[options.name]["imageTouch"] ~= nil and muiData.widgetDict[options.name]["imageTouchIndex"] ~= nil then
+        muiData.widgetDict[options.name]["imageTouch"].alpha = 1
+        muiData.widgetDict[options.name]["imageTouch"].isVisible = true
+        muiData.widgetDict[options.name]["image"].isVisible = false
     end
 end
 
 function M.deactivateImageTouch(options)
     if muiData.widgetDict[options.name] == nil then return end
-    if muiData.widgetDict[options.name]["myImageTouch"] ~= nil and muiData.widgetDict[options.name]["myImageTouchIndex"] ~= nil then
-        muiData.widgetDict[options.name]["myImage"].isVisible = true
-        if muiData.widgetDict[options.name]["myImageTouchFadeAnim"] == true then
-            local speed = muiData.widgetDict[options.name]["myImageTouchFadeAnimSpeed"]
-            transition.fadeOut(muiData.widgetDict[options.name]["myImageTouch"],{time=speed})
-            transition.fadeIn(muiData.widgetDict[options.name]["myImage"],{time=50})
+    if options.state.image ~= nil and options.state.image.touchFadeAnimation ~= nil and options.state.image.touchFadeAnimation == false then
+        return
+    end
+    if muiData.widgetDict[options.name]["imageTouch"] ~= nil and muiData.widgetDict[options.name]["imageTouchIndex"] ~= nil then
+        muiData.widgetDict[options.name]["image"].isVisible = true
+        if muiData.widgetDict[options.name]["imageTouchFadeAnim"] == true then
+            local speed = muiData.widgetDict[options.name]["imageTouchFadeAnimSpeed"]
+            transition.fadeOut(muiData.widgetDict[options.name]["imageTouch"],{time=speed})
+            transition.fadeIn(muiData.widgetDict[options.name]["image"],{time=50})
         else
-            muiData.widgetDict[options.name]["myImageTouch"].isVisible = false
+            muiData.widgetDict[options.name]["imageTouch"].isVisible = false
         end
     end
 end
 
 --[[
- options..
-    name: name of button
-    width: width
-    height: height
-    radius: radius of the corners
-    strokeColor: {r, g, b}
-    fillColor: {r, g, b}
-    x: x
-    y: y
-    text: text for button
-    textColor: {r, g, b}
-    font: font to use
-    fontSize:
-    textMargin: used to pad around button and determine font size,
-    circleColor: {r, g, b} (optional, defaults to textColor)
-    touchpoint: boolean, if true circle touch point is user based else centered
-    callBack: method to call passing the "e" to it
+options..
+name: name of button
+width: width
+height: height
+radius: radius of the corners
+strokeColor: {r, g, b}
+fillColor: {r, g, b}
+x: x
+y: y
+text: text for button
+textColor: {r, g, b}
+font: font to use
+fontSize:
+textMargin: used to pad around button and determine font size,
+circleColor: {r, g, b} (optional, defaults to textColor)
+touchpoint: boolean, if true circle touch point is user based else centered
+callBack: method to call passing the "e" to it
 
 ]]
 function M.createRRectButton(options)
@@ -108,6 +114,8 @@ function M.newRoundedRectButton(options)
     local padding = 0
     if options.useShadow == true then padding = 50 end
 
+    options.iconAlign = options.iconAlign or "left"
+
     muiData.widgetDict[options.name]["container"] = display.newContainer( nw+padding, nh+padding )
 
     muiData.widgetDict[options.name]["container"]:translate( x, y ) -- center the container
@@ -128,17 +136,19 @@ function M.newRoundedRectButton(options)
         radius = options.radius
     end
 
-    if options.useShadow == true then
+    if options.state == nil then options.state = {} end
+
+    if options.state.image == nil and options.useShadow == true then
         local size = options.shadowSize or 20
         local opacity = options.shadowOpacity or 0.3
         local shadow = M.newShadowShape("rounded_rect", {
-            name = options.name,
-            width = options.width,
-            height = options.height,
-            size = size,
-            opacity = opacity,
-            cornerRadius = radius,
-        })
+                name = options.name,
+                width = options.width,
+                height = options.height,
+                size = size,
+                opacity = opacity,
+                cornerRadius = radius,
+            })
         muiData.widgetDict[options.name]["shadow"] = shadow
         muiData.widgetDict[options.name]["container"]:insert( shadow )
     end
@@ -147,7 +157,7 @@ function M.newRoundedRectButton(options)
 
     -- paint normal or use gradient?
     local paint = nil
-    if options.gradientShadowColor1 ~= nil and options.gradientShadowColor2 ~= nil then
+    if options.state.image == nil and options.gradientShadowColor1 ~= nil and options.gradientShadowColor2 ~= nil then
         if options.gradientDirection == nil then
             options.gradientDirection = "up"
         end
@@ -160,30 +170,34 @@ function M.newRoundedRectButton(options)
     end
 
     muiData.widgetDict[options.name]["rrect2"] = display.newRoundedRect( 0, 1, options.width+8, options.height+8, nr )
-    if paint ~= nil then
-        muiData.widgetDict[options.name]["rrect2"].fill = paint
-    else
-        muiData.widgetDict[options.name]["rrect2"].isVisible = false
+    local fillColor = { 0, 0.82, 1 }
+    if options.state.image == nil then
+        if paint ~= nil then
+            muiData.widgetDict[options.name]["rrect2"].fill = paint
+        else
+            muiData.widgetDict[options.name]["rrect2"].isVisible = false
+        end
+        if options.state.off ~= nil and options.state.off.fillColor ~= nil and paint == nil then
+            fillColor = options.state.off.fillColor
+        end
     end
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["rrect2"] )
-
-    local fillColor = { 0, 0.82, 1 }
-    if options.fillColor ~= nil then
-        fillColor = options.fillColor
-    end
 
     if options.strokeWidth == nil then
         options.strokeWidth = 0
     end
 
     muiData.widgetDict[options.name]["rrect"] = display.newRoundedRect( 0, 0, options.width, options.height, radius )
-    if options.strokeWidth > 0 then
-        muiData.widgetDict[options.name]["rrect"].strokeWidth = options.strokeWidth or 1
-        muiData.widgetDict[options.name]["rrect"]:setStrokeColor( unpack(options.strokeColor) )
+    if options.state.image == nil then
+        if options.strokeWidth > 0 then
+            muiData.widgetDict[options.name]["rrect"].strokeWidth = options.strokeWidth or 1
+            muiData.widgetDict[options.name]["rrect"]:setStrokeColor( unpack(options.strokeColor) )
+        end
+        muiData.widgetDict[options.name]["rrect"]:setFillColor( unpack(fillColor) )
     end
-    muiData.widgetDict[options.name]["rrect"]:setFillColor( unpack(fillColor) )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["rrect"] )
     muiData.widgetDict[options.name]["rrect"].dialogName = options.dialogName
+    print("contentWidth for rrect "..muiData.widgetDict[options.name]["rrect"].contentWidth)
 
     local rrect = muiData.widgetDict[options.name]["rrect"]
 
@@ -199,18 +213,14 @@ function M.newRoundedRectButton(options)
     end
 
     local textColor = { 1, 1, 1 }
-    if options.textColor ~= nil then
-        textColor = options.textColor
-    end
-
-    if options.transitionStartColor == nil then
-
+    if options.state.off ~= nil and options.state.off.textColor ~= nil then
+        textColor = options.state.off.textColor
     end
 
     options.ignoreTap = options.ignoreTap or false
 
     -- create image buttons if exist
-    M.createButtonsFromList(options, rrect, "container")
+    M.createButtonsFromList({ name=options.name, image=options.state.image }, rrect, "container")
 
     muiData.widgetDict[options.name]["clickAnimation"] = options.clickAnimation
 
@@ -223,35 +233,102 @@ function M.newRoundedRectButton(options)
     local textToMeasure = display.newText( options.text, 0, 0, font, fontSize )
     fontSize = fontSize * ( ( rrect.contentHeight - textMargin ) / textToMeasure.contentHeight )
     fontSize = mathFloor(tonumber(fontSize))
+    local tw, th = textToMeasure.contentWidth, textToMeasure.contentHeight
     textToMeasure:removeSelf()
     textToMeasure = nil
 
-    if options.iconText ~= nil and options.iconFont ~= nil and options.iconImage == nil then
-
+    if options.state.off ~= nil and options.state.off.svg ~= nil and type(options.state.off.svg) == "table" and options.state.image == nil then
+       local params = {
+            {
+                name = "iconText",
+                svgName = options.name.."SvgOff",
+                state = "off",
+                isVisible = true
+            },
+            {
+                name = "iconTextOn",
+                svgName = options.name.."SvgOn",
+                state = "on",
+                isVisible = false
+            },
+            {
+                name = "iconTextDisabled",
+                svgName = options.name.."SvgDisabled",
+                state = "disabled",
+                isVisible = false
+            }
+        }
+        for k, v in pairs(params) do
+            if options.state[v.state] ~= nil and options.state[v.state].svg ~= nil then
+                muiData.widgetDict[options.name][v.name] = M.newSvgImageWithStyle({
+                        name = v.svgName,
+                        path = options.state[v.state].svg.path,
+                        width = fontSize,
+                        height = fontSize,
+                        fillColor = options.state[v.state].svg.fillColor,
+                        strokeWidth = options.state[v.state].svg.strokeWidth or 1,
+                        strokeColor = options.state[v.state].svg.textColor or options.state[v.state].textColor,
+                        y = 0,
+                        x = 0,
+                    })
+                muiData.widgetDict[options.name][v.name].isVisible = v.isVisible
+                muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name][v.name], false )
+            end
+        end
+    elseif options.state.off ~= nil and options.state.off.iconImage ~= nil and options.state.image == nil then
+        muiData.widgetDict[options.name]["iconText"] = display.newImageRect( options.state.off.iconImage, options.width, options.height )
+        if muiData.widgetDict[options.name]["iconText"] ~= nil then
+            muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["iconText"], false )
+        end
+        if options.state.on.iconImage ~= nil then
+            muiData.widgetDict[options.name]["iconTextOn"] = display.newImageRect( options.state.on.iconImage, options.width, options.height )
+            if muiData.widgetDict[options.name]["iconTextOn"] ~= nil then
+                muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["iconTextOn"], false )
+                muiData.widgetDict[options.name]["iconTextOn"].isVisible = false
+            end
+        end
+    elseif options.iconText ~= nil and options.iconFont ~= nil and options.state.image == nil then
         if M.isMaterialFont(options.iconFont) == true then
             options.iconText = M.getMaterialFontCodePointByName(options.iconText)
         end
-        muiData.widgetDict[options.name]["myIconText"] = display.newText( options.iconText, 0, 0, options.iconFont, fontSize )
-        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myIconText"], false )
-    elseif options.iconImage ~= nil then
-        muiData.widgetDict[options.name]["myIconText"] = display.newImageRect( options.iconImage, options.width, options.height )
-        if muiData.widgetDict[options.name]["myIconText"] ~= nil then
-            muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myIconText"], false )
+        muiData.widgetDict[options.name]["iconText"] = display.newText( options.iconText, 0, 0, options.iconFont, fontSize )
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["iconText"], false )
+
+        if options.state.on ~= nil and options.state.on.iconImage ~= nil then
+            muiData.widgetDict[options.name]["iconTextOn"] = display.newText( options.iconText, 0, 0, options.iconFont, fontSize )
+            muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["iconTextOn"], false )
+            muiData.widgetDict[options.name]["iconTextOn"].isVisible = false
         end
     end
 
     textXOffset = 0
-    if muiData.widgetDict[options.name]["myIconText"] ~= nil then
-        textXOffset = fontSize * 0.55
+    if muiData.widgetDict[options.name]["iconText"] ~= nil then
+        if options.iconAlign == "left" then
+            textXOffset = fontSize * 0.55
+        else
+            textXOffset = -(fontSize * 0.55)
+        end
     end
 
-    muiData.widgetDict[options.name]["myText"] = display.newText( options.text, textXOffset, 0, font, fontSize )
-    muiData.widgetDict[options.name]["myText"]:setFillColor( unpack(textColor) )
-    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myText"], false )
+    if options.state.image == nil then
+        muiData.widgetDict[options.name]["text"] = display.newText( options.text, textXOffset, 0, font, fontSize )
+        muiData.widgetDict[options.name]["text"]:setFillColor( unpack(textColor) )
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["text"], false )
+    end
 
-    if muiData.widgetDict[options.name]["myIconText"] ~= nil then
-        local width = muiData.widgetDict[options.name]["myText"].contentWidth * 0.55
-        muiData.widgetDict[options.name]["myIconText"].x = -(width)
+    if muiData.widgetDict[options.name]["iconText"] ~= nil and options.state.image == nil then
+        local width = muiData.widgetDict[options.name]["text"].contentWidth * 0.55
+        if options.iconAlign == "left" then
+            muiData.widgetDict[options.name]["iconText"].x = -(width)
+        else
+            muiData.widgetDict[options.name]["iconText"].x = width
+        end
+        if muiData.widgetDict[options.name]["iconTextOn"] ~= nil then
+            muiData.widgetDict[options.name]["iconTextOn"].x = muiData.widgetDict[options.name]["iconText"].x
+        end
+        if muiData.widgetDict[options.name]["iconTextDisabled"] ~= nil then
+            muiData.widgetDict[options.name]["iconTextDisabled"].x = muiData.widgetDict[options.name]["iconText"].x
+        end
     end
 
     local circleColor = textColor
@@ -262,22 +339,28 @@ function M.newRoundedRectButton(options)
 
     local maxWidth = muiData.widgetDict[options.name]["rrect"].path.width - (radius * 2)
 
-    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( options.height, options.height, options.height * 0.5)
-    muiData.widgetDict[options.name]["myCircle"]:setFillColor( unpack(circleColor) )
-    muiData.widgetDict[options.name]["myCircle"].isVisible = false
-    muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
-    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
+    muiData.widgetDict[options.name]["circle"] = display.newCircle( options.height, options.height, options.height * 0.5)
+    muiData.widgetDict[options.name]["circle"]:setFillColor( unpack(circleColor) )
+    muiData.widgetDict[options.name]["circle"].isVisible = false
+    muiData.widgetDict[options.name]["circle"].alpha = 0.3
+    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["circle"], true ) -- insert and center bkgd
 
-    if muiData.widgetDict[options.name]["myImage"] ~= nil then
-        muiData.widgetDict[options.name]["rrect"].alpha = 0.01
-        muiData.widgetDict[options.name]["rrect2"].isVisible = false
-        muiData.widgetDict[options.name]["myText"].isVisible = false
-    end
+    --if muiData.widgetDict[options.name]["image"] ~= nil then
+    -- muiData.widgetDict[options.name]["rrect"].alpha = 0.01
+    --end
 
     rrect.muiOptions = options
     muiData.widgetDict[options.name]["rrect"]:addEventListener( "touch", M.touchRRectButton )
     if options.ignoreTap then
         muiData.widgetDict[options.name]["rrect"]:addEventListener("tap", function() return true end)
+    end
+
+    if options.state.value == "off" then
+        M.turnOffButton( options )
+    elseif options.state.value == "on" then
+        M.turnOnButton( options )
+    elseif options.state.value == "disabled" then
+        M.disableButton( options )
     end
 end
 
@@ -289,7 +372,7 @@ function M.getRoundedRectButtonProperty(widgetName, propertyName)
     if propertyName == "object" then
         data = muiData.widgetDict[widgetName]["container"] -- x,y movement
     elseif propertyName == "text" then
-        data = muiData.widgetDict[widgetName]["myText"] -- button text
+        data = muiData.widgetDict[widgetName]["text"] -- button text
     elseif propertyName == "value" then
         data = muiData.widgetDict[widgetName]["value"] -- value of button
     elseif propertyName == "layer_1" then
@@ -297,9 +380,9 @@ function M.getRoundedRectButtonProperty(widgetName, propertyName)
     elseif propertyName == "layer_2" then
         data = muiData.widgetDict[widgetName]["rrect"] -- button face
     elseif propertyName == "image" then
-        data = muiData.widgetDict[widgetName]["myImage"]
+        data = muiData.widgetDict[widgetName]["image"]
     elseif propertyName == "image_touch" then
-        data = muiData.widgetDict[widgetName]["myImageTouch"]
+        data = muiData.widgetDict[widgetName]["imageTouch"]
     elseif propertyName == "shadow" then
         data = muiData.widgetDict[widgetName]["shadow"]
     end
@@ -314,6 +397,26 @@ function M.touchRRectButton (event)
 
     if muiData.dialogInUse == true and options.dialogName == nil then return end
 
+    if muiData.currentControl == nil then
+        muiData.currentControl = options.name
+        muiData.currentControlType = "mui-button"
+    end
+
+    if M.disableButton( options, event ) then
+        if options.state.disabled.callBackData ~= nil and event.phase == "ended" then
+            M.setEventParameter(event, "muiTargetCallBackData", options.state.disabled.callBackData)
+            assert( options.state.disabled.callBack )(event)
+        end
+        return
+    end
+
+    if muiData.currentControl ~= nil and muiData.currentControl ~= options.name then
+        if event.phase == "ended" then
+            M.turnOffControlHandler()
+        end
+        return
+    end
+
     M.addBaseEventParameters(event, options)
 
     if ( event.phase == "began" ) then
@@ -325,6 +428,9 @@ function M.touchRRectButton (event)
         end
         -- muiData.interceptEventHandler = event.target
         M.updateUI(event)
+
+        M.turnOnButton( options )
+
         if muiData.touching == false then
             muiData.touching = true
             M.activateImageTouch( options )
@@ -354,26 +460,23 @@ function M.touchRRectButton (event)
             end
 
             if options.touchpoint ~= nil and options.touchpoint == true then
-                muiData.widgetDict[options.name]["myCircle"].x = event.x - muiData.widgetDict[options.name]["container"].x
-                muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["container"].y
+                muiData.widgetDict[options.name]["circle"].x = event.x - muiData.widgetDict[options.name]["container"].x
+                muiData.widgetDict[options.name]["circle"].y = event.y - muiData.widgetDict[options.name]["container"].y
             end
-            muiData.widgetDict[options.name]["myCircle"].isVisible = true
+            muiData.widgetDict[options.name]["circle"].isVisible = true
             local scaleFactor = 0.1
-            muiData.widgetDict[options.name].myCircleTrans = transition.from( muiData.widgetDict[options.name]["myCircle"], { time=500,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+            muiData.widgetDict[options.name].circleTrans = transition.from( muiData.widgetDict[options.name]["circle"], { time=500,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
             transition.to(muiData.widgetDict[options.name]["container"],{time=300, xScale=1.02, yScale=1.02, transition=easing.continuousLoop})
-        end
-    elseif ( event.phase == "moved" ) then
-        if options.fillColor ~= nil then
-            muiData.widgetDict[options.name]["rrect"]:setFillColor( unpack(options.fillColor) )
         end
     elseif ( event.phase == "ended" ) then
 
+        M.removeEventFromQueue( options.name ) -- cancel and remove from queue
         M.deactivateImageTouch( options )
 
         if M.isTouchPointOutOfRange( event ) then
-              event.phase = "offTarget"
-              -- M.debug("Its out of the button area")
-              -- event.target:dispatchEvent(event)
+            event.phase = "offTarget"
+            -- M.debug("Its out of the button area")
+            -- event.target:dispatchEvent(event)
         else
             event.phase = "onTarget"
             if muiData.interceptMoved == false then
@@ -396,33 +499,37 @@ function M.touchRRectButton (event)
                 end
             end
         end
+        M.turnOffButton( options )
         muiData.interceptEventHandler = nil
         muiData.interceptOptions = nil
         muiData.interceptMoved = false
         muiData.touching = false
+        M.processEventQueue()
+    else
+        M.addToEventQueue( options )
     end
     muiData.touched = true
     return true
 end
 
 --[[
- options..
-    name: name of button
-    width: width
-    height: height
-    radius: radius of the corners
-    strokeColor: {r, g, b}
-    fillColor: {r, g, b}
-    x: x
-    y: y
-    text: text for button
-    textColor: {r, g, b}
-    font: font to use
-    fontSize:
-    textMargin: used to pad around button and determine font size,
-    circleColor: {r, g, b} (optional, defaults to textColor)
-    touchpoint: boolean, if true circle touch point is user based else centered
-    callBack: method to call passing the "e" to it
+options..
+name: name of button
+width: width
+height: height
+radius: radius of the corners
+strokeColor: {r, g, b}
+fillColor: {r, g, b}
+x: x
+y: y
+text: text for button
+textColor: {r, g, b}
+font: font to use
+fontSize:
+textMargin: used to pad around button and determine font size,
+circleColor: {r, g, b} (optional, defaults to textColor)
+touchpoint: boolean, if true circle touch point is user based else centered
+callBack: method to call passing the "e" to it
 
 ]]
 function M.createRectButton(options)
@@ -443,6 +550,8 @@ function M.newRectButton(options)
 
     local padding = 4
     if options.useShadow == true then padding = 50 end
+
+    options.iconAlign = options.iconAlign or "left"
 
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "RectButton"
@@ -475,42 +584,43 @@ function M.newRectButton(options)
     end
 
     local fillColor = { 0, 0.82, 1 }
-    if options.fillColor ~= nil then
-        fillColor = options.fillColor
+    if options.state.off.fillColor ~= nil then
+        fillColor = options.state.off.fillColor
     end
 
     local strokeWidth = 0
     if paint ~= nil then strokeWidth = 1 end
 
-    if options.useShadow == true then
+    if options.useShadow == true and options.state.image == nil then
         local size = options.shadowSize or 20
         local opacity = options.shadowOpacity or 0.3
         local shadow = M.newShadowShape("rect", {
-            name = options.name,
-            width = options.width,
-            height = options.height,
-            size = size,
-            opacity = opacity,
-        })
+                name = options.name,
+                width = options.width,
+                height = options.height,
+                size = size,
+                opacity = opacity,
+            })
         muiData.widgetDict[options.name]["shadow"] = shadow
         muiData.widgetDict[options.name]["container"]:insert( shadow )
     end
 
     muiData.widgetDict[options.name]["rrect"] = display.newRect( 0, 0, options.width, options.height )
-    if paint ~= nil then
-        muiData.widgetDict[options.name]["rrect"].fill = paint
+    if options.state.image == nil then
+        if paint ~= nil then
+            muiData.widgetDict[options.name]["rrect"].fill = paint
+        end
+        if options.strokeWidth ~= nil and options.strokeWidth > 0 then
+            muiData.widgetDict[options.name]["rrect"].strokeWidth = options.strokeWidth or 1
+            muiData.widgetDict[options.name]["rrect"]:setStrokeColor( unpack(options.strokeColor) )
+        end
+        muiData.widgetDict[options.name]["rrect"]:setFillColor( unpack(fillColor) )
     end
-    if options.strokeWidth ~= nil and options.strokeWidth > 0 then
-        muiData.widgetDict[options.name]["rrect"].strokeWidth = options.strokeWidth or 1
-        muiData.widgetDict[options.name]["rrect"]:setStrokeColor( unpack(options.strokeColor) )
-    end
-    muiData.widgetDict[options.name]["rrect"]:setFillColor( unpack(fillColor) )
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["rrect"] )
-
     local rrect = muiData.widgetDict[options.name]["rrect"]
 
     -- create image buttons if exist
-    M.createButtonsFromList(options, rrect, "container")
+    M.createButtonsFromList({ name=options.name, image=options.state.image }, rrect, "container")
 
     local fontSize = 10
     if options.fontSize ~= nil then
@@ -528,8 +638,8 @@ function M.newRectButton(options)
     end
 
     local textColor = { 1, 1, 1 }
-    if options.textColor ~= nil then
-        textColor = options.textColor
+    if options.state.off.textColor ~= nil then
+        textColor = options.state.off.textColor
     end
 
     muiData.widgetDict[options.name]["font"] = font
@@ -546,33 +656,92 @@ function M.newRectButton(options)
         textToMeasure = nil
     end
 
-    if options.iconText ~= nil and options.iconFont ~= nil and options.iconImage == nil then
+    if options.state.off.svg ~= nil and type(options.state.off.svg) == "table" and options.state.image == nil then
+       local params = {
+            {
+                name = "iconText",
+                svgName = options.name.."SvgOff",
+                state = "off",
+                isVisible = true
+            },
+            {
+                name = "iconTextOn",
+                svgName = options.name.."SvgOn",
+                state = "on",
+                isVisible = false
+            },
+            {
+                name = "iconTextDisabled",
+                svgName = options.name.."SvgDisabled",
+                state = "disabled",
+                isVisible = false
+            }
+        }
+        for k, v in pairs(params) do
+            if options.state[v.state] ~= nil and options.state[v.state].svg ~= nil then
+                muiData.widgetDict[options.name][v.name] = M.newSvgImageWithStyle({
+                        name = v.svgName,
+                        path = options.state[v.state].svg.path,
+                        width = fontSize,
+                        height = fontSize,
+                        fillColor = options.state[v.state].svg.fillColor,
+                        strokeWidth = options.state[v.state].svg.strokeWidth or 1,
+                        strokeColor = options.state[v.state].svg.textColor or options.state[v.state].textColor,
+                        y = 0,
+                        x = 0,
+                    })
+                muiData.widgetDict[options.name][v.name].isVisible = v.isVisible
+                muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name][v.name], false )
+            end
+        end
+    elseif options.state.off.iconImage ~= nil and options.state.image == nil then
+        muiData.widgetDict[options.name]["iconText"] = display.newImageRect( options.state.off.iconImage, fontSize, fontSize )
+        if muiData.widgetDict[options.name]["iconText"] ~= nil then
+            muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["iconText"], false )
+        end
+        if options.state.on.iconImage ~= nil then
+            muiData.widgetDict[options.name]["iconTextOn"] = display.newImageRect( options.state.on.iconImage, fontSize, fontSize )
+            if muiData.widgetDict[options.name]["iconTextOn"] ~= nil then
+                muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["iconTextOn"], false )
+                muiData.widgetDict[options.name]["iconTextOn"].isVisible = false
+            end
+        end
+    elseif options.state.off.iconText ~= nil and options.iconFont ~= nil and options.state.image == nil then
         if M.isMaterialFont(options.iconFont) == true then
-            options.iconText = M.getMaterialFontCodePointByName(options.iconText)
+            options.iconText = M.getMaterialFontCodePointByName(options.state.off.iconText)
         end
-        muiData.widgetDict[options.name]["myIconText"] = display.newText( options.iconText, 0, 0, options.iconFont, fontSize )
-        if options.iconFontColor ~= nil then
-            muiData.widgetDict[options.name]["myIconText"]:setFillColor( unpack(options.iconFontColor) )
+        muiData.widgetDict[options.name]["iconText"] = display.newText( options.state.off.iconText, 0, 0, options.iconFont, fontSize )
+        if options.state.off.iconFontColor ~= nil then
+            muiData.widgetDict[options.name]["iconText"]:setFillColor( unpack(options.state.off.iconFontColor) )
         end
-        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myIconText"], false )
-    elseif options.iconImage ~= nil then
-        muiData.widgetDict[options.name]["myIconText"] = display.newImageRect( options.iconImage, fontSize, fontSize )
-        if muiData.widgetDict[options.name]["myIconText"] ~= nil then
-            muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myIconText"], false )
-        end
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["iconText"], false )
     end
 
     textXOffset = 0
-    if muiData.widgetDict[options.name]["myIconText"] ~= nil then
-        textXOffset = fontSize * 0.55
+    if muiData.widgetDict[options.name]["iconText"] ~= nil then
+        if options.iconAlign == "left" then
+            textXOffset = fontSize * 0.55
+        else
+            textXOffset = -(fontSize * 0.55)
+        end
     end
-    muiData.widgetDict[options.name]["myText"] = display.newText( options.text, textXOffset, 0, font, fontSize )
-    muiData.widgetDict[options.name]["myText"]:setFillColor( unpack(textColor) )
-    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myText"], false )
 
-    if muiData.widgetDict[options.name]["myIconText"] ~= nil then
-        local width = muiData.widgetDict[options.name]["myText"].contentWidth * 0.55
-        muiData.widgetDict[options.name]["myIconText"].x = -(width)
+    if options.state.image == nil then
+        muiData.widgetDict[options.name]["text"] = display.newText( options.text, textXOffset, 0, font, fontSize )
+        muiData.widgetDict[options.name]["text"]:setFillColor( unpack(textColor) )
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["text"], false )
+    end
+
+    if muiData.widgetDict[options.name]["iconText"] ~= nil and options.state.image == nil then
+        local width = muiData.widgetDict[options.name]["text"].contentWidth * 0.55
+        if options.iconAlign == "left" then
+            muiData.widgetDict[options.name]["iconText"].x = -(width)
+        else
+            muiData.widgetDict[options.name]["iconText"].x = width
+        end
+        if muiData.widgetDict[options.name]["iconTextOn"] ~= nil then
+            muiData.widgetDict[options.name]["iconTextOn"].x = muiData.widgetDict[options.name]["iconText"].x
+        end
     end
 
     local circleColor = textColor
@@ -587,18 +756,25 @@ function M.newRectButton(options)
 
     local maxWidth = muiData.widgetDict[options.name]["rrect"].width - (radius * 2)
 
-    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( options.height, options.height, maxWidth )
-    muiData.widgetDict[options.name]["myCircle"]:setFillColor( unpack(circleColor) )
-    muiData.widgetDict[options.name]["myCircle"].isVisible = false
-    muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
-    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
-
+    muiData.widgetDict[options.name]["circle"] = display.newCircle( options.height, options.height, maxWidth )
+    muiData.widgetDict[options.name]["circle"]:setFillColor( unpack(circleColor) )
+    muiData.widgetDict[options.name]["circle"].isVisible = false
+    muiData.widgetDict[options.name]["circle"].alpha = 0.3
+    muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["circle"], true ) -- insert and center bkgd
 
     rrect.muiOptions = options
     muiData.widgetDict[options.name]["rrect"]:addEventListener( "touch", M.touchRRectButton )
     options.ignoreTap = options.ignoreTap or false
     if options.ignoreTap then
         muiData.widgetDict[options.name]["rrect"]:addEventListener("tap", function() return true end)
+    end
+
+    if options.state.value == "off" then
+        M.turnOffButton( options )
+    elseif options.state.value == "on" then
+        M.turnOnButton( options )
+    elseif options.state.value == "disabled" then
+        M.disableButton( options )
     end
 end
 
@@ -610,15 +786,15 @@ function M.getRectButtonProperty(widgetName, propertyName)
     if propertyName == "object" then
         data = muiData.widgetDict[widgetName]["container"] -- x,y movement
     elseif propertyName == "text" then
-        data = muiData.widgetDict[widgetName]["myText"] -- button text
+        data = muiData.widgetDict[widgetName]["text"] -- button text
     elseif propertyName == "value" then
         data = muiData.widgetDict[widgetName]["value"] -- value of button
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["rrect"] -- button face
     elseif propertyName == "image" then
-        data = muiData.widgetDict[widgetName]["myImage"]
+        data = muiData.widgetDict[widgetName]["image"]
     elseif propertyName == "image_touch" then
-        data = muiData.widgetDict[widgetName]["myImageTouch"]
+        data = muiData.widgetDict[widgetName]["imageTouch"]
     elseif propertyName == "shadow" then
         data = muiData.widgetDict[widgetName]["shadow"]
     end
@@ -626,23 +802,23 @@ function M.getRectButtonProperty(widgetName, propertyName)
 end
 
 --[[
- options..
-    name: name of button
-    width: width
-    height: height
-    radius: radius of the corners
-    strokeColor: {r, g, b}
-    fillColor: {r, g, b}
-    x: x
-    y: y
-    text: text for button
-    textColor: {r, g, b}
-    font: font to use
-    fontSize:
-    textMargin: used to pad around button and determine font size,
-    circleColor: {r, g, b} (optional, defaults to textColor)
-    touchpoint: boolean, if true circle touch point is user based else centered
-    callBack: method to call passing the "e" to it
+options..
+name: name of button
+width: width
+height: height
+radius: radius of the corners
+strokeColor: {r, g, b}
+fillColor: {r, g, b}
+x: x
+y: y
+text: text for button
+textColor: {r, g, b}
+font: font to use
+fontSize:
+textMargin: used to pad around button and determine font size,
+circleColor: {r, g, b} (optional, defaults to textColor)
+touchpoint: boolean, if true circle touch point is user based else centered
+callBack: method to call passing the "e" to it
 
 ]]
 function M.createIconButton(options)
@@ -661,26 +837,24 @@ function M.newIconButton(options)
 
     x, y = M.getSafeXY(options, x, y)
 
-    isSvgIcon = options.isSvgIcon or false
-
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "IconButton"
-    muiData.widgetDict[options.name]["mygroup"] = display.newGroup()
-    muiData.widgetDict[options.name]["mygroup"].x = x
-    muiData.widgetDict[options.name]["mygroup"].y = y
+    muiData.widgetDict[options.name]["group"] = display.newGroup()
+    muiData.widgetDict[options.name]["group"].x = x
+    muiData.widgetDict[options.name]["group"].y = y
     muiData.widgetDict[options.name]["touching"] = false
 
     if options.scrollView ~= nil then
         muiData.widgetDict[options.name]["scrollView"] = options.scrollView
-        muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+        muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["group"] )
     end
 
     if options.parent ~= nil then
         muiData.widgetDict[options.name]["parent"] = options.parent
-        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["group"] )
     end
 
-    local radius = options.height -- * (0.2 * M.getSizeRatio())
+    local radius = options.height
     if options.radius ~= nil and options.radius < options.height and options.radius > 1 then
         radius = options.radius
     end
@@ -697,8 +871,8 @@ function M.newIconButton(options)
     end
 
     local textColor = { 0, 0.82, 1 }
-    if options.textColor ~= nil then
-        textColor = options.textColor
+    if options.state.off.textColor ~= nil then
+        textColor = options.state.off.textColor
     end
 
     local isChecked = false
@@ -735,7 +909,7 @@ function M.newIconButton(options)
         tw = fontSize
     end
 
-    if isSvgIcon then
+    if options.svg ~= nil or options.state.image ~= nil then
         tw = textToMeasure.contentWidth
         th = textToMeasure.contentHeight
     end
@@ -743,7 +917,15 @@ function M.newIconButton(options)
     textToMeasure:removeSelf()
     textToMeasure = nil
 
-    if not isSvgIcon then
+    -- create image buttons if exist
+    if options.state.image ~= nil then
+        muiData.widgetDict[options.name]["rrect"] = display.newRect( 0, 0, options.width, options.height )
+        muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name]["rrect"] )
+        options.image = options.state.image
+        M.createButtonsFromList(options, muiData.widgetDict[options.name]["rrect"], "group")
+    end
+
+    if options.state.off.svg == nil and options.state.image == nil then
         local options2 =
         {
             --parent = textGroup,
@@ -756,61 +938,129 @@ function M.newIconButton(options)
             align = "center"
         }
 
-        muiData.widgetDict[options.name]["myText"] = display.newText( options2 )
-        muiData.widgetDict[options.name]["myText"]:setFillColor( unpack(textColor) )
-    else
-        muiData.widgetDict[options.name]["myText"] = M.newSvgImageWithStyle({
-            name = options.name,
-            path = options.svgPath,
-            width = tw,
-            height = th,
-            fillColor = options.fillColor,
-            strokeWidth = options.strokeWidth,
-            strokeColor = options.strokeColor,
-            x = 0,
-            y = 0,
-        })
-    end
-    muiData.widgetDict[options.name]["myText"].isVisible = true
+        muiData.widgetDict[options.name]["text"] = display.newText( options2 )
+        muiData.widgetDict[options.name]["text"]:setFillColor( unpack(options.state.off.textColor) )
+        muiData.widgetDict[options.name]["text"].isVisible = true
 
-    if isChecked then
-        muiData.widgetDict[options.name]["myText"].isChecked = isChecked
+        if isChecked then
+            muiData.widgetDict[options.name]["text"].isChecked = isChecked
+        end
+    elseif options.state.off.svg ~= nil and type(options.state.off.svg) == "table" and options.state.image == nil then
+       local params = {
+            {
+                name = "text",
+                svgName = options.name.."SvgOff",
+                state = "off",
+                isVisible = true
+            },
+            {
+                name = "textOn",
+                svgName = options.name.."SvgOn",
+                state = "on",
+                isVisible = false
+            },
+            {
+                name = "textDisabled",
+                svgName = options.name.."SvgDisabled",
+                state = "disabled",
+                isVisible = false
+            }
+        }
+        for k, v in pairs(params) do
+            if options.state[v.state] ~= nil and options.state[v.state].svg ~= nil then
+                muiData.widgetDict[options.name][v.name] = M.newSvgImageWithStyle({
+                        name = v.svgName,
+                        path = options.state[v.state].svg.path,
+                        width = tw,
+                        height = th,
+                        fillColor = options.state[v.state].svg.fillColor,
+                        strokeWidth = options.state[v.state].svg.strokeWidth or 1,
+                        strokeColor = options.state[v.state].svg.textColor or options.state[v.state].textColor,
+                        x = 0,
+                        y = 0,
+                    })
+                muiData.widgetDict[options.name][v.name].isVisible = v.isVisible
+                muiData.widgetDict[options.name].isChecked = isChecked
+                if isChecked and v.state == "on" then
+                    muiData.widgetDict[options.name]["text"].isVisible = false
+                    muiData.widgetDict[options.name]["textOn"].isVisible = true
+                end
+            end
+        end
     end
     muiData.widgetDict[options.name]["value"] = isChecked
 
-    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myText"], true )
+    if options.state.image == nil then
+        muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name]["text"], true )
+        if muiData.widgetDict[options.name]["textOn"] ~= nil then
+            muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name]["textOn"], true )
+        end
+        if muiData.widgetDict[options.name]["textDisabled"] ~= nil then
+            muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name]["textDisabled"], true )
+        end
 
-    checkbox = muiData.widgetDict[options.name]["myText"]
+        checkbox = muiData.widgetDict[options.name]["text"]
+        checkbox.muiOptions = options
+    end
 
     local radiusOffset = 2.5
     if muiData.masterRatio > 1 then radiusOffset = 2.0 end
-    local maxWidth = checkbox.contentWidth * 0.6 -- - (radius * radiusOffset)
+    local maxWidth = tw * 0.6
 
     local circleColor = textColor
     if options.circleColor ~= nil then
         circleColor = options.circleColor
     end
 
-    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( 0, 0, maxWidth + 5)
-    muiData.widgetDict[options.name]["myCircle"]:setFillColor( unpack(circleColor) )
+    muiData.widgetDict[options.name]["circle"] = display.newCircle( 0, 0, maxWidth + 5)
+    muiData.widgetDict[options.name]["circle"]:setFillColor( unpack(circleColor) )
 
-    muiData.widgetDict[options.name]["myCircle"].isVisible = false
-    muiData.widgetDict[options.name]["myCircle"].x = 0
-    muiData.widgetDict[options.name]["myCircle"].y = 0
-    muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
-    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
+    muiData.widgetDict[options.name]["circle"].isVisible = false
+    muiData.widgetDict[options.name]["circle"].x = 0
+    muiData.widgetDict[options.name]["circle"].y = 0
+    muiData.widgetDict[options.name]["circle"].alpha = 0.3
+    muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name]["circle"], true ) -- insert and center bkgd
 
-    checkbox.muiOptions = options
-    muiData.widgetDict[options.name]["myText"]:addEventListener( "touch", M.touchIconButton )
-    options.ignoreTap = options.ignoreTap or false
-    if options.ignoreTap then
-        muiData.widgetDict[options.name]["myText"]:addEventListener("tap", function() return true end)
+    if options.state.image == nil then
+        muiData.widgetDict[options.name]["text"]:addEventListener( "touch", M.touchIconButton )
+        if muiData.widgetDict[options.name]["textOn"] ~= nil then
+            muiData.widgetDict[options.name]["textOn"]:addEventListener( "touch", M.touchIconButton )
+            muiData.widgetDict[options.name]["textOn"].muiOptions = options
+        end
+        if muiData.widgetDict[options.name]["textDisabled"] ~= nil then
+            muiData.widgetDict[options.name]["textDisabled"]:addEventListener( "touch", M.touchIconButton )
+            muiData.widgetDict[options.name]["textDisabled"].muiOptions = options
+        end
+        options.ignoreTap = options.ignoreTap or false
+        if options.ignoreTap then
+            muiData.widgetDict[options.name]["text"]:addEventListener("tap", function() return true end)
+            if muiData.widgetDict[options.name]["textOn"] ~= nil then
+                muiData.widgetDict[options.name]["textOn"]:addEventListener("tap", function() return true end)
+            end
+            if muiData.widgetDict[options.name]["textDisabled"] ~= nil then
+                muiData.widgetDict[options.name]["textDisabled"]:addEventListener("tap", function() return true end)
+            end
+        end
+    elseif options.state.image ~= nil then
+        muiData.widgetDict[options.name]["rrect"]:addEventListener( "touch", M.touchIconButton )
+        options.ignoreTap = options.ignoreTap or false
+        if options.ignoreTap then
+            muiData.widgetDict[options.name]["rrect"]:addEventListener("tap", function() return true end)
+        end
+        muiData.widgetDict[options.name]["rrect"].muiOptions = options
+    end
+    if options.state.value == "off" then
+        M.turnOffButton( options )
+    elseif options.state.value == "on" then
+        M.turnOnButton( options )
+    elseif options.state.value == "disabled" then
+        M.disableButton( options )
     end
 end
 
 function M.resizeIconButton(options)
     if options == nil then return end
-    local obj = muiData.widgetDict[options.name]["myText"]
+    local obj = muiData.widgetDict[options.name]["text"]
     obj.size = options.size
 end
 
@@ -820,15 +1070,15 @@ function M.getIconButtonProperty(widgetName, propertyName)
     if widgetName == nil or propertyName == nil then return data end
 
     if propertyName == "object" then
-        data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+        data = muiData.widgetDict[widgetName]["group"] -- x,y movement
     elseif propertyName == "icon" then
-        data = muiData.widgetDict[widgetName]["myText"] -- button
+        data = muiData.widgetDict[widgetName]["text"] -- button
     elseif propertyName == "value" then
         data = muiData.widgetDict[widgetName]["value"] -- value of button
     elseif propertyName == "image" then
-        data = muiData.widgetDict[widgetName]["myImage"]
+        data = muiData.widgetDict[widgetName]["image"]
     elseif propertyName == "image_touch" then
-        data = muiData.widgetDict[widgetName]["myImageTouch"]
+        data = muiData.widgetDict[widgetName]["imageTouch"]
     end
     return data
 end
@@ -839,45 +1089,76 @@ function M.touchIconButton (event)
         options = event.target.muiOptions
     end
 
+    if muiData.currentControl == nil then
+        muiData.currentControl = options.name
+        muiData.currentControlType = "mui-button"
+    end
+
+    if M.disableButton( options, event ) then
+        if options.state.disabled.callBackData ~= nil and event.phase == "ended" then
+            M.setEventParameter(event, "muiTargetCallBackData", options.state.disabled.callBackData)
+            assert( options.state.disabled.callBack )(event)
+        end
+        return
+    end
+
+    if muiData.currentControl ~= nil and muiData.currentControl ~= options.name then
+        if event.phase == "ended" then
+            M.turnOffControlHandler()
+        end
+        return
+    end
+
+    if muiData.currentControl ~= nil and muiData.currentControl ~= options.name then
+        return
+    end
     if muiData.dialogInUse == true and options.dialogName == nil then return end
 
     M.addBaseEventParameters(event, options)
 
+    if event.phase == "began" or event.phase == "ended" then
+        M.setEventParameter(event, "muiTargetName", options.name)
+        M.setEventParameter(event, "muiTargetValue", options.value)
+        M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["text"])
+        M.setEventParameter(event, "muiTargetCallBackData", options.state["off"].callBackData)
+    end
+
     if ( event.phase == "began" ) then
+        muiData.currentControl = options.name
         muiData.interceptEventHandler = M.touchIconButton
         if muiData.interceptOptions == nil then
             muiData.interceptOptions = options
         end
         M.updateUI(event)
+
+        M.turnOnButton( options, event )
+
         if muiData.touching == false then
             muiData.touching = true
             M.activateImageTouch( options )
             if options.touchpoint ~= nil and options.touchpoint == true then
-                muiData.widgetDict[options.name]["myCircle"].x = event.x - muiData.widgetDict[options.name]["mygroup"].x
-                muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["mygroup"].y
+                muiData.widgetDict[options.name]["circle"].x = event.x - muiData.widgetDict[options.name]["group"].x
+                muiData.widgetDict[options.name]["circle"].y = event.y - muiData.widgetDict[options.name]["group"].y
             end
-            muiData.widgetDict[options.name]["myCircle"].isVisible = true
+            muiData.widgetDict[options.name]["circle"].isVisible = true
             local scaleFactor = 0.1
-            muiData.widgetDict[options.name].myCircleTrans = transition.from( muiData.widgetDict[options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+            muiData.widgetDict[options.name].circleTrans = transition.from( muiData.widgetDict[options.name]["circle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
             transition.to(event.target,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
         end
     elseif ( event.phase == "ended" ) then
+        M.removeEventFromQueue( options.name ) -- cancel and remove from queue
         if M.isTouchPointOutOfRange( event ) then
             event.phase = "offTarget"
             -- event.target:dispatchEvent(event)
             -- M.debug("Its out of the button area")
         else
-          event.phase = "onTarget"
+            event.phase = "onTarget"
             if muiData.interceptMoved == false then
                 event.target = muiData.widgetDict[options.name]["checkbox"]
-                event.altTarget = muiData.widgetDict[options.name]["myText"]
+                event.altTarget = muiData.widgetDict[options.name]["text"]
                 event.myTargetName = options.name
 
                 muiData.widgetDict[options.name]["value"] = options.value
-                M.setEventParameter(event, "muiTargetName", options.name)
-                M.setEventParameter(event, "muiTargetValue", options.value)
-                M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.name]["myText"])
-                M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
 
                 if options.callBack ~= nil then
                     assert( options.callBack )(event)
@@ -889,9 +1170,403 @@ function M.touchIconButton (event)
             muiData.touching = false
             M.deactivateImageTouch( options )
         end
+        M.turnOffButton( options, event )
+
+        if options.isCheckBox ~= nil and options.isCheckBox == true then
+            if muiData.widgetDict[options.name].isChecked ~= nil and muiData.widgetDict[options.name].isChecked == true then
+                M.turnOnButton( options, event )
+            elseif muiData.widgetDict[options.name].isChecked == nil and options.state.value == "on" then
+                M.turnOnButton( options, event )
+            end
+        end
+
+        muiData.currentControl = nil
+        M.processEventQueue()
+    else
+        M.addToEventQueue( options )
     end
     muiData.touched = true
     return true
+end
+
+function M.getOptionsForButton( name, basename )
+    if name == nil then return end
+    local options = nil
+
+    if muiData.widgetDict[basename] ~= nil and muiData.widgetDict[basename]["radio"] ~= nil then
+        options = muiData.widgetDict[basename]["radio"][name]["text"].muiOptions
+    elseif muiData.widgetDict[name] ~= nil and muiData.widgetDict[name]["type"] == "IconButton" then
+        if muiData.widgetDict[name]["text"] ~= nil then
+            options = muiData.widgetDict[name]["text"].muiOptions
+        elseif muiData.widgetDict[name]["rrect"] ~= nil then
+            options = muiData.widgetDict[name]["rrect"].muiOptions
+        end
+    elseif muiData.widgetDict[name] ~= nil and (muiData.widgetDict[name]["type"] == "RRectButton" or muiData.widgetDict[name]["type"] == "RectButton") then
+        options = muiData.widgetDict[name]["rrect"].muiOptions
+    elseif muiData.widgetDict[name] ~= nil and muiData.widgetDict[name]["type"] == "CircleButton" then
+        options = muiData.widgetDict[name]["circlemain"].muiOptions
+    end
+
+    return options
+end
+
+function M.disableButton( options, event )
+    M.debug("M.disableButton()")
+    local val = false
+    if options == nil then return val end
+    if options.state.value ~= "disabled" then return val end
+
+    if options.state.image ~= nil and options.state.image.touchFadeAnimation == true then
+        return
+    end
+
+    val = true
+
+    if muiData.widgetDict[options.basename] ~= nil and muiData.widgetDict[options.basename]["type"] == "RadioButton" then
+        -- change color
+        if options.state.image == nil and options.state.disabled.labelColor ~= nil and options.state.disabled.textColor ~= nil then
+            M.setGroupObjectFillColor(options.basename, "radio", options.name, "text", options.state.disabled.textColor)
+            M.setGroupObjectFillColor(options.basename, "radio", options.name, "label", options.state.disabled.labelColor)
+        end
+
+        -- change icon
+        if muiData.widgetDict[options.basename]["radio"][options.name].iconTextDisabled ~= nil then
+            M.setGroupObjectVisible(options.basename, "radio", options.name, "iconText", false)
+            M.setGroupObjectVisible(options.basename, "radio", options.name, "iconTextOn", false)
+            M.setGroupObjectVisible(options.basename, "radio", options.name, "iconTextDisabled", true)
+        end
+
+        -- change image
+        if muiData.widgetDict[options.basename]["image"] ~= nil and muiData.widgetDict[options.basename]["imageTouch"] ~= nil then
+            M.setObjectVisible(options.basename, "image", false)
+            M.setObjectVisible(options.basename, "imageTouch", false)
+            M.setObjectVisible(options.basename, "imageDisabled", true)
+        end
+        muiData.widgetDict[options.basename].disabled = true
+        if muiData.currentControl == options.name then
+            M.resetCurrentControlVars()
+        end
+    end
+
+    if muiData.widgetDict[options.name] == nil then return val end
+
+    muiData.widgetDict[options.name].disabled = true
+
+    if muiData.widgetDict[options.name]["type"] == "IconButton" then
+        -- change color
+        if options.state.image == nil and options.state.off.svg == nil and options.state.disabled.textColor ~= nil then
+            M.setObjectFillColor(options.name, "text", options.state.disabled.textColor)
+        end
+
+        -- change icon
+        if muiData.widgetDict[options.name].textDisabled ~= nil then
+            M.setObjectVisible(options.name, "text", false)
+            M.setObjectVisible(options.name, "textOn", false)
+            M.setObjectVisible(options.name, "textDisabled", true)
+            M.setObjectFillColor(options.name, "text", options.state.disabled.textColor)
+        end
+
+        -- change image
+        if muiData.widgetDict[options.name]["image"] ~= nil and muiData.widgetDict[options.name]["imageTouch"] ~= nil then
+            M.setObjectVisible(options.name, "image", false)
+            M.setObjectVisible(options.name, "imageTouch", false)
+            M.setObjectVisible(options.name, "imageDisabled", true)
+        end
+
+    elseif muiData.widgetDict[options.name]["type"] == "RRectButton" or muiData.widgetDict[options.name]["type"] == "RectButton" then
+        -- change color
+        if options.state.image == nil and options.state.disabled.fillColor ~= nil and options.state.disabled.textColor ~= nil then
+            M.setObjectFillColor(options.name, "rrect", options.state.disabled.fillColor)
+            M.setObjectFillColor(options.name, "text", options.state.disabled.textColor)
+            M.setObjectFillColor(options.name, "iconText", options.state.disabled.iconFontColor)
+        end
+
+        -- change icon
+        if muiData.widgetDict[options.name].iconTextDisabled ~= nil then
+            M.setObjectVisible(options.name, "iconText", false)
+            M.setObjectVisible(options.name, "iconTextOn", false)
+            M.setObjectVisible(options.name, "iconTextDisabled", true)
+        end
+
+        -- change image
+        if muiData.widgetDict[options.name]["image"] ~= nil and muiData.widgetDict[options.name]["imageTouch"] ~= nil then
+            M.setObjectVisible(options.name, "image", false)
+            M.setObjectVisible(options.name, "imageTouch", false)
+            M.setObjectVisible(options.name, "imageDisabled", true)
+        end
+
+    elseif muiData.widgetDict[options.name]["type"] == "CircleButton" then
+        -- change color
+        if options.state.image == nil and options.state.disabled.fillColor ~= nil and options.state.disabled.textColor ~= nil then
+            M.setObjectFillColor(options.name, "circlemain", options.state.disabled.fillColor)
+            M.setObjectFillColor(options.name, "text", options.state.disabled.textColor)
+        end
+
+        -- change icon
+        if muiData.widgetDict[options.name].textDisabled ~= nil and options.state.image == nil then
+            M.setObjectVisible(options.name, "text", false)
+            M.setObjectVisible(options.name, "textOn", false)
+            M.setObjectVisible(options.name, "textDisabled", true)
+            M.setObjectFillColor(options.name, "circlemain", options.state.disabled.svg.fillColor)
+        end
+
+        -- change image
+        if muiData.widgetDict[options.name]["image"] ~= nil and muiData.widgetDict[options.name]["imageTouch"] ~= nil then
+            M.setObjectVisible(options.name, "image", false)
+            M.setObjectVisible(options.name, "imageTouch", false)
+            M.setObjectVisible(options.name, "imageDisabled", true)
+        end
+
+    end
+
+    if muiData.currentControl == options.name then
+        M.resetCurrentControlVars()
+    end
+
+    return val
+end
+
+-- params...
+-- name: name of button
+-- basename: only required if RadioButton or grouped element
+function M.turnOnButtonByName( name, basename )
+    if name == nil then return end
+    local options = M.getOptionsForButton(name, basename)
+
+    if options ~= nil then
+        M.turnOnButton( options )
+    end
+end
+
+function M.turnOnButton( options, event )
+    -- body
+    M.debug("M.turnOnButton()")
+
+    if options.state.image ~= nil and options.state.image.touchFadeAnimation == true then
+        return
+    end
+
+    options.state.value = "on"
+    if event ~= nil then
+        if options.state.on.callBack ~= nil then
+            M.setEventParameter(event, "muiTargetCallBackData", options.state.on.callBackData)
+            assert( options.state.on.callBack )(event)
+        end
+    end
+
+    if muiData.widgetDict[options.basename] ~= nil and muiData.widgetDict[options.basename]["type"] == "RadioButton" then
+        -- change color
+        if options.state.image == nil and options.state.on.labelColor ~= nil and options.state.on.textColor ~= nil then
+            M.setGroupObjectFillColor(options.basename, "radio", options.name, "text", options.state.on.textColor)
+            M.setGroupObjectFillColor(options.basename, "radio", options.name, "label", options.state.on.labelColor)
+        end
+
+        -- change icon
+        if muiData.widgetDict[options.basename]["radio"][options.name].iconTextOn ~= nil then
+            M.setGroupObjectVisible(options.basename, "radio", options.name, "iconText", false)
+            M.setGroupObjectVisible(options.basename, "radio", options.name, "iconTextOn", true)
+            M.setGroupObjectVisible(options.basename, "radio", options.name, "iconTextDisabled", false)
+        end
+
+        -- change image
+        if muiData.widgetDict[options.basename]["image"] ~= nil and muiData.widgetDict[options.basename]["imageTouch"] ~= nil then
+            M.setObjectVisible(options.basename, "image", false)
+            M.setObjectVisible(options.basename, "imageDisabled", false)
+            M.setObjectVisible(options.basename, "imageTouch", true)
+        end
+    end
+
+    if muiData.widgetDict[options.name] == nil then return end
+
+    if muiData.widgetDict[options.name]["type"] == "IconButton" then
+
+        -- change color
+        if options.state.image == nil and options.state.off.svg == nil and options.state.on.textColor ~= nil then
+            M.setObjectFillColor(options.name, "text", options.state.on.textColor)
+        end
+
+        -- change icon
+        if muiData.widgetDict[options.name].textOn ~= nil then
+            muiData.widgetDict[options.name].text.isVisible = false
+            muiData.widgetDict[options.name].textOn.isVisible = true
+        end
+
+        -- change image
+        if muiData.widgetDict[options.name]["image"] ~= nil and muiData.widgetDict[options.name]["imageTouch"] ~= nil then
+            M.setObjectVisible(options.name, "image", false)
+            M.setObjectVisible(options.name, "imageDisabled", false)
+            M.setObjectVisible(options.name, "imageTouch", true)
+        end
+
+    elseif muiData.widgetDict[options.name]["type"] == "RRectButton" or muiData.widgetDict[options.name]["type"] == "RectButton" then
+        -- change color
+        if options.state.image == nil and options.state.on.fillColor ~= nil and options.state.on.textColor ~= nil then
+            M.setObjectFillColor(options.name, "rrect", options.state.on.fillColor)
+            M.setObjectFillColor(options.name, "text", options.state.on.textColor)
+            M.setObjectFillColor(options.name, "iconText", options.state.on.iconFontColor)
+        end
+
+        -- change icon
+        if muiData.widgetDict[options.name].iconTextOn ~= nil then
+            muiData.widgetDict[options.name].iconText.isVisible = false
+            muiData.widgetDict[options.name].iconTextOn.isVisible = true
+        end
+
+        -- change image
+        if muiData.widgetDict[options.name]["image"] ~= nil and muiData.widgetDict[options.name]["imageTouch"] ~= nil then
+            M.setObjectVisible(options.name, "image", false)
+            M.setObjectVisible(options.name, "imageDisabled", false)
+            M.setObjectVisible(options.name, "imageTouch", true)
+        end
+    elseif muiData.widgetDict[options.name]["type"] == "CircleButton" then
+        -- change color
+        if muiData.widgetDict[options.name].textOn == nil and options.state.image == nil and options.state.on.fillColor ~= nil and options.state.on.textColor ~= nil then
+            M.setObjectFillColor(options.name, "circlemain", options.state.on.fillColor)
+            M.setObjectFillColor(options.name, "text", options.state.on.textColor)
+        end
+
+        -- change icon
+        if muiData.widgetDict[options.name].textOn ~= nil then
+            muiData.widgetDict[options.name].text.isVisible = false
+            muiData.widgetDict[options.name].textOn.isVisible = true
+        end
+
+        -- change image
+        if muiData.widgetDict[options.name]["image"] ~= nil and muiData.widgetDict[options.name]["imageTouch"] ~= nil then
+            M.setObjectVisible(options.name, "image", false)
+            M.setObjectVisible(options.name, "imageDisabled", false)
+            M.setObjectVisible(options.name, "imageTouch", true)
+        end
+    end
+end
+
+-- params...
+-- name: name of button
+-- basename: only required if RadioButton
+function M.turnOffButtonByName( name, basename )
+    if name == nil then return end
+    local options = M.getOptionsForButton(name, basename)
+
+    if options ~= nil then
+        print("final???")
+        M.turnOffButton( options )
+    end
+end
+
+function M.turnOffButton( options, event )
+    -- body
+    M.debug("M.turnOffButton()")
+
+    if options.state.image ~= nil and options.state.image.touchFadeAnimation == true then
+        return
+    end
+
+    options.state.value = "off"
+    if event ~= nil then
+        if options.state.off.callBack ~= nil then
+            M.setEventParameter(event, "muiTargetCallBackData", options.state.off.callBackData)
+            assert( options.state.off.callBack )(event)
+        end
+    end
+
+    if muiData.widgetDict[options.basename] ~= nil and muiData.widgetDict[options.basename]["type"] == "RadioButton" then
+        -- change color
+        if options.state.image == nil and options.state.on.labelColor ~= nil and options.state.on.textColor ~= nil then
+            M.setGroupObjectFillColor(options.basename, "radio", options.name, "text", options.state.off.textColor)
+            M.setGroupObjectFillColor(options.basename, "radio", options.name, "label", options.state.off.labelColor)
+        end
+
+        -- change icon
+        if muiData.widgetDict[options.basename]["radio"][options.name].iconTextOn ~= nil then
+            M.setGroupObjectVisible(options.basename, "radio", options.name, "iconText", true)
+            M.setGroupObjectVisible(options.basename, "radio", options.name, "iconTextOn", false)
+            M.setGroupObjectVisible(options.basename, "radio", options.name, "iconTextDisabled", false)
+        end
+
+        -- change image
+        if muiData.widgetDict[options.basename]["image"] ~= nil and muiData.widgetDict[options.basename]["imageTouch"] ~= nil then
+            M.setObjectVisible(options.basename, "image", true)
+            M.setObjectVisible(options.basename, "imageDisabled", false)
+            M.setObjectVisible(options.basename, "imageTouch", false)
+        end
+
+        if muiData.currentControl == options.basename then
+            M.resetCurrentControlVars()
+        end
+    end
+
+    if muiData.widgetDict[options.name] == nil then return end
+
+    if muiData.widgetDict[options.name]["type"] == "IconButton" then
+        -- revert to normal color
+        if options.state.image == nil and options.state.off.svg == nil and options.state.off.textColor ~= nil then
+            M.setObjectFillColor(options.name, "text", options.state.off.textColor)
+        end
+
+        -- revert to normal icon
+        if muiData.widgetDict[options.name].textOn ~= nil then
+            muiData.widgetDict[options.name].text.isVisible = true
+            muiData.widgetDict[options.name].textOn.isVisible = false
+        end
+
+        -- change image
+        if muiData.widgetDict[options.name]["image"] ~= nil and muiData.widgetDict[options.name]["imageTouch"] ~= nil then
+            M.setObjectVisible(options.name, "image", true)
+            M.setObjectVisible(options.name, "imageDisabled", false)
+            M.setObjectVisible(options.name, "imageTouch", false)
+        end
+
+        if muiData.currentControl == options.name then
+            M.resetCurrentControlVars()
+        end
+    elseif muiData.widgetDict[options.name]["type"] == "RRectButton" or muiData.widgetDict[options.name]["type"] == "RectButton" then
+        -- revert to normal color
+        if options.state.image == nil and options.state.off.fillColor ~= nil and options.state.off.textColor ~= nil then
+            M.setObjectFillColor(options.name, "rrect", options.state.off.fillColor)
+            M.setObjectFillColor(options.name, "text", options.state.off.textColor)
+            M.setObjectFillColor(options.name, "iconText", options.state.off.iconFontColor)
+        end
+
+        -- revert to normal icon
+        if muiData.widgetDict[options.name].iconTextOn ~= nil then
+            muiData.widgetDict[options.name].iconText.isVisible = true
+            muiData.widgetDict[options.name].iconTextOn.isVisible = false
+        end
+
+        -- change image
+        if muiData.widgetDict[options.name]["image"] ~= nil and muiData.widgetDict[options.name]["imageTouch"] ~= nil then
+            M.setObjectVisible(options.name, "image", true)
+            M.setObjectVisible(options.name, "imageDisabled", false)
+            M.setObjectVisible(options.name, "imageTouch", false)
+        end
+
+        if muiData.currentControl == options.name then
+            M.resetCurrentControlVars()
+        end
+    elseif muiData.widgetDict[options.name]["type"] == "CircleButton" then
+        -- change color
+        if options.state.image == nil and options.state.on.fillColor ~= nil and options.state.on.textColor ~= nil then
+            M.setObjectFillColor(options.name, "circlemain", options.state.off.fillColor)
+            M.setObjectFillColor(options.name, "text", options.state.off.textColor)
+        end
+
+        -- change icon
+        if muiData.widgetDict[options.name].textOn ~= nil then
+            muiData.widgetDict[options.name].text.isVisible = true
+            muiData.widgetDict[options.name].textOn.isVisible = false
+        end
+
+        -- change image
+        if muiData.widgetDict[options.name]["image"] ~= nil and muiData.widgetDict[options.name]["imageTouch"] ~= nil then
+            M.setObjectVisible(options.name, "image", true)
+            M.setObjectVisible(options.name, "imageDisabled", false)
+            M.setObjectVisible(options.name, "imageTouch", false)
+        end
+
+        if muiData.currentControl == options.name then
+            M.resetCurrentControlVars()
+        end
+    end
 end
 
 function M.createCheckBox(options)
@@ -899,6 +1574,7 @@ function M.createCheckBox(options)
 end
 
 function M.newCheckBox(options)
+    options.isCheckBox = true
     M.newIconButton(options)
 end
 
@@ -920,19 +1596,19 @@ function M.newCircleButton(options)
 
     muiData.widgetDict[options.name] = {}
     muiData.widgetDict[options.name]["type"] = "CircleButton"
-    muiData.widgetDict[options.name]["mygroup"] = display.newGroup()
-    muiData.widgetDict[options.name]["mygroup"].x = x
-    muiData.widgetDict[options.name]["mygroup"].y = y
+    muiData.widgetDict[options.name]["group"] = display.newGroup()
+    muiData.widgetDict[options.name]["group"].x = x
+    muiData.widgetDict[options.name]["group"].y = y
     muiData.widgetDict[options.name]["touching"] = false
 
     if options.scrollView ~= nil then
         muiData.widgetDict[options.name]["scrollView"] = options.scrollView
-        muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+        muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["group"] )
     end
 
     if options.parent ~= nil then
         muiData.widgetDict[options.name]["parent"] = options.parent
-        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+        muiData.widgetDict[options.name]["parent"]:insert( muiData.widgetDict[options.name]["group"] )
     end
 
     if options.radius == nil then
@@ -953,13 +1629,13 @@ function M.newCircleButton(options)
     end
 
     local textColor = { 0, 0.82, 1 }
-    if options.textColor ~= nil then
-        textColor = options.textColor
+    if options.state.off.textColor ~= nil then
+        textColor = options.state.off.textColor
     end
 
     local fillColor = { 0, 0, 0 }
-    if options.fillColor ~= nil then
-        fillColor = options.fillColor
+    if options.state.off.fillColor ~= nil then
+        fillColor = options.state.off.fillColor
     end
 
     if options.isFontIcon == nil then
@@ -978,14 +1654,14 @@ function M.newCircleButton(options)
         local size = options.shadowSize or options.radius * 0.55
         local opacity = options.shadowOpacity or 0.4
         local shadow = M.newShadowShape("circle", {
-            name = options.name,
-            width = options.radius,
-            height = options.radius,
-            size = size,
-            opacity = opacity,
-        })
+                name = options.name,
+                width = options.radius,
+                height = options.radius,
+                size = size,
+                opacity = opacity,
+            })
         muiData.widgetDict[options.name]["shadow"] = shadow
-        muiData.widgetDict[options.name]["mygroup"]:insert( shadow )
+        muiData.widgetDict[options.name]["group"]:insert( shadow )
     end
 
     -- scale font
@@ -1023,15 +1699,56 @@ function M.newCircleButton(options)
     }
 
     muiData.widgetDict[options.name]["circlemain"] = display.newCircle( 0, 0, radius )
-    muiData.widgetDict[options.name]["circlemain"]:setFillColor( unpack(fillColor) )
+    muiData.widgetDict[options.name]["circlemain"]:setFillColor( unpack(options.state.off.fillColor) )
     muiData.widgetDict[options.name]["circlemain"].isVisible = true
-    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["circlemain"], true )
+    muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name]["circlemain"], true )
 
-    muiData.widgetDict[options.name]["myText"] = display.newText( options2 )
-    muiData.widgetDict[options.name]["myText"]:setFillColor( unpack(textColor) )
-    muiData.widgetDict[options.name]["myText"].isVisible = true
+    -- create image buttons if exist
+    M.createButtonsFromList({ name = options.name, image=options.state.image }, muiData.widgetDict[options.name]["circlemain"], "group")
 
-    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myText"], false )
+    if options.state.off.svg ~= nil and type(options.state.off.svg) == "table" and options.state.image == nil then
+       local params = {
+            {
+                name = "text",
+                svgName = options.name.."SvgOff",
+                state = "off",
+                isVisible = true
+            },
+            {
+                name = "textOn",
+                svgName = options.name.."SvgOn",
+                state = "on",
+                isVisible = false
+            },
+            {
+                name = "textDisabled",
+                svgName = options.name.."SvgDisabled",
+                state = "disabled",
+                isVisible = false
+            }
+        }
+        for k, v in pairs(params) do
+            if options.state[v.state] ~= nil and options.state[v.state].svg ~= nil then
+                muiData.widgetDict[options.name][v.name] = M.newSvgImageWithStyle({
+                        name = v.svgName,
+                        path = options.state[v.state].svg.path,
+                        width = fontSize,
+                        height = fontSize,
+                        fillColor = options.state[v.state].svg.fillColor,
+                        strokeWidth = options.state[v.state].svg.strokeWidth or 1,
+                        strokeColor = options.state[v.state].svg.textColor or options.state[v.state].textColor,
+                        y = 0,
+                    })
+                muiData.widgetDict[options.name][v.name].isVisible = v.isVisible
+                muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name][v.name], false )
+            end
+        end
+    elseif options.state.image == nil then
+        muiData.widgetDict[options.name]["text"] = display.newText( options2 )
+        muiData.widgetDict[options.name]["text"]:setFillColor( unpack(options.state.off.textColor) )
+        muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name]["text"], false )
+        muiData.widgetDict[options.name]["text"].isVisible = true
+    end
 
     local circle = muiData.widgetDict[options.name]["circlemain"]
 
@@ -1044,20 +1761,28 @@ function M.newCircleButton(options)
         circleColor = options.circleColor
     end
 
-    muiData.widgetDict[options.name]["myCircle"] = display.newCircle( 0, 0, maxWidth + 5)
-    muiData.widgetDict[options.name]["myCircle"]:setFillColor( unpack(circleColor) )
+    muiData.widgetDict[options.name]["circle"] = display.newCircle( 0, 0, maxWidth + 5)
+    muiData.widgetDict[options.name]["circle"]:setFillColor( unpack(circleColor) )
 
-    muiData.widgetDict[options.name]["myCircle"].isVisible = false
-    muiData.widgetDict[options.name]["myCircle"].x = 0
-    muiData.widgetDict[options.name]["myCircle"].y = 0
-    muiData.widgetDict[options.name]["myCircle"].alpha = 0.3
-    muiData.widgetDict[options.name]["mygroup"]:insert( muiData.widgetDict[options.name]["myCircle"], true ) -- insert and center bkgd
+    muiData.widgetDict[options.name]["circle"].isVisible = false
+    muiData.widgetDict[options.name]["circle"].x = 0
+    muiData.widgetDict[options.name]["circle"].y = 0
+    muiData.widgetDict[options.name]["circle"].alpha = 0.3
+    muiData.widgetDict[options.name]["group"]:insert( muiData.widgetDict[options.name]["circle"], true ) -- insert and center bkgd
 
     muiData.widgetDict[options.name]["circlemain"].muiOptions = options
     muiData.widgetDict[options.name]["circlemain"]:addEventListener( "touch", M.touchCircleButton )
     options.ignoreTap = options.ignoreTap or false
     if options.ignoreTap then
         muiData.widgetDict[options.name]["circlemain"]:addEventListener("tap", function() return true end)
+    end
+
+    if options.state.value == "off" then
+        M.turnOffButton( options )
+    elseif options.state.value == "on" then
+        M.turnOnButton( options )
+    elseif options.state.value == "disabled" then
+        M.disableButton( options )
     end
 end
 
@@ -1067,17 +1792,17 @@ function M.getCircleButtonProperty(widgetName, propertyName)
     if widgetName == nil or propertyName == nil then return data end
 
     if propertyName == "object" then
-        data = muiData.widgetDict[widgetName]["mygroup"] -- x,y movement
+        data = muiData.widgetDict[widgetName]["group"] -- x,y movement
     elseif propertyName == "text" then
-        data = muiData.widgetDict[widgetName]["myText"] -- button
+        data = muiData.widgetDict[widgetName]["text"] -- button
     elseif propertyName == "value" then
         data = muiData.widgetDict[widgetName]["value"] -- value of button
     elseif propertyName == "layer_1" then
         data = muiData.widgetDict[widgetName]["circlemain"] -- the base
     elseif propertyName == "image" then
-        data = muiData.widgetDict[widgetName]["myImage"]
+        data = muiData.widgetDict[widgetName]["image"]
     elseif propertyName == "image_touch" then
-        data = muiData.widgetDict[widgetName]["myImageTouch"]
+        data = muiData.widgetDict[widgetName]["imageTouch"]
     elseif propertyName == "shadow" then
         data = muiData.widgetDict[widgetName]["shadow"]
     end
@@ -1089,8 +1814,29 @@ function M.touchCircleButton (event)
     if event.target ~= nil then
         options = event.target.muiOptions
     end
+
     if muiData.dialogInUse == true and options.dialogName == nil then
-         return
+        return
+    end
+
+    if muiData.currentControl == nil then
+        muiData.currentControl = options.name
+        muiData.currentControlType = "mui-button"
+    end
+
+    if M.disableButton( options, event ) then
+        if options.state.disabled.callBackData ~= nil and event.phase == "ended" then
+            M.setEventParameter(event, "muiTargetCallBackData", options.state.disabled.callBackData)
+            assert( options.state.disabled.callBack )(event)
+        end
+        return
+    end
+
+    if muiData.currentControl ~= nil and muiData.currentControl ~= options.name then
+        if event.phase == "ended" then
+            M.turnOffControlHandler()
+        end
+        return
     end
 
     M.addBaseEventParameters(event, options)
@@ -1101,25 +1847,31 @@ function M.touchCircleButton (event)
             muiData.interceptOptions = options
         end
         M.updateUI(event)
+
+        M.turnOnButton( options )
+
         if muiData.touching == false then
             muiData.touching = true
             M.activateImageTouch( options )
             if options.touchpoint ~= nil and options.touchpoint == true then
-                muiData.widgetDict[options.name]["myCircle"].x = event.x - muiData.widgetDict[options.name]["mygroup"].x
-                muiData.widgetDict[options.name]["myCircle"].y = event.y - muiData.widgetDict[options.name]["mygroup"].y
+                muiData.widgetDict[options.name]["circle"].x = event.x - muiData.widgetDict[options.name]["group"].x
+                muiData.widgetDict[options.name]["circle"].y = event.y - muiData.widgetDict[options.name]["group"].y
             end
-            muiData.widgetDict[options.name]["myCircle"].isVisible = true
+            muiData.widgetDict[options.name]["circle"].isVisible = true
             local scaleFactor = 4.1
-            muiData.widgetDict[options.name].myCircleTrans = transition.from( muiData.widgetDict[options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+            muiData.widgetDict[options.name].circleTrans = transition.from( muiData.widgetDict[options.name]["circle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
             transition.to(event.target,{time=500, xScale=1.1, yScale=1.1, transition=easing.continuousLoop})
         end
     elseif ( event.phase == "ended" ) then
+
+        M.removeEventFromQueue( options.name ) -- cancel and remove from queue
+
         if M.isTouchPointOutOfRange( event ) then
             event.phase = "offTarget"
             -- event.target:dispatchEvent(event)
             -- M.debug("Its out of the button area")
         else
-          event.phase = "onTarget"
+            event.phase = "onTarget"
             if muiData.interceptMoved == false then
                 event.target = muiData.widgetDict[options.name]["circlemain"]
                 event.myTargetName = options.name
@@ -1132,6 +1884,7 @@ function M.touchCircleButton (event)
                 if options.callBack ~= nil then
                     assert( options.callBack )(event)
                 end
+                M.turnOffButton( options )
             end
             muiData.interceptEventHandler = nil
             muiData.interceptOptions = nil
@@ -1139,29 +1892,33 @@ function M.touchCircleButton (event)
             muiData.touching = false
             M.deactivateImageTouch( options )
         end
+        M.turnOffButton( options )
+        M.processEventQueue()
+    else
+        M.addToEventQueue( options )
     end
     muiData.touched = true
     return true
 end
 
 --[[
- options..
-    name: name of button
-    width: width
-    height: height
-    radius: radius of the corners
-    strokeColor: {r, g, b}
-    fillColor: {r, g, b}
-    x: x
-    y: y
-    text: text for button
-    textColor: {r, g, b}
-    font: font to use
-    fontSize:
-    textMargin: used to pad around button and determine font size,
-    circleColor: {r, g, b} (optional, defaults to textColor)
-    touchpoint: boolean, if true circle touch point is user based else centered
-    callBack: method to call passing the "e" to it
+options..
+name: name of button
+width: width
+height: height
+radius: radius of the corners
+strokeColor: {r, g, b}
+fillColor: {r, g, b}
+x: x
+y: y
+text: text for button
+textColor: {r, g, b}
+font: font to use
+fontSize:
+textMargin: used to pad around button and determine font size,
+circleColor: {r, g, b} (optional, defaults to textColor)
+touchpoint: boolean, if true circle touch point is user based else centered
+callBack: method to call passing the "e" to it
 
 ]]
 function M.createRadioButton(options)
@@ -1183,20 +1940,20 @@ function M.newRadioButton(options)
     muiData.widgetDict[options.basename]["radio"][options.name] = {}
     muiData.widgetDict[options.basename]["type"] = "RadioButton"
 
-    local radioButton =  muiData.widgetDict[options.basename]["radio"][options.name]
-    radioButton["mygroup"] = display.newGroup()
-    radioButton["mygroup"].x = x
-    radioButton["mygroup"].y = y
+    local radioButton = muiData.widgetDict[options.basename]["radio"][options.name]
+    radioButton["group"] = display.newGroup()
+    radioButton["group"].x = x
+    radioButton["group"].y = y
     radioButton["touching"] = false
 
     if options.scrollView ~= nil and muiData.widgetDict[options.name]["scrollView"] == nil then
         muiData.widgetDict[options.name]["scrollView"] = options.scrollView
-        muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["mygroup"] )
+        muiData.widgetDict[options.name]["scrollView"]:insert( muiData.widgetDict[options.name]["group"] )
     end
 
     if options.parent ~= nil then
         radioButton["parent"] = options.parent
-        radioButton["parent"]:insert( radioButton["mygroup"] )
+        radioButton["parent"]:insert( radioButton["group"] )
     end
 
     local radius = options.height * 0.2
@@ -1216,8 +1973,8 @@ function M.newRadioButton(options)
     end
 
     local textColor = { 0, 0.82, 1 }
-    if options.textColor ~= nil then
-        textColor = options.textColor
+    if options.state.off.textColor ~= nil then
+        textColor = options.state.off.textColor
     end
 
     local labelFont = native.systemFont
@@ -1231,8 +1988,8 @@ function M.newRadioButton(options)
     end
 
     local labelColor = { 0, 0, 0 }
-    if options.labelColor ~= nil then
-        labelColor = options.labelColor
+    if options.state.off.labelColor ~= nil then
+        labelColor = options.state.off.labelColor
     end
 
     local isChecked = false
@@ -1284,17 +2041,73 @@ function M.newRadioButton(options)
         align = "center"
     }
 
-    radioButton["myText"] = display.newText( options2 )
-    radioButton["myText"]:setFillColor( unpack(textColor) )
-    radioButton["myText"].isVisible = true
-    if isChecked then
-        if options.textOn ~= nil then
-            radioButton["myText"].text = M.getMaterialFontCodePointByName(options.textOn)
+    if options.state.off.svg ~= nil and type(options.state.off.svg) == "table" and options.state.image == nil then
+
+       local params = {
+            {
+                name = "text",
+                svgName = options.basename..options.name.."SvgOff",
+                state = "off",
+                isVisible = true
+            },
+            {
+                name = "textOn",
+                svgName = options.basename..options.name.."SvgOn",
+                state = "on",
+                isVisible = false
+            },
+            {
+                name = "textDisabled",
+                svgName = options.basename..options.name.."SvgDisabled",
+                state = "disabled",
+                isVisible = false
+            }
+        }
+        for k, v in pairs(params) do
+            if options.state[v.state] ~= nil and options.state[v.state].svg ~= nil then
+                radioButton[v.name] = M.newSvgImageWithStyle({
+                        name = v.svgName,
+                        path = options.state[v.state].svg.path,
+                        width = fontSize,
+                        height = fontSize,
+                        fillColor = options.state[v.state].svg.fillColor,
+                        strokeWidth = options.state[v.state].svg.strokeWidth or 1,
+                        strokeColor = options.state[v.state].svg.textColor or options.state[v.state].textColor,
+                        y = 0,
+                    })
+                radioButton[v.name].isVisible = v.isVisible
+            end
         end
-        radioButton["myText"].isChecked = isChecked
+        if isChecked then
+            radioButton.isChecked = isChecked
+            if options.state.on.svg ~= nil then
+                radioButton["text"].isVisible = false
+                radioButton["textDisabled"].isVisible = false
+                radioButton["textOn"].isVisible = true
+                if options.state.value == "disabled" then
+                    radioButton["textOn"]:setFillColor( unpack(options.state.disabled.textColor) )
+                end
+            end
+        end
+    elseif options.state.image == nil then
+        radioButton["text"] = display.newText( options2 )
+        radioButton["text"]:setFillColor( unpack(options.state.off.textColor) )
+        if isChecked then
+            if options.textOn ~= nil then
+                radioButton["text"].text = M.getMaterialFontCodePointByName(options.textOn)
+            end
+            radioButton.isChecked = isChecked
+        end
     end
-    radioButton["myText"].value = options.value
-    radioButton["mygroup"]:insert( radioButton["myText"], true )
+    radioButton["text"].isVisible = true
+    radioButton["text"].value = options.value
+    radioButton["group"]:insert( radioButton["text"], true )
+    if radioButton["textOn"] ~= nil then
+        radioButton["group"]:insert( radioButton["textOn"], true )
+    end
+    if radioButton["textDisabled"] ~= nil then
+        radioButton["group"]:insert( radioButton["textDisabled"], true )
+    end
 
     -- add the label
 
@@ -1303,14 +2116,14 @@ function M.newRadioButton(options)
     textToMeasure2:removeSelf()
     textToMeasure2 = nil
 
-    local labelX = radioButton["mygroup"].x
-    -- x,y of both myText and label is centered so divide by half
+    local labelX = radioButton["group"].x
+    -- x,y of both text and label is centered so divide by half
     local labelSpacing = fontSize * 0.1
-    labelX = radioButton["myText"].x + (fontSize * 0.5) + labelSpacing
+    labelX = radioButton["text"].x + (fontSize * 0.5) + labelSpacing
     labelX = labelX + (labelWidth * 0.5)
     local options3 =
     {
-        --parent = muiData.widgetDict[options.name]["mygroup"],
+        --parent = muiData.widgetDict[options.name]["group"],
         text = options.label,
         x = mathFloor(labelX),
         y = 0,
@@ -1319,14 +2132,14 @@ function M.newRadioButton(options)
         fontSize = fontSize *.75
     }
 
-    radioButton["myLabel"] = display.newText( options3 )
-    radioButton["myLabel"]:setFillColor( unpack(labelColor) )
-    radioButton["myLabel"]:setStrokeColor( 0 )
-    radioButton["myLabel"].strokeWidth = 3
-    radioButton["myLabel"].isVisible = true
-    radioButton["myLabel"].touchTarget = radioButton["myText"]
-    radioButton["myLabel"].options = options
-    radioButton["mygroup"]:insert( radioButton["myLabel"], false )
+    radioButton["label"] = display.newText( options3 )
+    radioButton["label"]:setFillColor( unpack(options.state.off.labelColor) )
+    radioButton["label"]:setStrokeColor( 0 )
+    radioButton["label"].strokeWidth = 3
+    radioButton["label"].isVisible = true
+    radioButton["label"].touchTarget = radioButton["text"]
+    radioButton["label"].options = options
+    radioButton["group"]:insert( radioButton["label"], false )
 
     local maxWidth = checkbox.contentWidth - (radius * 2)
 
@@ -1337,24 +2150,32 @@ function M.newRadioButton(options)
         circleColor = options.circleColor
     end
 
-    radioButton["myCircle"] = display.newCircle( options.height, options.height, maxWidth + 5 )
-    radioButton["myCircle"]:setFillColor( unpack(circleColor) )
-    radioButton["myCircle"].isVisible = false
-    radioButton["myCircle"].x = 0
-    radioButton["myCircle"].y = 0
-    radioButton["myCircle"].alpha = 0.3
-    radioButton["mygroup"]:insert( radioButton["myCircle"], true ) -- insert and center bkgd
+    radioButton["circle"] = display.newCircle( options.height, options.height, maxWidth + 5 )
+    radioButton["circle"]:setFillColor( unpack(circleColor) )
+    radioButton["circle"].isVisible = false
+    radioButton["circle"].x = 0
+    radioButton["circle"].y = 0
+    radioButton["circle"].alpha = 0.3
+    radioButton["group"]:insert( radioButton["circle"], true ) -- insert and center bkgd
 
-    checkbox = radioButton["myText"]
-    local label = radioButton["myLabel"]
+    checkbox = radioButton["text"]
+    local label = radioButton["label"]
     checkbox.muiOptions = options
     label.muiOptions = options
-    muiData.widgetDict[options.basename]["radio"][options.name]["myText"]:addEventListener( "touch", M.touchCheckbox )
-    muiData.widgetDict[options.basename]["radio"][options.name]["myLabel"]:addEventListener( "touch", M.touchCheckboxLabel )
+    muiData.widgetDict[options.basename]["radio"][options.name]["text"]:addEventListener( "touch", M.touchCheckbox )
+    muiData.widgetDict[options.basename]["radio"][options.name]["label"]:addEventListener( "touch", M.touchCheckboxLabel )
     options.ignoreTap = options.ignoreTap or false
     if options.ignoreTap then
-        muiData.widgetDict[options.name]["radio"][options.name]["myText"]:addEventListener("tap", function() return true end)
-        muiData.widgetDict[options.name]["radio"][options.name]["myLabel"]:addEventListener("tap", function() return true end)
+        muiData.widgetDict[options.name]["radio"][options.name]["text"]:addEventListener("tap", function() return true end)
+        muiData.widgetDict[options.name]["radio"][options.name]["label"]:addEventListener("tap", function() return true end)
+    end
+
+    if options.state.value == "off" then
+        M.turnOffButton( options )
+    elseif options.state.value == "on" then
+        M.turnOnButton( options )
+    elseif options.state.value == "disabled" then
+        M.disableButton( options )
     end
 end
 
@@ -1367,11 +2188,11 @@ function M.getRadioButtonProperty(parentWidgetName, propertyName, index)
     if muiData.widgetDict[widgetParentName]["toolbar"][widgetName] == nil then return data end
 
     if propertyName == "object" then
-        data = muiData.widgetDict[parentWidgetName]["radio"][widgetName]["mygroup"] -- x,y movement
+        data = muiData.widgetDict[parentWidgetName]["radio"][widgetName]["group"] -- x,y movement
     elseif propertyName == "icon" then
-        data = muiData.widgetDict[parentWidgetName]["radio"][widgetName]["myText"] -- button
+        data = muiData.widgetDict[parentWidgetName]["radio"][widgetName]["text"] -- button
     elseif propertyName == "label" then
-        data = muiData.widgetDict[parentWidgetName]["radio"][widgetName]["myLabel"] -- the base
+        data = muiData.widgetDict[parentWidgetName]["radio"][widgetName]["label"] -- the base
     elseif propertyName == "value" then
         data = muiData.widgetDict[parentWidgetName]["value"] -- value of button
     end
@@ -1383,34 +2204,63 @@ function M.touchCheckboxHandler(event)
     if event.target ~= nil then
         options = event.target.muiOptions
     end
+
+    if M.disableButton( options, event ) then
+        if options.state.disabled.callBackData ~= nil and event.phase == "ended" then
+            M.setEventParameter(event, "muiTargetCallBackData", options.state.disabled.callBackData)
+            assert( options.state.disabled.callBack )(event)
+        end
+        return
+    end
+
+    if muiData.currentControl == nil then
+        muiData.currentControl = options.basename
+        muiData.currentControlSubName = options.name
+        muiData.currentControlType = "mui-button"
+    end
+
+    if muiData.currentControl ~= nil and muiData.currentControl ~= options.basename then
+        if event.phase == "offTarget" or event.phase == "onTarget" then
+            M.turnOffControlHandler()
+        end
+        return
+    end
+
     if event.phase == "began" then
+        M.turnOnButton( options )
         if muiData.touching == false then
             muiData.touching = true
             if options.touchpoint ~= nil and options.touchpoint == true then
-                muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].x = event.x - muiData.widgetDict[options.basename]["radio"][options.name]["mygroup"].x
-                muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].y = event.y - muiData.widgetDict[options.basename]["radio"][options.name]["mygroup"].y
+                muiData.widgetDict[options.basename]["radio"][options.name]["circle"].x = event.x - muiData.widgetDict[options.basename]["radio"][options.name]["group"].x
+                muiData.widgetDict[options.basename]["radio"][options.name]["circle"].y = event.y - muiData.widgetDict[options.basename]["radio"][options.name]["group"].y
             end
-            muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"].isVisible = true
+            muiData.widgetDict[options.basename]["radio"][options.name]["circle"].isVisible = true
             local scaleFactor = 0.1
-            muiData.widgetDict[options.basename]["radio"][options.name].myCircleTrans = transition.from( muiData.widgetDict[options.basename]["radio"][options.name]["myCircle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
+            muiData.widgetDict[options.basename]["radio"][options.name].circleTrans = transition.from( muiData.widgetDict[options.basename]["radio"][options.name]["circle"], { time=300,alpha=0.2, xScale=scaleFactor, yScale=scaleFactor, transition=easing.inOutCirc, onComplete=M.subtleRadius } )
             transition.to(event.target,{time=500, xScale=1.03, yScale=1.03, transition=easing.continuousLoop})
         end
-    else
+    elseif event.phase == "offTarget" then
+        M.removeEventFromQueue( options.name ) -- cancel and remove from queue
+    elseif event.phase == "onTarget" then
+        M.removeEventFromQueue( options.name ) -- cancel and remove from queue
         if muiData.interceptMoved == false then
             --event.target = muiData.widgetDict[options.name]["rrect"]
             event.myTargetName = options.name
             event.myTargetBasename = options.basename
-            event.altTarget = muiData.widgetDict[options.basename]["radio"][options.name]["myText"]
+            event.altTarget = muiData.widgetDict[options.basename]["radio"][options.name]["text"]
 
             muiData.widgetDict[options.basename]["value"] = options.value
             M.setEventParameter(event, "muiTargetValue", options.value)
-            M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.basename]["radio"][options.name]["myText"])
+            M.setEventParameter(event, "muiTarget", muiData.widgetDict[options.basename]["radio"][options.name]["text"])
             M.setEventParameter(event, "muiTargetCallBackData", options.callBackData)
 
             if options.callBack ~= nil then
                 assert( options.callBack )(event)
             end
+            M.turnOffButton( options )
         end
+        M.turnOffButton( options )
+        M.processEventQueue()
         muiData.interceptEventHandler = nil
         muiData.interceptOptions = nil
         muiData.interceptMoved = false
@@ -1442,9 +2292,11 @@ function M.touchCheckboxLabel (event)
             -- event.target:dispatchEvent(event)
             -- M.debug("Its out of the button area")
         else
-          event.phase = "onTarget"
-          M.touchCheckboxHandler( event )
+            event.phase = "onTarget"
+            M.touchCheckboxHandler( event )
         end
+    else
+        M.addToEventQueue( options )
     end
     muiData.touched = true
     return true
@@ -1472,9 +2324,11 @@ function M.touchCheckbox (event)
             -- event.target:dispatchEvent(event)
             -- M.debug("Its out of the button area")
         else
-          event.phase = "onTarget"
-          M.touchCheckboxHandler( event )
+            event.phase = "onTarget"
+            M.touchCheckboxHandler( event )
         end
+    else
+        M.addToEventQueue( options )
     end
     muiData.touched = true
     return true
@@ -1500,38 +2354,43 @@ function M.newRadioGroup(options)
 
     if options.list ~= nil then
         local count = 0
+        local isFontIcon = true
         muiData.widgetDict[options.name] = {}
         muiData.widgetDict[options.name]["radio"] = {}
         muiData.widgetDict[options.name]["type"] = "RadioGroup"
+        if options.isSvgIcon ~= nil and options.isSvgIcon == true then
+            isFontIcon = false
+        end
         for i, v in ipairs(options.list) do
             M.newRadioButton({
-                parent = options.parent,
-                name = options.name .. "_" .. i,
-                basename = options.name,
-                label = v.key,
-                value = v.value,
-                text = "radio_button_unchecked",
-                textOn = "radio_button_checked",
-                width = options.width,
-                height = options.height,
-                ignoreInsets = true,
-                x = x,
-                y = y,
-                isChecked = v.isChecked,
-                isFontIcon = true,
-                font = muiData.materialFont,
-                labelFont = options.labelFont,
-                textColor = options.textColor,
-                textAlign = "center",
-                labelColor = options.labelColor,
-                callBack = options.callBack
-            })
+                    parent = options.parent,
+                    name = options.name .. "_" .. i,
+                    basename = options.name,
+                    label = v.key,
+                    value = v.value,
+                    text = "radio_button_unchecked",
+                    textOn = "radio_button_checked",
+                    width = options.width,
+                    height = options.height,
+                    ignoreInsets = true,
+                    x = x,
+                    y = y,
+                    isChecked = v.isChecked,
+                    isFontIcon = isFontIcon,
+                    state = options.state,
+                    font = muiData.materialFont,
+                    labelFont = options.labelFont,
+                    textColor = options.state.off.textColor,
+                    textAlign = "center",
+                    labelColor = options.state.off.labelColor,
+                    callBack = options.callBack
+                })
             local radioButton = muiData.widgetDict[options.name]["radio"][options.name.."_"..i]
             if options.layout ~= nil and options.layout == "horizontal" then
-                width = radioButton["myText"].contentWidth + radioButton["myLabel"].contentWidth + options.spacing
-                x = x + width * .8 -- + (radioButton["myText"].contentWidth *.25)
+                width = radioButton["text"].contentWidth + radioButton["label"].contentWidth + options.spacing
+                x = x + width * .8 -- + (radioButton["text"].contentWidth *.25)
             else
-                y = y + radioButton["myText"].contentHeight + options.spacing
+                y = y + radioButton["text"].contentHeight + options.spacing
             end
             count = count + 1
         end
@@ -1548,7 +2407,7 @@ function M.actionForPlus( e )
         if muiTarget.isChecked == true then
             muiTarget.isChecked = false
             muiTarget.text = M.getMaterialFontCodePointByName("add_circle")
-         else
+        else
             muiTarget.isChecked = true
             muiTarget.text = M.getMaterialFontCodePointByName("add_circle")
             if muiTargetValue ~= nil then
@@ -1564,12 +2423,20 @@ function M.actionForCheckbox( e )
     local muiTargetValue = M.getEventParameter(e, "muiTargetValue")
 
     if muiTarget ~= nil then
-        if muiTarget.isChecked == true then
-            muiTarget.isChecked = false
-            muiTarget.text = M.getMaterialFontCodePointByName("check_box_outline_blank")
-         else
-            muiTarget.isChecked = true
-            muiTarget.text = M.getMaterialFontCodePointByName("check_box")
+        if muiTarget.muiOptions.disabled ~= nil and muiTarget.muiOptions.disabled == true then
+            return
+        end
+        local name = muiTarget.muiOptions.name
+        if muiData.widgetDict[name].isChecked == true then
+            muiData.widgetDict[name].isChecked = false
+            if muiTarget.muiOptions.state.off.svg == nil then
+                muiTarget.text = M.getMaterialFontCodePointByName("check_box_outline_blank")
+            end
+        else
+            muiData.widgetDict[name].isChecked = true
+            if muiTarget.muiOptions.state.on.svg == nil then
+                muiTarget.text = M.getMaterialFontCodePointByName("check_box")
+            end
             if muiTargetValue ~= nil then
                 M.debug("checkbox value = "..muiTargetValue)
             end
@@ -1584,24 +2451,32 @@ function M.actionForRadioButton( e )
 
     if muiTarget ~= nil then
         -- uncheck all then check the one that is checked
+        -- textOn = SvgIcon and handle below, create above and delete down in remove
         local basename = M.getEventParameter(e, "basename")
         local foundName = false
 
         local list = muiData.widgetDict[basename]["radio"]
         for k, v in pairs(list) do
-            v["myText"].isChecked = false
-            v["myText"].text = M.getMaterialFontCodePointByName("radio_button_unchecked")
+            muiData.widgetDict[basename]["radio"][k].isChecked = false
+            if v.text.muiOptions.state.off.svg == nil then
+                v["text"].text = M.getMaterialFontCodePointByName("radio_button_unchecked")
+            end
         end
 
-        if muiTarget.isChecked == true then
-            muiTarget.isChecked = false
-            muiTarget.text = M.getMaterialFontCodePointByName("radio_button_unchecked")
-         else
-            muiTarget.isChecked = true
-            muiTarget.text = M.getMaterialFontCodePointByName("radio_button_checked")
+        if muiData.widgetDict[basename]["radio"][muiTarget.muiOptions.name].isChecked == true then
+            muiData.widgetDict[basename]["radio"][muiTarget.muiOptions.name].isChecked = false
+            if muiTarget.muiOptions.state.off.svg == nil then
+                muiTarget.text = M.getMaterialFontCodePointByName("radio_button_unchecked")
+            end
+        else
+            muiData.widgetDict[basename]["radio"][muiTarget.muiOptions.name].isChecked = true
+            if muiTarget.muiOptions.state.off.svg == nil then
+                muiTarget.text = M.getMaterialFontCodePointByName("radio_button_checked")
+            end
         end
         if muiTargetValue ~= nil then
             muiData.widgetDict[basename]["value"] = muiTargetValue
+            print("value is "..muiTargetValue)
             M.debug("radio button value = "..muiTargetValue)
         end
     end
@@ -1626,28 +2501,58 @@ function M.removeRoundedRectButton(widgetName)
 
     muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", M.touchRRectButton)
     muiData.widgetDict[widgetName]["rrect"]:removeEventListener("tap", M.touchRRectButton)
-    muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
-    muiData.widgetDict[widgetName]["myCircle"] = nil
-    muiData.widgetDict[widgetName]["myText"]:removeSelf()
-    muiData.widgetDict[widgetName]["myText"] = nil
+    muiData.widgetDict[widgetName]["circle"]:removeSelf()
+    muiData.widgetDict[widgetName]["circle"] = nil
+    muiData.widgetDict[widgetName]["text"]:removeSelf()
+    muiData.widgetDict[widgetName]["text"] = nil
 
-    if muiData.widgetDict[widgetName]["myIconText"] ~= nil then
-        muiData.widgetDict[widgetName]["myIconText"]:removeSelf()
-        muiData.widgetDict[widgetName]["myIconText"] = nil
+    if muiData.widgetDict[widgetName]["textOn"] ~= nil then
+        muiData.widgetDict[widgetName]["textOn"]:removeSelf()
+        muiData.widgetDict[widgetName]["textOn"] = nil
     end
 
-    if muiData.widgetDict[widgetName]["myImage"] ~= nil then
-        muiData.widgetDict[widgetName]["myImage"]:removeSelf()
-        muiData.widgetDict[widgetName]["myImage"] = nil
+    if muiData.widgetDict[widgetName]["iconText"] ~= nil then
+        muiData.widgetDict[widgetName]["iconText"]:removeSelf()
+        muiData.widgetDict[widgetName]["iconText"] = nil
     end
 
-    if muiData.widgetDict[widgetName]["myImageTouch"] ~= nil then
-        muiData.widgetDict[widgetName]["myImageTouch"]:removeSelf()
-        muiData.widgetDict[widgetName]["myImageTouch"] = nil
+    if muiData.widgetDict[widgetName]["iconTextOn"] ~= nil then
+        muiData.widgetDict[widgetName]["iconTextOn"]:removeSelf()
+        muiData.widgetDict[widgetName]["iconTextOn"] = nil
     end
 
-    if muiData.widgetDict[widgetName]["myImageSheet"] ~= nil then
-        muiData.widgetDict[widgetName]["myImageSheet"] = nil
+    if muiData.widgetDict[widgetName]["textDisabled"] ~= nil then
+        muiData.widgetDict[widgetName]["textDisabled"]:removeEventListener("touch", M.touchIconButton)
+        muiData.widgetDict[widgetName]["textDisabled"]:removeEventListener("tap", M.touchIconButton)
+    end
+
+    if muiData.widgetDict[widgetName.."SvgOff"] ~= nil then
+        M.removeImageSvgStyle(widgetName.."SvgOff")
+    end
+    if muiData.widgetDict[widgetName.."SvgOn"] ~= nil then
+        M.removeImageSvgStyle(widgetName.."SvgOn")
+    end
+    if muiData.widgetDict[widgetName.."SvgDisabled"] ~= nil then
+        M.removeImageSvgStyle(widgetName.."SvgDisabled")
+    end
+
+    if muiData.widgetDict[widgetName]["image"] ~= nil then
+        muiData.widgetDict[widgetName]["image"]:removeSelf()
+        muiData.widgetDict[widgetName]["image"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["imageTouch"] ~= nil then
+        muiData.widgetDict[widgetName]["imageTouch"]:removeSelf()
+        muiData.widgetDict[widgetName]["imageTouch"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["imageDisabled"] ~= nil then
+        muiData.widgetDict[widgetName]["imageDisabled"]:removeSelf()
+        muiData.widgetDict[widgetName]["imageDisabled"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["imageSheet"] ~= nil then
+        muiData.widgetDict[widgetName]["imageSheet"] = nil
     end
 
     if muiData.widgetDict[widgetName]["shadow"] ~= nil then
@@ -1667,6 +2572,7 @@ function M.removeRoundedRectButton(widgetName)
     muiData.widgetDict[widgetName]["container"]:removeSelf()
     muiData.widgetDict[widgetName]["container"] = nil
     muiData.widgetDict[widgetName] = nil
+    M.resetCurrentControlVars()
 end
 
 function M.removeWidgetRectButton(widgetName)
@@ -1682,26 +2588,56 @@ function M.removeRectButton(widgetName)
 
     muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", M.touchRRectButton)
     muiData.widgetDict[widgetName]["rrect"]:removeEventListener("tap", M.touchRRectButton)
-    muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
-    muiData.widgetDict[widgetName]["myCircle"] = nil
-    if muiData.widgetDict[widgetName]["myIconText"] ~= nil then
-        muiData.widgetDict[widgetName]["myIconText"]:removeSelf()
-        muiData.widgetDict[widgetName]["myIconText"] = nil
+    muiData.widgetDict[widgetName]["circle"]:removeSelf()
+    muiData.widgetDict[widgetName]["circle"] = nil
+    if muiData.widgetDict[widgetName]["iconText"] ~= nil then
+        muiData.widgetDict[widgetName]["iconText"]:removeSelf()
+        muiData.widgetDict[widgetName]["iconText"] = nil
     end
-    muiData.widgetDict[widgetName]["myText"]:removeSelf()
-    muiData.widgetDict[widgetName]["myText"] = nil
-    if muiData.widgetDict[widgetName]["myImage"] ~= nil then
-        muiData.widgetDict[widgetName]["myImage"]:removeSelf()
-        muiData.widgetDict[widgetName]["myImage"] = nil
+    if muiData.widgetDict[widgetName]["iconTextOn"] ~= nil then
+        muiData.widgetDict[widgetName]["iconTextOn"]:removeSelf()
+        muiData.widgetDict[widgetName]["iconTextOn"] = nil
+    end
+    muiData.widgetDict[widgetName]["text"]:removeSelf()
+    muiData.widgetDict[widgetName]["text"] = nil
+
+    if muiData.widgetDict[widgetName]["textOn"] ~= nil then
+        muiData.widgetDict[widgetName]["textOn"]:removeSelf()
+        muiData.widgetDict[widgetName]["textOn"] = nil
     end
 
-    if muiData.widgetDict[widgetName]["myImageTouch"] ~= nil then
-        muiData.widgetDict[widgetName]["myImageTouch"]:removeSelf()
-        muiData.widgetDict[widgetName]["myImageTouch"] = nil
+    if muiData.widgetDict[widgetName]["textDisabled"] ~= nil then
+        muiData.widgetDict[widgetName]["textDisabled"]:removeEventListener("touch", M.touchIconButton)
+        muiData.widgetDict[widgetName]["textDisabled"]:removeEventListener("tap", M.touchIconButton)
     end
 
-    if muiData.widgetDict[widgetName]["myImageSheet"] ~= nil then
-        muiData.widgetDict[widgetName]["myImageSheet"] = nil
+    if muiData.widgetDict[widgetName.."SvgOff"] ~= nil then
+        M.removeImageSvgStyle(widgetName.."SvgOff")
+    end
+    if muiData.widgetDict[widgetName.."SvgOn"] ~= nil then
+        M.removeImageSvgStyle(widgetName.."SvgOn")
+    end
+    if muiData.widgetDict[widgetName.."SvgDisabled"] ~= nil then
+        M.removeImageSvgStyle(widgetName.."SvgDisabled")
+    end
+
+    if muiData.widgetDict[widgetName]["image"] ~= nil then
+        muiData.widgetDict[widgetName]["image"]:removeSelf()
+        muiData.widgetDict[widgetName]["image"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["imageTouch"] ~= nil then
+        muiData.widgetDict[widgetName]["imageTouch"]:removeSelf()
+        muiData.widgetDict[widgetName]["imageTouch"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["imageDisabled"] ~= nil then
+        muiData.widgetDict[widgetName]["imageDisabled"]:removeSelf()
+        muiData.widgetDict[widgetName]["imageDisabled"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["imageSheet"] ~= nil then
+        muiData.widgetDict[widgetName]["imageSheet"] = nil
     end
 
     if muiData.widgetDict[widgetName]["shadow"] ~= nil then
@@ -1719,6 +2655,7 @@ function M.removeRectButton(widgetName)
     muiData.widgetDict[widgetName]["container"]:removeSelf()
     muiData.widgetDict[widgetName]["container"] = nil
     muiData.widgetDict[widgetName] = nil
+    M.resetCurrentControlVars()
 end
 
 function M.removeWidgetCircleButton(widgetName)
@@ -1733,22 +2670,47 @@ function M.removeCircleButton(widgetName)
     if muiData.widgetDict[widgetName] == nil then return end
 
     muiData.widgetDict[widgetName]["circlemain"]:removeEventListener("touch", M.touchCircleButton)
-    muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
-    muiData.widgetDict[widgetName]["myCircle"] = nil
-    muiData.widgetDict[widgetName]["myText"]:removeSelf()
-    muiData.widgetDict[widgetName]["myText"] = nil
-    if muiData.widgetDict[widgetName]["myImage"] ~= nil then
-        muiData.widgetDict[widgetName]["myImage"]:removeSelf()
-        muiData.widgetDict[widgetName]["myImage"] = nil
+    muiData.widgetDict[widgetName]["circlemain"]:removeEventListener("tap", M.touchCircleButton)
+    muiData.widgetDict[widgetName]["circle"]:removeSelf()
+    muiData.widgetDict[widgetName]["circle"] = nil
+    muiData.widgetDict[widgetName]["text"]:removeSelf()
+    muiData.widgetDict[widgetName]["text"] = nil
+    if muiData.widgetDict[widgetName]["textOn"] ~= nil then
+        muiData.widgetDict[widgetName]["textOn"]:removeSelf()
+        muiData.widgetDict[widgetName]["textOn"] = nil
     end
 
-    if muiData.widgetDict[widgetName]["myImageTouch"] ~= nil then
-        muiData.widgetDict[widgetName]["myImageTouch"]:removeSelf()
-        muiData.widgetDict[widgetName]["myImageTouch"] = nil
+    if muiData.widgetDict[widgetName]["textDisabled"] ~= nil then
+        muiData.widgetDict[widgetName]["textDisabled"]:removeEventListener("touch", M.touchIconButton)
+        muiData.widgetDict[widgetName]["textDisabled"]:removeEventListener("tap", M.touchIconButton)
     end
 
-    if muiData.widgetDict[widgetName]["myImageSheet"] ~= nil then
-        muiData.widgetDict[widgetName]["myImageSheet"] = nil
+    if muiData.widgetDict[widgetName.."SvgOff"] ~= nil then
+        M.removeImageSvgStyle(widgetName.."SvgOff")
+    end
+    if muiData.widgetDict[widgetName.."SvgOn"] ~= nil then
+        M.removeImageSvgStyle(widgetName.."SvgOn")
+    end
+    if muiData.widgetDict[widgetName.."SvgDisabled"] ~= nil then
+        M.removeImageSvgStyle(widgetName.."SvgDisabled")
+    end
+    if muiData.widgetDict[widgetName]["image"] ~= nil then
+        muiData.widgetDict[widgetName]["image"]:removeSelf()
+        muiData.widgetDict[widgetName]["image"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["imageTouch"] ~= nil then
+        muiData.widgetDict[widgetName]["imageTouch"]:removeSelf()
+        muiData.widgetDict[widgetName]["imageTouch"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["imageDisabled"] ~= nil then
+        muiData.widgetDict[widgetName]["imageDisabled"]:removeSelf()
+        muiData.widgetDict[widgetName]["imageDisabled"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["imageSheet"] ~= nil then
+        muiData.widgetDict[widgetName]["imageSheet"] = nil
     end
 
     if muiData.widgetDict[widgetName]["shadow"] ~= nil then
@@ -1763,9 +2725,10 @@ function M.removeCircleButton(widgetName)
 
     muiData.widgetDict[widgetName]["circlemain"]:removeSelf()
     muiData.widgetDict[widgetName]["circlemain"] = nil
-    muiData.widgetDict[widgetName]["mygroup"]:removeSelf()
-    muiData.widgetDict[widgetName]["mygroup"] = nil
+    muiData.widgetDict[widgetName]["group"]:removeSelf()
+    muiData.widgetDict[widgetName]["group"] = nil
     muiData.widgetDict[widgetName] = nil
+    M.resetCurrentControlVars()
 end
 
 function M.removeWidgetIconButton(widgetName)
@@ -1783,27 +2746,65 @@ function M.removeIconButton(widgetName)
 
     if muiData.widgetDict[widgetName] == nil then return end
 
-    muiData.widgetDict[widgetName]["myText"]:removeEventListener("touch", M.touchIconButton)
-    muiData.widgetDict[widgetName]["myCircle"]:removeSelf()
-    muiData.widgetDict[widgetName]["myCircle"] = nil
-    muiData.widgetDict[widgetName]["myText"]:removeSelf()
-    muiData.widgetDict[widgetName]["myText"] = nil
-    if muiData.widgetDict[widgetName]["myImage"] ~= nil then
-        muiData.widgetDict[widgetName]["myImage"]:removeSelf()
-        muiData.widgetDict[widgetName]["myImage"] = nil
+    muiData.widgetDict[widgetName]["text"]:removeEventListener("touch", M.touchIconButton)
+    muiData.widgetDict[widgetName]["text"]:removeEventListener("tap", M.touchIconButton)
+    if muiData.widgetDict[widgetName]["textOn"] ~= nil then
+        muiData.widgetDict[widgetName]["textOn"]:removeEventListener("touch", M.touchIconButton)
+        muiData.widgetDict[widgetName]["textOn"]:removeEventListener("tap", M.touchIconButton)
+        muiData.widgetDict[widgetName]["textOn"]:removeSelf()
+        muiData.widgetDict[widgetName]["textOn"] = nil
     end
 
-    if muiData.widgetDict[widgetName]["myImageTouch"] ~= nil then
-        muiData.widgetDict[widgetName]["myImageTouch"]:removeSelf()
-        muiData.widgetDict[widgetName]["myImageTouch"] = nil
+    if muiData.widgetDict[widgetName]["textDisabled"] ~= nil then
+        muiData.widgetDict[widgetName]["textDisabled"]:removeEventListener("touch", M.touchIconButton)
+        muiData.widgetDict[widgetName]["textDisabled"]:removeEventListener("tap", M.touchIconButton)
     end
 
-    if muiData.widgetDict[widgetName]["myImageSheet"] ~= nil then
-        muiData.widgetDict[widgetName]["myImageSheet"] = nil
+    if muiData.widgetDict[widgetName.."SvgOff"] ~= nil then
+        M.removeImageSvgStyle(widgetName.."SvgOff")
     end
-    muiData.widgetDict[widgetName]["mygroup"]:removeSelf()
-    muiData.widgetDict[widgetName]["mygroup"] = nil
+    if muiData.widgetDict[widgetName.."SvgOn"] ~= nil then
+        M.removeImageSvgStyle(widgetName.."SvgOn")
+    end
+    if muiData.widgetDict[widgetName.."SvgDisabled"] ~= nil then
+        M.removeImageSvgStyle(widgetName.."SvgDisabled")
+    end
+
+    if muiData.widgetDict[widgetName]["image"] ~= nil then
+        muiData.widgetDict[widgetName]["image"]:removeSelf()
+        muiData.widgetDict[widgetName]["image"] = nil
+        if muiData.widgetDict[widgetName]["rrect"] ~= nil then
+            muiData.widgetDict[widgetName]["rrect"]:removeEventListener("touch", M.touchIconButton)
+            muiData.widgetDict[widgetName]["rrect"]:removeEventListener("tap", M.touchIconButton)
+            muiData.widgetDict[widgetName]["rrect"]:removeSelf()
+        end
+        muiData.widgetDict[widgetName]["rrect"] = nil
+    end
+    muiData.widgetDict[widgetName]["circle"]:removeSelf()
+    muiData.widgetDict[widgetName]["circle"] = nil
+    muiData.widgetDict[widgetName]["text"]:removeSelf()
+    muiData.widgetDict[widgetName]["text"] = nil
+    if muiData.widgetDict[widgetName]["image"] ~= nil then
+        muiData.widgetDict[widgetName]["image"]:removeSelf()
+        muiData.widgetDict[widgetName]["image"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["imageTouch"] ~= nil then
+        muiData.widgetDict[widgetName]["imageTouch"]:removeSelf()
+        muiData.widgetDict[widgetName]["imageTouch"] = nil
+    end
+    if muiData.widgetDict[widgetName]["imageDisabled"] ~= nil then
+        muiData.widgetDict[widgetName]["imageDisabled"]:removeSelf()
+        muiData.widgetDict[widgetName]["imageDisabled"] = nil
+    end
+
+    if muiData.widgetDict[widgetName]["imageSheet"] ~= nil then
+        muiData.widgetDict[widgetName]["imageSheet"] = nil
+    end
+    muiData.widgetDict[widgetName]["group"]:removeSelf()
+    muiData.widgetDict[widgetName]["group"] = nil
     muiData.widgetDict[widgetName] = nil
+    M.resetCurrentControlVars()
 end
 
 function M.removeWidgetRadioButton(widgetName)
@@ -1818,20 +2819,38 @@ function M.removeRadioButton(widgetName)
     if muiData.widgetDict[widgetName] == nil then return end
 
     for name in pairs(muiData.widgetDict[widgetName]["radio"]) do
-        muiData.widgetDict[widgetName]["radio"][name]["myText"]:removeEventListener( "touch", M.touchCheckbox )
-        muiData.widgetDict[widgetName]["radio"][name]["myLabel"]:removeEventListener( "touch", M.touchCheckbox )
-        muiData.widgetDict[widgetName]["radio"][name]["myText"]:removeEventListener( "tap", M.touchCheckbox )
-        muiData.widgetDict[widgetName]["radio"][name]["myLabel"]:removeEventListener( "tap", M.touchCheckbox )
-        muiData.widgetDict[widgetName]["radio"][name]["myCircle"]:removeSelf()
-        muiData.widgetDict[widgetName]["radio"][name]["myCircle"] = nil
-        muiData.widgetDict[widgetName]["radio"][name]["myText"]:removeSelf()
-        muiData.widgetDict[widgetName]["radio"][name]["myText"] = nil
-        muiData.widgetDict[widgetName]["radio"][name]["myLabel"]:removeSelf()
-        muiData.widgetDict[widgetName]["radio"][name]["myLabel"] = nil
-        muiData.widgetDict[widgetName]["radio"][name]["mygroup"]:removeSelf()
-        muiData.widgetDict[widgetName]["radio"][name]["mygroup"] = nil
+        muiData.widgetDict[widgetName]["radio"][name]["text"]:removeEventListener( "touch", M.touchCheckbox )
+        if muiData.widgetDict[widgetName]["radio"][name]["textOn"] ~= nil then
+            muiData.widgetDict[widgetName]["radio"][name]["textOn"]:removeEventListener( "touch", M.touchCheckbox )
+            muiData.widgetDict[widgetName]["radio"][name]["textOn"]:removeEventListener( "tap", M.touchCheckbox )
+            muiData.widgetDict[widgetName]["radio"][name]["textOn"]:removeSelf()
+            muiData.widgetDict[widgetName]["radio"][name]["textOn"] = nil
+        end
+
+        if muiData.widgetDict[widgetName..name.."SvgOff"] ~= nil then
+            M.removeImageSvgStyle(widgetName..name.."SvgOff")
+        end
+        if muiData.widgetDict[widgetName..name.."SvgOn"] ~= nil then
+            M.removeImageSvgStyle(widgetName..name.."SvgOn")
+        end
+        if muiData.widgetDict[widgetName..name.."SvgDisabled"] ~= nil then
+            M.removeImageSvgStyle(widgetName..name.."SvgDisabled")
+        end
+
+        muiData.widgetDict[widgetName]["radio"][name]["label"]:removeEventListener( "touch", M.touchCheckbox )
+        muiData.widgetDict[widgetName]["radio"][name]["text"]:removeEventListener( "tap", M.touchCheckbox )
+        muiData.widgetDict[widgetName]["radio"][name]["label"]:removeEventListener( "tap", M.touchCheckbox )
+        muiData.widgetDict[widgetName]["radio"][name]["circle"]:removeSelf()
+        muiData.widgetDict[widgetName]["radio"][name]["circle"] = nil
+        muiData.widgetDict[widgetName]["radio"][name]["text"]:removeSelf()
+        muiData.widgetDict[widgetName]["radio"][name]["text"] = nil
+        muiData.widgetDict[widgetName]["radio"][name]["label"]:removeSelf()
+        muiData.widgetDict[widgetName]["radio"][name]["label"] = nil
+        muiData.widgetDict[widgetName]["radio"][name]["group"]:removeSelf()
+        muiData.widgetDict[widgetName]["radio"][name]["group"] = nil
         muiData.widgetDict[widgetName]["radio"][name] = nil
     end
+    M.resetCurrentControlVars()
 end
 
 return M

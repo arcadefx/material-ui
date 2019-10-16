@@ -1,32 +1,32 @@
 --[[
-    A loosely based Material UI module
+A loosely based Material UI module
 
-    mui-dialog.lua : This is for creating modal dialog popups.
+mui-dialog.lua : This is for creating modal dialog popups.
 
-    The MIT License (MIT)
+The MIT License (MIT)
 
-    Copyright (C) 2016 Anedix Technologies, Inc.  All Rights Reserved.
+Copyright (C) 2016 Anedix Technologies, Inc. All Rights Reserved.
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-    For other software and binaries included in this module see their licenses.
-    The license and the software must remain in full when copying or distributing.
+For other software and binaries included in this module see their licenses.
+The license and the software must remain in full when copying or distributing.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 --]]--
 
@@ -134,7 +134,7 @@ function M.newDialog(options)
     muiData.widgetDict[options.name]["container"]["rrect2"] = display.newRoundedRect( x, y, options.width, options.height, nr )
     if paint ~= nil then
         local object = muiData.widgetDict[options.name]["container"]["rrect2"]
-       object.fill = paint
+        object.fill = paint
 
         object.fill.effect = "filter.vignetteMask"
         object.fill.effect.innerRadius = 1
@@ -147,6 +147,11 @@ function M.newDialog(options)
     muiData.widgetDict[options.name]["container"]["rrect"]:setFillColor( unpack( options.fillColor ) )
     muiData.widgetDict[options.name]["container"]["rrect"].name = options.name
     muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["container"]["rrect"] )
+
+    if options.background ~= nil then
+        muiData.widgetDict[options.name]["background"] = display.newImageRect(options.background, width, height)
+        muiData.widgetDict[options.name]["container"]:insert( muiData.widgetDict[options.name]["background"] )
+    end
 
     -- add text
     if options.text ~= nil then
@@ -202,22 +207,37 @@ function M.newDialog(options)
             bx = 0
         end
         M.newRectButton({
-            name = "okay_dialog_button",
-            text = options.buttons["okayButton"].text,
-            width = options.buttons["okayButton"].width,
-            height = options.buttons["okayButton"].height,
-            ignoreInsets = true,
-            x = bx,
-            y = by,
-            font = native.systemFont,
-            fillColor = options.buttons["okayButton"].fillColor,
-            textColor = options.buttons["okayButton"].textColor,
-            touchpoint = true,
-            callBack = M.dialogOkayCallback,
-            callBackData = options.buttons["okayButton"].callBackData,
-            clickAnimation = options.buttons["okayButton"].clickAnimation,
-            dialogName = options.name
-        })
+                name = "okay_dialog_button",
+                text = options.buttons["okayButton"].text,
+                width = options.buttons["okayButton"].width,
+                height = options.buttons["okayButton"].height,
+                ignoreInsets = true,
+                x = bx,
+                y = by,
+                font = native.systemFont,
+                fillColor = options.buttons["okayButton"].fillColor,
+                textColor = options.buttons["okayButton"].textColor,
+                state = {
+                    value = "off",
+                    off = {
+                        textColor = options.buttons["okayButton"].textColor,
+                        fillColor = options.buttons["okayButton"].fillColor,
+                    },
+                    on = {
+                        textColor = options.buttons["okayButton"].textColor,
+                        fillColor = options.buttons["okayButton"].fillColor,
+                    },
+                    disabled = {
+                        textColor = {1,1,1,1},
+                        fillColor = {0.7, 0.7, 0.7, 1},
+                    },
+                },
+                touchpoint = true,
+                callBack = M.dialogOkayCallback,
+                callBackData = options.buttons["okayButton"].callBackData,
+                clickAnimation = options.buttons["okayButton"].clickAnimation,
+                dialogName = options.name
+            })
         muiData.widgetDict[options.name]["container"]:insert( M.getWidgetBaseObject("okay_dialog_button") )
     end
 
@@ -245,22 +265,37 @@ function M.newDialog(options)
             bx = (bx - options.buttons["cancelButton"].width) * .5 - 20
         end
         M.newRectButton({
-            name = "cancel_dialog_button",
-            text = options.buttons["cancelButton"].text,
-            width = options.buttons["cancelButton"].width,
-            height = options.buttons["cancelButton"].height,
-            ignoreInsets = true,
-            x = bx,
-            y = by,
-            font = native.systemFont,
-            fillColor = options.buttons["cancelButton"].fillColor,
-            textColor = options.buttons["cancelButton"].textColor,
-            touchpoint = true,
-            clickAnimation = options.buttons["cancelButton"].clickAnimation,
-            callBack = M.dialogCancelCallback,
-            callBackData = options.buttons["cancelButton"].callBackData,
-            dialogName = options.name
-        })
+                name = "cancel_dialog_button",
+                text = options.buttons["cancelButton"].text,
+                width = options.buttons["cancelButton"].width,
+                height = options.buttons["cancelButton"].height,
+                ignoreInsets = true,
+                x = bx,
+                y = by,
+                font = native.systemFont,
+                fillColor = options.buttons["cancelButton"].fillColor,
+                textColor = options.buttons["cancelButton"].textColor,
+                state = {
+                    value = "off",
+                    off = {
+                        textColor = options.buttons["okayButton"].textColor,
+                        fillColor = options.buttons["okayButton"].fillColor,
+                    },
+                    on = {
+                        textColor = options.buttons["okayButton"].textColor,
+                        fillColor = options.buttons["okayButton"].fillColor,
+                    },
+                    disabled = {
+                        textColor = {1,1,1,1},
+                        fillColor = {0.7, 0.7, 0.7, 1},
+                    },
+                },
+                touchpoint = true,
+                clickAnimation = options.buttons["cancelButton"].clickAnimation,
+                callBack = M.dialogCancelCallback,
+                callBackData = options.buttons["cancelButton"].callBackData,
+                dialogName = options.name
+            })
         muiData.widgetDict[options.name]["container"]:insert( M.getWidgetBaseObject("cancel_dialog_button") )
     end
     --]]--
@@ -272,9 +307,9 @@ end
 
 --[[--
 
- For the buttons on the Dialog use the following to get their properties
- M.getRectButtonProperty("okay_dialog_button", <property name>)
- M.getRectButtonProperty("cancel_dialog_button", <property name>)
+For the buttons on the Dialog use the following to get their properties
+M.getRectButtonProperty("okay_dialog_button", <property name>)
+M.getRectButtonProperty("cancel_dialog_button", <property name>)
 
 --]]--
 function M.getDialogProperty(widgetName, propertyName)
@@ -301,7 +336,7 @@ end
 function M.dialogOkayCallback(e)
     if muiData.dialogName == nil then return end
     if muiData.widgetDict[muiData.dialogName]["callBackOkay"] ~= nil then
-       assert( muiData.widgetDict[muiData.dialogName]["callBackOkay"] )(e)
+        assert( muiData.widgetDict[muiData.dialogName]["callBackOkay"] )(e)
     end
     M.closeDialog(e)
 end
@@ -312,7 +347,7 @@ end
 
 function M.dialogCancelCallback(e)
     if muiData.widgetDict[muiData.dialogName]["callBackCancel"] ~= nil then
-       assert( muiData.widgetDict[muiData.dialogName]["callBackCancel"] )(e)
+        assert( muiData.widgetDict[muiData.dialogName]["callBackCancel"] )(e)
     end
     M.closeDialog(e)
 end
@@ -349,6 +384,12 @@ function M.removeDialog()
     -- remove the rest
     -- muiData.widgetDict[widgetName]["container"]["myText"]:removeSelf()
     -- muiData.widgetDict[widgetName]["container"]["myText"] = nil
+
+    if muiData.widgetDict[widgetName]["background"] ~= nil then
+        muiData.widgetDict[widgetName]["background"]:removeSelf()
+        muiData.widgetDict[widgetName]["background"] = nil
+    end
+
     muiData.widgetDict[widgetName]["rectbackdrop"]:removeSelf()
     muiData.widgetDict[widgetName]["rectbackdrop"] = nil
     muiData.widgetDict[widgetName]["container"]["rrect"]:removeSelf()

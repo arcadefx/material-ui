@@ -42,6 +42,7 @@ local mathMod = math.fmod
 local mathABS = math.abs
 -- local utf8 = require( "plugin.utf8" )
 local MySceneName = nil
+local nothing = nil
 
 local M = {} -- for module array/table
 

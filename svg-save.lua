@@ -7,7 +7,7 @@
 local composer = require("composer")
 local sqlite3 = require("sqlite3")
 
-transition = require("transition2")
+-- transition = require("transition2")
 local mui = require("materialui.mui")
 local database = require("database")
 
